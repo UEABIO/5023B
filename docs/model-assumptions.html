@@ -1,0 +1,2225 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.5.57">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="Statistical skills for Biologists">
+<title>11&nbsp; Model diagnostics – 5027A</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./summary-table.html" rel="next">
+<link href="./13-interaction.html" rel="prev">
+<link href="./images/logos/logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script src="site_libs/kePrint-0.0.1/kePrint.js"></script><link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+<link rel="stylesheet" href="include/booktem.css">
+<link rel="stylesheet" href="include/webex.css">
+<link rel="stylesheet" href="include/glossary.css">
+<link rel="stylesheet" href="include/style.css">
+</head>
+<body class="nav-sidebar floating">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./model-assumptions.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model diagnostics</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">5027A</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-penguin-project.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Meet the Penguins</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-dplyr.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data cleaning</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-data-bias.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data bias</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-data-insights.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data insights</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-inferential-statistics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Inferential statistics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-linear-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Linear models</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-paired-design.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Paired tests</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-ANOVA.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">ANOVA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-interaction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Multi factor ANOVA</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./model-assumptions.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model diagnostics</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Summary tables</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary-table.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary tables</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Data Visualisation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">ggplot</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reproducible Reports</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Project workflows</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./tidy-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Tidy data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./advanced_ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">ggplot extras</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#model-assumptions" id="toc-model-assumptions" class="nav-link active" data-scroll-target="#model-assumptions"><span class="header-section-number">11.1</span> Model assumptions</a></li>
+  <li>
+<a href="#missing-variables" id="toc-missing-variables" class="nav-link" data-scroll-target="#missing-variables"><span class="header-section-number">11.2</span> Missing variables</a>
+  <ul class="collapse">
+<li><a href="#blood-pressure-data" id="toc-blood-pressure-data" class="nav-link" data-scroll-target="#blood-pressure-data"><span class="header-section-number">11.2.1</span> Blood Pressure Data</a></li>
+  <li><a href="#improving-the-blood-pressure-model" id="toc-improving-the-blood-pressure-model" class="nav-link" data-scroll-target="#improving-the-blood-pressure-model"><span class="header-section-number">11.2.2</span> Improving the blood pressure model</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#data-transformations" id="toc-data-transformations" class="nav-link" data-scroll-target="#data-transformations"><span class="header-section-number">11.3</span> Data transformations</a>
+  <ul class="collapse">
+<li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example"><span class="header-section-number">11.3.1</span> Example</a></li>
+  <li><a href="#potential-drawbacks" id="toc-potential-drawbacks" class="nav-link" data-scroll-target="#potential-drawbacks"><span class="header-section-number">11.3.2</span> Potential drawbacks</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#heteroscedasticity" id="toc-heteroscedasticity" class="nav-link" data-scroll-target="#heteroscedasticity"><span class="header-section-number">11.4</span> Heteroscedasticity</a>
+  <ul class="collapse">
+<li><a href="#robust-errors" id="toc-robust-errors" class="nav-link" data-scroll-target="#robust-errors"><span class="header-section-number">11.4.1</span> Robust errors</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#bootstrapping" id="toc-bootstrapping" class="nav-link" data-scroll-target="#bootstrapping"><span class="header-section-number">11.5</span> Bootstrapping</a>
+  <ul class="collapse">
+<li><a href="#things-bootstrapping-can-help-with" id="toc-things-bootstrapping-can-help-with" class="nav-link" data-scroll-target="#things-bootstrapping-can-help-with"><span class="header-section-number">11.5.1</span> Things bootstrapping can help with:</a></li>
+  <li><a href="#limitations-of-bootstrapping" id="toc-limitations-of-bootstrapping" class="nav-link" data-scroll-target="#limitations-of-bootstrapping"><span class="header-section-number">11.5.2</span> Limitations of Bootstrapping</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#non-linearity" id="toc-non-linearity" class="nav-link" data-scroll-target="#non-linearity"><span class="header-section-number">11.6</span> Non-linearity</a>
+  <ul class="collapse">
+<li><a href="#transformation-1" id="toc-transformation-1" class="nav-link" data-scroll-target="#transformation-1"><span class="header-section-number">11.6.1</span> Transformation</a></li>
+  <li><a href="#polynomials" id="toc-polynomials" class="nav-link" data-scroll-target="#polynomials"><span class="header-section-number">11.6.2</span> Polynomials</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#multicollinearity" id="toc-multicollinearity" class="nav-link" data-scroll-target="#multicollinearity"><span class="header-section-number">11.7</span> Multicollinearity</a>
+  <ul class="collapse">
+<li><a href="#structural-multicollinearity" id="toc-structural-multicollinearity" class="nav-link" data-scroll-target="#structural-multicollinearity"><span class="header-section-number">11.7.1</span> Structural Multicollinearity</a></li>
+  <li><a href="#predictor-multicollinearity" id="toc-predictor-multicollinearity" class="nav-link" data-scroll-target="#predictor-multicollinearity"><span class="header-section-number">11.7.2</span> Predictor Multicollinearity</a></li>
+  <li><a href="#example-3" id="toc-example-3" class="nav-link" data-scroll-target="#example-3"><span class="header-section-number">11.7.3</span> Example</a></li>
+  <li><a href="#fitting-a-model" id="toc-fitting-a-model" class="nav-link" data-scroll-target="#fitting-a-model"><span class="header-section-number">11.7.4</span> Fitting a model</a></li>
+  <li><a href="#correcting-for-multicollinearity" id="toc-correcting-for-multicollinearity" class="nav-link" data-scroll-target="#correcting-for-multicollinearity"><span class="header-section-number">11.7.5</span> Correcting for multicollinearity</a></li>
+  </ul>
+</li>
+  <li><a href="#outliers" id="toc-outliers" class="nav-link" data-scroll-target="#outliers"><span class="header-section-number">11.8</span> Outliers</a></li>
+  <li><a href="#advanced-data-analysis" id="toc-advanced-data-analysis" class="nav-link" data-scroll-target="#advanced-data-analysis"><span class="header-section-number">11.9</span> Advanced Data Analysis</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<h1 class="title"><span id="sec-assumption" class="quarto-section-identifier"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model diagnostics</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(performance)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">library</span>(parameters)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">library</span>(sandwich)</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">library</span>(car)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="fu">library</span>(openintro)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Set this up as a new R project, with organised folders.</p>
+</div>
+</div>
+<section id="model-assumptions" class="level2" data-number="11.1"><h2 data-number="11.1" class="anchored" data-anchor-id="model-assumptions">
+<span class="header-section-number">11.1</span> Model assumptions</h2>
+<p>Linear models are a cornerstone of statistical analysis, widely used across scientific disciplines to explore relationships between variables. Their popularity stems from their simplicity, interpretability, and versatility. However, the reliability of linear models depends on meeting several critical assumptions:</p>
+<ul>
+<li><p>Normality of residuals</p></li>
+<li><p>Homogeneity of variance</p></li>
+<li><p>Linearity of relationships</p></li>
+<li><p>Absence of influential outliers</p></li>
+<li><p>Low multicollinearity among predictors.</p></li>
+</ul>
+<p>When these assumptions are violated, the model’s conclusions can become misleading, leading to erroneous inferences and predictions. Diagnosing and addressing these violations is a crucial step in any linear modeling workflow. This chapter explores how to evaluate linear models, identify assumption violations, and apply appropriate corrective measures.</p>
+</section><section id="missing-variables" class="level2" data-number="11.2"><h2 data-number="11.2" class="anchored" data-anchor-id="missing-variables">
+<span class="header-section-number">11.2</span> Missing variables</h2>
+<p>When learning statistics, it’s important to remember that the first step in diagnosing poor model residuals is to ensure that your model includes the correct predictors and interaction terms. Residuals reflect the difference between the observed and predicted values, and large or patterned residuals often indicate that the model is missing key information.</p>
+<p>For example:</p>
+<p>If a predictor that strongly affects the outcome is omitted, the model may fail to capture important variation, leading to biased predictions. If an interaction between two predictors (e.g., temperature and humidity) exists but is not included, the model might not adequately describe the relationship between predictors and the outcome.</p>
+<section id="blood-pressure-data" class="level3" data-number="11.2.1"><h3 data-number="11.2.1" class="anchored" data-anchor-id="blood-pressure-data">
+<span class="header-section-number">11.2.1</span> Blood Pressure Data</h3>
+<p>This dataset includes key physiological and demographic variables — <strong>Blood Pressure, Weight, Age, Albumin (a blood protein level), Pulse, and Stress</strong>. These variables are commonly studied in health and biological research to understand how physiological and psychological factors interact.</p>
+<p>We are specifically interested in the effects of Weight and Blood albumin levels on blood pressure readings:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>bp_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(BP <span class="sc">~</span> Weight <span class="sc">+</span> Albumin, <span class="at">data =</span>bp)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">summary</span>(bp_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = BP ~ Weight + Albumin, data = bp)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-1.8932 -1.1961 -0.4061  1.0764  4.7524 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   5.6534     9.3925   0.602    0.555    
+Weight        1.0387     0.1927   5.392 4.87e-05 ***
+Albumin       5.8313     6.0627   0.962    0.350    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 1.744 on 17 degrees of freedom
+Multiple R-squared:  0.9077,    Adjusted R-squared:  0.8968 
+F-statistic: 83.54 on 2 and 17 DF,  p-value: 1.607e-09</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(bp_model,</span>
+<span id="cb4-2"><a href="#cb4-2"></a>                         <span class="at">detrend =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>What are the issues with these model residuals?</strong></p>
+<div id="radio_LXQCNIJUXT" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_LXQCNIJUXT" value="answer"><span>non-normality of residuals</span></label><label><input type="radio" autocomplete="off" name="radio_LXQCNIJUXT" value=""><span>Heteroscedasticity of variance</span></label><label><input type="radio" autocomplete="off" name="radio_LXQCNIJUXT" value="answer"><span>Non-linearity</span></label><label><input type="radio" autocomplete="off" name="radio_LXQCNIJUXT" value=""><span>Outliers</span></label>
+</div>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<p>There residuals do not fit the assumption of a normal distribution. In addition there are some non-linear patterns in the residuals that indicate this model may not be the best fit</p>
+</div>
+</section><section id="improving-the-blood-pressure-model" class="level3" data-number="11.2.2"><h3 data-number="11.2.2" class="anchored" data-anchor-id="improving-the-blood-pressure-model">
+<span class="header-section-number">11.2.2</span> Improving the blood pressure model</h3>
+<p>One of the simplest methods to improve a model can be to reevaluate whether important predictor variables have been left out. Can you add other predictors to the model and evaluate whether they improve the fit?</p>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>bp_model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(BP <span class="sc">~</span> Weight <span class="sc">+</span> Albumin <span class="sc">+</span> Age, <span class="at">data =</span>bp)</span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(bp_model2,</span>
+<span id="cb5-4"><a href="#cb5-4"></a>                         <span class="at">detrend =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>From this we can see that adding Age is an important covariate for our model. If we chose to include Pulse or Stress as well, that would be ok - they don’t make the model any worse - but they don’t appear to be particularly important.</p>
+<p>From this we can learn that before we attempt any radical data transformations, we should check whether our model would fit the data better with the inclusion of an omitted variable.</p>
+<p>When we do this, not only does our model fit the data better, but our understanding of the importance of our predictor variables changes as well. Previously we would have dismised Albumin levels as unimportant, now we see that when account for Age as a predictor of blood pressure, albumin levels are also a significant predictor.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">summary</span>(bp_model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = BP ~ Weight + Albumin + Age, data = bp)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.75810 -0.24872  0.01925  0.29509  0.63030 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -13.66725    2.64664  -5.164 9.42e-05 ***
+Weight        0.90582    0.04899  18.490 3.20e-12 ***
+Albumin       4.62739    1.52107   3.042  0.00776 ** 
+Age           0.70162    0.04396  15.961 3.00e-11 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.437 on 16 degrees of freedom
+Multiple R-squared:  0.9945,    Adjusted R-squared:  0.9935 
+F-statistic: 971.9 on 3 and 16 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+</div>
+</section></section><section id="data-transformations" class="level2" data-number="11.3"><h2 data-number="11.3" class="anchored" data-anchor-id="data-transformations">
+<span class="header-section-number">11.3</span> Data transformations</h2>
+<p>When building a linear model, we assume that the residuals (the differences between the observed and predicted values) are small, randomly distributed, and have constant variance. If this isn’t true, the model may not be capturing the relationship between the variables correctly.</p>
+<p>Transforming the dependent variable (the variable you’re trying to predict) can help fix these issues by changing its scale to better match the assumptions of the model. Here’s how:</p>
+<ul>
+<li><p>Non-normal residuals: If the dependent variable is heavily skewed (e.g., income or population size), transformations like taking the log(y) or square root (y) can make the distribution more symmetric.</p></li>
+<li><p>Stabilize Variance: If the residuals show increasing or decreasing spread (heteroscedasticity), transformations can help make the variance more constant.</p></li>
+<li><p>Linearise Relationships: Some relationships between the dependent and independent variables are non-linear. Transformations can make these relationships more linear, which linear models handle better.</p></li>
+</ul>
+<section id="example" class="level3" data-number="11.3.1"><h3 data-number="11.3.1" class="anchored" data-anchor-id="example">
+<span class="header-section-number">11.3.1</span> Example</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># Model and diagnostics</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>bacteria_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Growth_Rate <span class="sc">~</span> Temperature, <span class="at">data =</span> bacteria_growth_data)</span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="fu">check_model</span>(bacteria_model,</span>
+<span id="cb8-5"><a href="#cb8-5"></a>            <span class="at">detrend =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>** What are the issues with this model?**</p>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<p>If we look at the residuals we see there are obvious issues with linearity, and heteroscedasticity and normality of the residuals - all of these criteria <em>might</em> be improved with the right data transformation</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">check_normality</span>(bacteria_model)</span>
+<span id="cb9-2"><a href="#cb9-2"></a></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="fu">check_heteroscedasticity</span>(bacteria_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Non-normality of residuals detected (p &lt; .001).
+Warning: Heteroscedasticity (non-constant error variance) detected (p &lt; .001).</code></pre>
+</div>
+</div>
+</div>
+<section id="boxcox" class="level4" data-number="11.3.1.1"><h4 data-number="11.3.1.1" class="anchored" data-anchor-id="boxcox">
+<span class="header-section-number">11.3.1.1</span> Boxcox</h4>
+<p>Box-Cox transformations help identify the best transformation for the dependent variable (y) in a linear model to improve fit, stabilize variance, and address non-normality. The method tests a family of power transformations:</p>
+<p>How It Works: The Box-Cox method estimates the optimal value of 𝜆 (the power parameter) that makes the residuals closest to normality and stabilizes variance.</p>
+<p>Common transformations include:</p>
+<ul>
+<li><p>𝜆= 1: No transformation (original scale).</p></li>
+<li><p>λ=0: Log transformation.</p></li>
+<li><p>λ=0.5: Square root transformation.</p></li>
+</ul>
+<div class="{callout-note}">
+<p>Why Not Use 𝜆 Directly? The optimal 𝜆is often not a simple value like 0, 0.5, or 1. Using a fractional 𝜆(e.g., 0.27) creates a less interpretable transformation. Instead of applying the exact 𝜆 it’s better to choose a nearby, familiar transformation (e.g., log or square root) for ease of interpretation while still improving the model.</p>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>car<span class="sc">::</span><span class="fu">boxCox</span>(bacteria_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="table caption-top table-sm table-striped small" data-quarto-postprocess="true">
+<caption>Common Box-Cox Transformations</caption>
+<thead><tr class="header">
+<th style="text-align: right;" data-quarto-table-cell-role="th">lambda value</th>
+<th style="text-align: left;" data-quarto-table-cell-role="th">transformation</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">0.0</td>
+<td style="text-align: left;">log(Y)</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">0.5</td>
+<td style="text-align: left;">sqrt(Y)</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">1.0</td>
+<td style="text-align: left;">Y</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">2.0</td>
+<td style="text-align: left;">Y^1</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p><strong>What is the optimal transformation for our dependent variable according to the Box-Cox transformation</strong></p>
+<div id="radio_QETWFVVKKM" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_QETWFVVKKM" value=""><span>Identitity/No transformation</span></label><label><input type="radio" autocomplete="off" name="radio_QETWFVVKKM" value=""><span>Square root</span></label><label><input type="radio" autocomplete="off" name="radio_QETWFVVKKM" value="answer"><span>Logarithm</span></label><label><input type="radio" autocomplete="off" name="radio_QETWFVVKKM" value=""><span>Inverse</span></label>
+</div>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Model and diagnostics</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>log_bacteria_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(Growth_Rate) <span class="sc">~</span> Temperature, <span class="at">data =</span> bacteria_growth_data)</span>
+<span id="cb12-3"><a href="#cb12-3"></a></span>
+<span id="cb12-4"><a href="#cb12-4"></a><span class="fu">check_model</span>(log_bacteria_model,</span>
+<span id="cb12-5"><a href="#cb12-5"></a>            <span class="at">detrend =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">check_normality</span>(log_bacteria_model)</span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="fu">check_heteroscedasticity</span>(log_bacteria_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Non-normality of residuals detected (p &lt; .001).
+Warning: Heteroscedasticity (non-constant error variance) detected (p &lt; .001).</code></pre>
+</div>
+</div>
+</div>
+</section></section><section id="potential-drawbacks" class="level3" data-number="11.3.2"><h3 data-number="11.3.2" class="anchored" data-anchor-id="potential-drawbacks">
+<span class="header-section-number">11.3.2</span> Potential drawbacks</h3>
+<p>Transforming the dependent variable can help fix issues like skewed data or uneven residual patterns, but it can also create new challenges:</p>
+<ul>
+<li>Interpretability:</li>
+</ul>
+<p>After a transformation, the relationship between predictors and the dependent variable becomes harder to interpret. For example, if you log-transform the dependent variable, the model predicts the logarithm of y, not y itself. This makes it less intuitive to explain results on the original scale.</p>
+<ul>
+<li>Fixing One Issue, Causing Another:</li>
+</ul>
+<p>While a transformation might solve one problem (e.g., skewed data), it could create new issues. For instance, a log transformation can stabilize variance but may introduce difficulties if the data contains zero or negative values.</p>
+<p>In short, while transformations are useful, they require careful consideration to avoid trading one problem for another or making the results harder to interpret.</p>
+</section></section><section id="heteroscedasticity" class="level2" data-number="11.4"><h2 data-number="11.4" class="anchored" data-anchor-id="heteroscedasticity">
+<span class="header-section-number">11.4</span> Heteroscedasticity</h2>
+<p>Heteroscedasticity occurs when the residuals (errors) of a linear model have non-constant variance across the range of the predictors. Even if the data appears normal and linear, heteroscedasticity can still be a problem.</p>
+<p>Imagine a situation where:</p>
+<ul>
+<li><p>Residuals are larger (more spread out) for higher values of a predictor, or smaller for lower values.</p></li>
+<li><p>Although the relationship between the predictors and the response variable is linear, the variance of the errors changes systematically.</p></li>
+</ul>
+<section id="why-does-this-matter" class="level4" data-number="11.4.0.1"><h4 data-number="11.4.0.1" class="anchored" data-anchor-id="why-does-this-matter">
+<span class="header-section-number">11.4.0.1</span> Why Does This Matter?</h4>
+<p>Misleading Inference: Heteroscedasticity doesn’t bias the coefficients of the model, but it affects the calculation of standard errors, leading to incorrect p-values and confidence intervals.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># Model and diagnostics</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>plant_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(plant_growth <span class="sc">~</span> sunlight <span class="sc">+</span> water, <span class="at">data =</span> plant_data)</span>
+<span id="cb15-3"><a href="#cb15-3"></a></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="fu">check_model</span>(plant_model,</span>
+<span id="cb15-5"><a href="#cb15-5"></a>            <span class="at">detrend =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">check_heteroscedasticity</span>(plant_model)</span>
+<span id="cb16-2"><a href="#cb16-2"></a><span class="fu">check_normality</span>(plant_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Heteroscedasticity (non-constant error variance) detected (p &lt; .001).
+OK: residuals appear as normally distributed (p = 0.199).</code></pre>
+</div>
+</div>
+<p><strong>What are the issues with these model residuals?</strong></p>
+<div id="radio_PMSGDPDHMW" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_PMSGDPDHMW" value=""><span>non-normality of residuals</span></label><label><input type="radio" autocomplete="off" name="radio_PMSGDPDHMW" value="answer"><span>Heteroscedasticity of variance</span></label><label><input type="radio" autocomplete="off" name="radio_PMSGDPDHMW" value=""><span>Non-linearity</span></label><label><input type="radio" autocomplete="off" name="radio_PMSGDPDHMW" value=""><span>Outliers</span></label>
+</div>
+</section><section id="transformation" class="level4" data-number="11.4.0.2"><h4 data-number="11.4.0.2" class="anchored" data-anchor-id="transformation">
+<span class="header-section-number">11.4.0.2</span> Transformation</h4>
+<p>Unlike the previous example we have heteroscedasticity of variance, without non-linearity or non-normal residuals. So what happens when we attempt a dependent variable transformation?</p>
+<p>First let’s see what a box-cox transformation suggests?</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>car<span class="sc">::</span><span class="fu">boxCox</span>(plant_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Why does the Box-Cox transformation throw an error when the dependent variable contains non-positive values (zero or negative)?</strong></p>
+<div id="radio_IBZGCYHJZU" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_IBZGCYHJZU" value="answer"><span>The transformation involves logarithms, which are undefined for non-positive values.</span></label><label><input type="radio" autocomplete="off" name="radio_IBZGCYHJZU" value=""><span>The dependent variable must be normally distributed before applying Box-Cox.</span></label><label><input type="radio" autocomplete="off" name="radio_IBZGCYHJZU" value=""><span>Box-Cox transformations cannot handle decimals or fractions in the dependent variable.</span></label><label><input type="radio" autocomplete="off" name="radio_IBZGCYHJZU" value=""><span>Non-positive values violate the assumption of homoscedasticity required for Box-Cox.</span></label>
+</div>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<p>If we add a <strong>constant</strong> to the dependent variable (enough to make all values positive), the relationship between dependent and independent variables is preserved but the all values are now non-negative.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>plant_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(plant_growth<span class="sc">+</span><span class="dv">1</span> <span class="sc">~</span> sunlight <span class="sc">+</span> water, <span class="at">data =</span> plant_data)</span>
+<span id="cb19-2"><a href="#cb19-2"></a></span>
+<span id="cb19-3"><a href="#cb19-3"></a>car<span class="sc">::</span><span class="fu">boxCox</span>(plant_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-23-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This indicates a square root transformation could be applied to the model</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>sqrt_plant_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">sqrt</span>(plant_growth<span class="sc">+</span><span class="dv">1</span>) <span class="sc">~</span> sunlight <span class="sc">+</span> water, <span class="at">data =</span> plant_data)</span>
+<span id="cb20-2"><a href="#cb20-2"></a></span>
+<span id="cb20-3"><a href="#cb20-3"></a><span class="fu">check_model</span>(sqrt_plant_model,</span>
+<span id="cb20-4"><a href="#cb20-4"></a>            <span class="at">detrend =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">check_heteroscedasticity</span>(sqrt_plant_model)</span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="fu">check_normality</span>(sqrt_plant_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Warning: Heteroscedasticity (non-constant error variance) detected (p &lt; .001).
+Warning: Non-normality of residuals detected (p = 0.002).</code></pre>
+</div>
+</div>
+<p>Despite the box-cox predictions, we should be able to see that transforming the dependent variable has actually made this worse.</p>
+<p>Not totally unexpected, a data transformation changes the relationship between the predictor variables and the mean/ regression line as well as affecting variance.</p>
+</div>
+</section><section id="robust-errors" class="level3" data-number="11.4.1"><h3 data-number="11.4.1" class="anchored" data-anchor-id="robust-errors">
+<span class="header-section-number">11.4.1</span> Robust errors</h3>
+<p>When the only issue with a model is heteroscedasticity of variance, the relationship between predictors and the dependent variable can be good, but our standard errors, confidence intervals and p-values will be unreliable.</p>
+<p>In a linear model, <strong>robust errors</strong> are adjustments to the standard errors of the model’s coefficients that make them more reliable when certain assumptions, like constant variance of residuals (homoscedasticity), are violated (giving heteroscedasticity).</p>
+<p>Imagine you’re analysing data where some observations have more variability than others. Ordinary linear models assume all residuals have the same variance, so they might underestimate (or overestimate) the uncertainty of your coefficients. Robust errors correct this by accounting for the uneven variance, giving you more reliable p-values and confidence intervals.</p>
+<p>In R we can use the package <span class="citation" data-cites="R-sandwich">Zeileis &amp; Lumley (<a href="references.html#ref-R-sandwich" role="doc-biblioref">2024</a>)</span> to help provide robust errors:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">coeftest</span>(plant_model, </span>
+<span id="cb23-2"><a href="#cb23-2"></a>         <span class="at">vcov =</span> <span class="fu">vcovHC</span>(plant_model, <span class="at">type =</span> <span class="st">"HC1"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+t test of coefficients:
+
+             Estimate Std. Error t value  Pr(&gt;|t|)    
+(Intercept) 31.423746   6.804327  4.6182 1.189e-05 ***
+sunlight     2.824254   0.919202  3.0725  0.002755 ** 
+water        0.057812   0.398499  0.1451  0.884952    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<div class="{callout-warning}">
+<p>The emmeans package doesn’t support the sandwich model outputs directy, but we can supply the same adjustments when running the emmeans function</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># Get robust covariance matrix</span></span>
+<span id="cb25-2"><a href="#cb25-2"></a>robust_vcov <span class="ot">&lt;-</span> <span class="fu">vcovHC</span>(plant_model, <span class="at">type =</span> <span class="st">"HC1"</span>)</span>
+<span id="cb25-3"><a href="#cb25-3"></a></span>
+<span id="cb25-4"><a href="#cb25-4"></a><span class="co"># Use emmeans with robust covariance</span></span>
+<span id="cb25-5"><a href="#cb25-5"></a><span class="co"># specify lists to get predictions for continuous variables</span></span>
+<span id="cb25-6"><a href="#cb25-6"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(plant_model, <span class="at">specs =</span> <span class="sc">~</span> sunlight <span class="sc">+</span> water, </span>
+<span id="cb25-7"><a href="#cb25-7"></a>                 <span class="at">at =</span> <span class="fu">list</span>(<span class="at">sunlight =</span> <span class="fu">c</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>),</span>
+<span id="cb25-8"><a href="#cb25-8"></a>                           <span class="at">water =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">20</span>),</span>
+<span id="cb25-9"><a href="#cb25-9"></a>                 <span class="at">vcov. =</span> robust_vcov)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section></section><section id="bootstrapping" class="level2" data-number="11.5"><h2 data-number="11.5" class="anchored" data-anchor-id="bootstrapping">
+<span class="header-section-number">11.5</span> Bootstrapping</h2>
+<p>Bootstrapping is a statistical technique that uses resampling to estimate the variability of a model’s predictions or parameters, such as coefficients and standard errors. Unlike traditional methods that rely on strict assumptions about the data (e.g., normality or constant variance), bootstrapping works by repeatedly sampling from the observed data or residuals to create many simulated datasets we create many versions of what the data “could have looked like.”</p>
+<p>This process reflects the natural variability in the data, giving us a realistic measure of uncertainty.</p>
+<p>By fitting the model to these resampled datasets, we can calculate how often our estimates and standard errors change - if they are generally constant - we can have confidence they are useful even when they may violate some of the assumptions of the standard linear model.</p>
+<section id="things-bootstrapping-can-help-with" class="level3" data-number="11.5.1"><h3 data-number="11.5.1" class="anchored" data-anchor-id="things-bootstrapping-can-help-with">
+<span class="header-section-number">11.5.1</span> Things bootstrapping can help with:</h3>
+<ol type="1">
+<li>
+<p>Non-Normality of Residuals</p>
+<ul>
+<li><p>Problem: Linear models assume that residuals (errors) are normally distributed. If this assumption is violated (e.g., due to skewed data or outliers), the standard errors and confidence intervals based on the normality assumption may be invalid.</p></li>
+<li><p>How Bootstrapping Helps: Bootstrapping does not rely on the residuals being normally distributed. Instead, it estimates variability directly by resampling from the data, providing robust confidence intervals and standard errors even when residuals are non-normal.</p></li>
+</ul>
+</li>
+<li>
+<p>Heteroscedasticity (Non-Constant Variance of Residuals)</p>
+<ul>
+<li><p>Problem: Linear models assume that residuals have constant variance (homoscedasticity). If the variance of residuals changes across levels of a predictor, standard errors can be underestimated or overestimated.</p></li>
+<li><p>How Bootstrapping Helps: Bootstrapping accounts for heteroscedasticity by resampling residuals with their original variability, providing standard errors and confidence intervals that reflect the true spread of the data.</p></li>
+</ul>
+</li>
+<li>
+<p>Small Sample Sizes</p>
+<ul>
+<li><p>Problem: Small datasets make it hard to rely on traditional statistical methods, as they often assume large sample sizes for accurate standard errors and confidence intervals.</p></li>
+<li><p>How Bootstrapping Helps: By repeatedly resampling the available data, bootstrapping effectively “amplifies” the sample size, allowing for more stable estimates of variability even with small datasets.</p></li>
+</ul>
+</li>
+<li>
+<p>Outliers or Influential Points</p>
+<ul>
+<li><p>Problem: Outliers or influential data points can skew the model fit, affecting estimates and residual patterns.</p></li>
+<li><p>How Bootstrapping Helps: Bootstrapping resamples the data, ensuring that results are not overly dependent on specific observations. It gives a more robust estimate of variability that accounts for the influence of outliers.</p></li>
+</ul>
+</li>
+</ol></section><section id="limitations-of-bootstrapping" class="level3" data-number="11.5.2"><h3 data-number="11.5.2" class="anchored" data-anchor-id="limitations-of-bootstrapping">
+<span class="header-section-number">11.5.2</span> Limitations of Bootstrapping</h3>
+<p>While bootstrapping is powerful, it does not address all issues, it cannot help with:</p>
+<ul>
+<li><p>Multicollinearity</p></li>
+<li><p>Missing Key Predictors: If an important predictor is omitted, bootstrapping will not fix the resulting bias in the model.</p></li>
+<li><p>Non-linearity: Bootstrapping does not correct for non-linear relationships; re-specifying the model is necessary.</p></li>
+</ul>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Bootstrapping can be very powerful, but it doesn’t fix everything (see above).</p>
+<p>In addition bootstrapping does not teach us about the real patterns of variance or distribution of residuals in the data. Instead, it works by resampling the observed residuals (or data) and assumes that these resampled patterns are representative of the true variability.</p>
+<p>Finally it is computationally intensive as the data is resampled and modelled many times</p>
+</div>
+</div>
+<p>We can fit bootstrapped parameters using the <span class="citation" data-cites="R-parameters">Lüdecke et al. (<a href="references.html#ref-R-parameters" role="doc-biblioref">2024</a>)</span> package:</p>
+<ul>
+<li><p>We usually set the iterations argument to a minimum of 1000 iterations, it may need more. You have to bootstrap until the estimates are <em>stable</em> (appear not to change as iterations increase)</p></li>
+<li><p>If the estimates change only negligibly (e.g., within 1–2%), you have likely run enough iterations.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a>parameters<span class="sc">::</span><span class="fu">bootstrap_parameters</span>(plant_model, <span class="at">iterations =</span> <span class="dv">1000</span>)</span>
+<span id="cb26-2"><a href="#cb26-2"></a></span>
+<span id="cb26-3"><a href="#cb26-3"></a><span class="co"># parameters::bootstrap_parameters(plant_model, iterations = 3000)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: left;">Parameter</th>
+<th style="text-align: right;">Coefficient</th>
+<th style="text-align: right;">CI_low</th>
+<th style="text-align: right;">CI_high</th>
+<th style="text-align: right;">p</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">31.9361207</td>
+<td style="text-align: right;">17.9358663</td>
+<td style="text-align: right;">44.5906445</td>
+<td style="text-align: right;">0.000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">sunlight</td>
+<td style="text-align: right;">2.7980277</td>
+<td style="text-align: right;">0.9572954</td>
+<td style="text-align: right;">4.6363813</td>
+<td style="text-align: right;">0.002</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">water</td>
+<td style="text-align: right;">0.0415434</td>
+<td style="text-align: right;">-0.7876087</td>
+<td style="text-align: right;">0.8271346</td>
+<td style="text-align: right;">0.938</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>Because bootstrapping is inherently random, you can get slightly different results each time it is run, for that reason we often use the <code><a href="https://rdrr.io/r/base/Random.html">set.seed()</a></code> function - this function is used to create reproducible results when writing code that involves random number generation.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb27-2"><a href="#cb27-2"></a></span>
+<span id="cb27-3"><a href="#cb27-3"></a>times <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">500</span>,<span class="dv">1000</span>,<span class="dv">3000</span>,<span class="dv">5000</span>, <span class="dv">10000</span>)</span>
+<span id="cb27-4"><a href="#cb27-4"></a></span>
+<span id="cb27-5"><a href="#cb27-5"></a><span class="co"># This code iterates the bootstrapping over increasing iterations</span></span>
+<span id="cb27-6"><a href="#cb27-6"></a>times <span class="sc">|&gt;</span> </span>
+<span id="cb27-7"><a href="#cb27-7"></a>  <span class="fu">map</span>(<span class="sc">~</span> <span class="fu">bootstrap_parameters</span>(<span class="at">model =</span> plant_model, <span class="at">iterations =</span> .x))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>[[1]]
+# Fixed Effects
+
+Parameter   | Coefficient |         95% CI |      p
+---------------------------------------------------
+(Intercept) |       47.28 | [33.13, 59.40] | &lt; .001
+sunlight    |        0.02 | [-1.68,  1.80] | 0.980 
+water       |       -0.02 | [-0.81,  0.90] | 0.980 
+
+[[2]]
+# Fixed Effects
+
+Parameter   | Coefficient |         95% CI |      p
+---------------------------------------------------
+(Intercept) |       47.87 | [33.49, 62.12] | &lt; .001
+sunlight    |   -7.41e-04 | [-1.74,  1.66] | &gt; .999
+water       |       -0.04 | [-0.87,  0.95] | 0.938 
+
+[[3]]
+# Fixed Effects
+
+Parameter   | Coefficient |         95% CI |      p
+---------------------------------------------------
+(Intercept) |       47.71 | [32.81, 61.19] | &lt; .001
+sunlight    |       -0.02 | [-1.74,  1.67] | 0.979 
+water       |   -3.32e-03 | [-0.86,  0.91] | 0.994 
+
+[[4]]
+# Fixed Effects
+
+Parameter   | Coefficient |         95% CI |      p
+---------------------------------------------------
+(Intercept) |       47.70 | [33.16, 61.24] | &lt; .001
+sunlight    |   -6.85e-03 | [-1.67,  1.71] | 0.995 
+water       |   -1.45e-03 | [-0.86,  0.87] | 0.998 
+
+[[5]]
+# Fixed Effects
+
+Parameter   | Coefficient |         95% CI |      p
+---------------------------------------------------
+(Intercept) |       47.63 | [33.88, 61.09] | &lt; .001
+sunlight    |       -0.01 | [-1.70,  1.69] | 0.988 
+water       |   -7.96e-03 | [-0.86,  0.86] | 0.986 
+</code></pre>
+</section></section><section id="non-linearity" class="level2" data-number="11.6"><h2 data-number="11.6" class="anchored" data-anchor-id="non-linearity">
+<span class="header-section-number">11.6</span> Non-linearity</h2>
+<p>In linear models, we assume that the relationship between the predictors (independent variables) and the response (dependent variable) is linear—that is, a change in a predictor is associated with a proportional change in the response. However, real-world data often deviate from this assumption, and relationships can be non-linear. For example, the effect of increasing temperature on plant growth might plateau after an optimal range, or the impact of exercise on health might diminish after a certain intensity.</p>
+<p>Let’s revisit the janka data from our introductory regression chapter</p>
+<p>We originally fitted a simple regression model of wood density as a predictor of timber hardness:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a>janka_ls1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(hardness <span class="sc">~</span> dens, <span class="at">data =</span> janka) </span>
+<span id="cb29-2"><a href="#cb29-2"></a></span>
+<span id="cb29-3"><a href="#cb29-3"></a><span class="fu">summary</span>(janka_ls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = hardness ~ dens, data = janka)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-338.40  -96.98  -15.71   92.71  625.06 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) -1160.500    108.580  -10.69 2.07e-12 ***
+dens           57.507      2.279   25.24  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 183.1 on 34 degrees of freedom
+Multiple R-squared:  0.9493,    Adjusted R-squared:  0.9478 
+F-statistic:   637 on 1 and 34 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>If we inspect this model we can see there are issues with non-linearity, heteroscedasticity and non-normality:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(janka_ls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-31-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="transformation-1" class="level3" data-number="11.6.1"><h3 data-number="11.6.1" class="anchored" data-anchor-id="transformation-1">
+<span class="header-section-number">11.6.1</span> Transformation</h3>
+<p><strong>Which model does a Boxcox transformation suggest is most appropriate?</strong></p>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1"></a>car<span class="sc">::</span><span class="fu">boxCox</span>(janka_ls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-32-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="radio_WAOWYIRGMJ" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_WAOWYIRGMJ" value=""><span>Identity</span></label><label><input type="radio" autocomplete="off" name="radio_WAOWYIRGMJ" value=""><span>square root</span></label><label><input type="radio" autocomplete="off" name="radio_WAOWYIRGMJ" value="answer"><span>log</span></label><label><input type="radio" autocomplete="off" name="radio_WAOWYIRGMJ" value=""><span>inverse</span></label>
+</div>
+<p>We can fit both a sqrt and log transformed model and compare them:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a>janka_sqrt <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">sqrt</span>(hardness) <span class="sc">~</span> dens, <span class="at">data =</span> janka)</span>
+<span id="cb33-2"><a href="#cb33-2"></a></span>
+<span id="cb33-3"><a href="#cb33-3"></a>janka_log <span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(hardness) <span class="sc">~</span> dens, <span class="at">data =</span> janka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(janka_sqrt)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-35-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This model does not significantly improve the normality or heterogeneity of the residuals, but does improve linearity</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(janka_log)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This model does improve normality and heterogeneity, but introduces an overcorrection on linearity</p>
+</section><section id="polynomials" class="level3" data-number="11.6.2"><h3 data-number="11.6.2" class="anchored" data-anchor-id="polynomials">
+<span class="header-section-number">11.6.2</span> Polynomials</h3>
+<p>Polynomials are mathematical expressions that allow us to model non-linear relationships between predictors and the response variable in a linear model. By including polynomial terms (e.g., x^2, x^3), we can create more flexible models to capture curvature in the data.</p>
+<section id="what-does-polyx-2-do" class="level4" data-number="11.6.2.1"><h4 data-number="11.6.2.1" class="anchored" data-anchor-id="what-does-polyx-2-do">
+<span class="header-section-number">11.6.2.1</span> What Does <code>poly(x, 2)</code> Do?</h4>
+<ul>
+<li>
+<code>poly(x, 2)</code> creates a <strong>second-degree polynomial</strong> (quadratic).</li>
+<li>It models the relationship as: [ y = _0 + _1 x + _2 x^2 + ]</li>
+<li>This adds curvature to the model, allowing it to capture a U-shape or an inverted U-shape.</li>
+</ul>
+<section id="example-1" class="level5" data-number="11.6.2.1.1"><h5 data-number="11.6.2.1.1" class="anchored" data-anchor-id="example-1">
+<span class="header-section-number">11.6.2.1.1</span> Example:</h5>
+<p>If the data looks like a parabola (e.g., plant growth increasing with temperature up to a point, then declining), a second-degree polynomial can model this.</p>
+</section></section><section id="what-does-polyx-3-do" class="level4" data-number="11.6.2.2"><h4 data-number="11.6.2.2" class="anchored" data-anchor-id="what-does-polyx-3-do">
+<span class="header-section-number">11.6.2.2</span> What Does <code>poly(x, 3)</code> Do?</h4>
+<ul>
+<li><p><code>poly(x, 3)</code> creates a <strong>third-degree polynomial</strong> (cubic).</p></li>
+<li><p>It models the relationship as: [ y = _0 + _1 x + _2 x^2 + _3 x^3 + ]</p></li>
+<li><p>This allows for more flexibility in the curve, capturing an S-shaped pattern or two bends in the data.</p></li>
+</ul>
+<section id="example-2" class="level5" data-number="11.6.2.2.1"><h5 data-number="11.6.2.2.1" class="anchored" data-anchor-id="example-2">
+<span class="header-section-number">11.6.2.2.1</span> Example:</h5>
+<p>If the relationship involves multiple changes in direction (e.g., population growth speeding up, then slowing down, and finally stabilizing), a cubic polynomial can model this.</p>
+</section></section><section id="janka-data" class="level4" data-number="11.6.2.3"><h4 data-number="11.6.2.3" class="anchored" data-anchor-id="janka-data">
+<span class="header-section-number">11.6.2.3</span> Janka data</h4>
+<p>In our example the slight curvature in the model could be addressed with a quadratic term:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a>janka_poly<span class="ot">&lt;-</span> <span class="fu">lm</span>(hardness <span class="sc">~</span> <span class="fu">poly</span>(dens,<span class="dv">2</span>), <span class="at">data =</span> janka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>But we can see this does not address the issues of heteroscedasticity or non-normality of residuals.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(janka_poly)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-38-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We know that the log transformed dependent variable did address this, but introduced unwarranted curvature - we could address this with a polynomial:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>janka_polylog<span class="ot">&lt;-</span> <span class="fu">lm</span>(<span class="fu">log</span>(hardness) <span class="sc">~</span> <span class="fu">poly</span>(dens,<span class="dv">2</span>), <span class="at">data =</span> janka)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(janka_polylog)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-40-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This produces a much better fitting model - but what about interpretation?</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a><span class="fu">summary</span>(janka_polylog)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = log(hardness) ~ poly(dens, 2), data = janka)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.22331 -0.05708 -0.01104  0.07500  0.18871 
+
+Coefficients:
+               Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)      7.1362     0.0168 424.896  &lt; 2e-16 ***
+poly(dens, 2)1   3.3862     0.1008  33.603  &lt; 2e-16 ***
+poly(dens, 2)2  -0.5395     0.1008  -5.354 6.49e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1008 on 33 degrees of freedom
+Multiple R-squared:  0.9723,    Adjusted R-squared:  0.9706 
+F-statistic: 578.9 on 2 and 33 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p>We now have an excellent fitting model - but this has come at the cost of interpretation.</p>
+<ul>
+<li><p>The coefficients are not directly interpretable</p></li>
+<li><p>The relationship with the dependent is on a log scale</p></li>
+</ul></section><section id="polynomial-summary" class="level4" data-number="11.6.2.4"><h4 data-number="11.6.2.4" class="anchored" data-anchor-id="polynomial-summary">
+<span class="header-section-number">11.6.2.4</span> Polynomial summary</h4>
+<p>Polynomials can help improve the fit of a model when there is a non-linear relationship. When you do this focus on the overall model fit and visualizations, as the coefficients from <code><a href="https://rdrr.io/r/stats/poly.html">poly()</a></code> are not directly tied to raw powers of x. Because of the lack of coefficient interpretation use this with <em>caution</em></p>
+<ul>
+<li><p>poly(x, 2) (Quadratic): Adds curvature, useful for simple bends like U-shapes.</p></li>
+<li><p>poly(x, 3) (Cubic): Adds more flexibility, useful for S-shaped or complex curves.</p></li>
+</ul>
+<p>In our advanced modules we will look at <strong>Generalised Linear Models</strong> which retain the benefits of modelling non-linear relationships with better interpretability</p>
+</section></section></section><section id="multicollinearity" class="level2" data-number="11.7"><h2 data-number="11.7" class="anchored" data-anchor-id="multicollinearity">
+<span class="header-section-number">11.7</span> Multicollinearity</h2>
+<p>Multicollinearity occurs when predictor variables in a linear model are highly correlated, which can make it hard to isolate the effect of individual predictors.</p>
+<p>If the primary aim of our model is <strong>prediction</strong> we do not need to be concerned about multicollinearity as our model will predict new data well</p>
+<p>If our aim is to identify <strong>significant predictors</strong> then multicollinearity makes it difficult to produce accurate estimates and standard errors:</p>
+<p>However, not all types of multicollinearity need to be a concern.</p>
+<section id="structural-multicollinearity" class="level3" data-number="11.7.1"><h3 data-number="11.7.1" class="anchored" data-anchor-id="structural-multicollinearity">
+<span class="header-section-number">11.7.1</span> Structural Multicollinearity</h3>
+<ul>
+<li><p><strong>What it is</strong>: This happens when we create new variables (e.g., interaction terms or quadratic terms) that are mathematically related to the original variable naturally introduces multicollinearity</p></li>
+<li><p><strong>Do we need to worry?</strong>: No, structural multicollinearity is expected and doesn’t affect the validity of the model. It can often be reduced by mean-centering or standardising the variables, but this is often unnecessary.</p></li>
+</ul></section><section id="predictor-multicollinearity" class="level3" data-number="11.7.2"><h3 data-number="11.7.2" class="anchored" data-anchor-id="predictor-multicollinearity">
+<span class="header-section-number">11.7.2</span> Predictor Multicollinearity</h3>
+<ul>
+<li><p><strong>What it is</strong>: This occurs when two or more predictors are strongly correlated in the dataset (e.g., temperature and humidity in an environmental study). This can inflate standard errors and make it difficult to interpret individual effects.</p></li>
+<li><p><strong>Do we need to worry?</strong>: Sometimes. If your goal is prediction, multicollinearity is less of an issue because the model’s overall performance is what matters. However, if you’re interested in understanding the effect of individual predictors, you may need to address it.</p></li>
+</ul>
+<p>Predictor Multicollinearity can be addressed using simple techniques like variable selection, where we selectively remove terms from the model, this can address inflated standard errors, but requires careful thought over removing terms. More advanced technqiues include principal components analysis (PCA), or regularization (e.g., ridge regression).</p>
+</section><section id="example-3" class="level3" data-number="11.7.3"><h3 data-number="11.7.3" class="anchored" data-anchor-id="example-3">
+<span class="header-section-number">11.7.3</span> Example</h3>
+<p>The Mammals dataset includes information about various mammal species, focusing on their physical characteristics and ecoogicial traits.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1"></a><span class="fu">library</span>(openintro)</span>
+<span id="cb42-2"><a href="#cb42-2"></a></span>
+<span id="cb42-3"><a href="#cb42-3"></a><span class="fu">data</span>(<span class="st">"mammals"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We will look at the follwing traits:</p>
+<ol type="1">
+<li>
+<p><strong>Physiological Variables</strong>:</p>
+<ul>
+<li>
+<code>total_sleep</code>: The average number of hours a species sleeps per day.</li>
+<li>
+<code>life_span</code>: The average lifespan of the species in years.</li>
+<li>
+<code>gestation</code>: The average gestation period (pregnancy duration) in days.</li>
+<li>
+<code>brain_wt</code>: Brain weight of the species in kilograms.</li>
+<li>
+<code>body_wt</code>: Body weight of the species in kilograms.</li>
+</ul>
+</li>
+<li>
+<p><strong>Ecological and Behavioral Variables</strong>:</p>
+<ul>
+<li>
+<code>predation</code>: A categorical variable indicating the species’ risk of predation (e.g., low, medium, high).</li>
+<li>
+<code>exposure</code>: A categorical variable describing how exposed the species is while sleeping.</li>
+<li>
+<code>danger</code>: A categorical variable summarizing the overall danger level to the species.</li>
+</ul>
+</li>
+</ol>
+<section id="correlations" class="level4" data-number="11.7.3.1"><h4 data-number="11.7.3.1" class="anchored" data-anchor-id="correlations">
+<span class="header-section-number">11.7.3.1</span> Correlations</h4>
+<p>We can get a good idea of which variables might produce multicollinearity by first seeing which are highly correlated:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a>mammals <span class="sc">|&gt;</span> </span>
+<span id="cb43-2"><a href="#cb43-2"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(total_sleep, life_span, gestation, brain_wt,</span>
+<span id="cb43-3"><a href="#cb43-3"></a>               body_wt, predation, exposure, danger) <span class="sc">|&gt;</span> </span>
+<span id="cb43-4"><a href="#cb43-4"></a>  GGally<span class="sc">::</span><span class="fu">ggpairs</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-43-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Which sets of variables have the highest correlations?</strong></p>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<ul>
+<li><p>Danger and predation</p></li>
+<li><p>Brain weight and Body weight</p></li>
+</ul>
+</div>
+</section></section><section id="fitting-a-model" class="level3" data-number="11.7.4"><h3 data-number="11.7.4" class="anchored" data-anchor-id="fitting-a-model">
+<span class="header-section-number">11.7.4</span> Fitting a model</h3>
+<p>I am fitting a model to establish the behavioural and physiological characteristics that predict sleep:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a>mammal_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_sleep <span class="sc">~</span> life_span <span class="sc">+</span> gestation <span class="sc">+</span> brain_wt <span class="sc">+</span></span>
+<span id="cb44-2"><a href="#cb44-2"></a>               body_wt <span class="sc">+</span> predation <span class="sc">+</span> exposure <span class="sc">+</span> danger, <span class="at">data=</span>mammals)</span>
+<span id="cb44-3"><a href="#cb44-3"></a></span>
+<span id="cb44-4"><a href="#cb44-4"></a><span class="fu">summary</span>(mammal_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = total_sleep ~ life_span + gestation + brain_wt + 
+    body_wt + predation + exposure + danger, data = mammals)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-5.8931 -1.9556  0.0842  1.4620  6.5572 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 16.603699   1.078176  15.400  &lt; 2e-16 ***
+life_span   -0.039830   0.035366  -1.126 0.266323    
+gestation   -0.016465   0.006214  -2.650 0.011230 *  
+brain_wt     0.002319   0.001614   1.437 0.157923    
+body_wt     -0.001601   0.001464  -1.094 0.280039    
+predation    2.393361   0.971101   2.465 0.017789 *  
+exposure     0.632923   0.558573   1.133 0.263448    
+danger      -4.508571   1.186118  -3.801 0.000449 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.846 on 43 degrees of freedom
+  (11 observations deleted due to missingness)
+Multiple R-squared:  0.682, Adjusted R-squared:  0.6302 
+F-statistic: 13.17 on 7 and 43 DF,  p-value: 6.364e-09</code></pre>
+</div>
+</div>
+<p>The model summary suggests that “danger” and “predation” are the most likely predictors of sleep duration</p>
+<p>The model residual checks indicate this is an excellent model fit but with high multicollinearity:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(mammal_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-45-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="correcting-for-multicollinearity" class="level3" data-number="11.7.5"><h3 data-number="11.7.5" class="anchored" data-anchor-id="correcting-for-multicollinearity">
+<span class="header-section-number">11.7.5</span> Correcting for multicollinearity</h3>
+<p>In this instance we have no structural multicollinearity and must conclude there is genuine multicollinearity between our measured variables.</p>
+<p>There are advanced techniques for dealing with predictor multicollinearity, but the simplest method is to identify the variables causing mulitcollinearity and use your biological expertise to determine which variables can be removed.</p>
+<p>In this instance I should remove one of predation/danger and one of brain_wt/body_wt.</p>
+<p>I have decided that overall danger and brain_wt are the most important variables so will retain these:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>mammal_model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(total_sleep <span class="sc">~</span> life_span <span class="sc">+</span> gestation <span class="sc">+</span> brain_wt <span class="sc">+</span></span>
+<span id="cb47-2"><a href="#cb47-2"></a>                   danger <span class="sc">+</span> exposure, <span class="at">data=</span>mammals)</span>
+<span id="cb47-3"><a href="#cb47-3"></a></span>
+<span id="cb47-4"><a href="#cb47-4"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(mammal_model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-46-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>I can see that my multicollinearity has gone AND my model is still a good fit.</p>
+<p>Importantly if I compare the summaries of my old and new models, I can see that my <strong>adjusted R squared</strong> has only dropped slightly and that gestation period now appears to be a significant predictor of sleep duration - previously this relationship was masked!</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1"></a><span class="fu">summary</span>(mammal_model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = total_sleep ~ life_span + gestation + brain_wt + 
+    danger + exposure, data = mammals)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-6.637 -2.265 -0.070  2.268  5.700 
+
+Coefficients:
+              Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept) 17.4645151  1.0083134  17.321  &lt; 2e-16 ***
+life_span   -0.0334366  0.0299688  -1.116  0.27047    
+gestation   -0.0188417  0.0064347  -2.928  0.00533 ** 
+brain_wt     0.0008579  0.0006901   1.243  0.22029    
+danger      -1.7697634  0.5100262  -3.470  0.00116 ** 
+exposure     0.2499213  0.5543300   0.451  0.65426    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 2.989 on 45 degrees of freedom
+  (11 observations deleted due to missingness)
+Multiple R-squared:  0.6328,    Adjusted R-squared:  0.592 
+F-statistic: 15.51 on 5 and 45 DF,  p-value: 7.363e-09</code></pre>
+</div>
+</div>
+<p>When reporting the effects of multicollinearity it is important to:</p>
+<ul>
+<li><p>Report variables that were removed for reasons of multicollinearity</p></li>
+<li><p>Compare the two models for fit</p></li>
+</ul></section></section><section id="outliers" class="level2" data-number="11.8"><h2 data-number="11.8" class="anchored" data-anchor-id="outliers">
+<span class="header-section-number">11.8</span> Outliers</h2>
+<p>Outliers have been left to last because they should be dealt with last. Outliers can be the result of a poor model fit, non-linearity or non-normal residuals. As such they may be resolved when attempting to fix other issues with a model.</p>
+<p>Cope’s rule refers to the tendency of animal body sizes to increase in time with increasing age of the lineage. De Souza and Santucci (2014) tested this using a set of data from the dinosaur clade called the Titanosaurs. This is a group of sauropods that included some of the largest animals known in the history of the Earth (e.g.&nbsp;Argentinosaurus) and which were widespread and diverse during the Cretaceous period. Most Titanosaurs are known from only a few bones, and the massive limb bones are particularly common: In this dataset we wish to see whether there is a significant relationship between two sets of bones, so that if we only have access to the Humerus we can predict the size of the Femur and the overall size of the dinsosaur:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>titanosaur_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(Femur <span class="sc">~</span> Humerus, <span class="at">data =</span> titanosaurs)</span>
+<span id="cb50-2"><a href="#cb50-2"></a></span>
+<span id="cb50-3"><a href="#cb50-3"></a><span class="fu">summary</span>(titanosaur_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Femur ~ Humerus, data = titanosaurs)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.28305 -0.11302 -0.02654  0.08374  0.43352 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  0.33387    0.09489   3.519  0.00245 ** 
+Humerus      0.84261    0.08573   9.829 1.16e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1792 on 18 degrees of freedom
+Multiple R-squared:  0.8429,    Adjusted R-squared:  0.8342 
+F-statistic: 96.61 on 1 and 18 DF,  p-value: 1.164e-08</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(titanosaur_model,</span>
+<span id="cb52-2"><a href="#cb52-2"></a>                         <span class="at">detrend =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-50-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>In this model the residual fits are good (perhaps slight non-linearity, but lets leave that for now). But we have one outlier.</p>
+<p>Assumin all other aspects of the model are good, we can check whether this outlier is affecting our model interpretations by removing it and evaluating the model without it</p>
+<p>The diagnostic plot indicates that the data is from <strong>row 1</strong></p>
+<p>The easiest way to address this is to use co-ordinates:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a><span class="co"># removes row 1 [row, column]</span></span>
+<span id="cb53-2"><a href="#cb53-2"></a>titanosaurs2 <span class="ot">&lt;-</span> titanosaurs[<span class="sc">-</span><span class="fu">c</span>(<span class="dv">1</span>), ]</span>
+<span id="cb53-3"><a href="#cb53-3"></a></span>
+<span id="cb53-4"><a href="#cb53-4"></a><span class="co">#refit model</span></span>
+<span id="cb53-5"><a href="#cb53-5"></a>titanosaur_model2 <span class="ot">&lt;-</span> <span class="fu">lm</span>(Femur <span class="sc">~</span> Humerus, <span class="at">data =</span> titanosaurs2)</span>
+<span id="cb53-6"><a href="#cb53-6"></a></span>
+<span id="cb53-7"><a href="#cb53-7"></a><span class="fu">summary</span>(titanosaur_model2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = Femur ~ Humerus, data = titanosaurs2)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-0.24494 -0.06682  0.00366  0.04784  0.40959 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)   0.2095     0.1025   2.045   0.0567 .  
+Humerus       0.9909     0.1023   9.688 2.46e-08 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 0.1622 on 17 degrees of freedom
+Multiple R-squared:  0.8466,    Adjusted R-squared:  0.8376 
+F-statistic: 93.85 on 1 and 17 DF,  p-value: 2.46e-08</code></pre>
+</div>
+</div>
+<p>Importantly the model estimate <strong>has</strong>changed, but it is still a significant predictor, and there are no further outliers:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(titanosaur_model2,</span>
+<span id="cb55-2"><a href="#cb55-2"></a>                         <span class="at">detrend =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="model-assumptions_files/figure-html/unnamed-chunk-52-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>If you remove an outlier causing leverage you must report it, and you should compare the models and report whether it has altered any of your coefficient estimates and significant predictors.</p>
+</section><section id="advanced-data-analysis" class="level2" data-number="11.9"><h2 data-number="11.9" class="anchored" data-anchor-id="advanced-data-analysis">
+<span class="header-section-number">11.9</span> Advanced Data Analysis</h2>
+<p>Linear models are a foundational tool in data analysis, providing a straightforward way to understand relationships between variables. However, they are just the beginning. As you progress, more advanced techniques will equip you to tackle a wider range of data and research questions:</p>
+<ul>
+<li><p>Generalized Linear Models (GLMs): Extend linear models to handle different types of response variables, such as counts (Poisson regression) or proportions (logistic regression).</p></li>
+<li><p>Mixed Models: Account for hierarchical or grouped data, such as repeated measures or experiments with nested designs, by including both fixed and random effects.</p></li>
+<li><p>Machine Learning Algorithms: Focus on predictive accuracy and uncovering complex patterns in data using techniques like decision trees, random forests, and neural networks.</p></li>
+<li><p>Classification: Specialized methods, like logistic regression or support vector machines, are used to predict categorical outcomes (e.g., disease presence or absence).</p></li>
+<li><p>Principal Component Analysis (PCA): A dimensionality reduction technique that simplifies large datasets by transforming variables into a smaller set of uncorrelated components while retaining most of the variability.</p></li>
+</ul>
+<p>Each of these methods builds on the principles of linear models, expanding your ability to analyse complex data, make predictions, and extract meaningful insights across diverse contexts. Your journey in data analysis has only just begun!</p>
+
+
+<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
+<div id="ref-R-parameters" class="csl-entry" role="listitem">
+Lüdecke, D., Makowski, D., Ben-Shachar, M. S., Patil, I., Højsgaard, S., &amp; Wiernik, B. M. (2024). <em>Parameters: Processing of model parameters</em>. <a href="https://easystats.github.io/parameters/">https://easystats.github.io/parameters/</a>
+</div>
+<div id="ref-R-sandwich" class="csl-entry" role="listitem">
+Zeileis, A., &amp; Lumley, T. (2024). <em>Sandwich: Robust covariance matrix estimators</em>. <a href="https://sandwich.R-Forge.R-project.org/">https://sandwich.R-Forge.R-project.org/</a>
+</div>
+</div>
+</section></main><!-- /main --><script>
+
+/* update total correct if #webex-total_correct exists */
+update_total_correct = function() {
+  console.log("webex: update total_correct");
+
+  var t = document.getElementsByClassName("webex-total_correct");
+  for (var i = 0; i < t.length; i++) {
+    p = t[i].parentElement;
+    var correct = p.getElementsByClassName("webex-correct").length;
+    var solvemes = p.getElementsByClassName("webex-solveme").length;
+    var radiogroups = p.getElementsByClassName("webex-radiogroup").length;
+    var selects = p.getElementsByClassName("webex-select").length;
+
+    t[i].innerHTML = correct + " of " + (solvemes + radiogroups + selects) + " correct";
+  }
+}
+
+/* webex-solution button toggling function */
+b_func = function() {
+  console.log("webex: toggle hide");
+
+  var cl = this.parentElement.classList;
+  if (cl.contains('open')) {
+    cl.remove("open");
+  } else {
+    cl.add("open");
+  }
+}
+
+/* check answers */
+check_func = function() {
+  console.log("webex: check answers");
+
+  var cl = this.parentElement.classList;
+  if (cl.contains('unchecked')) {
+    cl.remove("unchecked");
+    this.innerHTML = "Hide Answers";
+  } else {
+    cl.add("unchecked");
+    this.innerHTML = "Show Answers";
+  }
+}
+
+/* function for checking solveme answers */
+solveme_func = function(e) {
+  console.log("webex: check solveme");
+
+  var real_answers = JSON.parse(this.dataset.answer);
+  var my_answer = this.value;
+  var cl = this.classList;
+  if (cl.contains("ignorecase")) {
+    my_answer = my_answer.toLowerCase();
+  }
+  if (cl.contains("nospaces")) {
+    my_answer = my_answer.replace(/ /g, "")
+  }
+
+  if (my_answer == "") {
+    cl.remove("webex-correct");
+    cl.remove("webex-incorrect");
+  } else if (real_answers.includes(my_answer)) {
+    cl.add("webex-correct");
+    cl.remove("webex-incorrect");
+  } else {
+    cl.add("webex-incorrect");
+    cl.remove("webex-correct");
+  }
+
+  // match numeric answers within a specified tolerance
+  if(this.dataset.tol > 0){
+    var tol = JSON.parse(this.dataset.tol);
+    var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+    if (matches.reduce((a, b) => a + b, 0) > 0) {
+      cl.add("webex-correct");
+    } else {
+      cl.remove("webex-correct");
+    }
+  }
+
+  // added regex bit
+  if (cl.contains("regex")){
+    answer_regex = RegExp(real_answers.join("|"))
+    if (answer_regex.test(my_answer)) {
+      cl.add("webex-correct");
+    }
+  }
+
+  update_total_correct();
+}
+
+/* function for checking select answers */
+select_func = function(e) {
+  console.log("webex: check select");
+
+  var cl = this.classList
+
+  /* add style */
+  cl.remove("webex-incorrect");
+  cl.remove("webex-correct");
+  if (this.value == "answer") {
+    cl.add("webex-correct");
+  } else if (this.value != "blank") {
+    cl.add("webex-incorrect");
+  }
+
+  update_total_correct();
+}
+
+/* function for checking radiogroups answers */
+radiogroups_func = function(e) {
+  console.log("webex: check radiogroups");
+
+  var checked_button = document.querySelector('input[name=' + this.id + ']:checked');
+  var cl = checked_button.parentElement.classList;
+  var labels = checked_button.parentElement.parentElement.children;
+
+  /* get rid of styles */
+  for (i = 0; i < labels.length; i++) {
+    labels[i].classList.remove("webex-incorrect");
+    labels[i].classList.remove("webex-correct");
+  }
+
+  /* add style */
+  if (checked_button.value == "answer") {
+    cl.add("webex-correct");
+  } else {
+    cl.add("webex-incorrect");
+  }
+
+  update_total_correct();
+}
+
+window.onload = function() {
+  console.log("webex onload");
+  /* set up solution buttons */
+  var buttons = document.getElementsByTagName("button");
+
+  for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i].parentElement.classList.contains('webex-solution')) {
+      buttons[i].onclick = b_func;
+    }
+  }
+
+  var check_sections = document.getElementsByClassName("webex-check");
+  console.log("check:", check_sections.length);
+  for (var i = 0; i < check_sections.length; i++) {
+    check_sections[i].classList.add("unchecked");
+
+    let btn = document.createElement("button");
+    btn.innerHTML = "Show Answers";
+    btn.classList.add("webex-check-button");
+    btn.onclick = check_func;
+    check_sections[i].appendChild(btn);
+
+    let spn = document.createElement("span");
+    spn.classList.add("webex-total_correct");
+    check_sections[i].appendChild(spn);
+  }
+
+  /* set up webex-solveme inputs */
+  var solveme = document.getElementsByClassName("webex-solveme");
+
+  for (var i = 0; i < solveme.length; i++) {
+    /* make sure input boxes don't auto-anything */
+    solveme[i].setAttribute("autocomplete","off");
+    solveme[i].setAttribute("autocorrect", "off");
+    solveme[i].setAttribute("autocapitalize", "off");
+    solveme[i].setAttribute("spellcheck", "false");
+    solveme[i].value = "";
+
+    /* adjust answer for ignorecase or nospaces */
+    var cl = solveme[i].classList;
+    var real_answer = solveme[i].dataset.answer;
+    if (cl.contains("ignorecase")) {
+      real_answer = real_answer.toLowerCase();
+    }
+    if (cl.contains("nospaces")) {
+      real_answer = real_answer.replace(/ /g, "");
+    }
+    solveme[i].dataset.answer = real_answer;
+
+    /* attach checking function */
+    solveme[i].onkeyup = solveme_func;
+    solveme[i].onchange = solveme_func;
+
+    solveme[i].insertAdjacentHTML("afterend", " <span class='webex-icon'></span>")
+  }
+
+  /* set up radiogroups */
+  var radiogroups = document.getElementsByClassName("webex-radiogroup");
+  for (var i = 0; i < radiogroups.length; i++) {
+    radiogroups[i].onchange = radiogroups_func;
+  }
+
+  /* set up selects */
+  var selects = document.getElementsByClassName("webex-select");
+  for (var i = 0; i < selects.length; i++) {
+    selects[i].onchange = select_func;
+    selects[i].insertAdjacentHTML("afterend", " <span class='webex-icon'></span>")
+  }
+
+  update_total_correct();
+}
+
+</script><script>
+// open rdrr links externally ----
+
+var exlinks = document.querySelectorAll("a[href^='https://rdrr.io']");
+var exlink_func = function(){
+  window.open(this.href);
+  return false;
+};
+for (var i = 0; i < exlinks.length; i++) {
+    exlinks[i].addEventListener('click', exlink_func, false);
+}
+
+// visible second sidebar in mobile ----
+
+function move_sidebar() {
+  var toc = document.getElementById("TOC");
+  var small_sidebar = document.querySelector("#quarto-sidebar .sidebar-menu-container");
+  var right_sidebar = document.getElementById("quarto-margin-sidebar");
+
+  if (window.innerWidth < 768) {
+    small_sidebar.append(toc);
+  } else {
+    right_sidebar.append(toc);
+  }
+}
+move_sidebar();
+window.onresize = move_sidebar;
+</script><script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const disableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'prefetch';
+    }
+  }
+  const enableStylesheet = (stylesheets) => {
+    for (let i=0; i < stylesheets.length; i++) {
+      const stylesheet = stylesheets[i];
+      stylesheet.rel = 'stylesheet';
+    }
+  }
+  const manageTransitions = (selector, allowTransitions) => {
+    const els = window.document.querySelectorAll(selector);
+    for (let i=0; i < els.length; i++) {
+      const el = els[i];
+      if (allowTransitions) {
+        el.classList.remove('notransition');
+      } else {
+        el.classList.add('notransition');
+      }
+    }
+  }
+  const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+    const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+    const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+    let newTheme = '';
+    if(darkModeDefault) {
+      newTheme = isAlternate ? baseTheme : alternateTheme;
+    } else {
+      newTheme = isAlternate ? alternateTheme : baseTheme;
+    }
+    const changeGiscusTheme = () => {
+      // From: https://github.com/giscus/giscus/issues/336
+      const sendMessage = (message) => {
+        const iframe = document.querySelector('iframe.giscus-frame');
+        if (!iframe) return;
+        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+      }
+      sendMessage({
+        setConfig: {
+          theme: newTheme
+        }
+      });
+    }
+    const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+    if (isGiscussLoaded) {
+      changeGiscusTheme();
+    }
+  }
+  const toggleColorMode = (alternate) => {
+    // Switch the stylesheets
+    const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+    manageTransitions('#quarto-margin-sidebar .nav-link', false);
+    if (alternate) {
+      enableStylesheet(alternateStylesheets);
+      for (const sheetNode of alternateStylesheets) {
+        if (sheetNode.id === "quarto-bootstrap") {
+          toggleBodyColorMode(sheetNode);
+        }
+      }
+    } else {
+      disableStylesheet(alternateStylesheets);
+      toggleBodyColorPrimary();
+    }
+    manageTransitions('#quarto-margin-sidebar .nav-link', true);
+    // Switch the toggles
+    const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+    for (let i=0; i < toggles.length; i++) {
+      const toggle = toggles[i];
+      if (toggle) {
+        if (alternate) {
+          toggle.classList.add("alternate");     
+        } else {
+          toggle.classList.remove("alternate");
+        }
+      }
+    }
+    // Hack to workaround the fact that safari doesn't
+    // properly recolor the scrollbar when toggling (#1455)
+    if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+      manageTransitions("body", false);
+      window.scrollTo(0, 1);
+      setTimeout(() => {
+        window.scrollTo(0, 0);
+        manageTransitions("body", true);
+      }, 40);  
+    }
+  }
+  const isFileUrl = () => { 
+    return window.location.protocol === 'file:';
+  }
+  const hasAlternateSentinel = () => {  
+    let styleSentinel = getColorSchemeSentinel();
+    if (styleSentinel !== null) {
+      return styleSentinel === "alternate";
+    } else {
+      return false;
+    }
+  }
+  const setStyleSentinel = (alternate) => {
+    const value = alternate ? "alternate" : "default";
+    if (!isFileUrl()) {
+      window.localStorage.setItem("quarto-color-scheme", value);
+    } else {
+      localAlternateSentinel = value;
+    }
+  }
+  const getColorSchemeSentinel = () => {
+    if (!isFileUrl()) {
+      const storageValue = window.localStorage.getItem("quarto-color-scheme");
+      return storageValue != null ? storageValue : localAlternateSentinel;
+    } else {
+      return localAlternateSentinel;
+    }
+  }
+  const darkModeDefault = false;
+  let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+  // Dark / light mode switch
+  window.quartoToggleColorScheme = () => {
+    // Read the current dark / light value 
+    let toAlternate = !hasAlternateSentinel();
+    toggleColorMode(toAlternate);
+    setStyleSentinel(toAlternate);
+    toggleGiscusIfUsed(toAlternate, darkModeDefault);
+  };
+  // Ensure there is a toggle, if there isn't float one in the top right
+  if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+    const a = window.document.createElement('a');
+    a.classList.add('top-right');
+    a.classList.add('quarto-color-scheme-toggle');
+    a.href = "";
+    a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+    const i = window.document.createElement("i");
+    i.classList.add('bi');
+    a.appendChild(i);
+    window.document.body.appendChild(a);
+  }
+  // Switch to dark mode if need be
+  if (hasAlternateSentinel()) {
+    toggleColorMode(true);
+  } else {
+    toggleColorMode(false);
+  }
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    // For code content inside modals, clipBoardJS needs to be initialized with a container option
+    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./13-interaction.html" class="pagination-link" aria-label="Multi factor ANOVA">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Multi factor ANOVA</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./summary-table.html" class="pagination-link" aria-label="Summary tables">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary tables</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>CC-BY (2024) Philip Leftwich</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+</body></html>

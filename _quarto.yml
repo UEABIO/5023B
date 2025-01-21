@@ -1,0 +1,96 @@
+lang: en
+project:
+  type: book
+  output-dir: docs
+  resources: resources
+execute:
+  freeze: auto
+book:
+  title: 5027A
+  subtitle: ''
+  author: Philip Leftwich
+  doi: ''
+  license: CC-BY
+  description: Statistical skills for Biologists
+  cover-image: images/logos/logo.png
+  image: images/logos/logo.png
+  favicon: images/logos/logo.png
+  cookie-consent: false
+  google-analytics: ''
+  page-navigation: true
+  search: true
+  sidebar:
+    title: ''
+    logo: ''
+    search: true
+    contents: ''
+    style: floating
+    background: light
+    foreground: dark
+    border: true
+    alignment: left
+    collapse-level: 3
+    pinned: true
+    header: ''
+    footer: ''
+  margin-header: ''
+  page-footer: CC-BY (2024) Philip Leftwich
+  chapters:
+  - index.qmd
+  - 04-penguin-project.qmd
+  - 05-dplyr.qmd
+  - 06-data-bias.qmd
+  - 07-data-insights.qmd
+  - 08-inferential-statistics.qmd
+  - 09-linear-models.qmd
+  - 10-paired-design.qmd
+  - 11-regression.qmd
+  - 12-ANOVA.qmd
+  - 13-interaction.qmd
+  - model-assumptions.qmd
+  - part: "Summary tables"
+    chapters:
+    - summary-table.qmd
+  - part: "Data Visualisation"
+    chapters:
+    - ggplot.qmd
+  - part: "Reproducible Reports"
+    chapters:
+    - quarto.qmd
+  appendices:
+  - r-basics.qmd
+  - projects.qmd
+  - tidy-data.qmd
+  - advanced_ggplot.qmd
+  - references.qmd
+bibliography:
+  - include/packages.bib
+  - include/references.bib
+csl: include/apa.csl
+format:
+  html:
+    theme:
+      light:
+      - flatly
+      - include/light.scss
+      dark:
+      - darkly
+      - include/dark.scss
+    css:
+    - https://use.fontawesome.com/releases/v5.13.0/css/all.css
+    - include/booktem.css
+    - include/webex.css
+    - include/glossary.css
+    - include/style.css
+    df-print: kable
+    code-link: true
+    code-fold: false
+    code-line-numbers: true
+    code-overflow: scroll
+    code-copy: hover
+    highlight-style: a11y
+    mainfont: ''
+    monofont: ''
+    include-after-body:
+    - include/webex.js
+    - include/script.js

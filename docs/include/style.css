@@ -1,0 +1,23 @@
+/* edit this file to add custom styles */
+.inline-figure {
+  border: none;
+}
+
+.quarto-cover-image {
+  display: block;
+  width: 200px;
+  height: auto;
+}
+
+
+
+/* named colours */
+:root {
+  --border-color: #046C9A; /* You can change this to any color */
+}
+
+/* Apply a single top border */
+body {
+  margin-top: 0px;
+  border-top: 50px solid var(--border-color); /* Single top border */
+}
