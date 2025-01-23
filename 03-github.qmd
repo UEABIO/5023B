@@ -262,6 +262,8 @@ Although we can selectively add the files we wish to include in the staging area
 
 :::
 
+If you make commits - these are snapshots or tracked changes to your files, held locally on your computer. Git will track how far ahead you are of the repository held online and you can see this in the Git Pane
+
 #### Terminal 
 
 `add` and `commit` are also git commands. RStudio provides a basic GUI for git, which we are going to use in this workshop. But you can also use the Terminal to talk to git on the command line
@@ -283,14 +285,19 @@ git commit -m "A descriptive message to commit the files on the staging area."
 
 ### 5. Push changes
 
-**Now Push** - push your commits to the remote repository. You won't see any changes on Github until you push those commits. 
+**Now Push** - push your commits to the remote repository. You won't see any changes on Github until you push those commits.
+
+:::{.callout-tip}
+
+You might be asked for your username and password at this point - when working on your own computer this shouldn't happen, but on Posit Cloud it seems to. You can put your GitHub username in followed by your PAT (not your password)
+
+:::
 
 Let's head back to GitHub now. If you refresh the page, now you’ll see the files you committed just now. Let’s click on “Commits” to see the history of the repository. From this view, you can explore the repository at the “state” of each commit and look at the file differences.
 
 #### Terminal
 
 And if you want to try the command line:
-
 
 :::{.callout-tip}
 
@@ -308,9 +315,10 @@ git pull
 :::
 
 
-Now, we can try to make changes here at github.com
 
 ## Remote changes
+
+Now, we can try to make changes here at github.com
 
 ### Create a README
 
@@ -322,11 +330,16 @@ Now, we can try to make changes here at github.com
 
 - Come back to the main page to see the README.
 
+
+:::{.callout-warning}
+
 The new file and the changes you do on GitHub are only on the remote repository until you make a pull from the local repo. If you make changes on the local repo while it not up to date, you may encounter **merge conflicts**, which lead to headaches. This happens when the version of a file on the local repo is not compatible with its version on the remote repo. In those cases, git cannot decide which version is the right one and you have to do it yourself.
 
-To avoid this problem (most of the time), you should do a **pull everytime you load up a project** before doing anything else. Most of the time the message will be "Already up to-date", but this is a good habit.
+To avoid this problem (most of the time), you should aim to do all your work on RStudio AND make a **pull everytime you load up a project** before doing anything else. Most of the time the message will be "Already up to-date", but this is a good habit.
 
-Now we should head to the GitPane in RStudio and select the blue "Pull" button. The README should appear in your files. 
+:::
+
+Now we should head to the GitPane in RStudio and select the blue "Pull" button. The README *should* appear in your files. 
 
 ## Working with branches
 
