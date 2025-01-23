@@ -2,10 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.5.57">
+<meta name="generator" content="quarto-1.6.39">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Statistical skills for Biologists">
-<title>Appendix D — ggplot extras – 5027A</title>
+<title>Appendix F — ggplot extras – 5023B</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -68,12 +68,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-3e476e15ae565c222d94875412ae43a1.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-d3043699f4f525e226433170f63674df.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark.min.css" rel="prefetch" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-966f60e3bc60cc6f7c6c3c8d3b3a508b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-e0b3d8e73f4d1716c2cfb9b6011ce545.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -115,7 +115,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./r-basics.html">Appendices</a></li><li class="breadcrumb-item"><a href="./advanced_ggplot.html"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">ggplot extras</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./r-basics.html">Appendices</a></li><li class="breadcrumb-item"><a href="./advanced_ggplot.html"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">ggplot extras</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -126,7 +126,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
-      <a href="./">5027A</a> 
+      <a href="./">5023B</a> 
         <div class="sidebar-tools-main">
   <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
 </div>
@@ -145,93 +145,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
  <span class="menu-text">Overview</span></a>
   </div>
 </li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./04-penguin-project.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Meet the Penguins</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./05-dplyr.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Data cleaning</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./06-data-bias.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Data bias</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./07-data-insights.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Data insights</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./08-inferential-statistics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Inferential statistics</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./09-linear-models.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Linear models</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./10-paired-design.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Paired tests</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./11-regression.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Regression</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./12-ANOVA.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">ANOVA</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./13-interaction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Multi factor ANOVA</span></span></a>
-  </div>
-</li>
-        <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./model-assumptions.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Model diagnostics</span></span></a>
-  </div>
-</li>
         <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">Summary tables</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <span class="sidebar-item-text sidebar-link text-start">
+ <span class="menu-text">Reproducible Environments</span></span>
+  </li>
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary-table.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Summary tables</span></span></a>
+  <a href="./01-projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project-oriented workflows</span></span></a>
   </div>
 </li>
-      </ul>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-renv.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title"><code>renv</code></span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Github</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Task One</span></span></a>
+  </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Data Visualisation</span></a>
+ <span class="menu-text">Summary tables</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -239,8 +184,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./ggplot.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">ggplot</span></span></a>
+  <a href="./summary-table.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary tables</span></span></a>
   </div>
 </li>
       </ul>
@@ -248,7 +193,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Reproducible Reports</span></a>
+ <span class="menu-text">Data Visualisation</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -256,8 +201,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+  <a href="./ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">ggplot</span></span></a>
   </div>
 </li>
       </ul>
@@ -265,12 +210,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
+ <span class="menu-text">Reproducible Reports</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./r-basics.html" class="sidebar-item-text sidebar-link">
@@ -279,20 +241,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./projects.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Project workflows</span></span></a>
+  <a href="./import.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Basic Import/Export</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./script.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Scripts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Naming conventions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Naming files</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./tidy-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Tidy data</span></span></a>
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tidy data</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./advanced_ggplot.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">ggplot extras</span></span></a>
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">ggplot extras</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -311,33 +285,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#fonts" id="toc-fonts" class="nav-link active" data-scroll-target="#fonts"><span class="header-section-number">D.1</span> Fonts</a></li>
-  <li><a href="#custom-themes" id="toc-custom-themes" class="nav-link" data-scroll-target="#custom-themes"><span class="header-section-number">D.2</span> Custom themes</a></li>
+<li><a href="#fonts" id="toc-fonts" class="nav-link active" data-scroll-target="#fonts"><span class="header-section-number">F.1</span> Fonts</a></li>
+  <li><a href="#custom-themes" id="toc-custom-themes" class="nav-link" data-scroll-target="#custom-themes"><span class="header-section-number">F.2</span> Custom themes</a></li>
   <li>
-<a href="#extensions-for-ggplot2" id="toc-extensions-for-ggplot2" class="nav-link" data-scroll-target="#extensions-for-ggplot2"><span class="header-section-number">D.3</span> Extensions for ggplot2</a>
+<a href="#extensions-for-ggplot2" id="toc-extensions-for-ggplot2" class="nav-link" data-scroll-target="#extensions-for-ggplot2"><span class="header-section-number">F.3</span> Extensions for ggplot2</a>
   <ul class="collapse">
-<li><a href="#ggdist" id="toc-ggdist" class="nav-link" data-scroll-target="#ggdist"><span class="header-section-number">D.3.1</span> ggdist</a></li>
-  <li><a href="#interval-plots" id="toc-interval-plots" class="nav-link" data-scroll-target="#interval-plots"><span class="header-section-number">D.3.2</span> Interval plots</a></li>
-  <li><a href="#density" id="toc-density" class="nav-link" data-scroll-target="#density"><span class="header-section-number">D.3.3</span> Density</a></li>
-  <li><a href="#ggridges" id="toc-ggridges" class="nav-link" data-scroll-target="#ggridges"><span class="header-section-number">D.3.4</span> ggridges</a></li>
-  <li><a href="#bump-charts" id="toc-bump-charts" class="nav-link" data-scroll-target="#bump-charts"><span class="header-section-number">D.3.5</span> Bump charts</a></li>
-  <li><a href="#dumbell-charts" id="toc-dumbell-charts" class="nav-link" data-scroll-target="#dumbell-charts"><span class="header-section-number">D.3.6</span> Dumbell charts</a></li>
-  <li><a href="#heat-maps" id="toc-heat-maps" class="nav-link" data-scroll-target="#heat-maps"><span class="header-section-number">D.3.7</span> Heat maps</a></li>
-  <li><a href="#hexbins" id="toc-hexbins" class="nav-link" data-scroll-target="#hexbins"><span class="header-section-number">D.3.8</span> Hexbins</a></li>
-  <li><a href="#facets" id="toc-facets" class="nav-link" data-scroll-target="#facets"><span class="header-section-number">D.3.9</span> Facets</a></li>
-  <li><a href="#highlighting" id="toc-highlighting" class="nav-link" data-scroll-target="#highlighting"><span class="header-section-number">D.3.10</span> Highlighting</a></li>
-  <li><a href="#plotly" id="toc-plotly" class="nav-link" data-scroll-target="#plotly"><span class="header-section-number">D.3.11</span> Plotly</a></li>
-  <li><a href="#text" id="toc-text" class="nav-link" data-scroll-target="#text"><span class="header-section-number">D.3.12</span> Text</a></li>
-  <li><a href="#scales" id="toc-scales" class="nav-link" data-scroll-target="#scales"><span class="header-section-number">D.3.13</span> scales</a></li>
-  <li><a href="#maps" id="toc-maps" class="nav-link" data-scroll-target="#maps"><span class="header-section-number">D.3.14</span> Maps</a></li>
-  <li><a href="#layouts-and-compositions" id="toc-layouts-and-compositions" class="nav-link" data-scroll-target="#layouts-and-compositions"><span class="header-section-number">D.3.15</span> Layouts and compositions</a></li>
+<li><a href="#ggdist" id="toc-ggdist" class="nav-link" data-scroll-target="#ggdist"><span class="header-section-number">F.3.1</span> ggdist</a></li>
+  <li><a href="#interval-plots" id="toc-interval-plots" class="nav-link" data-scroll-target="#interval-plots"><span class="header-section-number">F.3.2</span> Interval plots</a></li>
+  <li><a href="#density" id="toc-density" class="nav-link" data-scroll-target="#density"><span class="header-section-number">F.3.3</span> Density</a></li>
+  <li><a href="#ggridges" id="toc-ggridges" class="nav-link" data-scroll-target="#ggridges"><span class="header-section-number">F.3.4</span> ggridges</a></li>
+  <li><a href="#bump-charts" id="toc-bump-charts" class="nav-link" data-scroll-target="#bump-charts"><span class="header-section-number">F.3.5</span> Bump charts</a></li>
+  <li><a href="#dumbell-charts" id="toc-dumbell-charts" class="nav-link" data-scroll-target="#dumbell-charts"><span class="header-section-number">F.3.6</span> Dumbell charts</a></li>
+  <li><a href="#heat-maps" id="toc-heat-maps" class="nav-link" data-scroll-target="#heat-maps"><span class="header-section-number">F.3.7</span> Heat maps</a></li>
+  <li><a href="#hexbins" id="toc-hexbins" class="nav-link" data-scroll-target="#hexbins"><span class="header-section-number">F.3.8</span> Hexbins</a></li>
+  <li><a href="#facets" id="toc-facets" class="nav-link" data-scroll-target="#facets"><span class="header-section-number">F.3.9</span> Facets</a></li>
+  <li><a href="#highlighting" id="toc-highlighting" class="nav-link" data-scroll-target="#highlighting"><span class="header-section-number">F.3.10</span> Highlighting</a></li>
+  <li><a href="#plotly" id="toc-plotly" class="nav-link" data-scroll-target="#plotly"><span class="header-section-number">F.3.11</span> Plotly</a></li>
+  <li><a href="#text" id="toc-text" class="nav-link" data-scroll-target="#text"><span class="header-section-number">F.3.12</span> Text</a></li>
+  <li><a href="#scales" id="toc-scales" class="nav-link" data-scroll-target="#scales"><span class="header-section-number">F.3.13</span> scales</a></li>
+  <li><a href="#maps" id="toc-maps" class="nav-link" data-scroll-target="#maps"><span class="header-section-number">F.3.14</span> Maps</a></li>
+  <li><a href="#layouts-and-compositions" id="toc-layouts-and-compositions" class="nav-link" data-scroll-target="#layouts-and-compositions"><span class="header-section-number">F.3.15</span> Layouts and compositions</a></li>
   </ul>
 </li>
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./r-basics.html">Appendices</a></li><li class="breadcrumb-item"><a href="./advanced_ggplot.html"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">ggplot extras</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-advanced-ggplot" class="quarto-section-identifier">Appendix D — ggplot extras</span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./r-basics.html">Appendices</a></li><li class="breadcrumb-item"><a href="./advanced_ggplot.html"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">ggplot extras</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-advanced-ggplot" class="quarto-section-identifier">Appendix F — ggplot extras</span></h1>
 </div>
 
 
@@ -351,8 +325,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
 
 
-</header><section id="fonts" class="level2" data-number="D.1"><h2 data-number="D.1" class="anchored" data-anchor-id="fonts">
-<span class="header-section-number">D.1</span> Fonts</h2>
+</header><section id="fonts" class="level2" data-number="F.1"><h2 data-number="F.1" class="anchored" data-anchor-id="fonts">
+<span class="header-section-number">F.1</span> Fonts</h2>
 <p>You can customise the fonts used in themes. All computers should be able to recognise the families “sans”, “serif”, and “mono”, and some computers will be able to access other installed fonts by name.</p>
 <p>The easiest way to add lots of custom fonts is with <code>showtext</code>.</p>
 <p>The second argument, family, is optional. It gives the family name of the font that will be used in R. In other words, it means that the name used to refer to the font in R does not need to be the same than the original name of the font. In this case, the font Special Elite is going to be the special family.</p>
@@ -362,8 +336,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-2"><a href="#cb1-2"></a><span class="fu">font_add_google</span>(<span class="st">"Special Elite"</span>, <span class="at">family =</span> <span class="st">"special"</span>)</span>
 <span id="cb1-3"><a href="#cb1-3"></a><span class="fu">showtext_auto</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="custom-themes" class="level2" data-number="D.2"><h2 data-number="D.2" class="anchored" data-anchor-id="custom-themes">
-<span class="header-section-number">D.2</span> Custom themes</h2>
+</section><section id="custom-themes" class="level2" data-number="F.2"><h2 data-number="F.2" class="anchored" data-anchor-id="custom-themes">
+<span class="header-section-number">F.2</span> Custom themes</h2>
 <p>It is often the case that we start to default to a particular ‘style’ for our figures, or you may be making several similar figures within a research paper. Creating custom functions can extend to making our own custom ggplot themes. You have probably already used theme variants such as <code>theme_bw()</code>, <code>theme_void()</code>, <code>theme_minimal()</code> - these are incredibly useful, but you might find you still wish to make consistent changes.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>plot <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span> </span>
@@ -444,14 +418,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="extensions-for-ggplot2" class="level2" data-number="D.3"><h2 data-number="D.3" class="anchored" data-anchor-id="extensions-for-ggplot2">
-<span class="header-section-number">D.3</span> Extensions for ggplot2</h2>
+</section><section id="extensions-for-ggplot2" class="level2" data-number="F.3"><h2 data-number="F.3" class="anchored" data-anchor-id="extensions-for-ggplot2">
+<span class="header-section-number">F.3</span> Extensions for ggplot2</h2>
 <p>This tutorial has but scratched the surface of the visualisation options available using R. Here I have provided some further advanced plots and customisation options for those who are feeling confident with the content covered in this tutorial. However, the below plots give an idea of what is possible.</p>
 <p>Check out https://exts.ggplot2.tidyverse.org/ for the full list of approved extensions for ggplot</p>
-<section id="ggdist" class="level3" data-number="D.3.1"><h3 data-number="D.3.1" class="anchored" data-anchor-id="ggdist">
-<span class="header-section-number">D.3.1</span> ggdist</h3>
-<section id="rainclouds" class="level4" data-number="D.3.1.1"><h4 data-number="D.3.1.1" class="anchored" data-anchor-id="rainclouds">
-<span class="header-section-number">D.3.1.1</span> Rainclouds</h4>
+<section id="ggdist" class="level3" data-number="F.3.1"><h3 data-number="F.3.1" class="anchored" data-anchor-id="ggdist">
+<span class="header-section-number">F.3.1</span> ggdist</h3>
+<section id="rainclouds" class="level4" data-number="F.3.1.1"><h4 data-number="F.3.1.1" class="anchored" data-anchor-id="rainclouds">
+<span class="header-section-number">F.3.1.1</span> Rainclouds</h4>
 <p>Raincloud plots combine a density plot, boxplot, raw data points, and any desired summary statistics for a complete visualisation of the data. They are so called because the density plot plus raw data is reminiscent of a rain cloud.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">library</span>(ggdist)</span>
@@ -497,8 +471,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section></section><section id="interval-plots" class="level3" data-number="D.3.2"><h3 data-number="D.3.2" class="anchored" data-anchor-id="interval-plots">
-<span class="header-section-number">D.3.2</span> Interval plots</h3>
+</section></section><section id="interval-plots" class="level3" data-number="F.3.2"><h3 data-number="F.3.2" class="anchored" data-anchor-id="interval-plots">
+<span class="header-section-number">F.3.2</span> Interval plots</h3>
 <p>An interval plot is a type of data visualization that is used to display intervals or ranges associated with data points. It is particularly useful for visualizing uncertainty or variability in the data. Interval plots can be used to represent various types of intervals, such as confidence intervals, prediction intervals, or any other kind of range or interval associated with the data.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>penguins <span class="sc">|&gt;</span> </span>
@@ -521,8 +495,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="density" class="level3" data-number="D.3.3"><h3 data-number="D.3.3" class="anchored" data-anchor-id="density">
-<span class="header-section-number">D.3.3</span> Density</h3>
+</section><section id="density" class="level3" data-number="F.3.3"><h3 data-number="F.3.3" class="anchored" data-anchor-id="density">
+<span class="header-section-number">F.3.3</span> Density</h3>
 <p>A density plot is a data visualization technique used to represent the distribution of a continuous numeric variable. It provides a smoothed estimate of the probability density function (PDF) of the data, showing where values are concentrated and where they are sparse. Density plots are particularly useful for visualizing the shape, central tendency, and spread of data.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(ggdensity)</span>
@@ -541,8 +515,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="ggridges" class="level3" data-number="D.3.4"><h3 data-number="D.3.4" class="anchored" data-anchor-id="ggridges">
-<span class="header-section-number">D.3.4</span> ggridges</h3>
+</section><section id="ggridges" class="level3" data-number="F.3.4"><h3 data-number="F.3.4" class="anchored" data-anchor-id="ggridges">
+<span class="header-section-number">F.3.4</span> ggridges</h3>
 <p>A ridge plot is a data visualization technique that is similar to a density plot but is designed for displaying multiple probability density distributions side by side, allowing for easier comparison between different groups or categories. Ridge plots are particularly useful when you want to visualize and compare the distribution of multiple continuous variables or data sets simultaneously.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">library</span>(ggridges)</span>
@@ -562,8 +536,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="bump-charts" class="level3" data-number="D.3.5"><h3 data-number="D.3.5" class="anchored" data-anchor-id="bump-charts">
-<span class="header-section-number">D.3.5</span> Bump charts</h3>
+</section><section id="bump-charts" class="level3" data-number="F.3.5"><h3 data-number="F.3.5" class="anchored" data-anchor-id="bump-charts">
+<span class="header-section-number">F.3.5</span> Bump charts</h3>
 <p>A bump chart, also known as a line chart or path chart, is a data visualization technique used to show the ranking and changes in ranking of entities (such as teams, players, or products) over time or across different categories. Bump charts are especially useful for visualizing the rise and fall of ranked items, making it easy to identify trends and compare changes in relative position.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">library</span>(ggbump)</span>
@@ -596,8 +570,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="dumbell-charts" class="level3" data-number="D.3.6"><h3 data-number="D.3.6" class="anchored" data-anchor-id="dumbell-charts">
-<span class="header-section-number">D.3.6</span> Dumbell charts</h3>
+</section><section id="dumbell-charts" class="level3" data-number="F.3.6"><h3 data-number="F.3.6" class="anchored" data-anchor-id="dumbell-charts">
+<span class="header-section-number">F.3.6</span> Dumbell charts</h3>
 <p>A dumbbell chart is a data visualization technique that is used to compare two data points for multiple categories or entities. It is called a “dumbbell” chart because it often resembles a pair of dumbbells, with circles or dots representing the data points at the ends of a line connecting them. Dumbbell charts are useful for comparing before-and-after values, two different groups, or any two related data points for different categories or entities.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">library</span>(ggalt)</span>
@@ -625,8 +599,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="heat-maps" class="level3" data-number="D.3.7"><h3 data-number="D.3.7" class="anchored" data-anchor-id="heat-maps">
-<span class="header-section-number">D.3.7</span> Heat maps</h3>
+</section><section id="heat-maps" class="level3" data-number="F.3.7"><h3 data-number="F.3.7" class="anchored" data-anchor-id="heat-maps">
+<span class="header-section-number">F.3.7</span> Heat maps</h3>
 <p>Here’s an example of simulated biological data for a heatmap in R. This dataset represents monthly measurements of water quality in different lake locations, where measurements could include factors like pH, dissolved oxygen, or nutrient concentration. Each lake is sampled monthly over a year, giving us a grid of data points that can be visualized in a heatmap.</p>
 <p>A popular package for this sort of data is the <code>viridis</code> package. The <code>viridis</code> package is popular for creating color scales in data visualizations because it offers color palettes that are perceptually uniform, accessible, and still work when printed grayscale.</p>
 <div class="cell" data-layout-align="center">
@@ -660,8 +634,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="hexbins" class="level3" data-number="D.3.8"><h3 data-number="D.3.8" class="anchored" data-anchor-id="hexbins">
-<span class="header-section-number">D.3.8</span> Hexbins</h3>
+</section><section id="hexbins" class="level3" data-number="F.3.8"><h3 data-number="F.3.8" class="anchored" data-anchor-id="hexbins">
+<span class="header-section-number">F.3.8</span> Hexbins</h3>
 <p>Hexbin plots are excellent for visualizing dense data without overplotting, as they use color intensity to represent areas with many overlapping points, revealing patterns and clusters effectively.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Load necessary packages</span></span>
@@ -691,8 +665,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="facets" class="level3" data-number="D.3.9"><h3 data-number="D.3.9" class="anchored" data-anchor-id="facets">
-<span class="header-section-number">D.3.9</span> Facets</h3>
+</section><section id="facets" class="level3" data-number="F.3.9"><h3 data-number="F.3.9" class="anchored" data-anchor-id="facets">
+<span class="header-section-number">F.3.9</span> Facets</h3>
 <p>The <code>facet_nested()</code> function in the <code>ggh4x</code> package is used for creating nested or hierarchical faceting in ggplot2 plots. Faceting is the process of breaking down a data visualization into multiple subplots or panels based on one or more categorical variables, allowing you to see how the data behaves within different categories. Nested faceting allows you to further subdivide these panels into smaller panels, creating a hierarchy of facets.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="fu">library</span>(ggh4x)</span>
@@ -713,8 +687,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="highlighting" class="level3" data-number="D.3.10"><h3 data-number="D.3.10" class="anchored" data-anchor-id="highlighting">
-<span class="header-section-number">D.3.10</span> Highlighting</h3>
+</section><section id="highlighting" class="level3" data-number="F.3.10"><h3 data-number="F.3.10" class="anchored" data-anchor-id="highlighting">
+<span class="header-section-number">F.3.10</span> Highlighting</h3>
 <p>Using plot highlighting, such as the gghighlight package in R, can be beneficial in data visualization for several reasons:</p>
 <ul>
 <li><p>Emphasizing Key Information: Plot highlighting allows you to draw attention to specific data points or groups of interest. This can be helpful when you want to highlight outliers, key observations, or certain categories that are important in your data.</p></li>
@@ -758,8 +732,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="plotly" class="level3" data-number="D.3.11"><h3 data-number="D.3.11" class="anchored" data-anchor-id="plotly">
-<span class="header-section-number">D.3.11</span> Plotly</h3>
+</section><section id="plotly" class="level3" data-number="F.3.11"><h3 data-number="F.3.11" class="anchored" data-anchor-id="plotly">
+<span class="header-section-number">F.3.11</span> Plotly</h3>
 <p><code>plotly</code> is a library for creating interactive plots that can be embedded in web applications or reports. It integrates seamlessly with <code>ggplot2</code> and allows users to turn static graphics into interactive ones.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Heatmap for pH levels by lake and month</span></span>
@@ -774,11 +748,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-10"><a href="#cb17-10"></a><span class="fu">ggplotly</span>(heatmap)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="plotly html-widget html-fill-item" id="htmlwidget-f133f9a4461e7c1eb1b1" style="width:100%;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-f133f9a4461e7c1eb1b1">{"x":{"data":[{"x":[1,2,3,4,5,6,7,8,9,10,11,12],"y":[1,2,3,4,5],"z":[[0.33980582524271846,0.89320388349514579,0.77184466019417497,0.90776699029126195,0.21844660194174761,0.067961165048543951,0.57766990291262144,0.64077669902912615,0.30582524271844691,0.20388349514563142,0.53883495145631066,0.84466019417475713],[0.41747572815533984,0.58737864077669932,0.56310679611650483,0.59708737864077677,0.42233009708737856,0.67961165048543692,0.40291262135922323,0.61165048543689338,0.42718446601941773,0.37864077669902918,0.47087378640776717,0.10194174757281592],[0.85436893203883513,0.16990291262135945,0.57281553398058271,0,0.2281553398058255,0.51456310679611661,0.69417475728155353,0.46116504854368928,0.16990291262135945,0.36407766990291252,0.46601941747572845,0.6165048543689321],[0.49514563106796128,0.31067961165048563,0.50485436893203872,0.64563106796116487,0.30097087378640774,0.19902912621359226,0.68932038834951481,0.40291262135922323,1,0.66504854368932032,0.80582524271844647,0.50485436893203872],[0.50485436893203872,0.36893203883495168,0.33980582524271846,0.35922330097087379,0.32524271844660224,0.78155339805825241,0.6747572815533982,0.3834951456310679,0.7669902912621358,0.45631067961165056,0.42233009708737856,0.52912621359223322]],"text":[["month: Jan<br />lake: Lake 1<br />ph: 6.72","month: Feb<br />lake: Lake 1<br />ph: 7.86","month: Mar<br />lake: Lake 1<br />ph: 7.61","month: Apr<br />lake: Lake 1<br />ph: 7.89","month: May<br />lake: Lake 1<br />ph: 6.47","month: Jun<br />lake: Lake 1<br />ph: 6.16","month: Jul<br />lake: Lake 1<br />ph: 7.21","month: Aug<br />lake: Lake 1<br />ph: 7.34","month: Sep<br />lake: Lake 1<br />ph: 6.65","month: Oct<br />lake: Lake 1<br />ph: 6.44","month: Nov<br />lake: Lake 1<br />ph: 7.13","month: Dec<br />lake: Lake 1<br />ph: 7.76"],["month: Jan<br />lake: Lake 2<br />ph: 6.88","month: Feb<br />lake: Lake 2<br />ph: 7.23","month: Mar<br />lake: Lake 2<br />ph: 7.18","month: Apr<br />lake: Lake 2<br />ph: 7.25","month: May<br />lake: Lake 2<br />ph: 6.89","month: Jun<br />lake: Lake 2<br />ph: 7.42","month: Jul<br />lake: Lake 2<br />ph: 6.85","month: Aug<br />lake: Lake 2<br />ph: 7.28","month: Sep<br />lake: Lake 2<br />ph: 6.90","month: Oct<br />lake: Lake 2<br />ph: 6.80","month: Nov<br />lake: Lake 2<br />ph: 6.99","month: Dec<br />lake: Lake 2<br />ph: 6.23"],["month: Jan<br />lake: Lake 3<br />ph: 7.78","month: Feb<br />lake: Lake 3<br />ph: 6.37","month: Mar<br />lake: Lake 3<br />ph: 7.20","month: Apr<br />lake: Lake 3<br />ph: 6.02","month: May<br />lake: Lake 3<br />ph: 6.49","month: Jun<br />lake: Lake 3<br />ph: 7.08","month: Jul<br />lake: Lake 3<br />ph: 7.45","month: Aug<br />lake: Lake 3<br />ph: 6.97","month: Sep<br />lake: Lake 3<br />ph: 6.37","month: Oct<br />lake: Lake 3<br />ph: 6.77","month: Nov<br />lake: Lake 3<br />ph: 6.98","month: Dec<br />lake: Lake 3<br />ph: 7.29"],["month: Jan<br />lake: Lake 4<br />ph: 7.04","month: Feb<br />lake: Lake 4<br />ph: 6.66","month: Mar<br />lake: Lake 4<br />ph: 7.06","month: Apr<br />lake: Lake 4<br />ph: 7.35","month: May<br />lake: Lake 4<br />ph: 6.64","month: Jun<br />lake: Lake 4<br />ph: 6.43","month: Jul<br />lake: Lake 4<br />ph: 7.44","month: Aug<br />lake: Lake 4<br />ph: 6.85","month: Sep<br />lake: Lake 4<br />ph: 8.08","month: Oct<br />lake: Lake 4<br />ph: 7.39","month: Nov<br />lake: Lake 4<br />ph: 7.68","month: Dec<br />lake: Lake 4<br />ph: 7.06"],["month: Jan<br />lake: Lake 5<br />ph: 7.06","month: Feb<br />lake: Lake 5<br />ph: 6.78","month: Mar<br />lake: Lake 5<br />ph: 6.72","month: Apr<br />lake: Lake 5<br />ph: 6.76","month: May<br />lake: Lake 5<br />ph: 6.69","month: Jun<br />lake: Lake 5<br />ph: 7.63","month: Jul<br />lake: Lake 5<br />ph: 7.41","month: Aug<br />lake: Lake 5<br />ph: 6.81","month: Sep<br />lake: Lake 5<br />ph: 7.60","month: Oct<br />lake: Lake 5<br />ph: 6.96","month: Nov<br />lake: Lake 5<br />ph: 6.89","month: Dec<br />lake: Lake 5<br />ph: 7.11"]],"colorscale":[[0,"#440154"],[0.067961165048543951,"#481A6C"],[0.10194174757281592,"#482576"],[0.16990291262135945,"#443A83"],[0.19902912621359226,"#414487"],[0.20388349514563142,"#404588"],[0.21844660194174761,"#3E4989"],[0.2281553398058255,"#3E4C8A"],[0.30097087378640774,"#34608D"],[0.30582524271844691,"#34618D"],[0.31067961165048563,"#33628D"],[0.32524271844660224,"#31668E"],[0.33980582524271846,"#306A8E"],[0.35922330097087379,"#2E6F8E"],[0.36407766990291252,"#2D708E"],[0.36893203883495168,"#2D718E"],[0.37864077669902918,"#2C738E"],[0.3834951456310679,"#2B748E"],[0.40291262135922323,"#29798E"],[0.41747572815533984,"#287C8E"],[0.42233009708737856,"#277E8E"],[0.42718446601941773,"#277F8E"],[0.45631067961165056,"#25858E"],[0.46116504854368928,"#24878E"],[0.46601941747572845,"#23888E"],[0.47087378640776717,"#23898E"],[0.49514563106796128,"#218F8D"],[0.50485436893203872,"#20928C"],[0.51456310679611661,"#20938C"],[0.52912621359223322,"#1F978B"],[0.53883495145631066,"#1F998A"],[0.56310679611650483,"#1FA088"],[0.57281553398058271,"#1FA187"],[0.57766990291262144,"#1FA287"],[0.58737864077669932,"#21A585"],[0.59708737864077677,"#22A785"],[0.61165048543689338,"#25AB82"],[0.6165048543689321,"#25AC82"],[0.64077669902912615,"#2CB17E"],[0.64563106796116487,"#2EB37C"],[0.66504854368932032,"#35B779"],[0.6747572815533982,"#38B977"],[0.67961165048543692,"#3ABA76"],[0.68932038834951481,"#3FBC73"],[0.69417475728155353,"#40BD72"],[0.7669902912621358,"#66CC5D"],[0.77184466019417497,"#69CD5B"],[0.78155339805825241,"#6FCE58"],[0.80582524271844647,"#7DD24F"],[0.84466019417475713,"#96D83F"],[0.85436893203883513,"#9DD93B"],[0.89320388349514579,"#B7DE29"],[0.90776699029126195,"#C1DF24"],[1,"#FDE725"]],"type":"heatmap","showscale":false,"autocolorscale":false,"showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1],"y":[1],"name":"f6183edf660322b01fca126267254a0a","type":"scatter","mode":"markers","opacity":0,"hoverinfo":"skip","showlegend":false,"marker":{"color":[0,1],"colorscale":[[0,"#440154"],[0.0033444816053513379,"#440256"],[0.0066889632107022447,"#450357"],[0.010033444816053583,"#450558"],[0.013377926421404489,"#450659"],[0.016722408026755828,"#46075B"],[0.020066889632107166,"#46085C"],[0.023411371237458071,"#460A5D"],[0.026755852842809409,"#460B5E"],[0.030100334448160748,"#470C5F"],[0.033444816053511656,"#470E61"],[0.036789297658862991,"#470F62"],[0.040133779264213895,"#471063"],[0.043478260869565237,"#471164"],[0.046822742474916572,"#471365"],[0.050167224080267483,"#481467"],[0.053511705685618818,"#481568"],[0.056856187290969723,"#481768"],[0.060200668896321065,"#481769"],[0.063545150501672407,"#48186A"],[0.066889632107023311,"#481A6C"],[0.070234113712374646,"#481B6D"],[0.073578595317725551,"#481C6E"],[0.076923076923076886,"#481D6F"],[0.080267558528428234,"#481E6F"],[0.083612040133779139,"#481F70"],[0.086956521739130474,"#482071"],[0.090301003344481809,"#482173"],[0.093645484949832714,"#482374"],[0.096989966555184048,"#482475"],[0.10033444816053497,"#482576"],[0.1036789297658863,"#482576"],[0.10702341137123764,"#482777"],[0.11036789297658854,"#482878"],[0.11371237458193988,"#482979"],[0.11705685618729079,"#472A7A"],[0.12040133779264213,"#472B7A"],[0.12374581939799346,"#472D7B"],[0.12709030100334437,"#472D7B"],[0.1304347826086957,"#472E7C"],[0.13377926421404662,"#472F7D"],[0.13712374581939796,"#46307E"],[0.14046822742474929,"#46327E"],[0.14381270903010021,"#46337F"],[0.14715719063545155,"#463480"],[0.15050167224080288,"#463480"],[0.15384615384615377,"#453581"],[0.15719063545150511,"#453781"],[0.16053511705685602,"#453882"],[0.16387959866220736,"#443983"],[0.16722408026755869,"#443A83"],[0.17056856187290961,"#443A83"],[0.17391304347826095,"#443C84"],[0.17725752508361184,"#433D84"],[0.1806020066889632,"#433E85"],[0.18394648829431454,"#423F85"],[0.18729096989966543,"#424086"],[0.19063545150501676,"#424186"],[0.1939799331103681,"#424186"],[0.19732441471571902,"#414387"],[0.20066889632107035,"#414487"],[0.20401337792642127,"#404588"],[0.2073578595317726,"#404688"],[0.21070234113712394,"#3F4788"],[0.21404682274247483,"#3F4889"],[0.21739130434782619,"#3F4889"],[0.22073578595317708,"#3E4989"],[0.22408026755852842,"#3E4A89"],[0.22742474916387975,"#3E4C8A"],[0.23076923076923067,"#3D4D8A"],[0.23411371237458201,"#3D4E8A"],[0.23745819397993292,"#3C4F8A"],[0.24080267558528426,"#3C4F8A"],[0.24414715719063559,"#3C508B"],[0.24749163879598648,"#3B518B"],[0.25083612040133785,"#3B528B"],[0.25418060200668874,"#3A538B"],[0.25752508361204007,"#3A548C"],[0.26086956521739141,"#39558C"],[0.2642140468227423,"#39558C"],[0.26755852842809363,"#39568C"],[0.27090301003344502,"#38588C"],[0.27424749163879591,"#38598C"],[0.27759197324414725,"#375A8C"],[0.28093645484949814,"#375B8D"],[0.28428093645484948,"#375B8D"],[0.28762541806020081,"#365C8D"],[0.29096989966555176,"#365D8D"],[0.29431438127090309,"#355E8D"],[0.29765886287625443,"#355F8D"],[0.30100334448160532,"#34608D"],[0.30434782608695665,"#34618D"],[0.30769230769230754,"#34618D"],[0.31103678929765888,"#33628D"],[0.31438127090301021,"#33638D"],[0.31772575250836116,"#32648E"],[0.32107023411371249,"#32658E"],[0.32441471571906338,"#31668E"],[0.32775919732441472,"#31678E"],[0.33110367892976605,"#31678E"],[0.33444816053511695,"#31688E"],[0.33779264214046828,"#30698E"],[0.34113712374581923,"#306A8E"],[0.34448160535117056,"#2F6B8E"],[0.3478260869565219,"#2F6C8E"],[0.35117056856187279,"#2E6D8E"],[0.35451505016722412,"#2E6D8E"],[0.35785953177257507,"#2E6E8E"],[0.3612040133779264,"#2E6F8E"],[0.36454849498327774,"#2D708E"],[0.36789297658862863,"#2D718E"],[0.37123745819397996,"#2C718E"],[0.3745819397993313,"#2C728E"],[0.37792642140468219,"#2C728E"],[0.38127090301003352,"#2C738E"],[0.38461538461538447,"#2B748E"],[0.38795986622073581,"#2B758E"],[0.39130434782608714,"#2A768E"],[0.39464882943143803,"#2A778E"],[0.39799331103678937,"#2A778E"],[0.4013377926421407,"#2A788E"],[0.40468227424749159,"#29798E"],[0.40802675585284293,"#297A8E"],[0.41137123745819387,"#297B8E"],[0.41471571906354521,"#287C8E"],[0.41806020066889654,"#287D8E"],[0.42140468227424743,"#287D8E"],[0.42474916387959877,"#277E8E"],[0.42809364548494966,"#277F8E"],[0.43143812709030105,"#27808E"],[0.43478260869565238,"#26818E"],[0.43812709030100327,"#26828E"],[0.44147157190635461,"#26828E"],[0.4448160535117055,"#26828E"],[0.44816053511705684,"#25838E"],[0.45150501672240817,"#25848E"],[0.45484949832775912,"#25858E"],[0.45819397993311045,"#24868E"],[0.46153846153846134,"#24878E"],[0.46488294314381268,"#23888E"],[0.46822742474916401,"#23888E"],[0.4715719063545149,"#23898E"],[0.47491638795986624,"#238A8D"],[0.47826086956521718,"#228B8D"],[0.48160535117056852,"#228C8D"],[0.48494983277591985,"#228D8D"],[0.48829431438127119,"#218E8D"],[0.49163879598662208,"#218E8D"],[0.49498327759197297,"#218F8D"],[0.4983277591973243,"#21908D"],[0.5016722408026757,"#21918C"],[0.50501672240802697,"#20928C"],[0.50836120401337792,"#20928C"],[0.5117056856187292,"#20928C"],[0.51505016722408015,"#20938C"],[0.51839464882943154,"#1F948C"],[0.52173913043478282,"#1F958B"],[0.52508361204013376,"#1F968B"],[0.52842809364548504,"#1F978B"],[0.53177257525083599,"#1F988B"],[0.53511705685618727,"#1F988B"],[0.53846153846153866,"#1F998A"],[0.5418060200668896,"#1F9A8A"],[0.54515050167224088,"#1E9B8A"],[0.54849498327759183,"#1E9C89"],[0.55183946488294311,"#1E9D89"],[0.5551839464882945,"#1F9E89"],[0.55852842809364545,"#1F9E89"],[0.56187290969899673,"#1F9F88"],[0.56521739130434767,"#1FA088"],[0.56856187290969895,"#1FA188"],[0.57190635451505034,"#1FA187"],[0.57525083612040118,"#1FA287"],[0.57859531772575257,"#20A386"],[0.58193979933110351,"#20A386"],[0.58528428093645479,"#20A486"],[0.58862876254180618,"#21A585"],[0.59197324414715746,"#21A685"],[0.59531772575250841,"#22A785"],[0.59866220735785924,"#22A884"],[0.60200668896321063,"#23A983"],[0.60535117056856191,"#23A983"],[0.6086956521739133,"#24AA83"],[0.61204013377926425,"#25AB82"],[0.61538461538461553,"#25AC82"],[0.61872909698996648,"#26AD81"],[0.62207357859531776,"#27AD81"],[0.62541806020066915,"#27AD81"],[0.62876254180602009,"#28AE80"],[0.63210702341137137,"#29AF7F"],[0.63545150501672232,"#2AB07F"],[0.6387959866220736,"#2CB17E"],[0.64214046822742499,"#2DB27D"],[0.64548494983277582,"#2EB37C"],[0.64882943143812721,"#2EB37C"],[0.65217391304347816,"#30B47C"],[0.65551839464882944,"#31B57B"],[0.65886287625418083,"#32B67A"],[0.66220735785953166,"#34B679"],[0.66555183946488305,"#35B779"],[0.66889632107023389,"#36B878"],[0.67224080267558528,"#37B878"],[0.67558528428093656,"#39B977"],[0.67892976588628751,"#3ABA76"],[0.6822742474916389,"#3BBB75"],[0.68561872909698973,"#3DBC74"],[0.68896321070234112,"#3EBC73"],[0.6923076923076924,"#40BD72"],[0.69565217391304335,"#41BD72"],[0.69899665551839474,"#42BE71"],[0.70234113712374557,"#44BF70"],[0.70568561872909696,"#46C06F"],[0.70903010033444824,"#48C16E"],[0.71237458193979963,"#49C16D"],[0.71571906354515047,"#4BC26C"],[0.71906354515050186,"#4DC26C"],[0.72240802675585281,"#4EC36B"],[0.72575250836120409,"#50C46A"],[0.72909698996655548,"#52C569"],[0.73244147157190631,"#54C568"],[0.7357859531772577,"#55C667"],[0.73913043478260854,"#57C666"],[0.74247491638795993,"#59C765"],[0.74581939799331121,"#5AC864"],[0.74916387959866215,"#5CC863"],[0.75250836120401354,"#5EC962"],[0.75585284280936438,"#5FCA61"],[0.75919732441471577,"#62CB5F"],[0.76254180602006705,"#64CB5F"],[0.76588628762541799,"#66CB5D"],[0.76923076923076938,"#67CC5C"],[0.77257525083612022,"#69CD5B"],[0.77591973244147161,"#6CCD5A"],[0.77926421404682289,"#6DCE59"],[0.78260869565217384,"#6FCF57"],[0.78595317725752512,"#71CF57"],[0.78929765886287606,"#74D055"],[0.79264214046822745,"#75D054"],[0.79598662207357873,"#77D153"],[0.79933110367892968,"#79D151"],[0.80267558528428096,"#7BD250"],[0.8060200668896319,"#7ED34F"],[0.80936454849498318,"#80D34E"],[0.81270903010033457,"#82D34D"],[0.81605351170568585,"#84D44B"],[0.8193979933110368,"#86D549"],[0.82274247491638819,"#88D548"],[0.82608695652173902,"#8AD647"],[0.82943143812709041,"#8DD645"],[0.83277591973244169,"#8FD644"],[0.83612040133779264,"#91D743"],[0.83946488294314403,"#93D741"],[0.84280936454849487,"#95D840"],[0.84615384615384626,"#97D83E"],[0.84949832775919754,"#9AD93D"],[0.85284280936454848,"#9CD93C"],[0.85618729096989976,"#9ED93A"],[0.85953177257525071,"#A0DA39"],[0.8628762541806021,"#A2DA37"],[0.86622073578595338,"#A5DB36"],[0.86956521739130432,"#A7DB35"],[0.8729096989966556,"#A9DC33"],[0.87625418060200655,"#ABDC31"],[0.87959866220735783,"#AEDC30"],[0.88294314381270922,"#B0DD2F"],[0.88628762541806017,"#B2DD2D"],[0.88963210702341144,"#B5DE2B"],[0.89297658862876239,"#B7DE2A"],[0.89632107023411367,"#B9DE28"],[0.89966555183946506,"#BBDE27"],[0.9030100334448159,"#BEDF26"],[0.90635451505016729,"#C0DF25"],[0.90969899665551823,"#C2DF23"],[0.91304347826086951,"#C4E021"],[0.9163879598662209,"#C7E020"],[0.91973244147157218,"#C9E11F"],[0.92307692307692313,"#CBE11E"],[0.92642140468227396,"#CEE11D"],[0.92976588628762535,"#D0E11C"],[0.93311036789297674,"#D2E21B"],[0.93645484949832802,"#D4E21A"],[0.93979933110367897,"#D7E219"],[0.94314381270903025,"#D9E319"],[0.9464882943143812,"#DBE319"],[0.94983277591973247,"#DDE318"],[0.95317725752508387,"#DFE318"],[0.95652173913043481,"#E2E418"],[0.95986622073578609,"#E4E419"],[0.96321070234113704,"#E6E419"],[0.96655518394648832,"#E8E419"],[0.96989966555183971,"#EBE51A"],[0.97324414715719021,"#EDE51B"],[0.97658862876254238,"#EFE51C"],[0.97993311036789288,"#F1E51D"],[0.98327759197324416,"#F3E61E"],[0.98662207357859555,"#F5E61F"],[0.98996655518394594,"#F7E620"],[0.99331103678929822,"#F9E622"],[0.99665551839464861,"#FBE723"],[1,"#FDE725"]],"colorbar":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"thickness":23.040000000000003,"title":"pH Level","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"tickmode":"array","ticktext":["6.5","7.0","7.5","8.0"],"tickvals":[0.23389967637540468,0.47580906148867314,0.71771844660194173,0.95962783171521038],"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"ticklen":2,"len":0.5}},"xaxis":"x","yaxis":"y","frame":null}],"layout":{"margin":{"t":45.223744292237441,"r":7.3059360730593621,"b":41.643835616438366,"l":60.639269406392714},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Monthly pH Levels by Lake","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,12.6],"tickmode":"array","ticktext":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"tickvals":[1,2,3,4.0000000000000009,5,6,7.0000000000000009,8,9,10,11,12],"categoryorder":"array","categoryarray":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Month","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,5.5999999999999996],"tickmode":"array","ticktext":["Lake 1","Lake 2","Lake 3","Lake 4","Lake 5"],"tickvals":[1,2,3,4,5],"categoryorder":"array","categoryarray":["Lake 1","Lake 2","Lake 3","Lake 4","Lake 5"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716894984},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Lake","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"pH Level","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"1a0b2ebb455b":{"x":{},"y":{},"fill":{},"type":"heatmap"}},"cur_data":"1a0b2ebb455b","visdat":{"1a0b2ebb455b":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<script type="application/json" data-for="htmlwidget-f133f9a4461e7c1eb1b1">{"x":{"data":[{"x":[1,2,3,4,5,6,7,8,9,10,11,12],"y":[1,2,3,4,5],"z":[[0.33980582524271846,0.89320388349514579,0.77184466019417497,0.90776699029126195,0.21844660194174761,0.067961165048543951,0.57766990291262144,0.64077669902912615,0.30582524271844691,0.20388349514563142,0.53883495145631066,0.84466019417475713],[0.41747572815533984,0.58737864077669932,0.56310679611650483,0.59708737864077677,0.42233009708737856,0.67961165048543692,0.40291262135922323,0.61165048543689338,0.42718446601941773,0.37864077669902918,0.47087378640776717,0.10194174757281592],[0.85436893203883513,0.16990291262135945,0.57281553398058271,0,0.2281553398058255,0.51456310679611661,0.69417475728155353,0.46116504854368928,0.16990291262135945,0.36407766990291252,0.46601941747572845,0.6165048543689321],[0.49514563106796128,0.31067961165048563,0.50485436893203872,0.64563106796116487,0.30097087378640774,0.19902912621359226,0.68932038834951481,0.40291262135922323,1,0.66504854368932032,0.80582524271844647,0.50485436893203872],[0.50485436893203872,0.36893203883495168,0.33980582524271846,0.35922330097087379,0.32524271844660224,0.78155339805825241,0.6747572815533982,0.3834951456310679,0.7669902912621358,0.45631067961165056,0.42233009708737856,0.52912621359223322]],"text":[["month: Jan<br />lake: Lake 1<br />ph: 6.72","month: Feb<br />lake: Lake 1<br />ph: 7.86","month: Mar<br />lake: Lake 1<br />ph: 7.61","month: Apr<br />lake: Lake 1<br />ph: 7.89","month: May<br />lake: Lake 1<br />ph: 6.47","month: Jun<br />lake: Lake 1<br />ph: 6.16","month: Jul<br />lake: Lake 1<br />ph: 7.21","month: Aug<br />lake: Lake 1<br />ph: 7.34","month: Sep<br />lake: Lake 1<br />ph: 6.65","month: Oct<br />lake: Lake 1<br />ph: 6.44","month: Nov<br />lake: Lake 1<br />ph: 7.13","month: Dec<br />lake: Lake 1<br />ph: 7.76"],["month: Jan<br />lake: Lake 2<br />ph: 6.88","month: Feb<br />lake: Lake 2<br />ph: 7.23","month: Mar<br />lake: Lake 2<br />ph: 7.18","month: Apr<br />lake: Lake 2<br />ph: 7.25","month: May<br />lake: Lake 2<br />ph: 6.89","month: Jun<br />lake: Lake 2<br />ph: 7.42","month: Jul<br />lake: Lake 2<br />ph: 6.85","month: Aug<br />lake: Lake 2<br />ph: 7.28","month: Sep<br />lake: Lake 2<br />ph: 6.90","month: Oct<br />lake: Lake 2<br />ph: 6.80","month: Nov<br />lake: Lake 2<br />ph: 6.99","month: Dec<br />lake: Lake 2<br />ph: 6.23"],["month: Jan<br />lake: Lake 3<br />ph: 7.78","month: Feb<br />lake: Lake 3<br />ph: 6.37","month: Mar<br />lake: Lake 3<br />ph: 7.20","month: Apr<br />lake: Lake 3<br />ph: 6.02","month: May<br />lake: Lake 3<br />ph: 6.49","month: Jun<br />lake: Lake 3<br />ph: 7.08","month: Jul<br />lake: Lake 3<br />ph: 7.45","month: Aug<br />lake: Lake 3<br />ph: 6.97","month: Sep<br />lake: Lake 3<br />ph: 6.37","month: Oct<br />lake: Lake 3<br />ph: 6.77","month: Nov<br />lake: Lake 3<br />ph: 6.98","month: Dec<br />lake: Lake 3<br />ph: 7.29"],["month: Jan<br />lake: Lake 4<br />ph: 7.04","month: Feb<br />lake: Lake 4<br />ph: 6.66","month: Mar<br />lake: Lake 4<br />ph: 7.06","month: Apr<br />lake: Lake 4<br />ph: 7.35","month: May<br />lake: Lake 4<br />ph: 6.64","month: Jun<br />lake: Lake 4<br />ph: 6.43","month: Jul<br />lake: Lake 4<br />ph: 7.44","month: Aug<br />lake: Lake 4<br />ph: 6.85","month: Sep<br />lake: Lake 4<br />ph: 8.08","month: Oct<br />lake: Lake 4<br />ph: 7.39","month: Nov<br />lake: Lake 4<br />ph: 7.68","month: Dec<br />lake: Lake 4<br />ph: 7.06"],["month: Jan<br />lake: Lake 5<br />ph: 7.06","month: Feb<br />lake: Lake 5<br />ph: 6.78","month: Mar<br />lake: Lake 5<br />ph: 6.72","month: Apr<br />lake: Lake 5<br />ph: 6.76","month: May<br />lake: Lake 5<br />ph: 6.69","month: Jun<br />lake: Lake 5<br />ph: 7.63","month: Jul<br />lake: Lake 5<br />ph: 7.41","month: Aug<br />lake: Lake 5<br />ph: 6.81","month: Sep<br />lake: Lake 5<br />ph: 7.60","month: Oct<br />lake: Lake 5<br />ph: 6.96","month: Nov<br />lake: Lake 5<br />ph: 6.89","month: Dec<br />lake: Lake 5<br />ph: 7.11"]],"colorscale":[[0,"#440154"],[0.067961165048543951,"#481A6C"],[0.10194174757281592,"#482576"],[0.16990291262135945,"#443A83"],[0.19902912621359226,"#414487"],[0.20388349514563142,"#404588"],[0.21844660194174761,"#3E4989"],[0.2281553398058255,"#3E4C8A"],[0.30097087378640774,"#34608D"],[0.30582524271844691,"#34618D"],[0.31067961165048563,"#33628D"],[0.32524271844660224,"#31668E"],[0.33980582524271846,"#306A8E"],[0.35922330097087379,"#2E6F8E"],[0.36407766990291252,"#2D708E"],[0.36893203883495168,"#2D718E"],[0.37864077669902918,"#2C738E"],[0.3834951456310679,"#2B748E"],[0.40291262135922323,"#29798E"],[0.41747572815533984,"#287C8E"],[0.42233009708737856,"#277E8E"],[0.42718446601941773,"#277F8E"],[0.45631067961165056,"#25858E"],[0.46116504854368928,"#24878E"],[0.46601941747572845,"#23888E"],[0.47087378640776717,"#23898E"],[0.49514563106796128,"#218F8D"],[0.50485436893203872,"#20928C"],[0.51456310679611661,"#20938C"],[0.52912621359223322,"#1F978B"],[0.53883495145631066,"#1F998A"],[0.56310679611650483,"#1FA088"],[0.57281553398058271,"#1FA187"],[0.57766990291262144,"#1FA287"],[0.58737864077669932,"#21A585"],[0.59708737864077677,"#22A785"],[0.61165048543689338,"#25AB82"],[0.6165048543689321,"#25AC82"],[0.64077669902912615,"#2CB17E"],[0.64563106796116487,"#2EB37C"],[0.66504854368932032,"#35B779"],[0.6747572815533982,"#38B977"],[0.67961165048543692,"#3ABA76"],[0.68932038834951481,"#3FBC73"],[0.69417475728155353,"#40BD72"],[0.7669902912621358,"#66CC5D"],[0.77184466019417497,"#69CD5B"],[0.78155339805825241,"#6FCE58"],[0.80582524271844647,"#7DD24F"],[0.84466019417475713,"#96D83F"],[0.85436893203883513,"#9DD93B"],[0.89320388349514579,"#B7DE29"],[0.90776699029126195,"#C1DF24"],[1,"#FDE725"]],"type":"heatmap","showscale":false,"autocolorscale":false,"showlegend":false,"xaxis":"x","yaxis":"y","hoverinfo":"text","frame":null},{"x":[1],"y":[1],"name":"f6183edf660322b01fca126267254a0a","type":"scatter","mode":"markers","opacity":0,"hoverinfo":"skip","showlegend":false,"marker":{"color":[0,1],"colorscale":[[0,"#440154"],[0.0033444816053513379,"#440256"],[0.0066889632107022447,"#450357"],[0.010033444816053583,"#450558"],[0.013377926421404489,"#450659"],[0.016722408026755828,"#46075B"],[0.020066889632107166,"#46085C"],[0.023411371237458071,"#460A5D"],[0.026755852842809409,"#460B5E"],[0.030100334448160748,"#470C5F"],[0.033444816053511656,"#470E61"],[0.036789297658862991,"#470F62"],[0.040133779264213895,"#471063"],[0.043478260869565237,"#471164"],[0.046822742474916572,"#471365"],[0.050167224080267483,"#481467"],[0.053511705685618818,"#481568"],[0.056856187290969723,"#481768"],[0.060200668896321065,"#481769"],[0.063545150501672407,"#48186A"],[0.066889632107023311,"#481A6C"],[0.070234113712374646,"#481B6D"],[0.073578595317725551,"#481C6E"],[0.076923076923076886,"#481D6F"],[0.080267558528428234,"#481E6F"],[0.083612040133779139,"#481F70"],[0.086956521739130474,"#482071"],[0.090301003344481809,"#482173"],[0.093645484949832714,"#482374"],[0.096989966555184048,"#482475"],[0.10033444816053497,"#482576"],[0.1036789297658863,"#482576"],[0.10702341137123764,"#482777"],[0.11036789297658854,"#482878"],[0.11371237458193988,"#482979"],[0.11705685618729079,"#472A7A"],[0.12040133779264213,"#472B7A"],[0.12374581939799346,"#472D7B"],[0.12709030100334437,"#472D7B"],[0.1304347826086957,"#472E7C"],[0.13377926421404662,"#472F7D"],[0.13712374581939796,"#46307E"],[0.14046822742474929,"#46327E"],[0.14381270903010021,"#46337F"],[0.14715719063545155,"#463480"],[0.15050167224080288,"#463480"],[0.15384615384615377,"#453581"],[0.15719063545150511,"#453781"],[0.16053511705685602,"#453882"],[0.16387959866220736,"#443983"],[0.16722408026755869,"#443A83"],[0.17056856187290961,"#443A83"],[0.17391304347826095,"#443C84"],[0.17725752508361184,"#433D84"],[0.1806020066889632,"#433E85"],[0.18394648829431454,"#423F85"],[0.18729096989966543,"#424086"],[0.19063545150501676,"#424186"],[0.1939799331103681,"#424186"],[0.19732441471571902,"#414387"],[0.20066889632107035,"#414487"],[0.20401337792642127,"#404588"],[0.2073578595317726,"#404688"],[0.21070234113712394,"#3F4788"],[0.21404682274247483,"#3F4889"],[0.21739130434782619,"#3F4889"],[0.22073578595317708,"#3E4989"],[0.22408026755852842,"#3E4A89"],[0.22742474916387975,"#3E4C8A"],[0.23076923076923067,"#3D4D8A"],[0.23411371237458201,"#3D4E8A"],[0.23745819397993292,"#3C4F8A"],[0.24080267558528426,"#3C4F8A"],[0.24414715719063559,"#3C508B"],[0.24749163879598648,"#3B518B"],[0.25083612040133785,"#3B528B"],[0.25418060200668874,"#3A538B"],[0.25752508361204007,"#3A548C"],[0.26086956521739141,"#39558C"],[0.2642140468227423,"#39558C"],[0.26755852842809363,"#39568C"],[0.27090301003344502,"#38588C"],[0.27424749163879591,"#38598C"],[0.27759197324414725,"#375A8C"],[0.28093645484949814,"#375B8D"],[0.28428093645484948,"#375B8D"],[0.28762541806020081,"#365C8D"],[0.29096989966555176,"#365D8D"],[0.29431438127090309,"#355E8D"],[0.29765886287625443,"#355F8D"],[0.30100334448160532,"#34608D"],[0.30434782608695665,"#34618D"],[0.30769230769230754,"#34618D"],[0.31103678929765888,"#33628D"],[0.31438127090301021,"#33638D"],[0.31772575250836116,"#32648E"],[0.32107023411371249,"#32658E"],[0.32441471571906338,"#31668E"],[0.32775919732441472,"#31678E"],[0.33110367892976605,"#31678E"],[0.33444816053511695,"#31688E"],[0.33779264214046828,"#30698E"],[0.34113712374581923,"#306A8E"],[0.34448160535117056,"#2F6B8E"],[0.3478260869565219,"#2F6C8E"],[0.35117056856187279,"#2E6D8E"],[0.35451505016722412,"#2E6D8E"],[0.35785953177257507,"#2E6E8E"],[0.3612040133779264,"#2E6F8E"],[0.36454849498327774,"#2D708E"],[0.36789297658862863,"#2D718E"],[0.37123745819397996,"#2C718E"],[0.3745819397993313,"#2C728E"],[0.37792642140468219,"#2C728E"],[0.38127090301003352,"#2C738E"],[0.38461538461538447,"#2B748E"],[0.38795986622073581,"#2B758E"],[0.39130434782608714,"#2A768E"],[0.39464882943143803,"#2A778E"],[0.39799331103678937,"#2A778E"],[0.4013377926421407,"#2A788E"],[0.40468227424749159,"#29798E"],[0.40802675585284293,"#297A8E"],[0.41137123745819387,"#297B8E"],[0.41471571906354521,"#287C8E"],[0.41806020066889654,"#287D8E"],[0.42140468227424743,"#287D8E"],[0.42474916387959877,"#277E8E"],[0.42809364548494966,"#277F8E"],[0.43143812709030105,"#27808E"],[0.43478260869565238,"#26818E"],[0.43812709030100327,"#26828E"],[0.44147157190635461,"#26828E"],[0.4448160535117055,"#26828E"],[0.44816053511705684,"#25838E"],[0.45150501672240817,"#25848E"],[0.45484949832775912,"#25858E"],[0.45819397993311045,"#24868E"],[0.46153846153846134,"#24878E"],[0.46488294314381268,"#23888E"],[0.46822742474916401,"#23888E"],[0.4715719063545149,"#23898E"],[0.47491638795986624,"#238A8D"],[0.47826086956521718,"#228B8D"],[0.48160535117056852,"#228C8D"],[0.48494983277591985,"#228D8D"],[0.48829431438127119,"#218E8D"],[0.49163879598662208,"#218E8D"],[0.49498327759197297,"#218F8D"],[0.4983277591973243,"#21908D"],[0.5016722408026757,"#21918C"],[0.50501672240802697,"#20928C"],[0.50836120401337792,"#20928C"],[0.5117056856187292,"#20928C"],[0.51505016722408015,"#20938C"],[0.51839464882943154,"#1F948C"],[0.52173913043478282,"#1F958B"],[0.52508361204013376,"#1F968B"],[0.52842809364548504,"#1F978B"],[0.53177257525083599,"#1F988B"],[0.53511705685618727,"#1F988B"],[0.53846153846153866,"#1F998A"],[0.5418060200668896,"#1F9A8A"],[0.54515050167224088,"#1E9B8A"],[0.54849498327759183,"#1E9C89"],[0.55183946488294311,"#1E9D89"],[0.5551839464882945,"#1F9E89"],[0.55852842809364545,"#1F9E89"],[0.56187290969899673,"#1F9F88"],[0.56521739130434767,"#1FA088"],[0.56856187290969895,"#1FA188"],[0.57190635451505034,"#1FA187"],[0.57525083612040118,"#1FA287"],[0.57859531772575257,"#20A386"],[0.58193979933110351,"#20A386"],[0.58528428093645479,"#20A486"],[0.58862876254180618,"#21A585"],[0.59197324414715746,"#21A685"],[0.59531772575250841,"#22A785"],[0.59866220735785924,"#22A884"],[0.60200668896321063,"#23A983"],[0.60535117056856191,"#23A983"],[0.6086956521739133,"#24AA83"],[0.61204013377926425,"#25AB82"],[0.61538461538461553,"#25AC82"],[0.61872909698996648,"#26AD81"],[0.62207357859531776,"#27AD81"],[0.62541806020066915,"#27AD81"],[0.62876254180602009,"#28AE80"],[0.63210702341137137,"#29AF7F"],[0.63545150501672232,"#2AB07F"],[0.6387959866220736,"#2CB17E"],[0.64214046822742499,"#2DB27D"],[0.64548494983277582,"#2EB37C"],[0.64882943143812721,"#2EB37C"],[0.65217391304347816,"#30B47C"],[0.65551839464882944,"#31B57B"],[0.65886287625418083,"#32B67A"],[0.66220735785953166,"#34B679"],[0.66555183946488305,"#35B779"],[0.66889632107023389,"#36B878"],[0.67224080267558528,"#37B878"],[0.67558528428093656,"#39B977"],[0.67892976588628751,"#3ABA76"],[0.6822742474916389,"#3BBB75"],[0.68561872909698973,"#3DBC74"],[0.68896321070234112,"#3EBC73"],[0.6923076923076924,"#40BD72"],[0.69565217391304335,"#41BD72"],[0.69899665551839474,"#42BE71"],[0.70234113712374557,"#44BF70"],[0.70568561872909696,"#46C06F"],[0.70903010033444824,"#48C16E"],[0.71237458193979963,"#49C16D"],[0.71571906354515047,"#4BC26C"],[0.71906354515050186,"#4DC26C"],[0.72240802675585281,"#4EC36B"],[0.72575250836120409,"#50C46A"],[0.72909698996655548,"#52C569"],[0.73244147157190631,"#54C568"],[0.7357859531772577,"#55C667"],[0.73913043478260854,"#57C666"],[0.74247491638795993,"#59C765"],[0.74581939799331121,"#5AC864"],[0.74916387959866215,"#5CC863"],[0.75250836120401354,"#5EC962"],[0.75585284280936438,"#5FCA61"],[0.75919732441471577,"#62CB5F"],[0.76254180602006705,"#64CB5F"],[0.76588628762541799,"#66CB5D"],[0.76923076923076938,"#67CC5C"],[0.77257525083612022,"#69CD5B"],[0.77591973244147161,"#6CCD5A"],[0.77926421404682289,"#6DCE59"],[0.78260869565217384,"#6FCF57"],[0.78595317725752512,"#71CF57"],[0.78929765886287606,"#74D055"],[0.79264214046822745,"#75D054"],[0.79598662207357873,"#77D153"],[0.79933110367892968,"#79D151"],[0.80267558528428096,"#7BD250"],[0.8060200668896319,"#7ED34F"],[0.80936454849498318,"#80D34E"],[0.81270903010033457,"#82D34D"],[0.81605351170568585,"#84D44B"],[0.8193979933110368,"#86D549"],[0.82274247491638819,"#88D548"],[0.82608695652173902,"#8AD647"],[0.82943143812709041,"#8DD645"],[0.83277591973244169,"#8FD644"],[0.83612040133779264,"#91D743"],[0.83946488294314403,"#93D741"],[0.84280936454849487,"#95D840"],[0.84615384615384626,"#97D83E"],[0.84949832775919754,"#9AD93D"],[0.85284280936454848,"#9CD93C"],[0.85618729096989976,"#9ED93A"],[0.85953177257525071,"#A0DA39"],[0.8628762541806021,"#A2DA37"],[0.86622073578595338,"#A5DB36"],[0.86956521739130432,"#A7DB35"],[0.8729096989966556,"#A9DC33"],[0.87625418060200655,"#ABDC31"],[0.87959866220735783,"#AEDC30"],[0.88294314381270922,"#B0DD2F"],[0.88628762541806017,"#B2DD2D"],[0.88963210702341144,"#B5DE2B"],[0.89297658862876239,"#B7DE2A"],[0.89632107023411367,"#B9DE28"],[0.89966555183946506,"#BBDE27"],[0.9030100334448159,"#BEDF26"],[0.90635451505016729,"#C0DF25"],[0.90969899665551823,"#C2DF23"],[0.91304347826086951,"#C4E021"],[0.9163879598662209,"#C7E020"],[0.91973244147157218,"#C9E11F"],[0.92307692307692313,"#CBE11E"],[0.92642140468227396,"#CEE11D"],[0.92976588628762535,"#D0E11C"],[0.93311036789297674,"#D2E21B"],[0.93645484949832802,"#D4E21A"],[0.93979933110367897,"#D7E219"],[0.94314381270903025,"#D9E319"],[0.9464882943143812,"#DBE319"],[0.94983277591973247,"#DDE318"],[0.95317725752508387,"#DFE318"],[0.95652173913043481,"#E2E418"],[0.95986622073578609,"#E4E419"],[0.96321070234113704,"#E6E419"],[0.96655518394648832,"#E8E419"],[0.96989966555183971,"#EBE51A"],[0.97324414715719021,"#EDE51B"],[0.97658862876254238,"#EFE51C"],[0.97993311036789288,"#F1E51D"],[0.98327759197324416,"#F3E61E"],[0.98662207357859555,"#F5E61F"],[0.98996655518394594,"#F7E620"],[0.99331103678929822,"#F9E622"],[0.99665551839464861,"#FBE723"],[1,"#FDE725"]],"colorbar":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"thickness":23.040000000000003,"title":"pH Level","titlefont":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"tickmode":"array","ticktext":["6.5","7.0","7.5","8.0"],"tickvals":[0.23389967637540468,0.47580906148867314,0.71771844660194173,0.95962783171521038],"tickfont":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"ticklen":2,"len":0.5}},"xaxis":"x","yaxis":"y","frame":null}],"layout":{"margin":{"t":45.223744292237441,"r":7.3059360730593621,"b":41.643835616438366,"l":60.639269406392714},"font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724},"title":{"text":"Monthly pH Levels by Lake","font":{"color":"rgba(0,0,0,1)","family":"","size":17.534246575342465},"x":0,"xref":"paper"},"xaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,12.6],"tickmode":"array","ticktext":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"tickvals":[1,2,3,4.0000000000000009,5,6,7.0000000000000009,8,9,10,11,12],"categoryorder":"array","categoryarray":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.68949771689498},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"y","title":{"text":"Month","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"yaxis":{"domain":[0,1],"automargin":true,"type":"linear","autorange":false,"range":[0.40000000000000002,5.5999999999999996],"tickmode":"array","ticktext":["Lake 1","Lake 2","Lake 3","Lake 4","Lake 5"],"tickvals":[1,2,3,4,5],"categoryorder":"array","categoryarray":["Lake 1","Lake 2","Lake 3","Lake 4","Lake 5"],"nticks":null,"ticks":"","tickcolor":null,"ticklen":3.6529680365296811,"tickwidth":0,"showticklabels":true,"tickfont":{"color":"rgba(77,77,77,1)","family":"","size":11.689497716894984},"tickangle":-0,"showline":false,"linecolor":null,"linewidth":0,"showgrid":true,"gridcolor":"rgba(235,235,235,1)","gridwidth":0.66417600664176002,"zeroline":false,"anchor":"x","title":{"text":"Lake","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}},"hoverformat":".2f"},"shapes":[{"type":"rect","fillcolor":null,"line":{"color":null,"width":0,"linetype":[]},"yref":"paper","xref":"paper","x0":0,"x1":1,"y0":0,"y1":1}],"showlegend":false,"legend":{"bgcolor":null,"bordercolor":null,"borderwidth":0,"font":{"color":"rgba(0,0,0,1)","family":"","size":11.68949771689498},"title":{"text":"pH Level","font":{"color":"rgba(0,0,0,1)","family":"","size":14.611872146118724}}},"hovermode":"closest","barmode":"relative"},"config":{"doubleClick":"reset","modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"source":"A","attrs":{"5ff72c7a4c9":{"x":{},"y":{},"fill":{},"type":"heatmap"}},"cur_data":"5ff72c7a4c9","visdat":{"5ff72c7a4c9":["function (y) ","x"]},"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
-</section><section id="text" class="level3" data-number="D.3.12"><h3 data-number="D.3.12" class="anchored" data-anchor-id="text">
-<span class="header-section-number">D.3.12</span> Text</h3>
+</section><section id="text" class="level3" data-number="F.3.12"><h3 data-number="F.3.12" class="anchored" data-anchor-id="text">
+<span class="header-section-number">F.3.12</span> Text</h3>
 <p>Annotating a chart with text is a common and valuable practice in data visualization for several important reasons:</p>
 <ul>
 <li><p>Provide Context: Text annotations help to provide context and background information for the data. They explain what the chart represents, the variables involved, and the meaning of various data points or patterns. This context is crucial for viewers who may not be familiar with the data or the chart.</p></li>
@@ -789,8 +763,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><p>Explain Methodology: Annotations can also explain the methodology or statistical techniques used to generate the chart, which is important for transparency and trust in data analysis.</p></li>
 </ul>
 <p>Below I provide some packages that help with text annotation:</p>
-<section id="ggforce" class="level4" data-number="D.3.12.1"><h4 data-number="D.3.12.1" class="anchored" data-anchor-id="ggforce">
-<span class="header-section-number">D.3.12.1</span> ggforce</h4>
+<section id="ggforce" class="level4" data-number="F.3.12.1"><h4 data-number="F.3.12.1" class="anchored" data-anchor-id="ggforce">
+<span class="header-section-number">F.3.12.1</span> ggforce</h4>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>penguins <span class="sc">|&gt;</span> </span>
 <span id="cb18-2"><a href="#cb18-2"></a>    <span class="fu">ggplot</span>(</span>
@@ -817,8 +791,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="textpaths" class="level4" data-number="D.3.12.2"><h4 data-number="D.3.12.2" class="anchored" data-anchor-id="textpaths">
-<span class="header-section-number">D.3.12.2</span> textpaths</h4>
+</section><section id="textpaths" class="level4" data-number="F.3.12.2"><h4 data-number="F.3.12.2" class="anchored" data-anchor-id="textpaths">
+<span class="header-section-number">F.3.12.2</span> textpaths</h4>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="fu">library</span>(geomtextpath)</span>
 <span id="cb19-2"><a href="#cb19-2"></a></span>
@@ -835,8 +809,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="ggtext" class="level4" data-number="D.3.12.3"><h4 data-number="D.3.12.3" class="anchored" data-anchor-id="ggtext">
-<span class="header-section-number">D.3.12.3</span> ggtext</h4>
+</section><section id="ggtext" class="level4" data-number="F.3.12.3"><h4 data-number="F.3.12.3" class="anchored" data-anchor-id="ggtext">
+<span class="header-section-number">F.3.12.3</span> ggtext</h4>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">library</span>(ggtext)</span>
 <span id="cb20-2"><a href="#cb20-2"></a></span>
@@ -875,8 +849,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section></section><section id="scales" class="level3" data-number="D.3.13"><h3 data-number="D.3.13" class="anchored" data-anchor-id="scales">
-<span class="header-section-number">D.3.13</span> scales</h3>
+</section></section><section id="scales" class="level3" data-number="F.3.13"><h3 data-number="F.3.13" class="anchored" data-anchor-id="scales">
+<span class="header-section-number">F.3.13</span> scales</h3>
 <p>The <code>scales</code>package provides much of the infrastructure that underlies ggplot2’s scales, and using it allow you to customize the transformations, breaks, and labels used by ggplot2. It is particularly good at providing sensible labels apply transformations such as a log scale.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">library</span>(scales)</span>
@@ -977,8 +951,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="maps" class="level3" data-number="D.3.14"><h3 data-number="D.3.14" class="anchored" data-anchor-id="maps">
-<span class="header-section-number">D.3.14</span> Maps</h3>
+</section><section id="maps" class="level3" data-number="F.3.14"><h3 data-number="F.3.14" class="anchored" data-anchor-id="maps">
+<span class="header-section-number">F.3.14</span> Maps</h3>
 <p>Working with maps can be tricky. The <code>sf</code> package provides functions that work with ggplot2, such as <code>geom_sf()</code>. The <code>rnaturalearth</code> package provides high-quality mapping coordinates.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">library</span>(sf)          <span class="co"># for mapping geoms</span></span>
@@ -1014,8 +988,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section><section id="layouts-and-compositions" class="level3" data-number="D.3.15"><h3 data-number="D.3.15" class="anchored" data-anchor-id="layouts-and-compositions">
-<span class="header-section-number">D.3.15</span> Layouts and compositions</h3>
+</section><section id="layouts-and-compositions" class="level3" data-number="F.3.15"><h3 data-number="F.3.15" class="anchored" data-anchor-id="layouts-and-compositions">
+<span class="header-section-number">F.3.15</span> Layouts and compositions</h3>
 <p>Having control over layouts allow you to tailor the appearance of your plot to match your specific needs and preferences. You can control every aspect of the plot’s design, including the arrangement of facets, legends, titles, and labels. When you need to create complex composite plots that combine multiple geoms and facets, custom layouts enable you to precisely position and arrange them.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="fu">library</span>(patchwork)</span>
@@ -1555,8 +1529,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   });
   clipboard.on('success', onCopySuccess);
   if (window.document.getElementById('quarto-embedded-source-code-modal')) {
-    // For code content inside modals, clipBoardJS needs to be initialized with a container option
-    // TODO: Check when it could be a function (https://github.com/zenorocha/clipboard.js/issues/860)
     const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
       text: getTextToCopy,
       container: window.document.getElementById('quarto-embedded-source-code-modal')
@@ -1667,7 +1639,6 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       if (window.Quarto?.typesetMath) {
         window.Quarto.typesetMath(note);
       }
-      // TODO in 1.5, we should make sure this works without a callout special case
       if (note.classList.contains("callout")) {
         return note.outerHTML;
       } else {
@@ -1894,7 +1865,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
       <a href="./tidy-data.html" class="pagination-link" aria-label="Tidy data">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Tidy data</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tidy data</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

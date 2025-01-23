@@ -6,7 +6,7 @@ project:
 execute:
   freeze: auto
 book:
-  title: 5027A
+  title: 5023B
   subtitle: ''
   author: Philip Leftwich
   doi: ''
@@ -37,17 +37,11 @@ book:
   page-footer: CC-BY (2024) Philip Leftwich
   chapters:
   - index.qmd
-  - 04-penguin-project.qmd
-  - 05-dplyr.qmd
-  - 06-data-bias.qmd
-  - 07-data-insights.qmd
-  - 08-inferential-statistics.qmd
-  - 09-linear-models.qmd
-  - 10-paired-design.qmd
-  - 11-regression.qmd
-  - 12-ANOVA.qmd
-  - 13-interaction.qmd
-  - model-assumptions.qmd
+  - part: "Reproducible Environments"
+  - 01-projects.qmd
+  - 02-renv.qmd
+  - 03-github.qmd
+  - task1.qmd
   - part: "Summary tables"
     chapters:
     - summary-table.qmd
@@ -59,7 +53,9 @@ book:
     - quarto.qmd
   appendices:
   - r-basics.qmd
-  - projects.qmd
+  - import.qmd
+  - script.qmd
+  - Naming conventions.qmd
   - tidy-data.qmd
   - advanced_ggplot.qmd
   - references.qmd
