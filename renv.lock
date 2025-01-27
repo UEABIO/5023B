@@ -2469,6 +2469,16 @@
       ],
       "Hash": "37a7f0abce0349f5950ce49f38c7626b"
     },
+    "palmerpenguins": {
+      "Package": "palmerpenguins",
+      "Version": "0.1.1",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R"
+      ],
+      "Hash": "6c6861efbc13c1d543749e9c7be4a592"
+    },
     "parameters": {
       "Package": "parameters",
       "Version": "0.24.1",

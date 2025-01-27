@@ -1,0 +1,58 @@
+# Coding with AI support
+
+```{r, include = FALSE}
+source("R/booktem_setup.R")
+source("R/my_setup.R")
+library(tidyverse)
+library(here)
+penguins_raw <- read_csv(here("files", "penguins_raw.csv"))
+```
+
+## Github Copilot
+
+### What is GitHub Copilot?
+ 
+GitHub Copilot is a popular AI development tool that can convert human language commands into executable code or speed up your coding with intelligent autocompletion.
+
+### Setting up Copilot on Posit Cloud
+
+GitHub Copilot needs to be enabled and authorised for each new project. 
+
+1. You must have access to GitHub Copilot via your GitHub account, and you must authenticate with that account before you can use GitHub Copilot in your projects. [GitHub Copilot is free for students and teachers](https://education.github.com/discount_requests/application).
+
+2. To enable GitHub Copilot in RStudio:
+
+- Navigate to Tools > Global Options > Copilot.
+
+- Check the box to “Enable GitHub Copilot”.
+
+- Download and install the Copilot Agent components.
+
+- Click the “Sign In” button.
+
+- In the “GitHub Copilot: Sign in” dialog, copy the Verification Code.
+
+- Navigate to or click on the link to https://github.com/login/device, paste the Verification Code and click “Continue”.
+
+- GitHub will request the necessary permissions for GitHub Copilot. To approve these permissions, click “Authorize GitHub Copilot Plugin”.
+
+- After the permissions have been approved, your RStudio IDE will indicate the currently signed in user.
+
+- Close the Global Options dialogue, open a source file (.R, .py, .qmd, etc) and begin coding with Copilot!
+
+
+### Using Copilot
+
+:::{.callout-warning}
+
+While Copilot often generates useful and functional code, it is important to note that the suggestions are not always valid code examples or completely solve the intended problem. 
+
+Copilot suggestions are non-deterministic and we cannot guarantee the quality, accuracy, or security of the outputs. It is important to review the suggestions and ensure that they are both accurate and appropriate for the intended use case. Copilot may generate code that contains insecure coding patterns, bugs, or outdated practices. 
+
+It is important to record questions, suggestions and autocompletions and for these reasons including prompts in scripts and documenting use is critical.
+
+:::
+
+## Reading
+
+[Responsible use of copilot](https://docs.github.com/en/copilot/responsible-use-of-github-copilot-features/responsible-use-of-github-copilot-chat-in-your-ide)

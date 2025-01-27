@@ -1,10 +1,10 @@
 
 # Github
 
-```{r, include = FALSE}
+```{r}
+# Required packages
 
 library(usethis)
-
 library(gitcreds)
 
 ```
@@ -28,7 +28,7 @@ Git and GitHub are a big part of the data science and research community. We can
   
     📝 Reports
   
-Are version controlled and open access
+- Are version controlled and open access
 
 3) Version control lets you recover from any mistakes & your analysis is *backed up* externally
 
@@ -85,40 +85,32 @@ There are many ways to start a new repository, the easiest is *Github first*
 
 - On the top right corner, click on the “+” bottom and then “New repository”
 
-Then:
+Then perform the following steps:
 
-- Repository template: No template.
+1.  Repository template: No template.
 
-- Repository name: myrepo or whatever you wish to name your new project.
+2.  Repository name: "My first Github Repo" or whatever you wish to name your new project.
 
-- Description: Any short description of the project. Write this for humans.
+3.  Description: Any short description of the project. Write this for humans.
 
-- Public.
+4.  Public.
 
 - Initialize this repository with: nothing (we can set up everything from R).
 
-Before going back to RStudio, copy the url for the repository. 
+5. **Before going back to RStudio, copy the url for the repository.** 
 
 ### Clone into RStudio
 
-- File > New Project > Version Control > Git. In the “repository URL” paste the URL of your new GitHub repository 
-
-- Choose the folder where you want to create the project.
-
-- Choose “Open in new session”.
+- New Project > Version Control > Git. In the “repository URL” paste the URL of your new GitHub repository 
 
 - And Click on “Create Project”.
 
-
-The new folder in your computer will be a git repository, linked to a remote GitHub repository and an RStudio Project at the same time. This workflow also makes sure that all the configuration between the local and remote repos are done correctly.
+The new project will be a clone of the git repository, linked to a remote GitHub repository and an RStudio Project at the same time. This workflow also makes sure that all the configuration between the local and remote repos are done correctly.
 
 It also adds a `.gitignore` file that includes a list of files that we don’t need to track (i.e. .Rhistory).
 
-:::{.callout-tip}
+> Open it and have a look
 
-The .gitignore file can be a good place to store your PAT file. Make a plain text file and write in your token code, save it as anything you like e.g. token.txt. Add the name of this to your .gitignore file and it will save locally but never be pushed to your repo. Watch the Git pane in Rstudio to check it is not being tracked. 
-
-:::
 
 ### Connect your user credentials to Github
 
@@ -191,15 +183,51 @@ git config --global credential.helper 'cache --timeout=10000000'
 
 Thanks to https://blog.djnavarro.net/posts/2021-08-08_git-credential-helpers/ for this bit of information! 
 
-> If the system ever forgets your username or PAT, you should be able to paste these into prompts when pushing as well. 
+:::{.callout-tip}
 
+The .gitignore file can be a good place to manag the storage of your PAT file. Make a plain text file and write in your token code, save it as anything you like e.g. token.txt. Add the name of this to your .gitignore file and it will save locally but never be pushed to your repo. Watch the Git pane in Rstudio to check it is not being tracked. 
+
+:::
+
+> If the system ever forgets your username or PAT, you should be able to paste these into prompts when pushing as well. 
 
 
 ### Tracking local changes
 
+:::{.task}
+::::{.task-header}
+Track some changes
+::::
+::::{.task-container}
+
 - Create a new .qmd file
 
+- Add a Quarto Chunk set to (include = FALSE)
+
+- Put library() calls for `tidyverse` and `palmerpenguin`
+
+
+````md
+
+```{r}`r ''`
+#| include = FALSE
+library(tidyverse)
+library(palmerpenguins)
+```
+
+````
+
 - Save the file
+
+::::
+:::
+
+:::{.callout-warning}
+
+You won't have these R packages installed in your project yet, you will need to run `install.packages()` first. Or if you are using `renv` then `renv::install()`.
+It is important not to include install functions in your scripts and documents, as this will re-download the packages *every* time you run the script.
+
+:::
 
 At this point you should be able to see all the files in the git tracking area, and by selecting each one, the line by line differences in any changes you have made since your last commit
 
@@ -250,11 +278,18 @@ The background colours tells you whether the text has been added (green) or remo
 
 A git commit is a fundamental concept in version control with Git. It represents a snapshot of the changes made to a repository's files at a particular point in time. Think of it as saving the state of your project at a specific moment, which allows you to track and manage changes over time.
 
-In order to make a commit we must first
+:::{.task}
+::::{.task-header}
+Commit changes
+::::
+::::{.task-container}
 
 - Add the file to the staging area by selecting the file in the Git pane
 
 - Select commit and write a descriptive message in the commit message pane - think of this as an instruction for what it does - "This commit generates a new .qmd file"
+::::
+:::
+
 
 :::{callout-tip}
 
@@ -263,6 +298,12 @@ Although we can selectively add the files we wish to include in the staging area
 :::
 
 If you make commits - these are snapshots or tracked changes to your files, held locally on your computer. Git will track how far ahead you are of the repository held online and you can see this in the Git Pane
+
+
+
+```{r , echo=FALSE, eval=TRUE}
+knitr::include_graphics("images/local-commit.png")
+```
 
 #### Terminal 
 
@@ -282,10 +323,23 @@ git commit -m "A descriptive message to commit the files on the staging area."
 :::
 
 
+```{r , echo=FALSE, eval=TRUE}
+knitr::include_graphics("images/terminal.png")
+```
 
 ### 5. Push changes
 
-**Now Push** - push your commits to the remote repository. You won't see any changes on Github until you push those commits.
+
+:::{.task}
+::::{.task-header}
+Push changes
+::::
+::::{.task-container}
+
+- Push your commits to the remote repository. You won't see any changes on Github until you push those commits."
+::::
+:::
+
 
 :::{.callout-tip}
 
@@ -320,7 +374,11 @@ git pull
 
 Now, we can try to make changes here at github.com
 
-### Create a README
+:::{.task}
+::::{.task-header}
+Create a README
+::::
+::::{.task-container}
 
 - On the main page, click on the green bottom that says “Add a README”.
 
@@ -329,6 +387,8 @@ Now, we can try to make changes here at github.com
 - At the end of the page add a message on the first line and click on “Commit new file”.
 
 - Come back to the main page to see the README.
+::::
+:::
 
 
 :::{.callout-warning}
@@ -345,47 +405,95 @@ Now we should head to the GitPane in RStudio and select the blue "Pull" button. 
 
 Using Git branches in RStudio allows you to work on different features, experiments, or manuscript sections independently without affecting the main codebase. This is particularly useful in scientific research for trying out new analysis methods, writing different parts of a paper, or making bug fixes without disrupting ongoing work.
 
-### Create a new branch in Rstudio
-
-Go to the `Terminal` and run the following command:
-
-```
-git checkout -b new-plot
-
-```
-
 ###  Create a new branch in Github
+
+:::{.task}
+::::{.task-header}
+Create a new Git branch
+::::
+::::{.task-container}
 
 - Click on the "main" branch drop-down menu (or the current branch name).
 
 - Type the name of your new branch into the text field and press Enter to create it.
 
+::::
+:::
+
+
 ```{r fork, echo=FALSE, eval=TRUE}
 knitr::include_graphics("images/NewBranch.png")
 ```
 
-### Working on a new branch
+### Working on a new branch in RStudio
 
-Make Changes: Edit your files as needed on this branch.
+- In RStudio hit Pull to make sure you are up to-date
 
-Stage and Commit and Push changes as usual
+- In the Git Pane, next to New Branch is a drop-down of available branches
+
+- Select your new branch to "check it out"
+
+- Work on this branch can be made via Stage, Commit and Push as usual
+
+- Changes to this branch won't affect main until you submit a **merge request**
+
+:::{.task}
+::::{.task-header}
+Work on a new branch
+::::
+::::{.task-container}
+
+- Add the code to make a new figure in your .qmd file
+
+- When finished, commit and push these changes to your new branch on Github
+
+::::
+:::
+
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, fig.cap = "Example figure generated from palmer penguins"}
+library(tidyverse)
+library(palmerpenguins)
+## Custom colours ----
+
+pal <- c(
+  "Adelie" = "#FF8C00", 
+  "Chinstrap" = "#A034F0", 
+  "Gentoo" = "#159090")
+
+penguins |> 
+  ggplot(aes(x=flipper_length_mm, 
+             y = body_mass_g))+
+  geom_point(aes(colour=species))+
+  scale_color_manual(values=pal)+
+  theme_minimal()
+```
+
+:::{.callout-tip}
 
 In the Git pane, click on the Branch drop-down menu and select the branch you wish to use to switch between branches effortlessly
 
-```{task}
-
-Add a new plot to your file - hist(cars$speed)
-
-```
+:::
 
 ### Merge branches
 
 Pull request and merge changes
+
 Now go back to your repo on GitHub. You will notice that at the top of all you files there is a new section that says: Your recently pushed branches: The changes you made to your script have been pushed to your online copy of the project and are now in the branch feature. In order to merge them into your master branch we need to create a pull request.
 
-Click on the button that says *Compare and pull request**.
+:::{.task}
+::::{.task-header}
+Make a pull request to merge branches
+::::
+::::{.task-container}
 
-In the Open a pull request page click on Create pull request.
+- Click on the button that says *Compare and pull request**.
+
+- In the Open a pull request page click on Create pull request.
+
+::::
+:::
+
 
 ```{r , echo=FALSE, eval=TRUE}
 knitr::include_graphics("images/CreatePullReq.png")
@@ -424,6 +532,18 @@ The second situation is common when contributing to strangers' projects, such as
 
 
 ### Working with an external collaborator
+
+:::{.task}
+::::{.task-header}
+Contributing to someone else's repository
+::::
+::::{.task-container}
+
+Follow the steps below to fork, clone and submit a pull request to someone else's repo
+
+::::
+:::
+
 
 **1.** Go to [github.com](https://github.com/) and log in (you need your own account - for sign up with your uea.ac.uk e-mail)
 
@@ -569,6 +689,4 @@ text_tbl %>%
 
 ## BONUS EXERCISE
 
-This is a great exercise in practising dealing with merge conflicts when collaborating. To complete this exercise you will need a partner
-
-https://learning.nceas.ucsb.edu/2023-04-coreR/session_10.html
+[This is a great exercise in practising dealing with merge conflicts when collaborating](https://learning.nceas.ucsb.edu/2023-04-coreR/session_10.html). To complete this exercise you will need a partner. 
