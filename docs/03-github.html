@@ -113,7 +113,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./03-github.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Github</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-projects.html">Reproducible Environments</a></li><li class="breadcrumb-item"><a href="./03-github.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Github</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -144,37 +144,44 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
-      <span class="sidebar-item-text sidebar-link text-start">
- <span class="menu-text">Reproducible Environments</span></span>
-  </li>
-        <li class="sidebar-item">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Reproducible Environments</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./01-projects.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project-oriented workflows</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./02-renv.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title"><code>renv</code></span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./03-github.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Github</span></span></a>
   </div>
 </li>
-        <li class="sidebar-item">
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./task1.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Task One</span></span></a>
   </div>
 </li>
+      </ul>
+</li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">Summary tables</span></a>
+ <span class="menu-text">Exploratory Analysis</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -182,8 +189,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./summary-table.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Summary tables</span></span></a>
+  <a href="./04-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></span></a>
   </div>
 </li>
       </ul>
@@ -191,46 +198,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">Data Visualisation</span></a>
+ <span class="menu-text">Appendices</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./ggplot.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">ggplot</span></span></a>
-  </div>
-</li>
-      </ul>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">Reproducible Reports</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./quarto.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
-  </div>
-</li>
-      </ul>
-</li>
-        <li class="sidebar-item sidebar-item-section">
-      <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
- <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
-            <i class="bi bi-chevron-right ms-2"></i>
-          </a> 
-      </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./r-basics.html" class="sidebar-item-text sidebar-link">
@@ -263,8 +236,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
+  <a href="./quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">ggplot</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
   <a href="./advanced_ggplot.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">ggplot extras</span></span></a>
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">ggplot extras</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary-table.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Summary tables</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -284,33 +275,33 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
 <li><a href="#lets-git-it-started" id="toc-lets-git-it-started" class="nav-link active" data-scroll-target="#lets-git-it-started"><span class="header-section-number">3.1</span> Let’s Git it started</a></li>
-  <li><a href="#what-is-version-control" id="toc-what-is-version-control" class="nav-link" data-scroll-target="#what-is-version-control"><span class="header-section-number">3.2</span> What is version control?</a></li>
+  <li>
+<a href="#what-is-version-control" id="toc-what-is-version-control" class="nav-link" data-scroll-target="#what-is-version-control"><span class="header-section-number">3.2</span> What is version control?</a>
+  <ul class="collapse">
+<li><a href="#using-version-control-in-rstudio" id="toc-using-version-control-in-rstudio" class="nav-link" data-scroll-target="#using-version-control-in-rstudio"><span class="header-section-number">3.2.1</span> Using version control in RStudio</a></li>
+  </ul>
+</li>
   <li><a href="#remote-repositories" id="toc-remote-repositories" class="nav-link" data-scroll-target="#remote-repositories"><span class="header-section-number">3.3</span> Remote repositories</a></li>
   <li><a href="#git-introductions" id="toc-git-introductions" class="nav-link" data-scroll-target="#git-introductions"><span class="header-section-number">3.4</span> Git introductions</a></li>
   <li>
 <a href="#create-a-new-repository" id="toc-create-a-new-repository" class="nav-link" data-scroll-target="#create-a-new-repository"><span class="header-section-number">3.5</span> Create a new repository</a>
   <ul class="collapse">
-<li><a href="#create-an-online-repository." id="toc-create-an-online-repository." class="nav-link" data-scroll-target="#create-an-online-repository."><span class="header-section-number">3.5.1</span> 1. Create an online repository.</a></li>
-  <li><a href="#clone-into-rstudio" id="toc-clone-into-rstudio" class="nav-link" data-scroll-target="#clone-into-rstudio"><span class="header-section-number">3.5.2</span> 2. Clone into RStudio</a></li>
-  <li><a href="#connect-your-user-credentials-to-github" id="toc-connect-your-user-credentials-to-github" class="nav-link" data-scroll-target="#connect-your-user-credentials-to-github"><span class="header-section-number">3.5.3</span> 3. Connect your user credentials to Github</a></li>
-  <li><a href="#local-changes" id="toc-local-changes" class="nav-link" data-scroll-target="#local-changes"><span class="header-section-number">3.5.4</span> 4. Local changes</a></li>
-  <li><a href="#push-changes" id="toc-push-changes" class="nav-link" data-scroll-target="#push-changes"><span class="header-section-number">3.5.5</span> 5. Push changes</a></li>
+<li><a href="#create-an-online-repository." id="toc-create-an-online-repository." class="nav-link" data-scroll-target="#create-an-online-repository."><span class="header-section-number">3.5.1</span> Create an online repository.</a></li>
+  <li><a href="#clone-into-rstudio" id="toc-clone-into-rstudio" class="nav-link" data-scroll-target="#clone-into-rstudio"><span class="header-section-number">3.5.2</span> Clone into RStudio</a></li>
+  <li><a href="#connect-your-user-credentials-to-github" id="toc-connect-your-user-credentials-to-github" class="nav-link" data-scroll-target="#connect-your-user-credentials-to-github"><span class="header-section-number">3.5.3</span> Connect your user credentials to Github</a></li>
+  <li><a href="#tracking-local-changes" id="toc-tracking-local-changes" class="nav-link" data-scroll-target="#tracking-local-changes"><span class="header-section-number">3.5.4</span> Tracking local changes</a></li>
+  <li><a href="#commit-local-changes" id="toc-commit-local-changes" class="nav-link" data-scroll-target="#commit-local-changes"><span class="header-section-number">3.5.5</span> Commit local changes</a></li>
+  <li><a href="#push-changes" id="toc-push-changes" class="nav-link" data-scroll-target="#push-changes"><span class="header-section-number">3.5.6</span> 5. Push changes</a></li>
   </ul>
 </li>
-  <li>
-<a href="#remote-changes" id="toc-remote-changes" class="nav-link" data-scroll-target="#remote-changes"><span class="header-section-number">3.6</span> Remote changes</a>
-  <ul class="collapse">
-<li><a href="#create-a-readme" id="toc-create-a-readme" class="nav-link" data-scroll-target="#create-a-readme"><span class="header-section-number">3.6.1</span> Create a README</a></li>
-  </ul>
-</li>
+  <li><a href="#remote-changes" id="toc-remote-changes" class="nav-link" data-scroll-target="#remote-changes"><span class="header-section-number">3.6</span> Remote changes</a></li>
   <li>
 <a href="#working-with-branches" id="toc-working-with-branches" class="nav-link" data-scroll-target="#working-with-branches"><span class="header-section-number">3.7</span> Working with branches</a>
   <ul class="collapse">
-<li><a href="#create-a-new-branch-in-rstudio" id="toc-create-a-new-branch-in-rstudio" class="nav-link" data-scroll-target="#create-a-new-branch-in-rstudio"><span class="header-section-number">3.7.1</span> Create a new branch in Rstudio</a></li>
-  <li><a href="#create-a-new-branch-in-github" id="toc-create-a-new-branch-in-github" class="nav-link" data-scroll-target="#create-a-new-branch-in-github"><span class="header-section-number">3.7.2</span> Create a new branch in Github</a></li>
-  <li><a href="#working-on-a-new-branch" id="toc-working-on-a-new-branch" class="nav-link" data-scroll-target="#working-on-a-new-branch"><span class="header-section-number">3.7.3</span> Working on a new branch</a></li>
-  <li><a href="#merge-branches" id="toc-merge-branches" class="nav-link" data-scroll-target="#merge-branches"><span class="header-section-number">3.7.4</span> Merge branches</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.7.5</span> Summary</a></li>
+<li><a href="#create-a-new-branch-in-github" id="toc-create-a-new-branch-in-github" class="nav-link" data-scroll-target="#create-a-new-branch-in-github"><span class="header-section-number">3.7.1</span> Create a new branch in Github</a></li>
+  <li><a href="#working-on-a-new-branch-in-rstudio" id="toc-working-on-a-new-branch-in-rstudio" class="nav-link" data-scroll-target="#working-on-a-new-branch-in-rstudio"><span class="header-section-number">3.7.2</span> Working on a new branch in RStudio</a></li>
+  <li><a href="#merge-branches" id="toc-merge-branches" class="nav-link" data-scroll-target="#merge-branches"><span class="header-section-number">3.7.3</span> Merge branches</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">3.7.4</span> Summary</a></li>
   </ul>
 </li>
   <li>
@@ -335,7 +326,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-projects.html">Reproducible Environments</a></li><li class="breadcrumb-item"><a href="./03-github.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Github</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title">
 <span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Github</span>
 </h1>
@@ -352,7 +343,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
 
 
-</header><section id="lets-git-it-started" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="lets-git-it-started">
+</header><div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># Required packages</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(usethis)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">library</span>(gitcreds)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="lets-git-it-started" class="level2" data-number="3.1"><h2 data-number="3.1" class="anchored" data-anchor-id="lets-git-it-started">
 <span class="header-section-number">3.1</span> Let’s Git it started</h2>
 <p>Git is a <strong>version control system</strong>. Originally built to help groups of developers work collaboratively on big software projects. It helps us manage our RStudio projects - with tracked changes.</p>
 <p>Git and GitHub are a big part of the data science and research community. We can use GitHub in a number of ways</p>
@@ -366,7 +363,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>📝 Reports</p>
 </li>
 </ol>
-<p>Are version controlled and open access</p>
+<ul>
+<li>Are version controlled and open access</li>
+</ul>
 <ol start="3" type="1">
 <li><p>Version control lets you recover from any mistakes &amp; your analysis is <em>backed up</em> externally</p></li>
 <li><p>When you come to publish any reports - your analysis is accessible to others - it can even host dashboards and websites</p></li>
@@ -385,25 +384,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p><code>add</code> and <code>commit</code> are also git commands.RStudio provides a basic GUI for git, which we are going to use in this workshop. But you can also use the Terminal to talk to git on the command line</p>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Note
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>to add a file to the staging area.</p>
-<pre><code>git add &lt;file&gt; 
-
-
-git commit -m "A descriptive message to commit the files on the staging area."</code></pre>
-</div>
-</div>
-</section><section id="remote-repositories" class="level2" data-number="3.3"><h2 data-number="3.3" class="anchored" data-anchor-id="remote-repositories">
+<section id="using-version-control-in-rstudio" class="level3" data-number="3.2.1"><h3 data-number="3.2.1" class="anchored" data-anchor-id="using-version-control-in-rstudio">
+<span class="header-section-number">3.2.1</span> Using version control in RStudio</h3>
+</section></section><section id="remote-repositories" class="level2" data-number="3.3"><h2 data-number="3.3" class="anchored" data-anchor-id="remote-repositories">
 <span class="header-section-number">3.3</span> Remote repositories</h2>
 <p>What we explained before is the local workflow. This is when the repo lives in your computer and that’s it. But you can also connect the local repository with a remote repository. For this workshop we are going to use <a href="https://github.com/">GitHub</a> to host remote repositories, but there are other options you can explore, such as <a href="https://about.gitlab.com/">GitLab</a>.</p>
 <p>Let’s imagine we have a local repository, we made some commits and we want to send those changes to the remote repository (we’ll how to create the remote repository later). For that we push the commits to the remote repository and the two repos are “up to date”.</p>
@@ -416,16 +399,6 @@ git commit -m "A descriptive message to commit the files on the staging area."</
 </div>
 </div>
 </div>
-<p>And if you want to try the command line:</p>
-<pre><code>
-# to upload commits to the remote repository.
-
-git push 
-
-# to download commits from the remote repository to the local repo.
-
-git pull 
-</code></pre>
 </section><section id="git-introductions" class="level2" data-number="3.4"><h2 data-number="3.4" class="anchored" data-anchor-id="git-introductions">
 <span class="header-section-number">3.4</span> Git introductions</h2>
 <p>Before you create your first repository you need to make sure that git and RStudio are friends and that git knows you. That means you have:</p>
@@ -436,45 +409,36 @@ git pull
 <span class="header-section-number">3.5</span> Create a new repository</h2>
 <p>There are many ways to start a new repository, the easiest is <em>Github first</em></p>
 <section id="create-an-online-repository." class="level3" data-number="3.5.1"><h3 data-number="3.5.1" class="anchored" data-anchor-id="create-an-online-repository.">
-<span class="header-section-number">3.5.1</span> 1. Create an online repository.</h3>
+<span class="header-section-number">3.5.1</span> Create an online repository.</h3>
 <ul>
 <li><p>Go to github.com and log in.</p></li>
 <li><p>On the top right corner, click on the “+” bottom and then “New repository”</p></li>
 </ul>
-<p>Then:</p>
-<ul>
+<p>Then perform the following steps:</p>
+<ol type="1">
 <li><p>Repository template: No template.</p></li>
-<li><p>Repository name: myrepo or whatever you wish to name your new project.</p></li>
+<li><p>Repository name: “My first Github Repo” or whatever you wish to name your new project.</p></li>
 <li><p>Description: Any short description of the project. Write this for humans.</p></li>
 <li><p>Public.</p></li>
-<li><p>Initialize this repository with: nothing (we can set up everything from R).</p></li>
-</ul>
-<p>Before going back to RStudio, copy the url for the repository.</p>
-</section><section id="clone-into-rstudio" class="level3" data-number="3.5.2"><h3 data-number="3.5.2" class="anchored" data-anchor-id="clone-into-rstudio">
-<span class="header-section-number">3.5.2</span> 2. Clone into RStudio</h3>
+</ol>
 <ul>
-<li><p>File &gt; New Project &gt; Version Control &gt; Git. In the “repository URL” paste the URL of your new GitHub repository</p></li>
-<li><p>Choose the folder where you want to create the project.</p></li>
-<li><p>Choose “Open in new session”.</p></li>
+<li>Initialize this repository with: nothing (we can set up everything from R).</li>
+</ul>
+<ol start="5" type="1">
+<li><strong>Before going back to RStudio, copy the url for the repository.</strong></li>
+</ol></section><section id="clone-into-rstudio" class="level3" data-number="3.5.2"><h3 data-number="3.5.2" class="anchored" data-anchor-id="clone-into-rstudio">
+<span class="header-section-number">3.5.2</span> Clone into RStudio</h3>
+<ul>
+<li><p>New Project &gt; Version Control &gt; Git. In the “repository URL” paste the URL of your new GitHub repository</p></li>
 <li><p>And Click on “Create Project”.</p></li>
 </ul>
-<p>The new folder in your computer will be a git repository, linked to a remote GitHub repository and an RStudio Project at the same time. This workflow also makes sure that all the configuration between the local and remote repos are done correctly.</p>
+<p>The new project will be a clone of the git repository, linked to a remote GitHub repository and an RStudio Project at the same time. This workflow also makes sure that all the configuration between the local and remote repos are done correctly.</p>
 <p>It also adds a <code>.gitignore</code> file that includes a list of files that we don’t need to track (i.e.&nbsp;.Rhistory).</p>
-<div class="callout callout-style-default callout-tip callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Tip
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>The .gitignore file can be a good place to store your PAT file. Make a plain text file and write in your token code, save it as anything you like e.g.&nbsp;token.txt. Add the name of this to your .gitignore file and it will save locally but never be pushed to your repo. Watch the Git pane in Rstudio to check it is not being tracked.</p>
-</div>
-</div>
+<blockquote class="blockquote">
+<p>Open it and have a look</p>
+</blockquote>
 </section><section id="connect-your-user-credentials-to-github" class="level3" data-number="3.5.3"><h3 data-number="3.5.3" class="anchored" data-anchor-id="connect-your-user-credentials-to-github">
-<span class="header-section-number">3.5.3</span> 3. Connect your user credentials to Github</h3>
+<span class="header-section-number">3.5.3</span> Connect your user credentials to Github</h3>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -490,9 +454,9 @@ Note
 </div>
 <p>You can now introduce yourself to Github with the <code>usethis</code> package</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(usethis) </span>
-<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">use_git_config</span>(<span class="at">user.name  =</span> <span class="st">"Jane Doe"</span>,</span>
-<span id="cb3-3"><a href="#cb3-3"></a>               <span class="at">user.email =</span> <span class="st">"jane@example.org"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(usethis) </span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">use_git_config</span>(<span class="at">user.name  =</span> <span class="st">"Jane Doe"</span>,</span>
+<span id="cb2-3"><a href="#cb2-3"></a>               <span class="at">user.email =</span> <span class="st">"jane@example.org"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Substituting with your name and the email associated with your GitHub account, or you can also do this on the command line:</p>
 <div class="callout callout-style-default callout-note callout-titled">
@@ -514,16 +478,16 @@ git config --global user.email 'jane@example.com
 <p>You will also need a Personal Access Token (PAT), Github has started using these <em>in lieu</em> of passwords.</p>
 <p>Create a PAT with</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>usethis<span class="sc">::</span><span class="fu">create_github_token</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>usethis<span class="sc">::</span><span class="fu">create_github_token</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This will likely open a new window allowing you to create a token. Do now close this window, as you will need to copy the token to your clipboard. Then run this other command:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>gitcreds<span class="sc">::</span><span class="fu">gitcreds_set</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>gitcreds<span class="sc">::</span><span class="fu">gitcreds_set</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>This will ask you for your access token. Go to the previous window, copy the token, paste it on your console and press enter.</p>
 <p>Finally, to check that everything’s ok with this command.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>usethis<span class="sc">::</span><span class="fu">gh_token_help</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>usethis<span class="sc">::</span><span class="fu">gh_token_help</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p>Irritatingly the PAT seems to be forgotten on linux systems very quickly, which is what Posit Cloud is hosted on:</p>
 <p>A simple solution to this problem is to ask git to store information in the cache for just a teeny tiny little bit longer. Instead of having the cache expire after the default 900 seconds, maybe set it to expire after 10 million seconds. That way, you’ll only have to refresh the cache using gitcreds::gitcreds_set() once every four months instead of four times an hour. Implementing this solution requires only one line of code at the terminal:</p>
@@ -531,18 +495,59 @@ git config --global user.email 'jane@example.com
 git config --global credential.helper 'cache --timeout=10000000'
 </code></pre>
 <p>Thanks to https://blog.djnavarro.net/posts/2021-08-08_git-credential-helpers/ for this bit of information!</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The .gitignore file can be a good place to manag the storage of your PAT file. Make a plain text file and write in your token code, save it as anything you like e.g.&nbsp;token.txt. Add the name of this to your .gitignore file and it will save locally but never be pushed to your repo. Watch the Git pane in Rstudio to check it is not being tracked.</p>
+</div>
+</div>
 <blockquote class="blockquote">
 <p>If the system ever forgets your username or PAT, you should be able to paste these into prompts when pushing as well.</p>
 </blockquote>
-</section><section id="local-changes" class="level3" data-number="3.5.4"><h3 data-number="3.5.4" class="anchored" data-anchor-id="local-changes">
-<span class="header-section-number">3.5.4</span> 4. Local changes</h3>
+</section><section id="tracking-local-changes" class="level3" data-number="3.5.4"><h3 data-number="3.5.4" class="anchored" data-anchor-id="tracking-local-changes">
+<span class="header-section-number">3.5.4</span> Tracking local changes</h3>
+<div class="task">
+<div class="task-header">
+<p>Track some changes</p>
+</div>
+<div class="task-container">
 <ul>
 <li><p>Create a new .qmd file</p></li>
-<li><p>Save the file</p></li>
-<li><p>Add it to the staging area by selecting the file in the Git pane</p></li>
-<li><p>Select commit and write a descriptive message in the commit message pane</p></li>
+<li><p>Add a Quarto Chunk set to (include = FALSE)</p></li>
+<li><p>Put library() calls for <code>tidyverse</code> and <code>palmerpenguin</code></p></li>
 </ul>
-<p>At this point you should be able to see all the files in the staging area, and by selecting each one, the line by line differences in any changes you have made since your last commit</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource md number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="in">```{r}</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="in">#| include = FALSE</span></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="in">library(tidyverse)</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="in">library(palmerpenguins)</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ul>
+<li>Save the file</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You won’t have these R packages installed in your project yet, you will need to run <code><a href="https://rdrr.io/r/utils/install.packages.html">install.packages()</a></code> first. Or if you are using <code>renv</code> then <code><a href="https://rstudio.github.io/renv/reference/install.html">renv::install()</a></code>. It is important not to include install functions in your scripts and documents, as this will re-download the packages <em>every</em> time you run the script.</p>
+</div>
+</div>
+<p>At this point you should be able to see all the files in the git tracking area, and by selecting each one, the line by line differences in any changes you have made since your last commit</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -588,7 +593,9 @@ git config --global credential.helper 'cache --timeout=10000000'
 </div>
 </div>
 </div>
-<p>You can get more details on the changes that have been made to each file by right-clicking and selecting diff</p>
+<ul>
+<li>You can get more details on the changes that have been made to each file by right-clicking and selecting diff</li>
+</ul>
 <div class="cell" data-layout-align="left">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-left">
@@ -597,7 +604,9 @@ git config --global credential.helper 'cache --timeout=10000000'
 </div>
 </div>
 </div>
-<p>This opens a new window highlighting the <strong>diff</strong>erences between your current file and the previous commit.</p>
+<ul>
+<li>This opens a new window highlighting the <strong>diff</strong>erences between your current file and the previous commit.</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -607,38 +616,156 @@ git config --global credential.helper 'cache --timeout=10000000'
 </div>
 </div>
 <p>The background colours tells you whether the text has been added (green) or removed (red). (If you’re colourblind you can use the line numbers in the two columns at the far left as a guide).</p>
-</section></section><section id="push-changes" class="level3" data-number="3.5.5"><h3 data-number="3.5.5" class="anchored" data-anchor-id="push-changes">
-<span class="header-section-number">3.5.5</span> 5. Push changes</h3>
-<p><strong>Now Push</strong> - push your commits to the remote repository. You won’t see any changes on Github until you push those commits.</p>
+</section></section><section id="commit-local-changes" class="level3" data-number="3.5.5"><h3 data-number="3.5.5" class="anchored" data-anchor-id="commit-local-changes">
+<span class="header-section-number">3.5.5</span> Commit local changes</h3>
+<p>A git commit is a fundamental concept in version control with Git. It represents a snapshot of the changes made to a repository’s files at a particular point in time. Think of it as saving the state of your project at a specific moment, which allows you to track and manage changes over time.</p>
+<div class="task">
+<div class="task-header">
+<p>Commit changes</p>
+</div>
+<div class="task-container">
+<ul>
+<li><p>Add the file to the staging area by selecting the file in the Git pane</p></li>
+<li><p>Select commit and write a descriptive message in the commit message pane - think of this as an instruction for what it does - “This commit generates a new .qmd file”</p></li>
+</ul>
+</div>
+</div>
+<div class="{callout-tip}">
+<p>Although we can selectively add the files we wish to include in the staging area - its usually just the case we want to add everything that has changed since our last commit</p>
+</div>
+<p>If you make commits - these are snapshots or tracked changes to your files, held locally on your computer. Git will track how far ahead you are of the repository held online and you can see this in the Git Pane</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="images/local-commit.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="terminal" class="level4" data-number="3.5.5.1"><h4 data-number="3.5.5.1" class="anchored" data-anchor-id="terminal">
+<span class="header-section-number">3.5.5.1</span> Terminal</h4>
+<p><code>add</code> and <code>commit</code> are also git commands. RStudio provides a basic GUI for git, which we are going to use in this workshop. But you can also use the Terminal to talk to git on the command line</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>to add a file to the staging area.</p>
+<pre><code>git add &lt;file&gt; 
+
+
+git commit -m "A descriptive message to commit the files on the staging area."</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="images/terminal.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section></section><section id="push-changes" class="level3" data-number="3.5.6"><h3 data-number="3.5.6" class="anchored" data-anchor-id="push-changes">
+<span class="header-section-number">3.5.6</span> 5. Push changes</h3>
+<div class="task">
+<div class="task-header">
+<p>Push changes</p>
+</div>
+<div class="task-container">
+<ul>
+<li>Push your commits to the remote repository. You won’t see any changes on Github until you push those commits.”</li>
+</ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>You might be asked for your username and password at this point - when working on your own computer this shouldn’t happen, but on Posit Cloud it seems to. You can put your GitHub username in followed by your PAT (not your password)</p>
+</div>
+</div>
 <p>Let’s head back to GitHub now. If you refresh the page, now you’ll see the files you committed just now. Let’s click on “Commits” to see the history of the repository. From this view, you can explore the repository at the “state” of each commit and look at the file differences.</p>
-<p>Now, we can try to make changes here at github.com</p>
-</section></section><section id="remote-changes" class="level2" data-number="3.6"><h2 data-number="3.6" class="anchored" data-anchor-id="remote-changes">
+<section id="terminal-1" class="level4" data-number="3.5.6.1"><h4 data-number="3.5.6.1" class="anchored" data-anchor-id="terminal-1">
+<span class="header-section-number">3.5.6.1</span> Terminal</h4>
+<p>And if you want to try the command line:</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<pre><code># to upload commits to the remote repository.
+
+git push 
+
+# to download commits from the remote repository to the local repo.
+
+git pull 
+</code></pre>
+</div>
+</div>
+</section></section></section><section id="remote-changes" class="level2" data-number="3.6"><h2 data-number="3.6" class="anchored" data-anchor-id="remote-changes">
 <span class="header-section-number">3.6</span> Remote changes</h2>
-<section id="create-a-readme" class="level3" data-number="3.6.1"><h3 data-number="3.6.1" class="anchored" data-anchor-id="create-a-readme">
-<span class="header-section-number">3.6.1</span> Create a README</h3>
+<p>Now, we can try to make changes here at github.com</p>
+<div class="task">
+<div class="task-header">
+<p>Create a README</p>
+</div>
+<div class="task-container">
 <ul>
 <li><p>On the main page, click on the green bottom that says “Add a README”.</p></li>
 <li><p>Add something to the file. READMEs usually are written in Markdown and contain information about the repo.</p></li>
 <li><p>At the end of the page add a message on the first line and click on “Commit new file”.</p></li>
 <li><p>Come back to the main page to see the README.</p></li>
 </ul>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
 <p>The new file and the changes you do on GitHub are only on the remote repository until you make a pull from the local repo. If you make changes on the local repo while it not up to date, you may encounter <strong>merge conflicts</strong>, which lead to headaches. This happens when the version of a file on the local repo is not compatible with its version on the remote repo. In those cases, git cannot decide which version is the right one and you have to do it yourself.</p>
-<p>To avoid this problem (most of the time), you should do a <strong>pull everytime you load up a project</strong> before doing anything else. Most of the time the message will be “Already up to-date”, but this is a good habit.</p>
-<p>Now we should head to the GitPane in RStudio and select the blue “Pull” button. The README should appear in your files.</p>
-</section></section><section id="working-with-branches" class="level2" data-number="3.7"><h2 data-number="3.7" class="anchored" data-anchor-id="working-with-branches">
+<p>To avoid this problem (most of the time), you should aim to do all your work on RStudio AND make a <strong>pull everytime you load up a project</strong> before doing anything else. Most of the time the message will be “Already up to-date”, but this is a good habit.</p>
+</div>
+</div>
+<p>Now we should head to the GitPane in RStudio and select the blue “Pull” button. The README <em>should</em> appear in your files.</p>
+</section><section id="working-with-branches" class="level2" data-number="3.7"><h2 data-number="3.7" class="anchored" data-anchor-id="working-with-branches">
 <span class="header-section-number">3.7</span> Working with branches</h2>
 <p>Using Git branches in RStudio allows you to work on different features, experiments, or manuscript sections independently without affecting the main codebase. This is particularly useful in scientific research for trying out new analysis methods, writing different parts of a paper, or making bug fixes without disrupting ongoing work.</p>
-<section id="create-a-new-branch-in-rstudio" class="level3" data-number="3.7.1"><h3 data-number="3.7.1" class="anchored" data-anchor-id="create-a-new-branch-in-rstudio">
-<span class="header-section-number">3.7.1</span> Create a new branch in Rstudio</h3>
-<p>Go to the <code>Terminal</code> and run the following command:</p>
-<pre><code>git checkout -b new-plot
-</code></pre>
-</section><section id="create-a-new-branch-in-github" class="level3" data-number="3.7.2"><h3 data-number="3.7.2" class="anchored" data-anchor-id="create-a-new-branch-in-github">
-<span class="header-section-number">3.7.2</span> Create a new branch in Github</h3>
+<section id="create-a-new-branch-in-github" class="level3" data-number="3.7.1"><h3 data-number="3.7.1" class="anchored" data-anchor-id="create-a-new-branch-in-github">
+<span class="header-section-number">3.7.1</span> Create a new branch in Github</h3>
+<div class="task">
+<div class="task-header">
+<p>Create a new Git branch</p>
+</div>
+<div class="task-container">
 <ul>
 <li><p>Click on the “main” branch drop-down menu (or the current branch name).</p></li>
 <li><p>Type the name of your new branch into the text field and press Enter to create it.</p></li>
 </ul>
+</div>
+</div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -647,20 +774,62 @@ git config --global credential.helper 'cache --timeout=10000000'
 </div>
 </div>
 </div>
-</section><section id="working-on-a-new-branch" class="level3" data-number="3.7.3"><h3 data-number="3.7.3" class="anchored" data-anchor-id="working-on-a-new-branch">
-<span class="header-section-number">3.7.3</span> Working on a new branch</h3>
-<p>Make Changes: Edit your files as needed on this branch.</p>
-<p>Stage and Commit and Push changes as usual</p>
-<p>In the Git pane, click on the Branch drop-down menu and select the branch you wish to use to switch between branches effortlessly</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource task number-lines code-with-copy"><code class="sourceCode"><span id="cb10-1"><a href="#cb10-1"></a></span>
-<span id="cb10-2"><a href="#cb10-2"></a>Add a new plot to your file - hist(cars$speed)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section><section id="working-on-a-new-branch-in-rstudio" class="level3" data-number="3.7.2"><h3 data-number="3.7.2" class="anchored" data-anchor-id="working-on-a-new-branch-in-rstudio">
+<span class="header-section-number">3.7.2</span> Working on a new branch in RStudio</h3>
+<ul>
+<li><p>In RStudio hit Pull to make sure you are up to-date</p></li>
+<li><p>In the Git Pane, next to New Branch is a drop-down of available branches</p></li>
+<li><p>Select your new branch to “check it out”</p></li>
+<li><p>Work on this branch can be made via Stage, Commit and Push as usual</p></li>
+<li><p>Changes to this branch won’t affect main until you submit a <strong>merge request</strong></p></li>
+</ul>
+<div class="task">
+<div class="task-header">
+<p>Work on a new branch</p>
 </div>
-</section><section id="merge-branches" class="level3" data-number="3.7.4"><h3 data-number="3.7.4" class="anchored" data-anchor-id="merge-branches">
-<span class="header-section-number">3.7.4</span> Merge branches</h3>
-<p>Pull request and merge changes Now go back to your repo on GitHub. You will notice that at the top of all you files there is a new section that says: Your recently pushed branches: The changes you made to your script have been pushed to your online copy of the project and are now in the branch feature. In order to merge them into your master branch we need to create a pull request.</p>
-<p>Click on the button that says *Compare and pull request**.</p>
-<p>In the Open a pull request page click on Create pull request.</p>
+<div class="task-container">
+<ul>
+<li><p>Add the code to make a new figure in your .qmd file</p></li>
+<li><p>When finished, commit and push these changes to your new branch on Github</p></li>
+</ul>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="03-github_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Example figure generated from palmer penguins</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In the Git pane, click on the Branch drop-down menu and select the branch you wish to use to switch between branches effortlessly</p>
+</div>
+</div>
+</section><section id="merge-branches" class="level3" data-number="3.7.3"><h3 data-number="3.7.3" class="anchored" data-anchor-id="merge-branches">
+<span class="header-section-number">3.7.3</span> Merge branches</h3>
+<p>Pull request and merge changes</p>
+<p>Now go back to your repo on GitHub. You will notice that at the top of all you files there is a new section that says: Your recently pushed branches: The changes you made to your script have been pushed to your online copy of the project and are now in the branch feature. In order to merge them into your master branch we need to create a pull request.</p>
+<div class="task">
+<div class="task-header">
+<p>Make a pull request to merge branches</p>
+</div>
+<div class="task-container">
+<ul>
+<li><p>Click on the button that says *Compare and pull request**.</p></li>
+<li><p>In the Open a pull request page click on Create pull request.</p></li>
+</ul>
+</div>
+</div>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -687,8 +856,8 @@ git config --global credential.helper 'cache --timeout=10000000'
 </div>
 </div>
 </div>
-</section><section id="summary" class="level3" data-number="3.7.5"><h3 data-number="3.7.5" class="anchored" data-anchor-id="summary">
-<span class="header-section-number">3.7.5</span> Summary</h3>
+</section><section id="summary" class="level3" data-number="3.7.4"><h3 data-number="3.7.4" class="anchored" data-anchor-id="summary">
+<span class="header-section-number">3.7.4</span> Summary</h3>
 <p>You can create and manage Git branches either from RStudio or directly on GitHub. In RStudio, use the terminal to create branches and manage them through the Git pane. On GitHub, you can create branches and manage them using the web interface, which also supports pull requests for merging changes. Using branches helps you work on features or fixes independently, keeping your main branch clean and stable.</p>
 <blockquote class="blockquote">
 <p>Keep Branches short and prune them often, you have to manually fix any conflicts - and this is much simpler when branches are short and focused</p>
@@ -704,6 +873,14 @@ git config --global credential.helper 'cache --timeout=10000000'
 <p>The second situation is common when contributing to strangers’ projects, such as fixing bugs in open source packages. In this case, you need to first fork the repository, which creates a remote repository linked to your GitHub account to which you will have complete access. Now you work in this fork using the normal workflow: modify, add, commit and push. But for your changes to integrate into the original repository, you need to create a pull request (or PR). This will let the owner of the original repo that you made some changes that you think should be merged. The owner can then accept, reject or ask for modifications. Once they accept your Pull Request, your modifications will be safe in the original repository.</p>
 <section id="working-with-an-external-collaborator" class="level3" data-number="3.8.1"><h3 data-number="3.8.1" class="anchored" data-anchor-id="working-with-an-external-collaborator">
 <span class="header-section-number">3.8.1</span> Working with an external collaborator</h3>
+<div class="task">
+<div class="task-header">
+<p>Contributing to someone else’s repository</p>
+</div>
+<div class="task-container">
+<p>Follow the steps below to fork, clone and submit a pull request to someone else’s repo</p>
+</div>
+</div>
 <p><strong>1.</strong> Go to <a href="https://github.com/">github.com</a> and log in (you need your own account - for sign up with your uea.ac.uk e-mail)</p>
 <p><strong>2.</strong> In the Search bar, look for repo <strong>Philip-Leftwich/5023Y-Happy-Git</strong></p>
 <p><strong>3.</strong> Click on the repo name, and look at the existing repo structure</p>
@@ -869,8 +1046,7 @@ Tip
 <li><a href="https://happygitwithr.com/">Happy Git</a></li>
 </ul></section><section id="bonus-exercise" class="level2" data-number="3.14"><h2 data-number="3.14" class="anchored" data-anchor-id="bonus-exercise">
 <span class="header-section-number">3.14</span> BONUS EXERCISE</h2>
-<p>This is a great exercise in practising dealing with merge conflicts when collaborating. To complete this exercise you will need a partner</p>
-<p>https://learning.nceas.ucsb.edu/2023-04-coreR/session_10.html</p>
+<p><a href="https://learning.nceas.ucsb.edu/2023-04-coreR/session_10.html">This is a great exercise in practising dealing with merge conflicts when collaborating</a>. To complete this exercise you will need a partner.</p>
 
 
 </section></main><!-- /main --><script>

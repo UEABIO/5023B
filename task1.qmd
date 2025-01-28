@@ -91,7 +91,17 @@ Google and Stack Overflow will help you a lot. Remember to include the names of 
 
 A few hints to help you on your way:
 
-This dataset is bigger than the ones you’ve used before, which means you might find it takes R a little longer to complete certain tasks:
+- This dataset is bigger than the ones you’ve used before, which means you might find it takes R a little longer to complete certain tasks. 
+
+- You will need to use @R-lubridate to handle dates properly
+
+- You will need @R-forcats to handle factors and ordering
+
+- You will need `group_by()` and `summarise()` for group-specific calculations
+
+- You will need `if_else()` or `case_when()` to conditionally count cases
+
+- You will need `pivot_longer()` or `pivot_wider()` to reshape data
 
 
 ## Why am I being assessed like this?

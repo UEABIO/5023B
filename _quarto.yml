@@ -38,26 +38,25 @@ book:
   chapters:
   - index.qmd
   - part: "Reproducible Environments"
-  - 01-projects.qmd
-  - 02-renv.qmd
-  - 03-github.qmd
-  - task1.qmd
-  - part: "Summary tables"
     chapters:
-    - summary-table.qmd
-  - part: "Data Visualisation"
+    - 01-projects.qmd
+    - 02-renv.qmd
+    - 03-github.qmd
+    - task1.qmd
+  - part: "Exploratory Analysis"
     chapters:
-    - ggplot.qmd
-  - part: "Reproducible Reports"
-    chapters:
-    - quarto.qmd
+    - 04-eda.qmd
+
   appendices:
   - r-basics.qmd
   - import.qmd
   - script.qmd
   - Naming conventions.qmd
   - tidy-data.qmd
+  - quarto.qmd
+  - ggplot.qmd
   - advanced_ggplot.qmd
+  - summary-table.qmd
   - references.qmd
 bibliography:
   - include/packages.bib

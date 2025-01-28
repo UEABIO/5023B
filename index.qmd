@@ -1,18 +1,16 @@
 # Overview {.unnumbered}
 
-This course will introduce scientists and practitioners interested in applying statistical approaches in their daily routine using R as a working environment. Participants will be introduced into R and R Studio while learning how to perform common statistical analyses. After a short introduction on R and its principles, the focus will be on questions that could be addressed using common statistical analyses, both for descriptive statistics and for statistical inference.
+This course will introduce scientists and practitioners interested in statistics and machine learning in R. 
 
 ## Learning outcomes
 
-- Understand how to read, interpret and write scripts in R.
+- Understand how to create reproducible analyses
 
-- Learn how to check and clean data 
+- Learn fundamental programming tools
 
-- Learn statistical tools to address common questions in research activities.
+- Learn complex statistical models
 
-- An introduction to efficient, readable and reproducible analyses
-
-- Being comfortable with using R when performing both descriptive and inferential statistics.
+- An introduction to machine learning
 
 
 ## How to use this book
@@ -30,9 +28,9 @@ We have:
 
     - If you feel unwell, or cannot attend a session in-person don’t worry you can access everything, and follow along in real time, or work at your own pace.
 
-- One **assignment per week** - this will be in the form of quizzes or short assignments, each assignment is worth 2% of your module grade (to a maximum of 15%) and there will be 10 assignments total.
+- One **assignment per week** - this will be in the form of short assignments
 
-- One **data analysis project** - this will be a single piece of coursework (details after reading week) worth 20% of the the module grade 
+- One **data analysis project** - this will be a single piece of coursework
 
 
 
@@ -40,7 +38,7 @@ We have:
 # automatically create a bib database for R packages
 # add any packages you want to cite here
 knitr::write_bib(c(
-  .packages(), 'rstatix', 'patchwork', 'here', 'kableExtra', 'plotly', 'gitcreds', 'usethis', 'ggridges', 'scales', 'purrr', 'tinytex', 'gt', 'broom', 'tidyverse', 'rstatix', 'performance', 'see', 'lme4', 'lmerTest', 'DHARMa', 'glmmTMB', 'nlme', 'ggeffects', 'sjPlot', 'DHARMa', 'report', 'MuMIn', 'palmerpenguins', 'colorBlindness', 'skimr', 'ggplot2', 'sandwich', 'parameters'
+  .packages(), 'rstatix', 'patchwork', 'here', 'kableExtra', 'plotly', 'gitcreds', 'usethis', 'ggridges', 'scales', 'purrr', 'tinytex', 'gt', 'broom', 'tidyverse', 'rstatix', 'performance', 'see', 'lme4', 'lmerTest', 'DHARMa', 'glmmTMB', 'nlme', 'ggeffects', 'sjPlot', 'DHARMa', 'report', 'MuMIn', 'palmerpenguins', 'colorBlindness', 'skimr', 'ggplot2', 'sandwich', 'parameters', 'lubridate', 'forcats'
 ), 'include/packages.bib')
 
 

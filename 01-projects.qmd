@@ -49,9 +49,16 @@ This will set up a dedicated workspace for your project, ensuring that the worki
 knitr::include_graphics("images/project.png")
 ```
 
+
 ## Avoiding setwd() and Promoting Safe File Paths:
 
 To maintain a clean and efficient workflow in R, it's advisable to avoid using `setwd()` at the beginning of each script. This practice promotes the use of safe file paths and is particularly important for projects with multiple collaborators or when working across different computers.
+
+:::{.callout-important}
+
+[Why we use projects](https://www.tidyverse.org/blog/2017/12/workflow-vs-script/)
+
+:::
 
 ### Absolute vs. Relative Paths:
 
@@ -125,9 +132,9 @@ raw_data <- read.csv(here("data", "raw", "penguins.csv"))
 
 ### Reading
 
-https://github.com/jennybc/here_here
+(https://github.com/jennybc/here_here)
 
-https://cran.r-project.org/web/packages/here/index.html
+(https://cran.r-project.org/web/packages/here/index.html)
 
 
 ## Blank slates
@@ -147,6 +154,8 @@ For example many data analysis scripts start with the command `rm(list = ls())`.
 ### Restart R sessions
 
 Restarting R sessions and using scripts as your history is a best practice for maintaining a clean, reproducible, and efficient workflow. It addresses the limitations of `rm(list = ls())` by ensuring a complete reset and minimizing hidden dependencies, enhancing code organization, and ensuring your analysis remains robust and predictable across sessions and when shared with others.
+
+You can set up a "blank-slate" R project by navigating to the Workspace options Tools > Project Options and setting all of these options to "No."
 
 ```{r, eval=TRUE, echo=FALSE, out.width="80%",}
 knitr::include_graphics("images/rstudio-workspace.png")

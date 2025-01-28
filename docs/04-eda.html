@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.6.39">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Statistical skills for Biologists">
-<title>Appendix E — Tidy data – 5023B</title>
+<title>5&nbsp; Exploratory Data Analysis – 5023B</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -18,61 +18,7 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
@@ -80,8 +26,8 @@ div.csl-indent {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./quarto.html" rel="next">
-<link href="./Naming conventions.html" rel="prev">
+<link href="./r-basics.html" rel="next">
+<link href="./task1.html" rel="prev">
 <link href="./images/logos/logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -132,7 +78,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./r-basics.html">Appendices</a></li><li class="breadcrumb-item"><a href="./tidy-data.html"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tidy data</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-eda.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./04-eda.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -208,7 +154,7 @@ div.csl-indent {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-eda.html" class="sidebar-item-text sidebar-link">
+  <a href="./04-eda.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></span></a>
   </div>
 </li>
@@ -249,7 +195,7 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./tidy-data.html" class="sidebar-item-text sidebar-link active">
+  <a href="./tidy-data.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tidy data</span></span></a>
   </div>
 </li>
@@ -289,26 +235,14 @@ div.csl-indent {
 </div>
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
-   
-  <ul>
-<li><a href="#why-tidy-data" id="toc-why-tidy-data" class="nav-link active" data-scroll-target="#why-tidy-data"><span class="header-section-number">E.1</span> Why tidy data?</a></li>
-  <li>
-<a href="#using-pivot-functions" id="toc-using-pivot-functions" class="nav-link" data-scroll-target="#using-pivot-functions"><span class="header-section-number">E.2</span> Using <code>pivot</code> functions</a>
-  <ul class="collapse">
-<li><a href="#pivot-longer" id="toc-pivot-longer" class="nav-link" data-scroll-target="#pivot-longer"><span class="header-section-number">E.2.1</span> Pivot longer</a></li>
-  <li><a href="#overwrite-the-original-object" id="toc-overwrite-the-original-object" class="nav-link" data-scroll-target="#overwrite-the-original-object"><span class="header-section-number">E.2.2</span> Overwrite the original object</a></li>
-  <li><a href="#create-a-new-r-object" id="toc-create-a-new-r-object" class="nav-link" data-scroll-target="#create-a-new-r-object"><span class="header-section-number">E.2.3</span> Create a new r object</a></li>
-  <li><a href="#pivot-wider" id="toc-pivot-wider" class="nav-link" data-scroll-target="#pivot-wider"><span class="header-section-number">E.2.4</span> Pivot wider</a></li>
-  </ul>
-</li>
-  <li><a href="#reading" id="toc-reading" class="nav-link" data-scroll-target="#reading"><span class="header-section-number">E.3</span> Reading</a></li>
-  </ul></nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./r-basics.html">Appendices</a></li><li class="breadcrumb-item"><a href="./tidy-data.html"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tidy data</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-tidy" class="quarto-section-identifier">Appendix E — Tidy data</span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-eda.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./04-eda.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span>
+</h1>
 </div>
 
 
@@ -322,141 +256,11 @@ div.csl-indent {
   
 
 
-</header><p>We are going to learn how to organise data using the <em>tidy</em> format. This is because we are using the <code>tidyverse</code> packages <span class="citation" data-cites="R-tidyverse">Wickham (<a href="references.html#ref-R-tidyverse" role="doc-biblioref">2023</a>)</span>. This is an opinionated, but highly effective method for generating reproducible analyses with a wide-range of data manipulation tools. Tidy data is an easy format for computers to read. It is also the required data structure for our <strong>statistical tests</strong> that we will work with later.</p>
-<p>Here ‘tidy’ refers to a specific structure that lets us manipulate and visualise data with ease. In a tidy dataset each <em>variable</em> is in one column and each row contains one <em>observation</em>. Each cell of the table/spreadsheet contains the <em>values</em>. One observation you might make about tidy data is it is quite long - it generates a lot of rows of data - you might remember then that <em>tidy</em> data can be referred to as <em>long</em>-format data (as opposed to <em>wide</em> data).</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="images/tidy-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="tidy data overview"></p>
-</figure>
-</div>
-</div>
-</div>
-<section id="why-tidy-data" class="level2" data-number="E.1"><h2 data-number="E.1" class="anchored" data-anchor-id="why-tidy-data">
-<span class="header-section-number">E.1</span> Why tidy data?</h2>
-<ul>
-<li><p>The data cleaning and analysis tools in R work best with data that is “tidy”</p></li>
-<li><p>“Tidy” data has a clear and consistent structure, untidy data can be “messy” in lots of different ways</p></li>
-</ul></section><section id="using-pivot-functions" class="level2" data-number="E.2"><h2 data-number="E.2" class="anchored" data-anchor-id="using-pivot-functions">
-<span class="header-section-number">E.2</span> Using <code>pivot</code> functions</h2>
-<p>What do we do if the data we are working with in R isn’t “tidy”?</p>
-<p>There are functions found as part of the <code>tidyverse</code> that can help us to reshape data.</p>
-<ul>
-<li><p><code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">tidyr::pivot_wider()</a></code> - from <em>long</em> to <em>wide</em> format</p></li>
-<li><p><code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">tidyr::pivot_longer()</a></code> - from <em>wide</em> to <em>long</em> format</p></li>
-</ul>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="images/tidyr-longer-wider.gif" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>Reshaping data with pivot</figcaption></figure>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a> country <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"z"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2"></a> yr1960 <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a> yr1970 <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="dv">13</span>, <span class="dv">23</span>, <span class="dv">33</span>)</span>
-<span id="cb1-4"><a href="#cb1-4"></a> yr2010 <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">25</span>, <span class="dv">35</span>)</span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a>country_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(country, yr1960, yr1970, yr2010)</span>
-<span id="cb1-7"><a href="#cb1-7"></a>country_data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output-display">
-<div class="kable-table">
-<table class="caption-top table table-sm table-striped small">
-<thead><tr class="header">
-<th style="text-align: left;">country</th>
-<th style="text-align: right;">yr1960</th>
-<th style="text-align: right;">yr1970</th>
-<th style="text-align: right;">yr2010</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">x</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">15</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">y</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">23</td>
-<td style="text-align: right;">25</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">z</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: right;">33</td>
-<td style="text-align: right;">35</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<section id="pivot-longer" class="level3" data-number="E.2.1"><h3 data-number="E.2.1" class="anchored" data-anchor-id="pivot-longer">
-<span class="header-section-number">E.2.1</span> Pivot longer</h3>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">pivot_longer</span>(<span class="at">data =</span> country_data,</span>
-<span id="cb2-2"><a href="#cb2-2"></a>             <span class="at">cols =</span> yr1960<span class="sc">:</span>yr2010,</span>
-<span id="cb2-3"><a href="#cb2-3"></a>             <span class="at">names_to =</span> <span class="st">"year"</span>,</span>
-<span id="cb2-4"><a href="#cb2-4"></a>             <span class="at">names_prefix =</span> <span class="st">"yr"</span>,</span>
-<span id="cb2-5"><a href="#cb2-5"></a>             <span class="at">values_to =</span> <span class="st">"metric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="images/tidyr_pivot.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>Reshaping data with pivot</figcaption></figure>
-</div>
-</div>
-</div>
-<p>To <em>save</em> these changes to your data format, you must assign this to an object, and you have two options</p>
-<ul>
-<li><p>Use the same name as the original R object, this will <em>overwrite</em> the original with the new format</p></li>
-<li><p>Use a <em>new</em> name for the reformatted data both R objects will exist in your Environment</p></li>
-</ul>
-<p>Neither is more <em>correct</em> than the other but be aware of what you are doing.</p>
-</section><section id="overwrite-the-original-object" class="level3" data-number="E.2.2"><h3 data-number="E.2.2" class="anchored" data-anchor-id="overwrite-the-original-object">
-<span class="header-section-number">E.2.2</span> Overwrite the original object</h3>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>country_data <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(<span class="at">data =</span> country_data,</span>
-<span id="cb3-2"><a href="#cb3-2"></a>             <span class="at">cols =</span> yr1960<span class="sc">:</span>yr2010,</span>
-<span id="cb3-3"><a href="#cb3-3"></a>             <span class="at">names_to =</span> <span class="st">"year"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4"></a>             <span class="at">names_prefix =</span> <span class="st">"yr"</span>,</span>
-<span id="cb3-5"><a href="#cb3-5"></a>             <span class="at">values_to =</span> <span class="st">"metric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section><section id="create-a-new-r-object" class="level3" data-number="E.2.3"><h3 data-number="E.2.3" class="anchored" data-anchor-id="create-a-new-r-object">
-<span class="header-section-number">E.2.3</span> Create a new r object</h3>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>long_country_data <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(<span class="at">data =</span> country_data,</span>
-<span id="cb4-2"><a href="#cb4-2"></a>             <span class="at">cols =</span> yr1960<span class="sc">:</span>yr2010,</span>
-<span id="cb4-3"><a href="#cb4-3"></a>             <span class="at">names_to =</span> <span class="st">"year"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4"></a>             <span class="at">names_prefix =</span> <span class="st">"yr"</span>, <span class="co"># optional</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a>             <span class="at">values_to =</span> <span class="st">"metric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section><section id="pivot-wider" class="level3" data-number="E.2.4"><h3 data-number="E.2.4" class="anchored" data-anchor-id="pivot-wider">
-<span class="header-section-number">E.2.4</span> Pivot wider</h3>
-<p>Let’s use the long country data we have just generated as an example of how we <em>could</em> use the <code>pivot_wider()</code> function and reverse the process:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">pivot_wider</span>(<span class="at">data =</span> long_country_data,</span>
-<span id="cb5-2"><a href="#cb5-2"></a>            <span class="at">names_from =</span> year,</span>
-<span id="cb5-3"><a href="#cb5-3"></a>            <span class="at">names_prefix =</span> <span class="st">"yr"</span>,</span>
-<span id="cb5-4"><a href="#cb5-4"></a>            <span class="at">values_from =</span> <span class="st">"metric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section></section><section id="reading" class="level2" data-number="E.3"><h2 data-number="E.3" class="anchored" data-anchor-id="reading">
-<span class="header-section-number">E.3</span> Reading</h2>
-<ul>
-<li><a href="https://vita.had.co.nz/papers/tidy-data.pdf">Tidy data</a></li>
-</ul>
+</header><p>Coming next week!</p>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
-<div id="ref-R-tidyverse" class="csl-entry" role="listitem">
-Wickham, H. (2023). <em>Tidyverse: Easily install and load the tidyverse</em>. <a href="https://tidyverse.tidyverse.org">https://tidyverse.tidyverse.org</a>
-</div>
-</div>
-</section></main><!-- /main --><script>
+
+</main><!-- /main --><script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {
@@ -1249,13 +1053,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./Naming conventions.html" class="pagination-link" aria-label="Naming files">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Naming files</span></span>
+      <a href="./task1.html" class="pagination-link" aria-label="Task One">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Task One</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./quarto.html" class="pagination-link" aria-label="Quarto">
-        <span class="nav-page-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Quarto</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./r-basics.html" class="pagination-link" aria-label="R Basics">
+        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
