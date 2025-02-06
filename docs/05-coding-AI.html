@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.6.39">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Statistical skills for Biologists">
-<title>7&nbsp; Exploratory Data Analysis – 5023B</title>
+<title>5&nbsp; Coding with AI support – 5023B</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -18,6 +18,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -26,8 +60,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./r-basics.html" rel="next">
-<link href="./task2.html" rel="prev">
+<link href="./task2.html" rel="next">
+<link href="./task1.html" rel="prev">
 <link href="./images/logos/logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -78,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-eda.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./04-eda.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-projects.html">Reproducible Environments</a></li><li class="breadcrumb-item"><a href="./05-coding-AI.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Coding with AI support</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -143,7 +177,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./05-coding-AI.html" class="sidebar-item-text sidebar-link">
+  <a href="./05-coding-AI.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Coding with AI support</span></span></a>
   </div>
 </li>
@@ -166,7 +200,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-eda.html" class="sidebar-item-text sidebar-link active">
+  <a href="./04-eda.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></span></a>
   </div>
 </li>
@@ -247,13 +281,35 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li>
+<a href="#github-copilot" id="toc-github-copilot" class="nav-link active" data-scroll-target="#github-copilot"><span class="header-section-number">5.1</span> Github Copilot</a>
+  <ul class="collapse">
+<li><a href="#what-is-github-copilot" id="toc-what-is-github-copilot" class="nav-link" data-scroll-target="#what-is-github-copilot"><span class="header-section-number">5.1.1</span> What is GitHub Copilot?</a></li>
+  <li><a href="#setting-up-copilot-on-posit-cloud" id="toc-setting-up-copilot-on-posit-cloud" class="nav-link" data-scroll-target="#setting-up-copilot-on-posit-cloud"><span class="header-section-number">5.1.2</span> Setting up Copilot on Posit Cloud</a></li>
+  <li><a href="#using-copilot" id="toc-using-copilot" class="nav-link" data-scroll-target="#using-copilot"><span class="header-section-number">5.1.3</span> Using Copilot</a></li>
+  <li><a href="#uses" id="toc-uses" class="nav-link" data-scroll-target="#uses"><span class="header-section-number">5.1.4</span> Uses</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#ellmer" id="toc-ellmer" class="nav-link" data-scroll-target="#ellmer"><span class="header-section-number">5.2</span> Ellmer</a>
+  <ul class="collapse">
+<li><a href="#tokens" id="toc-tokens" class="nav-link" data-scroll-target="#tokens"><span class="header-section-number">5.2.1</span> Tokens?</a></li>
+  <li><a href="#initialise-ellmer-chat" id="toc-initialise-ellmer-chat" class="nav-link" data-scroll-target="#initialise-ellmer-chat"><span class="header-section-number">5.2.2</span> Initialise ellmer chat</a></li>
+  <li><a href="#prompts" id="toc-prompts" class="nav-link" data-scroll-target="#prompts"><span class="header-section-number">5.2.3</span> Prompts</a></li>
+  <li><a href="#recording-outputs" id="toc-recording-outputs" class="nav-link" data-scroll-target="#recording-outputs"><span class="header-section-number">5.2.4</span> Recording outputs</a></li>
+  </ul>
+</li>
+  <li><a href="#reading" id="toc-reading" class="nav-link" data-scroll-target="#reading"><span class="header-section-number">5.3</span> Reading</a></li>
+  </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-eda.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./04-eda.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></a></li></ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-projects.html">Reproducible Environments</a></li><li class="breadcrumb-item"><a href="./05-coding-AI.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Coding with AI support</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span>
+<span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Coding with AI support</span>
 </h1>
 </div>
 
@@ -268,11 +324,350 @@ ul.task-list li input[type="checkbox"] {
   
 
 
-</header><p>Coming next week!</p>
+</header><section id="github-copilot" class="level2" data-number="5.1"><h2 data-number="5.1" class="anchored" data-anchor-id="github-copilot">
+<span class="header-section-number">5.1</span> Github Copilot</h2>
+<section id="what-is-github-copilot" class="level3" data-number="5.1.1"><h3 data-number="5.1.1" class="anchored" data-anchor-id="what-is-github-copilot">
+<span class="header-section-number">5.1.1</span> What is GitHub Copilot?</h3>
+<p>GitHub Copilot is a popular AI development tool that can convert human language commands into executable code or speed up your coding with intelligent autocompletion.</p>
+</section><section id="setting-up-copilot-on-posit-cloud" class="level3" data-number="5.1.2"><h3 data-number="5.1.2" class="anchored" data-anchor-id="setting-up-copilot-on-posit-cloud">
+<span class="header-section-number">5.1.2</span> Setting up Copilot on Posit Cloud</h3>
+<p>GitHub Copilot needs to be enabled and authorised for each new project.</p>
+<ol type="1">
+<li><p>You must have access to GitHub Copilot via your GitHub account, and you must authenticate with that account before you can use GitHub Copilot in your projects. <a href="https://education.github.com/discount_requests/application">GitHub Copilot is free for students and teachers</a>.</p></li>
+<li><p>To enable GitHub Copilot in RStudio:</p></li>
+</ol>
+<ul>
+<li><p>Navigate to Tools &gt; Global Options &gt; Copilot.</p></li>
+<li><p>Check the box to “Enable GitHub Copilot”.</p></li>
+<li><p>Download and install the Copilot Agent components.</p></li>
+<li><p>Click the “Sign In” button.</p></li>
+<li><p>In the “GitHub Copilot: Sign in” dialog, copy the Verification Code.</p></li>
+<li><p>Navigate to or click on the link to https://github.com/login/device, paste the Verification Code and click “Continue”.</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="images/copilot_sign-in.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li><p>GitHub will request the necessary permissions for GitHub Copilot. To approve these permissions, click “Authorize GitHub Copilot Plugin”.</p></li>
+<li><p>After the permissions have been approved, your RStudio IDE will indicate the currently signed in user.</p></li>
+<li><p>Close the Global Options dialogue, open a source file (.R, .py, .qmd, etc) and begin coding with Copilot!</p></li>
+</ul></section><section id="using-copilot" class="level3" data-number="5.1.3"><h3 data-number="5.1.3" class="anchored" data-anchor-id="using-copilot">
+<span class="header-section-number">5.1.3</span> Using Copilot</h3>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>While Copilot often generates useful and functional code, it is important to note that the suggestions are not always valid code examples or completely solve the intended problem.</p>
+<p>Copilot suggestions are non-deterministic and we cannot guarantee the quality, accuracy, or security of the outputs. It is important to review the suggestions and ensure that they are both accurate and appropriate for the intended use case. Copilot may generate code that contains insecure coding patterns, bugs, or outdated practices.</p>
+<p>It is important to record questions, suggestions and autocompletions and for these reasons including prompts in scripts and documenting use is critical.</p>
+</div>
+</div>
+<section id="set-up" class="level4" data-number="5.1.3.1"><h4 data-number="5.1.3.1" class="anchored" data-anchor-id="set-up">
+<span class="header-section-number">5.1.3.1</span> Set-up</h4>
+<p>We need to set up co-pilot correctly for each R project. To make sure we are in control, and actively aware of when we are using AI assistance set up your copilot as follows:</p>
+<ul>
+<li>Tools &gt; Global Options &gt; Copilot &gt; Show Code Suggestions &gt; Manually</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="images/copilot-01.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<ul>
+<li>Tools &gt; Global Options &gt; Code &gt; Completion - Set R and other languages to “Manually”</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="images/copilot-02.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section></section><section id="uses" class="level3" data-number="5.1.4"><h3 data-number="5.1.4" class="anchored" data-anchor-id="uses">
+<span class="header-section-number">5.1.4</span> Uses</h3>
+<p>With copilot signed in and options set we can perform the following actions:</p>
+<section id="code-completion" class="level4" data-number="5.1.4.1"><h4 data-number="5.1.4.1" class="anchored" data-anchor-id="code-completion">
+<span class="header-section-number">5.1.4.1</span> Code completion</h4>
+<div class="task">
+<div class="task-header">
+<p>Copilot code completion</p>
+</div>
+<div class="task-container">
+<p>Put the following prompt and partial code into an R script, then hit CTRL + Backslash`</p>
+<p>To accept the code suggestions hit the TAB key</p>
+<p>You can ask for further prompts by pushing the keys again</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource md number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb1-1"><a href="#cb1-1"></a></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="in">```{r}</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="in"># Function to calculate the factorial of a number</span></span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="in">factorial &lt;- function(n) {</span></span>
+<span id="cb1-5"><a href="#cb1-5"></a></span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>A factorial is the product of an integer and all the integers beneath it e.g.&nbsp;4(!) = 4 x 3 x 2 x 1 = 24</p>
+</div>
+</div>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<p>Github should suggest the following code completion:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="co"># Function to calculate the factorial of a number</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>factorial <span class="ot">&lt;-</span> <span class="cf">function</span>(n) {</span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="cf">if</span> (n <span class="sc">==</span> <span class="dv">0</span>) {</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="fu">return</span>(<span class="dv">1</span>)</span>
+<span id="cb2-5"><a href="#cb2-5"></a>  } <span class="cf">else</span> {</span>
+<span id="cb2-6"><a href="#cb2-6"></a>    <span class="fu">return</span>(n <span class="sc">*</span> <span class="fu">factorial</span>(n <span class="sc">-</span> <span class="dv">1</span>))</span>
+<span id="cb2-7"><a href="#cb2-7"></a>  }</span>
+<span id="cb2-8"><a href="#cb2-8"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="task">
+<div class="task-header">
+<p>Testing outputs</p>
+</div>
+<div class="task-container">
+<p>We need to check that our code performs correctly - When we produce a “pure” function the output is always predictable Work out the answer to a few simple factorials (so you can check inputs and outputs) The ask copilot to write you a “unit test”</p>
+<p>A test encapsulates a series of expectations about a small, self-contained unit of functionality. Each test contains one or more expectations, such as <code>expect_equal()</code></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource md number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1"></a></span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="in">```{r}</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="in"># Write a unit test for the factorial function</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a></span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="in">```</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>If you put your cursor at the end of a line of text or code - copilot will try and suggest endings to the line (questions or code)</p>
+<p>If you put your cursor on the next line it will try and complete whole tasks or answer questions</p>
+</div>
+</div>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Write a unit test for the factorial function</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">test_that</span>(<span class="st">"factorial function"</span>, {</span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="fu">expect_equal</span>(<span class="fu">factorial</span>(<span class="dv">0</span>), <span class="dv">1</span>)</span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="fu">expect_equal</span>(<span class="fu">factorial</span>(<span class="dv">1</span>), <span class="dv">1</span>)</span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="fu">expect_equal</span>(<span class="fu">factorial</span>(<span class="dv">2</span>), <span class="dv">2</span>)</span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="fu">expect_equal</span>(<span class="fu">factorial</span>(<span class="dv">3</span>), <span class="dv">6</span>)</span>
+<span id="cb4-7"><a href="#cb4-7"></a>  <span class="fu">expect_equal</span>(<span class="fu">factorial</span>(<span class="dv">4</span>), <span class="dv">24</span>)</span>
+<span id="cb4-8"><a href="#cb4-8"></a>})</span>
+<span id="cb4-9"><a href="#cb4-9"></a><span class="co"># Error in test_that("factorial function", { : </span></span>
+<span id="cb4-10"><a href="#cb4-10"></a><span class="co">#  could not find function "test_that"</span></span>
+<span id="cb4-11"><a href="#cb4-11"></a><span class="co">#a: "You need to load the 'testthat' package before running the test_that function. You can load the package using the following code:</span></span>
+<span id="cb4-12"><a href="#cb4-12"></a><span class="co">#a: "library(testthat)"</span></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="co"># Run this code</span></span>
+<span id="cb4-14"><a href="#cb4-14"></a><span class="fu">library</span>(testthat)</span>
+<span id="cb4-15"><a href="#cb4-15"></a><span class="co">#q: Produce the correct order of code required to complete this unit test</span></span>
+<span id="cb4-16"><a href="#cb4-16"></a><span class="co">#a: "You need to load the 'testthat' package before running the test_that function. You can load the package using the following code:</span></span>
+<span id="cb4-17"><a href="#cb4-17"></a><span class="co">#a: "library(testthat)"</span></span>
+<span id="cb4-18"><a href="#cb4-18"></a><span class="co"># Run this code</span></span>
+<span id="cb4-19"><a href="#cb4-19"></a><span class="fu">library</span>(testthat)</span>
+<span id="cb4-20"><a href="#cb4-20"></a><span class="co"># Write a unit test for the factorial function</span></span>
+<span id="cb4-21"><a href="#cb4-21"></a><span class="fu">test_that</span>(<span class="st">"factorial function"</span>, {</span>
+<span id="cb4-22"><a href="#cb4-22"></a>  <span class="fu">expect_equal</span>(<span class="fu">factorial</span>(<span class="dv">0</span>), <span class="dv">1</span>)</span>
+<span id="cb4-23"><a href="#cb4-23"></a>  <span class="fu">expect_equal</span>(<span class="fu">factorial</span>(<span class="dv">1</span>), <span class="dv">1</span>)</span>
+<span id="cb4-24"><a href="#cb4-24"></a>  <span class="fu">expect_equal</span>(<span class="fu">factorial</span>(<span class="dv">2</span>), <span class="dv">2</span>)</span>
+<span id="cb4-25"><a href="#cb4-25"></a>  <span class="fu">expect_equal</span>(<span class="fu">factorial</span>(<span class="dv">3</span>), <span class="dv">6</span>)</span>
+<span id="cb4-26"><a href="#cb4-26"></a>  <span class="fu">expect_equal</span>(<span class="fu">factorial</span>(<span class="dv">4</span>), <span class="dv">24</span>)</span>
+<span id="cb4-27"><a href="#cb4-27"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Important
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>This is our first example of writing a custom function and a unit test to check performance</p>
+</div>
+</div>
+</section><section id="answering-questions" class="level4" data-number="5.1.4.2"><h4 data-number="5.1.4.2" class="anchored" data-anchor-id="answering-questions">
+<span class="header-section-number">5.1.4.2</span> Answering questions</h4>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>To get the best output from Copilot, it’s important to keep your instructions simple. Remember, Copilot is still a new feature in RStudio and it is continuously learning. Additionally, if you want to maintain Copilot’s momentum, just press the CTRL + Backslash then TAB on its previous suggestions to bring up more commands.</p>
+</div>
+</div>
+</section></section></section><section id="ellmer" class="level2" data-number="5.2"><h2 data-number="5.2" class="anchored" data-anchor-id="ellmer">
+<span class="header-section-number">5.2</span> Ellmer</h2>
+<p>The <code>ellmer</code> package in R provides a simple interface for communicating with OpenAI’s language models. It allows users to send prompts to the OpenAI API and receive responses, making it useful for text generation, summarization, and various other natural language processing (NLP) tasks.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">library</span>(ellmer)</span>
+<span id="cb5-2"><a href="#cb5-2"></a></span>
+<span id="cb5-3"><a href="#cb5-3"></a></span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="co"># to use a model like GPT-4o or GPT-4o-mini from OpenAI:</span></span>
+<span id="cb5-5"><a href="#cb5-5"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_openai</span>()</span>
+<span id="cb5-6"><a href="#cb5-6"></a></span>
+<span id="cb5-7"><a href="#cb5-7"></a><span class="co"># ...or a locally hosted ollama model:</span></span>
+<span id="cb5-8"><a href="#cb5-8"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_ollama</span>()</span>
+<span id="cb5-9"><a href="#cb5-9"></a></span>
+<span id="cb5-10"><a href="#cb5-10"></a><span class="co"># ...or Claude's Sonnet model:</span></span>
+<span id="cb5-11"><a href="#cb5-11"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_claude</span>()</span>
+<span id="cb5-12"><a href="#cb5-12"></a></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="co"># chat to Google's gemini</span></span>
+<span id="cb5-14"><a href="#cb5-14"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_gemini</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Then calling the output’s $chat() method returns a character response:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>chat<span class="sc">$</span><span class="fu">chat</span>(<span class="st">"When was R created? Be brief."</span>)</span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a><span class="co">#&gt; R was created in 1993 by Ross Ihaka and Robert Gentleman at </span></span>
+<span id="cb6-4"><a href="#cb6-4"></a><span class="co">#&gt; the University of Auckland, New Zealand.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="tokens" class="level3" data-number="5.2.1"><h3 data-number="5.2.1" class="anchored" data-anchor-id="tokens">
+<span class="header-section-number">5.2.1</span> Tokens?</h3>
+<p>To use any of the different LLM models we need to authorise or pay for tokens.</p>
+<p>An LLM is a model, and like all models needs some way to represent its inputs numerically. For LLMs, that means we need some way to convert words to numbers. This is the goal of the tokenizer. For example, using the GPT 4o tokenizer, the string “When was R created?” is converted to 5 tokens: 5958 (“When”), 673 (” was”), 460 (” R”), 5371 (” created”), 30 (“?”).</p>
+<p>LLMs are priced per million tokens. State of the art models (like GPT-4o or Claude 3.5 sonnet) cost $2-3 per million input tokens, and $10-15 per million output tokens. Cheaper models can cost much less, e.g.&nbsp;GPT-4o mini costs $0.15 per million input tokens and $0.60 per million output tokens. Even $10 of API credit will give you a lot of room for experimentation, particularly with cheaper models, and prices are likely to decline as model performance improves.</p>
+<p>In ellmer, you can see how many tokens a conversations has used by printing it, and you can see total usage for a session with <code>token_usage()</code>.</p>
+<div class="task">
+<div class="task-header">
+<p>Get an API key</p>
+</div>
+<div class="task-container">
+<p>An API key is a unique identifier that authenticates a user or application to an API</p>
+<p>We need authorisation in order to “talk” to the different LLM models</p>
+<p>Gemini is the only model I have found that offers API keys for free</p>
+<p>https://ai.google.dev/aistudio</p>
+<p>Generate a key and save it in your .Renviron</p>
+<p>GOOGLE_API_KEY = ‘Replace with your key’</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource md number-lines code-with-copy"><code class="sourceCode markdown"><span id="cb7-1"><a href="#cb7-1"></a></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="fu"># Function to open your .Renviron file</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a></span>
+<span id="cb7-4"><a href="#cb7-4"></a>usethis::edit_r_environ()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</section><section id="initialise-ellmer-chat" class="level3" data-number="5.2.2"><h3 data-number="5.2.2" class="anchored" data-anchor-id="initialise-ellmer-chat">
+<span class="header-section-number">5.2.2</span> Initialise ellmer chat</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_gemini</span>(<span class="at">system_prompt =</span> <span class="st">"</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="st">  You are an expert R programmer who prefers the tidyverse</span></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="st">"</span>)</span>
+<span id="cb8-4"><a href="#cb8-4"></a></span>
+<span id="cb8-5"><a href="#cb8-5"></a>question <span class="ot">&lt;-</span> <span class="st">"Write me a function to turn any numeric column into calculate Z scores"</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a></span>
+<span id="cb8-7"><a href="#cb8-7"></a>chat<span class="sc">$</span><span class="fu">chat</span>(question)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Tip
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>I have noticed it has a tendency to be quite “chatty”. Consider adding a system level prompt such as “Provide terse responses”. This will save on the tokens used to generate answers</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>chat <span class="ot">&lt;-</span> <span class="fu">chat_gemini</span>(<span class="at">system_prompt =</span> <span class="st">"</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="st">  You are an expert R programmer who prefers the tidyverse. Just give me the code. I don't want any explanation or sample data.</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="st">"</span>)</span>
+<span id="cb9-4"><a href="#cb9-4"></a></span>
+<span id="cb9-5"><a href="#cb9-5"></a></span>
+<span id="cb9-6"><a href="#cb9-6"></a>chat<span class="sc">$</span><span class="fu">chat</span>(question)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<pre><code>Using model = "gemini-1.5-flash".
+
+zscore &lt;- function(x) {
+  if(!is.numeric(x)) stop("Input must be numeric")
+  (x - mean(x, na.rm = TRUE)) / sd(x, na.rm = TRUE)
+}
+</code></pre>
+<p>You can check on token exchange with the function <code>token_usage()</code></p>
+</section><section id="prompts" class="level3" data-number="5.2.3"><h3 data-number="5.2.3" class="anchored" data-anchor-id="prompts">
+<span class="header-section-number">5.2.3</span> Prompts</h3>
+<ul>
+<li><p><strong>System prompts</strong>: These set the tone for the entire exchange, while these can be changed. If you are happy with the responses these only need to be set once per session</p></li>
+<li><p><strong>Standard prompts</strong>: Relevant only for that chat or exchange.</p></li>
+</ul></section><section id="recording-outputs" class="level3" data-number="5.2.4"><h3 data-number="5.2.4" class="anchored" data-anchor-id="recording-outputs">
+<span class="header-section-number">5.2.4</span> Recording outputs</h3>
+<p>Unlike Copilot, <code>ellmer</code> won’t edit your scripts - prompts may be written and recorded in scripts, but it is important to record the prompts and responses.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>chat</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="co"># This will return the user exchange and assistant suggestions</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Two simple ways to record your interactions</p>
+<ul>
+<li><p>Highlight and save the chat in a plain text file</p></li>
+<li><p>save the chat as an R object written to disk</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">saveRDS</span>(chat, <span class="st">"chat_gemini_record"</span>)</span>
+<span id="cb12-2"><a href="#cb12-2"></a></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="co"># This can be reloaded with readRDS() at a later date</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Responses from LLMs are stochastic - as such it is vital for reproducibility that we keep a record of all prompts and responses that helped build our analysis pipeline.</p>
+</div>
+</div>
+</section></section><section id="reading" class="level2" data-number="5.3"><h2 data-number="5.3" class="anchored" data-anchor-id="reading">
+<span class="header-section-number">5.3</span> Reading</h2>
+<p><a href="https://docs.github.com/en/copilot/responsible-use-of-github-copilot-features/responsible-use-of-github-copilot-chat-in-your-ide">Responsible use of copilot</a></p>
 
 
-
-</main><!-- /main --><script>
+</section></main><!-- /main --><script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {
@@ -1065,13 +1460,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./task2.html" class="pagination-link" aria-label="Task Two">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Task Two</span></span>
+      <a href="./task1.html" class="pagination-link" aria-label="Task One">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Task One</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./r-basics.html" class="pagination-link" aria-label="R Basics">
-        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./task2.html" class="pagination-link" aria-label="Task Two">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Task Two</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

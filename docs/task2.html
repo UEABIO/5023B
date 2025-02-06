@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.6.39">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
 <meta name="description" content="Statistical skills for Biologists">
-<title>7&nbsp; Exploratory Data Analysis – 5023B</title>
+
+<title>6&nbsp; Task Two – 5023B</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,14 +23,15 @@ ul.task-list li input[type="checkbox"] {
 }
 </style>
 
+
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./r-basics.html" rel="next">
-<link href="./task2.html" rel="prev">
+<link href="./04-eda.html" rel="next">
+<link href="./05-coding-AI.html" rel="prev">
 <link href="./images/logos/logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -39,7 +43,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-966f60e3bc60cc6f7c6c3c8d3b3a508b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-e0b3d8e73f4d1716c2cfb9b6011ce545.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-dark-e0b3d8e73f4d1716c2cfb9b6011ce545.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -65,29 +70,39 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+}</script>
+
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
 <link rel="stylesheet" href="include/booktem.css">
 <link rel="stylesheet" href="include/webex.css">
 <link rel="stylesheet" href="include/glossary.css">
 <link rel="stylesheet" href="include/style.css">
 </head>
+
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-eda.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./04-eda.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-projects.html">Reproducible Environments</a></li><li class="breadcrumb-item"><a href="./task2.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Task Two</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">5023B</a> 
         <div class="sidebar-tools-main">
@@ -102,7 +117,7 @@ ul.task-list li input[type="checkbox"] {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
@@ -116,8 +131,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./01-projects.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project-oriented workflows</span></span></a>
@@ -149,12 +164,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./task2.html" class="sidebar-item-text sidebar-link">
+  <a href="./task2.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Task Two</span></span></a>
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
@@ -163,15 +178,15 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-eda.html" class="sidebar-item-text sidebar-link active">
+  <a href="./04-eda.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></span></a>
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
@@ -180,8 +195,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./r-basics.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span></a>
@@ -242,19 +257,31 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
       </ul>
-</li>
+  </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#intended-learning-outcomes" id="toc-intended-learning-outcomes" class="nav-link active" data-scroll-target="#intended-learning-outcomes"><span class="header-section-number">6.1</span> Intended Learning Outcomes</a></li>
+  <li><a href="#here-we-go-again" id="toc-here-we-go-again" class="nav-link" data-scroll-target="#here-we-go-again"><span class="header-section-number">6.2</span> Here we go again</a></li>
+  <li><a href="#sec-setup-ai" id="toc-sec-setup-ai" class="nav-link" data-scroll-target="#sec-setup-ai"><span class="header-section-number">6.3</span> Set-up</a></li>
+  <li><a href="#starting-advice" id="toc-starting-advice" class="nav-link" data-scroll-target="#starting-advice"><span class="header-section-number">6.4</span> Starting advice</a></li>
+  <li><a href="#keep-a-log" id="toc-keep-a-log" class="nav-link" data-scroll-target="#keep-a-log"><span class="header-section-number">6.5</span> Keep a log</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-eda.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./04-eda.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title">
-<span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span>
-</h1>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-projects.html">Reproducible Environments</a></li><li class="breadcrumb-item"><a href="./task2.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Task Two</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Task Two</span></h1>
 </div>
 
 
@@ -268,11 +295,79 @@ ul.task-list li input[type="checkbox"] {
   
 
 
-</header><p>Coming next week!</p>
+</header>
 
 
+<section id="intended-learning-outcomes" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="intended-learning-outcomes"><span class="header-section-number">6.1</span> Intended Learning Outcomes</h2>
+<ul>
+<li>Use AI to write code</li>
+<li>Critically evaluate the output of AI</li>
+</ul>
+</section>
+<section id="here-we-go-again" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="here-we-go-again"><span class="header-section-number">6.2</span> Here we go again</h2>
+<p>Rather than giving you new exercises or content, your task is seemingly very simple: redo the dashboard from last week, but this time, <strong>AI must write all of the code</strong>. You can use any AI platform you’d like.</p>
+<ul>
+<li>Github copilot</li>
+<li><code>chattr</code></li>
+<li>chatbot windows e.g.&nbsp;chatgpt</li>
+</ul>
+<p>The rationale behind this is that having worked through the report yourself, you will be intimately familiar with the dataset and the requirements of the assignment. This means that your ability to critically evaluate and check its output will be stronger than with a new dataset. This should (in theory) allow you to:</p>
+<ul>
+<li><p>Check whether it’s actually done it right</p></li>
+<li><p>Understand how to engineer your prompts to get it closer to the solution if it’s struggling</p></li>
+<li><p>Evaluate the suitability of alternative approaches to your original solution.</p></li>
+</ul>
+</section>
+<section id="sec-setup-ai" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="sec-setup-ai"><span class="header-section-number">6.3</span> Set-up</h2>
+<p>Create a separate project from your original practice report project to avoid any confusion.</p>
+</section>
+<section id="starting-advice" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="starting-advice"><span class="header-section-number">6.4</span> Starting advice</h2>
+<p>A few hints, tip, and rules to get you on your way:</p>
+<ul>
+<li>Although the dataset for the practice report isn’t sensitive data, treat it as if it were. Even if the AI has the capability, don’t upload the dataset. Instead run <code>str()</code> and <code>summary()</code> and describe the dataset to the AI so it knows the variables and the types of data.</li>
+</ul>
+<blockquote class="blockquote">
+<p>Note copilot only works when give permissions to your repository so this does not apply.</p>
+</blockquote>
+<ul>
+<li><p>Check everything it produces. Just because it doesn’t throw an error, doesn’t mean it’s right.</p></li>
+<li><p>Think about the specificity of your prompts. If you want it to produce solutions closer to our solution, tell it to use the <code>tidyverse</code>. If you’d like to see what other approaches it might take, don’t give it a steer on packages (be mindful you might need to install some new packages).</p></li>
+</ul>
+</section>
+<section id="keep-a-log" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="keep-a-log"><span class="header-section-number">6.5</span> Keep a log</h2>
+<p>As you’re progressing, makes notes on the following:</p>
+<ul>
+<li><p>What does it get right with ease?</p></li>
+<li><p>What does it get right with a bit of back-and-forth?</p></li>
+<li><p>What errors does it make? If you didn’t know the dataset and hadn’t worked through the report yourself, is there anything you think you may have missed that the AI got wrong?</p></li>
+<li><p>How does the code compare to your original solution?? Is there anything you think it did better? Is there anything you think you did better?</p></li>
+<li><p>Did you learn any new functions or approaches?</p></li>
+</ul>
+<p><strong>Submit your individual chat histories, as a group compare your notes on the above and submit these as well in a markdown or plain text file</strong></p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Teaching with and about AI is a brave new world. This exercise will be extremely useful for a number of reasons but we’d really appreciate any feedback on whether that’s the case!</p>
+</div>
+</div>
 
-</main><!-- /main --><script>
+
+</section>
+
+</main> <!-- /main -->
+<script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {
@@ -477,7 +572,8 @@ window.onload = function() {
   update_total_correct();
 }
 
-</script><script>
+</script>
+<script>
 // open rdrr links externally ----
 
 var exlinks = document.querySelectorAll("a[href^='https://rdrr.io']");
@@ -504,7 +600,8 @@ function move_sidebar() {
 }
 move_sidebar();
 window.onresize = move_sidebar;
-</script><script id="quarto-html-after-body" type="application/javascript">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1064,19 +1161,22 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./task2.html" class="pagination-link" aria-label="Task Two">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Task Two</span></span>
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./05-coding-AI.html" class="pagination-link" aria-label="Coding with AI support">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Coding with AI support</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./r-basics.html" class="pagination-link" aria-label="R Basics">
-        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./04-eda.html" class="pagination-link" aria-label="Exploratory Data Analysis">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+<footer class="footer">
+  <div class="nav-footer">
     <div class="nav-footer-left">
       &nbsp;
     </div>   
@@ -1088,6 +1188,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+
+
 
 
 </body></html>

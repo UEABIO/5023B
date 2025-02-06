@@ -4,3 +4,6 @@ source("R/booktem_setup.R")
 # needs to check namespace to not bork github actions
 if (requireNamespace('webexercises', quietly = TRUE)) library(webexercises)
 source("R/my_setup.R")
+
+
+
