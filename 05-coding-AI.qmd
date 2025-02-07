@@ -8,6 +8,15 @@ library(here)
 penguins_raw <- read_csv(here("files", "penguins_raw.csv"))
 ```
 
+```{r, eval = FALSE}
+# Packages needed for this sheet
+library(tidyverse)
+library(ellmer)
+library(usethis)
+
+```
+
+
 ## Github Copilot
 
 ### What is GitHub Copilot?
@@ -247,6 +256,18 @@ chat$chat("When was R created? Be brief.")
 #> the University of Auckland, New Zealand.
 ```
 
+```
+Error in `gemini_key()`:
+! Can't find env var `GOOGLE_API_KEY`
+
+```
+
+Oh no that didn't work, what happened?
+
+### API Key
+
+We can’t chat with Gemini yet because we’ve never specified an API key. This key is necessary to authenticate with Gemini (and get billed for using tokens.) So from the error message it looks like the `chat_gemini()` function assumes that an API key is set via the environment variable GOOGLE_API_KEY.
+
 ### Tokens?
 
 To use any of the different LLM models we need to authorise or pay for tokens. 
@@ -267,9 +288,9 @@ An API key is a unique identifier that authenticates a user or application to an
 
 We need authorisation in order to "talk" to the different LLM models
 
-Gemini is the only model I have found that offers API keys for free
+Gemini is the only model I have found that offers API keys for free (or at least doesn't seem to ask for a credit card?)
 
-https://ai.google.dev/aistudio
+[Go here to Google developers studio](https://ai.google.dev/aistudio)
 
 Generate a key and save it in your .Renviron
 
@@ -285,6 +306,18 @@ usethis::edit_r_environ()
 ::::
 :::
 
+
+
+```{r, echo=FALSE, eval=TRUE}
+knitr::include_graphics("images/use_this.png")
+```
+Running this function will open a file called .Renviron
+
+```{r, echo=FALSE, eval=TRUE}
+knitr::include_graphics("images/r_environ.png")
+```
+
+Edit the file to include the api key for your chat model. Save the file and Restart R
 
 ### Initialise ellmer chat
 
@@ -365,3 +398,5 @@ Responses from LLMs are stochastic  - as such it is vital for reproducibility th
 ## Reading
 
 [Responsible use of copilot](https://docs.github.com/en/copilot/responsible-use-of-github-copilot-features/responsible-use-of-github-copilot-chat-in-your-ide)
+
+[Ellmer](https://ellmer.tidyverse.org/index.html)
