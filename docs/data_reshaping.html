@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.6.39">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Statistical skills for Biologists">
-<title>Appendix E — Tidy data – 5023B</title>
+<title>Appendix E — Data reshaping – 5023B</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -52,27 +52,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-  margin-bottom: 0em;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
@@ -132,7 +112,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./r-basics.html">Appendices</a></li><li class="breadcrumb-item"><a href="./tidy-data.html"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tidy data</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./r-basics.html">Appendices</a></li><li class="breadcrumb-item"><a href="./data_reshaping.html"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Data reshaping</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -195,6 +175,18 @@ div.csl-indent {
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Task One</span></span></a>
   </div>
 </li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-coding-AI.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Coding with AI support</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Task Two</span></span></a>
+  </div>
+</li>
       </ul>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -209,7 +201,7 @@ div.csl-indent {
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></span></a>
   </div>
 </li>
       </ul>
@@ -249,8 +241,8 @@ div.csl-indent {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./tidy-data.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tidy data</span></span></a>
+  <a href="./data_reshaping.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Data reshaping</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -293,22 +285,26 @@ div.csl-indent {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#why-tidy-data" id="toc-why-tidy-data" class="nav-link active" data-scroll-target="#why-tidy-data"><span class="header-section-number">E.1</span> Why tidy data?</a></li>
-  <li>
-<a href="#using-pivot-functions" id="toc-using-pivot-functions" class="nav-link" data-scroll-target="#using-pivot-functions"><span class="header-section-number">E.2</span> Using <code>pivot</code> functions</a>
+<li>
+<a href="#using-pivot-functions" id="toc-using-pivot-functions" class="nav-link active" data-scroll-target="#using-pivot-functions"><span class="header-section-number">E.1</span> Using <code>pivot</code> functions</a>
   <ul class="collapse">
-<li><a href="#pivot-longer" id="toc-pivot-longer" class="nav-link" data-scroll-target="#pivot-longer"><span class="header-section-number">E.2.1</span> Pivot longer</a></li>
-  <li><a href="#overwrite-the-original-object" id="toc-overwrite-the-original-object" class="nav-link" data-scroll-target="#overwrite-the-original-object"><span class="header-section-number">E.2.2</span> Overwrite the original object</a></li>
-  <li><a href="#create-a-new-r-object" id="toc-create-a-new-r-object" class="nav-link" data-scroll-target="#create-a-new-r-object"><span class="header-section-number">E.2.3</span> Create a new r object</a></li>
-  <li><a href="#pivot-wider" id="toc-pivot-wider" class="nav-link" data-scroll-target="#pivot-wider"><span class="header-section-number">E.2.4</span> Pivot wider</a></li>
+<li><a href="#overwrite-the-original-object" id="toc-overwrite-the-original-object" class="nav-link" data-scroll-target="#overwrite-the-original-object"><span class="header-section-number">E.1.1</span> Overwrite the original object</a></li>
+  <li><a href="#create-a-new-r-object" id="toc-create-a-new-r-object" class="nav-link" data-scroll-target="#create-a-new-r-object"><span class="header-section-number">E.1.2</span> Create a new r object</a></li>
   </ul>
 </li>
-  <li><a href="#reading" id="toc-reading" class="nav-link" data-scroll-target="#reading"><span class="header-section-number">E.3</span> Reading</a></li>
+  <li>
+<a href="#join-functions" id="toc-join-functions" class="nav-link" data-scroll-target="#join-functions"><span class="header-section-number">E.2</span> Join functions</a>
+  <ul class="collapse">
+<li><a href="#left-join" id="toc-left-join" class="nav-link" data-scroll-target="#left-join"><span class="header-section-number">E.2.1</span> Left join</a></li>
+  <li><a href="#right-join" id="toc-right-join" class="nav-link" data-scroll-target="#right-join"><span class="header-section-number">E.2.2</span> Right join</a></li>
+  <li><a href="#full-join" id="toc-full-join" class="nav-link" data-scroll-target="#full-join"><span class="header-section-number">E.2.3</span> Full join</a></li>
+  </ul>
+</li>
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./r-basics.html">Appendices</a></li><li class="breadcrumb-item"><a href="./tidy-data.html"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Tidy data</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title"><span id="sec-tidy" class="quarto-section-identifier">Appendix E — Tidy data</span></h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./r-basics.html">Appendices</a></li><li class="breadcrumb-item"><a href="./data_reshaping.html"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Data reshaping</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title">Appendix E — Data reshaping</h1>
 </div>
 
 
@@ -322,37 +318,14 @@ div.csl-indent {
   
 
 
-</header><p>We are going to learn how to organise data using the <em>tidy</em> format. This is because we are using the <code>tidyverse</code> packages <span class="citation" data-cites="R-tidyverse">Wickham (<a href="references.html#ref-R-tidyverse" role="doc-biblioref">2023</a>)</span>. This is an opinionated, but highly effective method for generating reproducible analyses with a wide-range of data manipulation tools. Tidy data is an easy format for computers to read. It is also the required data structure for our <strong>statistical tests</strong> that we will work with later.</p>
-<p>Here ‘tidy’ refers to a specific structure that lets us manipulate and visualise data with ease. In a tidy dataset each <em>variable</em> is in one column and each row contains one <em>observation</em>. Each cell of the table/spreadsheet contains the <em>values</em>. One observation you might make about tidy data is it is quite long - it generates a lot of rows of data - you might remember then that <em>tidy</em> data can be referred to as <em>long</em>-format data (as opposed to <em>wide</em> data).</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="images/tidy-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="tidy data overview"></p>
-</figure>
-</div>
-</div>
-</div>
-<section id="why-tidy-data" class="level2" data-number="E.1"><h2 data-number="E.1" class="anchored" data-anchor-id="why-tidy-data">
-<span class="header-section-number">E.1</span> Why tidy data?</h2>
-<ul>
-<li><p>The data cleaning and analysis tools in R work best with data that is “tidy”</p></li>
-<li><p>“Tidy” data has a clear and consistent structure, untidy data can be “messy” in lots of different ways</p></li>
-</ul></section><section id="using-pivot-functions" class="level2" data-number="E.2"><h2 data-number="E.2" class="anchored" data-anchor-id="using-pivot-functions">
-<span class="header-section-number">E.2</span> Using <code>pivot</code> functions</h2>
-<p>What do we do if the data we are working with in R isn’t “tidy”?</p>
+</header><p>While neither <em>wide</em> or <em>long</em> data is more correct than the other, we will work with <em>long</em> data as it is clearer how many distinct types of variables there are in our data <em>and</em> the tools we will be using from the <code>tidyverse</code> are designed to work with <em>long</em> data.</p>
+<section id="using-pivot-functions" class="level2" data-number="E.1"><h2 data-number="E.1" class="anchored" data-anchor-id="using-pivot-functions">
+<span class="header-section-number">E.1</span> Using <code>pivot</code> functions</h2>
 <p>There are functions found as part of the <code>tidyverse</code> that can help us to reshape data.</p>
 <ul>
 <li><p><code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">tidyr::pivot_wider()</a></code> - from <em>long</em> to <em>wide</em> format</p></li>
 <li><p><code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">tidyr::pivot_longer()</a></code> - from <em>wide</em> to <em>long</em> format</p></li>
 </ul>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="images/tidyr-longer-wider.gif" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>Reshaping data with pivot</figcaption></figure>
-</div>
-</div>
-</div>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a> country <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"z"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2"></a> yr1960 <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>)</span>
@@ -394,8 +367,6 @@ div.csl-indent {
 </div>
 </div>
 </div>
-<section id="pivot-longer" class="level3" data-number="E.2.1"><h3 data-number="E.2.1" class="anchored" data-anchor-id="pivot-longer">
-<span class="header-section-number">E.2.1</span> Pivot longer</h3>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">pivot_longer</span>(<span class="at">data =</span> country_data,</span>
 <span id="cb2-2"><a href="#cb2-2"></a>             <span class="at">cols =</span> yr1960<span class="sc">:</span>yr2010,</span>
@@ -417,8 +388,8 @@ div.csl-indent {
 <li><p>Use a <em>new</em> name for the reformatted data both R objects will exist in your Environment</p></li>
 </ul>
 <p>Neither is more <em>correct</em> than the other but be aware of what you are doing.</p>
-</section><section id="overwrite-the-original-object" class="level3" data-number="E.2.2"><h3 data-number="E.2.2" class="anchored" data-anchor-id="overwrite-the-original-object">
-<span class="header-section-number">E.2.2</span> Overwrite the original object</h3>
+<section id="overwrite-the-original-object" class="level3" data-number="E.1.1"><h3 data-number="E.1.1" class="anchored" data-anchor-id="overwrite-the-original-object">
+<span class="header-section-number">E.1.1</span> Overwrite the original object</h3>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>country_data <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(<span class="at">data =</span> country_data,</span>
 <span id="cb3-2"><a href="#cb3-2"></a>             <span class="at">cols =</span> yr1960<span class="sc">:</span>yr2010,</span>
@@ -426,37 +397,181 @@ div.csl-indent {
 <span id="cb3-4"><a href="#cb3-4"></a>             <span class="at">names_prefix =</span> <span class="st">"yr"</span>,</span>
 <span id="cb3-5"><a href="#cb3-5"></a>             <span class="at">values_to =</span> <span class="st">"metric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="create-a-new-r-object" class="level3" data-number="E.2.3"><h3 data-number="E.2.3" class="anchored" data-anchor-id="create-a-new-r-object">
-<span class="header-section-number">E.2.3</span> Create a new r object</h3>
+</section><section id="create-a-new-r-object" class="level3" data-number="E.1.2"><h3 data-number="E.1.2" class="anchored" data-anchor-id="create-a-new-r-object">
+<span class="header-section-number">E.1.2</span> Create a new r object</h3>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>long_country_data <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(<span class="at">data =</span> country_data,</span>
 <span id="cb4-2"><a href="#cb4-2"></a>             <span class="at">cols =</span> yr1960<span class="sc">:</span>yr2010,</span>
 <span id="cb4-3"><a href="#cb4-3"></a>             <span class="at">names_to =</span> <span class="st">"year"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4"></a>             <span class="at">names_prefix =</span> <span class="st">"yr"</span>, <span class="co"># optional</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>             <span class="at">names_prefix =</span> <span class="st">"yr"</span>,</span>
 <span id="cb4-5"><a href="#cb4-5"></a>             <span class="at">values_to =</span> <span class="st">"metric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-</section><section id="pivot-wider" class="level3" data-number="E.2.4"><h3 data-number="E.2.4" class="anchored" data-anchor-id="pivot-wider">
-<span class="header-section-number">E.2.4</span> Pivot wider</h3>
-<p>Let’s use the long country data we have just generated as an example of how we <em>could</em> use the <code>pivot_wider()</code> function and reverse the process:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">pivot_wider</span>(<span class="at">data =</span> long_country_data,</span>
-<span id="cb5-2"><a href="#cb5-2"></a>            <span class="at">names_from =</span> year,</span>
-<span id="cb5-3"><a href="#cb5-3"></a>            <span class="at">names_prefix =</span> <span class="st">"yr"</span>,</span>
-<span id="cb5-4"><a href="#cb5-4"></a>            <span class="at">values_from =</span> <span class="st">"metric"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section></section><section id="reading" class="level2" data-number="E.3"><h2 data-number="E.3" class="anchored" data-anchor-id="reading">
-<span class="header-section-number">E.3</span> Reading</h2>
+</section></section><section id="join-functions" class="level2" data-number="E.2"><h2 data-number="E.2" class="anchored" data-anchor-id="join-functions">
+<span class="header-section-number">E.2</span> Join functions</h2>
+<p>Frequently, analysis of data will require merging these separately managed tables back together. There are multiple ways to join the observations in two tables, based on how the rows of one table are merged with the rows of the other.</p>
+<p>When conceptualizing merges, one can think of two tables, one on the left and one on the right. The most common (and often useful) join is when you merge the subset of rows that have matches in both the left table and the right table: this is called an INNER JOIN. Other types of join are possible as well.</p>
 <ul>
-<li><a href="https://vita.had.co.nz/papers/tidy-data.pdf">Tidy data</a></li>
+<li><p>A LEFT JOIN takes all of the rows from the left table, and merges on the data from matching rows in the right table. Keys that don’t match from the left table are still provided with a missing value (NA) from the right table.</p></li>
+<li><p>A RIGHT JOIN is the same, except that all of the rows from the right table are included with matching data from the left, or a missing value.</p></li>
+<li><p>Finally, a FULL JOIN includes all data from all rows in both tables, and includes missing values wherever necessary.</p></li>
 </ul>
-
-
-<div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
-<div id="ref-R-tidyverse" class="csl-entry" role="listitem">
-Wickham, H. (2023). <em>Tidyverse: Easily install and load the tidyverse</em>. <a href="https://tidyverse.tidyverse.org">https://tidyverse.tidyverse.org</a>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="images/join-diagrams.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
 </div>
 </div>
-</section></main><!-- /main --><script>
+</div>
+<section id="left-join" class="level3" data-number="E.2.1"><h3 data-number="E.2.1" class="anchored" data-anchor-id="left-join">
+<span class="header-section-number">E.2.1</span> Left join</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Create tibbles df_primary and df_secondary</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>df_primary <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="at">ID =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"F"</span>),</span>
+<span id="cb5-4"><a href="#cb5-4"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">0</span>, <span class="dv">9</span>)</span>
+<span id="cb5-5"><a href="#cb5-5"></a>)</span>
+<span id="cb5-6"><a href="#cb5-6"></a></span>
+<span id="cb5-7"><a href="#cb5-7"></a>df_secondary <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb5-8"><a href="#cb5-8"></a>  <span class="at">ID =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>),</span>
+<span id="cb5-9"><a href="#cb5-9"></a>  <span class="at">z =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">21</span>, <span class="dv">22</span>, <span class="dv">25</span>, <span class="dv">29</span>)</span>
+<span id="cb5-10"><a href="#cb5-10"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">left_join</span>(df_primary, df_secondary, <span class="at">by =</span><span class="st">'ID'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: left;">ID</th>
+<th style="text-align: right;">y</th>
+<th style="text-align: right;">z</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">D</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">NA</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section><section id="right-join" class="level3" data-number="E.2.2"><h3 data-number="E.2.2" class="anchored" data-anchor-id="right-join">
+<span class="header-section-number">E.2.2</span> Right join</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">right_join</span>(df_primary, df_secondary, <span class="at">by =</span> <span class="st">'ID'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: left;">ID</th>
+<th style="text-align: right;">y</th>
+<th style="text-align: right;">z</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">D</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">E</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">29</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section><section id="full-join" class="level3" data-number="E.2.3"><h3 data-number="E.2.3" class="anchored" data-anchor-id="full-join">
+<span class="header-section-number">E.2.3</span> Full join</h3>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">full_join</span>(df_primary, df_secondary, <span class="at">by =</span> <span class="st">'ID'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: left;">ID</th>
+<th style="text-align: right;">y</th>
+<th style="text-align: right;">z</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">A</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">30</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">B</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">21</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">C</td>
+<td style="text-align: right;">8</td>
+<td style="text-align: right;">22</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">D</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">25</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">F</td>
+<td style="text-align: right;">9</td>
+<td style="text-align: right;">NA</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">E</td>
+<td style="text-align: right;">NA</td>
+<td style="text-align: right;">29</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+
+</section></section></main><!-- /main --><script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {

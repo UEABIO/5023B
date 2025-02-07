@@ -43,6 +43,8 @@ book:
     - 02-renv.qmd
     - 03-github.qmd
     - task1.qmd
+    - 05-coding-AI.qmd
+    - task2.qmd
   - part: "Exploratory Analysis"
     chapters:
     - 04-eda.qmd
@@ -52,7 +54,7 @@ book:
   - import.qmd
   - script.qmd
   - Naming conventions.qmd
-  - tidy-data.qmd
+  - data_reshaping.qmd
   - quarto.qmd
   - ggplot.qmd
   - advanced_ggplot.qmd
