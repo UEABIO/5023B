@@ -1,0 +1,12 @@
+
+# Task Three
+
+## Intended Learning Outcomes
+
+* Write a script to import and clean a dataset
+
+* Try not to use AI - use the methods and functions provided in the coursebook
+
+
+## Clean data
+
