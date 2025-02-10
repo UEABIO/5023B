@@ -47,7 +47,8 @@ book:
     - task2.qmd
   - part: "Exploratory Analysis"
     chapters:
-    - 04-eda.qmd
+    - 04-managing-data.qmd
+    - task3.qmd
 
   appendices:
   - r-basics.qmd

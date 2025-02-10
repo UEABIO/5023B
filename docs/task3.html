@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.6.39">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Statistical skills for Biologists">
-<title>7&nbsp; Exploratory Data Analysis – 5023B</title>
+<title>8&nbsp; Task Three – 5023B</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -27,7 +27,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
 <link href="./r-basics.html" rel="next">
-<link href="./task2.html" rel="prev">
+<link href="./04-managing-data.html" rel="prev">
 <link href="./images/logos/logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -78,7 +78,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-eda.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./04-eda.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-managing-data.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./task3.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Task Three</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -166,8 +166,14 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./04-eda.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></span></a>
+  <a href="./04-managing-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Managing Data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./task3.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Task Three</span></span></a>
   </div>
 </li>
       </ul>
@@ -247,13 +253,19 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#intended-learning-outcomes" id="toc-intended-learning-outcomes" class="nav-link active" data-scroll-target="#intended-learning-outcomes"><span class="header-section-number">8.1</span> Intended Learning Outcomes</a></li>
+  <li><a href="#clean-data" id="toc-clean-data" class="nav-link" data-scroll-target="#clean-data"><span class="header-section-number">8.2</span> Clean data</a></li>
+  <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link" data-scroll-target="#the-dataset"><span class="header-section-number">8.3</span> The dataset</a></li>
+  </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-eda.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./04-eda.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span></a></li></ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-managing-data.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./task3.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Task Three</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Exploratory Data Analysis</span>
+<span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Task Three</span>
 </h1>
 </div>
 
@@ -268,11 +280,44 @@ ul.task-list li input[type="checkbox"] {
   
 
 
-</header><p>Coming next week!</p>
+</header><section id="intended-learning-outcomes" class="level2" data-number="8.1"><h2 data-number="8.1" class="anchored" data-anchor-id="intended-learning-outcomes">
+<span class="header-section-number">8.1</span> Intended Learning Outcomes</h2>
+<ul>
+<li>Write a commented and reproducible script for data cleaning and exploratory analysis</li>
+</ul></section><section id="clean-data" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="clean-data">
+<span class="header-section-number">8.2</span> Clean data</h2>
+<ul>
+<li>
+<p>Your script should</p>
+<pre><code>  - Clean column names
+  - Fix typos and standardise text
+  - Check for duplications and remove
+  - Set factors
+  - Check for any missing data and deal with it appropriately</code></pre>
+</li>
+<li>
+<p>Make sure your script is reproducible:</p>
+<pre><code>  - It should contain information on all packages needed
+  - Run without errors or pauses to clean the dataset
+  - Use tidyverse functions taught in the coursebook
+  - Be clearly commented throughout</code></pre>
+</li>
+</ul>
+<p>I strongly recommend that you compare your script with someone else on the course when completed. Work to suggest improvements to each others work.</p>
+</section><section id="the-dataset" class="level2" data-number="8.3"><h2 data-number="8.3" class="anchored" data-anchor-id="the-dataset">
+<span class="header-section-number">8.3</span> The dataset</h2>
+<p>We are introduced to the fruitfly dataset Partridge and Farquhar (1981). From our understanding of sexual selection and reproductive biology in fruit flies, we know there is a well established ‘cost’ to reproduction in terms of reduced longevity for female fruitflies. The data from this experiment is designed to test whether increased sexual activity affects the lifespan of male fruitflies.</p>
+<p>The flies used were an outbred stock, sexual activity was manipulated by supplying males with either new virgin females each day, previously mated females ( Inseminated, so remating rates are lower), or provide no females at all (Control). All groups were otherwise treated identically.</p>
+<ul>
+<li><p>type: type of female companion (virgin, inseminated, control(partners = 0))</p></li>
+<li><p>longevity: lifespan in days</p></li>
+<li><p>thorax: length of thorax in micrometres (a proxy for body size)</p></li>
+<li><p>sleep: percentage of the day spent sleeping</p></li>
+</ul>
+<p><strong>Push your work to Github to complete</strong></p>
 
 
-
-</main><!-- /main --><script>
+</section></main><!-- /main --><script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {
@@ -1065,8 +1110,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./task2.html" class="pagination-link" aria-label="Task Two">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Task Two</span></span>
+      <a href="./04-managing-data.html" class="pagination-link" aria-label="Managing Data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Managing Data</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
