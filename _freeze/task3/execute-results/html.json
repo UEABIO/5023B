@@ -1,0 +1,15 @@
+{
+  "hash": "5c9d6015cd83be63fe00e712d4f63d26",
+  "result": {
+    "engine": "knitr",
+    "markdown": "\n# Task Three\n\n## Intended Learning Outcomes\n\n* Write a commented and reproducible script for data cleaning and exploratory analysis\n\n\n## Clean data\n\n* Your script should \n\n        - Clean column names\n        - Fix typos and standardise text\n        - Check for duplications and remove\n        - Set factors\n        - Check for any missing data and deal with it appropriately\n        \n* Make sure your script is reproducible: \n          \n        - It should contain information on all packages needed\n        - Run without errors or pauses to clean the dataset\n        - Use tidyverse functions taught in the coursebook\n        - Be clearly commented throughout\n        \nI strongly recommend that you compare your script with someone else on the course when completed. Work to suggest improvements to each others work. \n\n\n## The dataset\n\nWe are introduced to the fruitfly dataset Partridge and Farquhar (1981). From our understanding of sexual selection and reproductive biology in fruit flies, we know there is a well established 'cost' to reproduction in terms of reduced longevity for female fruitflies. The data from this experiment is designed to test whether increased sexual activity affects the lifespan of male fruitflies.\n\nThe flies used were an outbred stock, sexual activity was manipulated by supplying males with either new virgin females each day, previously mated females ( Inseminated, so remating rates are lower), or provide no females at all (Control). All groups were otherwise treated identically.\n\n- type: type of female companion (virgin, inseminated, control(partners = 0))\n\n- longevity: lifespan in days\n\n- thorax: length of thorax in micrometres (a proxy for body size)\n\n- sleep: percentage of the day spent sleeping\n\n\n\n\n::: {.cell layout-align=\"center\"}\n\n:::\n\n\n\n\n\n**Push your work to Github to complete**\n\n",
+    "supporting": [],
+    "filters": [
+      "rmarkdown/pagebreak.lua"
+    ],
+    "includes": {},
+    "engineDependencies": {},
+    "preserve": {},
+    "postProcess": true
+  }
+}
