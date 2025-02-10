@@ -629,7 +629,7 @@ This is because of unwanted empty spaces - R recognises these as unique characte
 
 We can trim leading or trailing empty spaces with `stringr::str_trim`. These are often problematic and difficult to spot e.g.
 
-```{r, eval  = T}
+```{r, eval  = F}
 penguins_clean_names |>  
   mutate(sex = str_trim(sex))
 ```
@@ -644,7 +644,7 @@ penguins_clean_names |>
 
 Here we have an issue with inconsistent formatting of values. We can use the function `case_when` as vectorised set of `if else` statements to manually sort the names. 
 
-```{r}
+```{r, eval = F}
 penguins_clean_names |>
   mutate(species = case_when(species == "adelie penguin (pygoscelis adeliae)"|
                              species ==  "ADELIE PENGUIN (PYGOSCELIS ADELIAE)" ~ "Adelie Penguin (Pygoscelis adeliae)",
@@ -658,18 +658,27 @@ penguins_clean_names |>
 
 Or we could use `stringr` again to simplify the task!
 
-```{r}
+```{r, eval = F}
 # str_to_title is used to assign capital letters to the first letter of each word, we also have str_to_lower and str_to_upper
 penguins_clean_names |> 
   mutate(species = str_to_title(species))
 
 ```
 
+```{r, echo = F}
+# str_to_title is used to assign capital letters to the first letter of each word, we also have str_to_lower and str_to_upper
+penguins_clean_names |> 
+  mutate(species = str_to_title(species)) |> 
+  head()
+
+```
+
+
 ### Standardise
 
 We could also use this data cleaning and checking stage as an opportunity to make long character strings a bit more manageable:
 
-```{r, eval = T, warning = F, message = F}
+```{r, eval = F, warning = F, message = F}
 # use mutate and case_when 
 # for a statement that conditionally changes 
 # the names of the values in a variable
@@ -679,6 +688,20 @@ penguins_clean_names |>
   ) |> 
   mutate(sex = stringr::str_to_title(sex)) |> 
   select(species, sex)
+
+```
+
+```{r, echo = F, warning = F, message = F}
+# use mutate and case_when 
+# for a statement that conditionally changes 
+# the names of the values in a variable
+
+penguins_clean_names |> 
+  mutate(species = stringr::word(species, 1)
+  ) |> 
+  mutate(sex = stringr::str_to_title(sex)) |> 
+  select(species, sex) |> 
+  head()
 
 ```
 
