@@ -1,4 +1,3 @@
-
 # Linear Models
 
 ```{r, include = FALSE}
@@ -66,9 +65,11 @@ Before you start any formal analysis you should think clearly about the sensible
 
 
 :::{.task}
+
 ::::{.task-header}
 Which terms do you think we should include in our model?
 ::::
+
 ::::{.task-container}
 
 - Identify the dependent variable
@@ -82,10 +83,11 @@ Which terms do you think we should include in our model?
 - Discuss this with someone else in class before checking your answers
 
 ::::
+
 :::
 
 
-` r hide("Solution")`
+`r hide("Solution")`
 
 In this exercise I have just asked you to try and think logically about suitable predictors. For a more formal investigation you should support this with evidence where possible: 
 
@@ -130,7 +132,9 @@ lm(longevity ~ type + thorax + sleep + type:sleep, data = dros_clean)
 
 ```
 
+
 `r unhide()`
+
 
 ## Checking the data
 
@@ -189,7 +193,7 @@ dros_clean |>
 dros_clean |> 
   ggplot(aes(x = thorax, y = longevity, colour = type))+
   geom_point()+
-  scale_colour_manual(values = colours)
+  scale_colour_manual(values = colours)+
   theme_minimal()+
   theme(legend.position = "none")
 
@@ -204,6 +208,7 @@ dros_clean |>
   theme_minimal()
 ```
 
+`r unhide()`
 
 ## Designing a model
 
@@ -425,7 +430,7 @@ emmeans::emmeans(flyls1,
 
 :::
 
-## Tables |> 
+## Tables
 
 `sjPlot` A really nice package that helps produce model summaries for you automatically
 

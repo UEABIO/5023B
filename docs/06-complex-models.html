@@ -315,17 +315,24 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
 <li><a href="#designing-a-model" id="toc-designing-a-model" class="nav-link active" data-scroll-target="#designing-a-model"><span class="header-section-number">9.1</span> Designing a Model</a></li>
-  <li>
-<a href="#hypothesis" id="toc-hypothesis" class="nav-link" data-scroll-target="#hypothesis"><span class="header-section-number">9.2</span> Hypothesis</a>
-  <ul class="collapse">
-<li><a href="#independent-variables" id="toc-independent-variables" class="nav-link" data-scroll-target="#independent-variables"><span class="header-section-number">9.2.1</span> Independent variables</a></li>
-  <li><a href="#hypotheses" id="toc-hypotheses" class="nav-link" data-scroll-target="#hypotheses"><span class="header-section-number">9.2.2</span> Hypotheses</a></li>
-  <li><a href="#possible-interactions" id="toc-possible-interactions" class="nav-link" data-scroll-target="#possible-interactions"><span class="header-section-number">9.2.3</span> Possible interactions</a></li>
-  <li><a href="#hypothesis-1" id="toc-hypothesis-1" class="nav-link" data-scroll-target="#hypothesis-1"><span class="header-section-number">9.2.4</span> Hypothesis</a></li>
-  </ul>
-</li>
+  <li><a href="#hypothesis" id="toc-hypothesis" class="nav-link" data-scroll-target="#hypothesis"><span class="header-section-number">9.2</span> Hypothesis</a></li>
   <li><a href="#checking-the-data" id="toc-checking-the-data" class="nav-link" data-scroll-target="#checking-the-data"><span class="header-section-number">9.3</span> Checking the data</a></li>
   <li><a href="#activity-1-think-about-your-data" id="toc-activity-1-think-about-your-data" class="nav-link" data-scroll-target="#activity-1-think-about-your-data"><span class="header-section-number">9.4</span> Activity 1: Think about your data</a></li>
+  <li><a href="#designing-a-model-1" id="toc-designing-a-model-1" class="nav-link" data-scroll-target="#designing-a-model-1"><span class="header-section-number">9.5</span> Designing a model</a></li>
+  <li>
+<a href="#model-checking-collinearity" id="toc-model-checking-collinearity" class="nav-link" data-scroll-target="#model-checking-collinearity"><span class="header-section-number">9.6</span> Model checking &amp; collinearity</a>
+  <ul class="collapse">
+<li><a href="#homogeneity-of-variance" id="toc-homogeneity-of-variance" class="nav-link" data-scroll-target="#homogeneity-of-variance"><span class="header-section-number">9.6.1</span> Homogeneity of variance</a></li>
+  <li><a href="#normality-of-residuals" id="toc-normality-of-residuals" class="nav-link" data-scroll-target="#normality-of-residuals"><span class="header-section-number">9.6.2</span> Normality of residuals</a></li>
+  <li><a href="#collinearity" id="toc-collinearity" class="nav-link" data-scroll-target="#collinearity"><span class="header-section-number">9.6.3</span> Collinearity</a></li>
+  <li><a href="#model-interpretation" id="toc-model-interpretation" class="nav-link" data-scroll-target="#model-interpretation"><span class="header-section-number">9.6.4</span> Model Interpretation</a></li>
+  <li><a href="#model-fit-metrics" id="toc-model-fit-metrics" class="nav-link" data-scroll-target="#model-fit-metrics"><span class="header-section-number">9.6.5</span> Model Fit Metrics</a></li>
+  <li><a href="#key-takeaways" id="toc-key-takeaways" class="nav-link" data-scroll-target="#key-takeaways"><span class="header-section-number">9.6.6</span> Key Takeaways</a></li>
+  </ul>
+</li>
+  <li><a href="#reporting-uncertainty" id="toc-reporting-uncertainty" class="nav-link" data-scroll-target="#reporting-uncertainty"><span class="header-section-number">9.7</span> Reporting Uncertainty</a></li>
+  <li><a href="#posthoc" id="toc-posthoc" class="nav-link" data-scroll-target="#posthoc"><span class="header-section-number">9.8</span> Posthoc</a></li>
+  <li><a href="#tables" id="toc-tables" class="nav-link" data-scroll-target="#tables"><span class="header-section-number">9.9</span> Tables</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -401,7 +408,10 @@ Important
 </ul>
 </div>
 </div>
-<p><code>r hide("Solution")</code></p>
+<div class="webex-solution">
+<button>
+Solution
+</button>
 <p>In this exercise I have just asked you to try and think logically about suitable predictors. For a more formal investigation you should support this with evidence where possible:</p>
 <ul>
 <li>longevity - this is the <strong>dependent</strong> variable</li>
@@ -436,11 +446,9 @@ lm(longevity ~ type + thorax + sleep, data = dros_clean)
 <pre><code>
 lm(longevity ~ type + thorax + sleep + type:sleep, data = dros_clean)
 </code></pre>
-</section></section></main>
+</section>
 </div>
-
-
-<section id="checking-the-data" class="level2" data-number="9.3"><h2 data-number="9.3" data-anchor-id="checking-the-data">
+</section><section id="checking-the-data" class="level2" data-number="9.3"><h2 data-number="9.3" class="anchored" data-anchor-id="checking-the-data">
 <span class="header-section-number">9.3</span> Checking the data</h2>
 <p>You should have imported, cleaned and tidied your data. Making sure it is in tidy format, all variables have useful names, and there are no mistakes, missing data or typos.</p>
 <p>Based on the variables you have decided to test you should start with some simple visualisations, to understand the distribution of your data, and investigate visually the relationships you wish to test.</p>
@@ -454,7 +462,7 @@ lm(longevity ~ type + thorax + sleep + type:sleep, data = dros_clean)
 </div>
 </div>
 </div>
-</section><section id="activity-1-think-about-your-data" class="level2" data-number="9.4"><h2 data-number="9.4" data-anchor-id="activity-1-think-about-your-data">
+</section><section id="activity-1-think-about-your-data" class="level2" data-number="9.4"><h2 data-number="9.4" class="anchored" data-anchor-id="activity-1-think-about-your-data">
 <span class="header-section-number">9.4</span> Activity 1: Think about your data</h2>
 <p>Think carefully about the plots you should make to investigate the potential differences and relationships you wish to investigate - try and answer the questions first before checking the examples hidden behind dropdowns.</p>
 <div class="task">
@@ -494,319 +502,22 @@ Solution
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>dros_clean <span class="sc">|&gt;</span> </span>
 <span id="cb6-2"><a href="#cb6-2"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> thorax, <span class="at">y =</span> longevity, <span class="at">colour =</span> type))<span class="sc">+</span></span>
 <span id="cb6-3"><a href="#cb6-3"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> colours)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-4"><a href="#cb6-4"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> colours)<span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="06-complex-models_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>  <span class="fu">theme_minimal</span>()<span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>List of 136
- $ line                            :List of 6
-  ..$ colour       : chr "black"
-  ..$ linewidth    : num 0.5
-  ..$ linetype     : num 1
-  ..$ lineend      : chr "butt"
-  ..$ arrow        : logi FALSE
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_line" "element"
- $ rect                            :List of 5
-  ..$ fill         : chr "white"
-  ..$ colour       : chr "black"
-  ..$ linewidth    : num 0.5
-  ..$ linetype     : num 1
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_rect" "element"
- $ text                            :List of 11
-  ..$ family       : chr ""
-  ..$ face         : chr "plain"
-  ..$ colour       : chr "black"
-  ..$ size         : num 11
-  ..$ hjust        : num 0.5
-  ..$ vjust        : num 0.5
-  ..$ angle        : num 0
-  ..$ lineheight   : num 0.9
-  ..$ margin       : 'margin' num [1:4] 0points 0points 0points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : logi FALSE
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ title                           : NULL
- $ aspect.ratio                    : NULL
- $ axis.title                      : NULL
- $ axis.title.x                    :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : num 1
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 2.75points 0points 0points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.title.x.top                :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : num 0
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 0points 2.75points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.title.x.bottom             : NULL
- $ axis.title.y                    :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : num 1
-  ..$ angle        : num 90
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 2.75points 0points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.title.y.left               : NULL
- $ axis.title.y.right              :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : num 1
-  ..$ angle        : num -90
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 0points 0points 2.75points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.text                       :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : chr "grey30"
-  ..$ size         : 'rel' num 0.8
-  ..$ hjust        : NULL
-  ..$ vjust        : NULL
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : NULL
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.text.x                     :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : num 1
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 2.2points 0points 0points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.text.x.top                 :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : NULL
-  ..$ vjust        : num 0
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 0points 2.2points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.text.x.bottom              : NULL
- $ axis.text.y                     :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : num 1
-  ..$ vjust        : NULL
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 2.2points 0points 0points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.text.y.left                : NULL
- $ axis.text.y.right               :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : num 0
-  ..$ vjust        : NULL
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 0points 0points 2.2points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.text.theta                 : NULL
- $ axis.text.r                     :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : num 0.5
-  ..$ vjust        : NULL
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : 'margin' num [1:4] 0points 2.2points 0points 2.2points
-  .. ..- attr(*, "unit")= int 8
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ axis.ticks                      : list()
-  ..- attr(*, "class")= chr [1:2] "element_blank" "element"
- $ axis.ticks.x                    : NULL
- $ axis.ticks.x.top                : NULL
- $ axis.ticks.x.bottom             : NULL
- $ axis.ticks.y                    : NULL
- $ axis.ticks.y.left               : NULL
- $ axis.ticks.y.right              : NULL
- $ axis.ticks.theta                : NULL
- $ axis.ticks.r                    : NULL
- $ axis.minor.ticks.x.top          : NULL
- $ axis.minor.ticks.x.bottom       : NULL
- $ axis.minor.ticks.y.left         : NULL
- $ axis.minor.ticks.y.right        : NULL
- $ axis.minor.ticks.theta          : NULL
- $ axis.minor.ticks.r              : NULL
- $ axis.ticks.length               : 'simpleUnit' num 2.75points
-  ..- attr(*, "unit")= int 8
- $ axis.ticks.length.x             : NULL
- $ axis.ticks.length.x.top         : NULL
- $ axis.ticks.length.x.bottom      : NULL
- $ axis.ticks.length.y             : NULL
- $ axis.ticks.length.y.left        : NULL
- $ axis.ticks.length.y.right       : NULL
- $ axis.ticks.length.theta         : NULL
- $ axis.ticks.length.r             : NULL
- $ axis.minor.ticks.length         : 'rel' num 0.75
- $ axis.minor.ticks.length.x       : NULL
- $ axis.minor.ticks.length.x.top   : NULL
- $ axis.minor.ticks.length.x.bottom: NULL
- $ axis.minor.ticks.length.y       : NULL
- $ axis.minor.ticks.length.y.left  : NULL
- $ axis.minor.ticks.length.y.right : NULL
- $ axis.minor.ticks.length.theta   : NULL
- $ axis.minor.ticks.length.r       : NULL
- $ axis.line                       : list()
-  ..- attr(*, "class")= chr [1:2] "element_blank" "element"
- $ axis.line.x                     : NULL
- $ axis.line.x.top                 : NULL
- $ axis.line.x.bottom              : NULL
- $ axis.line.y                     : NULL
- $ axis.line.y.left                : NULL
- $ axis.line.y.right               : NULL
- $ axis.line.theta                 : NULL
- $ axis.line.r                     : NULL
- $ legend.background               : list()
-  ..- attr(*, "class")= chr [1:2] "element_blank" "element"
- $ legend.margin                   : 'margin' num [1:4] 5.5points 5.5points 5.5points 5.5points
-  ..- attr(*, "unit")= int 8
- $ legend.spacing                  : 'simpleUnit' num 11points
-  ..- attr(*, "unit")= int 8
- $ legend.spacing.x                : NULL
- $ legend.spacing.y                : NULL
- $ legend.key                      : list()
-  ..- attr(*, "class")= chr [1:2] "element_blank" "element"
- $ legend.key.size                 : 'simpleUnit' num 1.2lines
-  ..- attr(*, "unit")= int 3
- $ legend.key.height               : NULL
- $ legend.key.width                : NULL
- $ legend.key.spacing              : 'simpleUnit' num 5.5points
-  ..- attr(*, "unit")= int 8
- $ legend.key.spacing.x            : NULL
- $ legend.key.spacing.y            : NULL
- $ legend.frame                    : NULL
- $ legend.ticks                    : NULL
- $ legend.ticks.length             : 'rel' num 0.2
- $ legend.axis.line                : NULL
- $ legend.text                     :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : 'rel' num 0.8
-  ..$ hjust        : NULL
-  ..$ vjust        : NULL
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : NULL
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ legend.text.position            : NULL
- $ legend.title                    :List of 11
-  ..$ family       : NULL
-  ..$ face         : NULL
-  ..$ colour       : NULL
-  ..$ size         : NULL
-  ..$ hjust        : num 0
-  ..$ vjust        : NULL
-  ..$ angle        : NULL
-  ..$ lineheight   : NULL
-  ..$ margin       : NULL
-  ..$ debug        : NULL
-  ..$ inherit.blank: logi TRUE
-  ..- attr(*, "class")= chr [1:2] "element_text" "element"
- $ legend.title.position           : NULL
- $ legend.position                 : chr "none"
- $ legend.position.inside          : NULL
- $ legend.direction                : NULL
- $ legend.byrow                    : NULL
- $ legend.justification            : chr "center"
- $ legend.justification.top        : NULL
- $ legend.justification.bottom     : NULL
- $ legend.justification.left       : NULL
- $ legend.justification.right      : NULL
- $ legend.justification.inside     : NULL
- $ legend.location                 : NULL
- $ legend.box                      : NULL
- $ legend.box.just                 : NULL
- $ legend.box.margin               : 'margin' num [1:4] 0cm 0cm 0cm 0cm
-  ..- attr(*, "unit")= int 1
- $ legend.box.background           : list()
-  ..- attr(*, "class")= chr [1:2] "element_blank" "element"
- $ legend.box.spacing              : 'simpleUnit' num 11points
-  ..- attr(*, "unit")= int 8
-  [list output truncated]
- - attr(*, "class")= chr [1:2] "theme" "gg"
- - attr(*, "complete")= logi TRUE
- - attr(*, "validate")= logi TRUE</code></pre>
-</div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>dros_clean <span class="sc">|&gt;</span> </span>
-<span id="cb9-2"><a href="#cb9-2"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>sleep, <span class="at">y =</span> longevity, <span class="at">group =</span> type, <span class="at">colour =</span> type))<span class="sc">+</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a>  <span class="fu">geom_point</span>( <span class="at">alpha =</span> <span class="fl">0.6</span>)<span class="sc">+</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> colours)<span class="sc">+</span></span>
-<span id="cb9-5"><a href="#cb9-5"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>dros_clean <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>sleep, <span class="at">y =</span> longevity, <span class="at">group =</span> type, <span class="at">colour =</span> type))<span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">geom_point</span>( <span class="at">alpha =</span> <span class="fl">0.6</span>)<span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> colours)<span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="06-complex-models_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
@@ -814,15 +525,16 @@ Solution
 </div>
 </div>
 </div>
-<section id="designing-a-model-1" class="level2" data-number="9.5"><h2 data-number="9.5" data-anchor-id="designing-a-model-1">
+</div>
+</section><section id="designing-a-model-1" class="level2" data-number="9.5"><h2 data-number="9.5" class="anchored" data-anchor-id="designing-a-model-1">
 <span class="header-section-number">9.5</span> Designing a model</h2>
 <p>In this section, we explore how to construct a statistical model to analyze biological data. Specifically, we will build a linear model to examine the effects of mating type, body size, and sleep on longevity in Drosophila melanogaster. We will define our dependent variable (longevity) and include relevant predictor variables (mating type, thorax length, and sleep duration).</p>
 <p>Using the <code><a href="https://rdrr.io/r/stats/lm.html">lm()</a></code> function in R, we fit a model to our cleaned dataset, and generate a summary of the results. This approach allows us to assess the significance of each predictor and interpret how these factors influence longevity. By the end of this section, you will understand how to structure a model, choose appropriate variables, and interpret statistical outputs.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># a full model</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a>flyls1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(longevity <span class="sc">~</span> type <span class="sc">+</span> thorax <span class="sc">+</span> sleep, <span class="at">data =</span> dros_clean)</span>
-<span id="cb10-3"><a href="#cb10-3"></a></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="fu">summary</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># a full model</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a>flyls1 <span class="ot">&lt;-</span> <span class="fu">lm</span>(longevity <span class="sc">~</span> type <span class="sc">+</span> thorax <span class="sc">+</span> sleep, <span class="at">data =</span> dros_clean)</span>
+<span id="cb8-3"><a href="#cb8-3"></a></span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="fu">summary</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -860,12 +572,12 @@ Important
 <p>Before we try to interpret the coefficients for a model, we must first check that the model is a good fit for our data. We do this by checking the residuals</p>
 </div>
 </div>
-</section><section id="model-checking-collinearity" class="level2" data-number="9.6"><h2 data-number="9.6" data-anchor-id="model-checking-collinearity">
+</section><section id="model-checking-collinearity" class="level2" data-number="9.6"><h2 data-number="9.6" class="anchored" data-anchor-id="model-checking-collinearity">
 <span class="header-section-number">9.6</span> Model checking &amp; collinearity</h2>
 <p>Before we start playing with the terms in our model, we should check to see if this is even a good way of fitting and measuring our data. We should check the assumptions of our model are being met.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(flyls1,</span>
-<span id="cb12-2"><a href="#cb12-2"></a>                         <span class="at">detrend =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(flyls1,</span>
+<span id="cb10-2"><a href="#cb10-2"></a>                         <span class="at">detrend =</span> F)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="06-complex-models_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
@@ -881,7 +593,7 @@ Important
 <li><p>Collinearity Check – Detects whether predictor variables are highly correlated with each other, which can distort model estimates and reduce interpretability.</p></li>
 <li><p>Normality Check – Examines whether the residuals of the model follow a normal distribution, an assumption necessary for reliable inference in linear regression.</p></li>
 </ul>
-<section id="homogeneity-of-variance" class="level3" data-number="9.6.1"><h3 data-number="9.6.1" data-anchor-id="homogeneity-of-variance">
+<section id="homogeneity-of-variance" class="level3" data-number="9.6.1"><h3 data-number="9.6.1" class="anchored" data-anchor-id="homogeneity-of-variance">
 <span class="header-section-number">9.6.1</span> Homogeneity of variance</h3>
 <p><strong>Question - IS the assumption of homogeneity of variance met?</strong> <select class="webex-select"><option value="blank"></option>
 <option value="answer">Yes</option>
@@ -897,15 +609,15 @@ Solution
 <p>VERDICT, pretty much ok, should be fine for making inferences.</p>
 <p>With a slight curvature this could indicate that you <em>might</em> get a better fit with a transformation, or perhaps that there is a missing variable that if included in the model would improve the residuals. In this instance I wouldn’t be overly concerned. See here for a great explainer on intepreting residuals<a href="#fn5" class="footnote-ref" id="fnref5" role="doc-noteref"><sup>5</sup></a>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Runs a Breusch-Pagan Test for heteroscedasticity</span></span>
-<span id="cb13-2"><a href="#cb13-2"></a><span class="co"># Sensitive to outliers, non-normality and sample size</span></span>
-<span id="cb13-3"><a href="#cb13-3"></a>performance<span class="sc">::</span><span class="fu">check_heteroscedasticity</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Runs a Breusch-Pagan Test for heteroscedasticity</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="co"># Sensitive to outliers, non-normality and sample size</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>performance<span class="sc">::</span><span class="fu">check_heteroscedasticity</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>OK: Error variance appears to be homoscedastic (p = 0.155).</code></pre>
 </div>
 </div>
 </div>
-</section><section id="normality-of-residuals" class="level3" data-number="9.6.2"><h3 data-number="9.6.2" data-anchor-id="normality-of-residuals">
+</section><section id="normality-of-residuals" class="level3" data-number="9.6.2"><h3 data-number="9.6.2" class="anchored" data-anchor-id="normality-of-residuals">
 <span class="header-section-number">9.6.2</span> Normality of residuals</h3>
 <p><select class="webex-select"><option value="blank"></option>
 <option value="answer">Yes</option>
@@ -917,15 +629,15 @@ Solution
 <p>Yes - the QQplot looks pretty good, a very minor indication of a right skew, but nothing to worry about.</p>
 <p>[Interpreting QQ plots][What is a Quantile-Quantile (QQ) plot?]</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="co"># Runs a Shapiro Wilk test of normality</span></span>
-<span id="cb15-2"><a href="#cb15-2"></a><span class="co"># Sensitive to outliers, sample size</span></span>
-<span id="cb15-3"><a href="#cb15-3"></a>performance<span class="sc">::</span><span class="fu">check_normality</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Runs a Shapiro Wilk test of normality</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="co"># Sensitive to outliers, sample size</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>performance<span class="sc">::</span><span class="fu">check_normality</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>OK: residuals appear as normally distributed (p = 0.065).</code></pre>
 </div>
 </div>
 </div>
-</section><section id="collinearity" class="level3" data-number="9.6.3"><h3 data-number="9.6.3" data-anchor-id="collinearity">
+</section><section id="collinearity" class="level3" data-number="9.6.3"><h3 data-number="9.6.3" class="anchored" data-anchor-id="collinearity">
 <span class="header-section-number">9.6.3</span> Collinearity</h3>
 <p><strong>Question - IS their an issue with Collinearity?</strong> <select class="webex-select"><option value="blank"></option>
 <option value="">Yes</option>
@@ -943,7 +655,7 @@ Tip
 <p>What can you do about collinearity in main effects? 1) Nothing 2) Transform 3) Drop one of the terms.</p>
 <p>The <code>check_performance()</code> function produces a visual summary of a Variance Inflation Factor produced from the <code>vif()</code> function. This is a measure of the standard error of each estimated coefficient. If this is very larger (greater than 5 or 10), this indicates the model has problems estimating the coefficient. This does not affect model predictions, but makes it more difficult to determine the estimate change from a predictor.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>car<span class="sc">::</span><span class="fu">vif</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>car<span class="sc">::</span><span class="fu">vif</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>           GVIF Df GVIF^(1/(2*Df))
 type   1.016134  2        1.004009
@@ -953,12 +665,12 @@ sleep  1.010512  1        1.005242</code></pre>
 </div>
 </div>
 </div>
-</section><section id="model-interpretation" class="level3" data-number="9.6.4"><h3 data-number="9.6.4" data-anchor-id="model-interpretation">
+</section><section id="model-interpretation" class="level3" data-number="9.6.4"><h3 data-number="9.6.4" class="anchored" data-anchor-id="model-interpretation">
 <span class="header-section-number">9.6.4</span> Model Interpretation</h3>
 <p>The <code><a href="https://rdrr.io/r/stats/add1.html">drop1()</a></code> function helps assess whether a predictor (e.g.&nbsp;type) significantly improves the model. If removing a variable results in a large decrease in model fit (i.e., a significant drop in the F-statistic), it suggests that the variable is an important contributor to explaining the outcome.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a><span class="co"># use drop1 function to remove top-level terms</span></span>
-<span id="cb19-2"><a href="#cb19-2"></a><span class="fu">drop1</span>(flyls1, <span class="at">test =</span> <span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># use drop1 function to remove top-level terms</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a><span class="fu">drop1</span>(flyls1, <span class="at">test =</span> <span class="st">"F"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="caption-top table table-sm table-striped small">
@@ -1015,7 +727,7 @@ sleep  1.010512  1        1.005242</code></pre>
 </div>
 <p>Based on this ANOVA table, we can conclude that type and thorax are both significant predictors of longevity, while sleep is not. We can go on now to look at directionality and effect size for each level of our predictors.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">summary</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">summary</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>
 Call:
@@ -1040,7 +752,7 @@ Multiple R-squared:  0.6046,    Adjusted R-squared:  0.5914
 F-statistic: 45.88 on 4 and 120 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
-<section id="coefficients-and-their-meaning" class="level4" data-number="9.6.4.1"><h4 data-number="9.6.4.1" data-anchor-id="coefficients-and-their-meaning">
+<section id="coefficients-and-their-meaning" class="level4" data-number="9.6.4.1"><h4 data-number="9.6.4.1" class="anchored" data-anchor-id="coefficients-and-their-meaning">
 <span class="header-section-number">9.6.4.1</span> Coefficients and Their Meaning</h4>
 <p>Each row represents a predictor variable in the model:</p>
 <ul>
@@ -1049,20 +761,20 @@ F-statistic: 45.88 on 4 and 120 DF,  p-value: &lt; 2.2e-16</code></pre>
 <li><p>typeVirgin (-13.25, t(120) = -4.8, p &lt; 0.001): Males paired with virgin females lived significantly shorter lives, about 13.25 days less than the control group (p &lt; 0.001, highly significant).</p></li>
 <li><p>thorax (144.43, t(120) = 11.01, p &lt; 0.001): Body size (thorax length) has a strong positive effect on longevity—each 1 mm increase in thorax length is associated with an increase of ~144 days in lifespan (p &lt; 0.001).</p></li>
 <li><p>sleep (-0.05, t(120) = -0.83, p = 0.41): Sleep has a very small negative effect on longevity, but this effect is not statistically significant (p &gt; 0.05).</p></li>
-</ul></section></section><section id="model-fit-metrics" class="level3" data-number="9.6.5"><h3 data-number="9.6.5" data-anchor-id="model-fit-metrics">
+</ul></section></section><section id="model-fit-metrics" class="level3" data-number="9.6.5"><h3 data-number="9.6.5" class="anchored" data-anchor-id="model-fit-metrics">
 <span class="header-section-number">9.6.5</span> Model Fit Metrics</h3>
 <ul>
 <li><p>Residual standard error (11.23): Measures how much the observed longevity values deviate from the model’s predictions on average.</p></li>
 <li><p>R-squared (0.6046): About 60% of the variability in longevity is explained by this model, which suggests a reasonably strong fit.</p></li>
 <li><p>F-statistic (45.88, p &lt; 2.2e-16): Indicates that the model overall is statistically significant, meaning at least one predictor contributes significantly to explaining longevity.</p></li>
-</ul></section><section id="key-takeaways" class="level3" data-number="9.6.6"><h3 data-number="9.6.6" data-anchor-id="key-takeaways">
+</ul></section><section id="key-takeaways" class="level3" data-number="9.6.6"><h3 data-number="9.6.6" class="anchored" data-anchor-id="key-takeaways">
 <span class="header-section-number">9.6.6</span> Key Takeaways</h3>
 <ul>
 <li><p>Body size (thorax) has the strongest and most significant effect on longevity.</p></li>
 <li><p>Being paired with virgin females significantly reduces male longevity.</p></li>
 <li><p>Sleep and pairing with inseminated females do not have significant effects.</p></li>
 <li><p>The model explains a substantial portion (60%) of the variation in longevity.</p></li>
-</ul></section></section><section id="reporting-uncertainty" class="level2" data-number="9.7"><h2 data-number="9.7" data-anchor-id="reporting-uncertainty">
+</ul></section></section><section id="reporting-uncertainty" class="level2" data-number="9.7"><h2 data-number="9.7" class="anchored" data-anchor-id="reporting-uncertainty">
 <span class="header-section-number">9.7</span> Reporting Uncertainty</h2>
 <p>Reporting mean differences along with 95% confidence intervals (CIs) provides several important benefits in reporting:</p>
 <ul>
@@ -1082,9 +794,9 @@ F-statistic: 45.88 on 4 and 120 DF,  p-value: &lt; 2.2e-16</code></pre>
 </ul>
 <p>Reporting both the point estimate and the confidence interval helps stakeholders, including researchers, practitioners, and policymakers, make better-informed decisions. It reflects both the strength of evidence and its precision.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># confint(flyls1)</span></span>
-<span id="cb22-2"><a href="#cb22-2"></a></span>
-<span id="cb22-3"><a href="#cb22-3"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(flyls1,<span class="at">conf.int =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># confint(flyls1)</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a></span>
+<span id="cb20-3"><a href="#cb20-3"></a>broom<span class="sc">::</span><span class="fu">tidy</span>(flyls1,<span class="at">conf.int =</span> T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="caption-top table table-sm table-striped small">
@@ -1157,12 +869,12 @@ F-statistic: 45.88 on 4 and 120 DF,  p-value: &lt; 2.2e-16</code></pre>
 </div>
 </div>
 </div>
-</section><section id="posthoc" class="level2" data-number="9.8"><h2 data-number="9.8" data-anchor-id="posthoc">
+</section><section id="posthoc" class="level2" data-number="9.8"><h2 data-number="9.8" class="anchored" data-anchor-id="posthoc">
 <span class="header-section-number">9.8</span> Posthoc</h2>
 <p>Using the <a href="https://aosmith.rbind.io/2019/03/25/getting-started-with-emmeans/">emmeans</a> package is a very easy way to produce the estimate mean values (rather than mean differences) for different categories <code>emmeans</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(flyls1, </span>
-<span id="cb23-2"><a href="#cb23-2"></a>                 <span class="at">specs =</span> <span class="sc">~</span> type <span class="sc">+</span> thorax <span class="sc">+</span> sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(flyls1, </span>
+<span id="cb21-2"><a href="#cb21-2"></a>                 <span class="at">specs =</span> <span class="sc">~</span> type <span class="sc">+</span> thorax <span class="sc">+</span> sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> type        thorax sleep emmean   SE  df lower.CL upper.CL
  Control      0.821  23.5   61.3 2.26 120     56.8     65.8
@@ -1174,9 +886,9 @@ Confidence level used: 0.95 </code></pre>
 </div>
 <p>If the term <code>pairwise</code> is included then it will also include post-hoc pairwise comparisons between all levels with a tukey test (adjustment for multiple comparisons) <code>contrasts</code>.</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="co"># add pairwise ~</span></span>
-<span id="cb25-2"><a href="#cb25-2"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(flyls1, </span>
-<span id="cb25-3"><a href="#cb25-3"></a>                 <span class="at">specs =</span> pairwise <span class="sc">~</span> type <span class="sc">+</span> thorax <span class="sc">+</span> sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># add pairwise ~</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(flyls1, </span>
+<span id="cb23-3"><a href="#cb23-3"></a>                 <span class="at">specs =</span> pairwise <span class="sc">~</span> type <span class="sc">+</span> thorax <span class="sc">+</span> sleep)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>$emmeans
  type        thorax sleep emmean   SE  df lower.CL upper.CL
@@ -1211,9 +923,9 @@ Tip
 <div class="callout-body-container callout-body">
 <p>For continuous variables (sleep and thorax) - <code>emmeans</code> has set these to the mean value within the dataset, so comparisons are constant between categories at the average value of all continuous variables. If we wish to model continuous predictions we need to specify these:</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(flyls1, </span>
-<span id="cb27-2"><a href="#cb27-2"></a>                 <span class="at">specs =</span> <span class="sc">~</span> type <span class="sc">+</span> thorax <span class="sc">+</span> sleep,</span>
-<span id="cb27-3"><a href="#cb27-3"></a>                 <span class="at">at =</span> <span class="fu">list</span>(<span class="at">thorax =</span> <span class="fu">seq</span>(<span class="fl">0.64</span>,<span class="fl">0.94</span>, .<span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(flyls1, </span>
+<span id="cb25-2"><a href="#cb25-2"></a>                 <span class="at">specs =</span> <span class="sc">~</span> type <span class="sc">+</span> thorax <span class="sc">+</span> sleep,</span>
+<span id="cb25-3"><a href="#cb25-3"></a>                 <span class="at">at =</span> <span class="fu">list</span>(<span class="at">thorax =</span> <span class="fu">seq</span>(<span class="fl">0.64</span>,<span class="fl">0.94</span>, .<span class="dv">1</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> type        thorax sleep emmean   SE  df lower.CL upper.CL
  Control       0.64  23.5   35.2 3.42 120     28.4     41.9
@@ -1234,12 +946,12 @@ Confidence level used: 0.95 </code></pre>
 </div>
 </div>
 </div>
-</section><section id="tables" class="level2" data-number="9.9"><h2 data-number="9.9" data-anchor-id="tables">
-<span class="header-section-number">9.9</span> Tables |&gt;</h2>
+</section><section id="tables" class="level2" data-number="9.9"><h2 data-number="9.9" class="anchored" data-anchor-id="tables">
+<span class="header-section-number">9.9</span> Tables</h2>
 <p><code>sjPlot</code> A really nice package that helps produce model summaries for you automatically</p>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="fu">library</span>(sjPlot)</span>
-<span id="cb29-2"><a href="#cb29-2"></a><span class="fu">tab_model</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a><span class="fu">library</span>(sjPlot)</span>
+<span id="cb27-2"><a href="#cb27-2"></a><span class="fu">tab_model</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
 <table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true"><tbody>
 <tr class="odd">
@@ -1294,26 +1006,26 @@ Confidence level used: 0.95 </code></pre>
 </div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1"></a><span class="fu">library</span>(gtsummary)</span>
-<span id="cb30-2"><a href="#cb30-2"></a><span class="fu">tbl_regression</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="fu">library</span>(gtsummary)</span>
+<span id="cb28-2"><a href="#cb28-2"></a><span class="fu">tbl_regression</span>(flyls1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<div id="wvlbxzoati" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
-<style>#wvlbxzoati table {
+<div id="uoexdpzxxf" style="padding-left:0px;padding-right:0px;padding-top:10px;padding-bottom:10px;overflow-x:auto;overflow-y:auto;width:auto;height:auto;">
+<style>#uoexdpzxxf table {
   font-family: system-ui, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-#wvlbxzoati thead, #wvlbxzoati tbody, #wvlbxzoati tfoot, #wvlbxzoati tr, #wvlbxzoati td, #wvlbxzoati th {
+#uoexdpzxxf thead, #uoexdpzxxf tbody, #uoexdpzxxf tfoot, #uoexdpzxxf tr, #uoexdpzxxf td, #uoexdpzxxf th {
   border-style: none;
 }
 
-#wvlbxzoati p {
+#uoexdpzxxf p {
   margin: 0;
   padding: 0;
 }
 
-#wvlbxzoati .gt_table {
+#uoexdpzxxf .gt_table {
   display: table;
   border-collapse: collapse;
   line-height: normal;
@@ -1339,12 +1051,12 @@ Confidence level used: 0.95 </code></pre>
   border-left-color: #D3D3D3;
 }
 
-#wvlbxzoati .gt_caption {
+#uoexdpzxxf .gt_caption {
   padding-top: 4px;
   padding-bottom: 4px;
 }
 
-#wvlbxzoati .gt_title {
+#uoexdpzxxf .gt_title {
   color: #333333;
   font-size: 125%;
   font-weight: initial;
@@ -1356,7 +1068,7 @@ Confidence level used: 0.95 </code></pre>
   border-bottom-width: 0;
 }
 
-#wvlbxzoati .gt_subtitle {
+#uoexdpzxxf .gt_subtitle {
   color: #333333;
   font-size: 85%;
   font-weight: initial;
@@ -1368,7 +1080,7 @@ Confidence level used: 0.95 </code></pre>
   border-top-width: 0;
 }
 
-#wvlbxzoati .gt_heading {
+#uoexdpzxxf .gt_heading {
   background-color: #FFFFFF;
   text-align: center;
   border-bottom-color: #FFFFFF;
@@ -1380,13 +1092,13 @@ Confidence level used: 0.95 </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#wvlbxzoati .gt_bottom_border {
+#uoexdpzxxf .gt_bottom_border {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
 }
 
-#wvlbxzoati .gt_col_headings {
+#uoexdpzxxf .gt_col_headings {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1401,7 +1113,7 @@ Confidence level used: 0.95 </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#wvlbxzoati .gt_col_heading {
+#uoexdpzxxf .gt_col_heading {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1421,7 +1133,7 @@ Confidence level used: 0.95 </code></pre>
   overflow-x: hidden;
 }
 
-#wvlbxzoati .gt_column_spanner_outer {
+#uoexdpzxxf .gt_column_spanner_outer {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1433,15 +1145,15 @@ Confidence level used: 0.95 </code></pre>
   padding-right: 4px;
 }
 
-#wvlbxzoati .gt_column_spanner_outer:first-child {
+#uoexdpzxxf .gt_column_spanner_outer:first-child {
   padding-left: 0;
 }
 
-#wvlbxzoati .gt_column_spanner_outer:last-child {
+#uoexdpzxxf .gt_column_spanner_outer:last-child {
   padding-right: 0;
 }
 
-#wvlbxzoati .gt_column_spanner {
+#uoexdpzxxf .gt_column_spanner {
   border-bottom-style: solid;
   border-bottom-width: 2px;
   border-bottom-color: #D3D3D3;
@@ -1453,11 +1165,11 @@ Confidence level used: 0.95 </code></pre>
   width: 100%;
 }
 
-#wvlbxzoati .gt_spanner_row {
+#uoexdpzxxf .gt_spanner_row {
   border-bottom-style: hidden;
 }
 
-#wvlbxzoati .gt_group_heading {
+#uoexdpzxxf .gt_group_heading {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1483,7 +1195,7 @@ Confidence level used: 0.95 </code></pre>
   text-align: left;
 }
 
-#wvlbxzoati .gt_empty_group_heading {
+#uoexdpzxxf .gt_empty_group_heading {
   padding: 0.5px;
   color: #333333;
   background-color: #FFFFFF;
@@ -1498,15 +1210,15 @@ Confidence level used: 0.95 </code></pre>
   vertical-align: middle;
 }
 
-#wvlbxzoati .gt_from_md > :first-child {
+#uoexdpzxxf .gt_from_md > :first-child {
   margin-top: 0;
 }
 
-#wvlbxzoati .gt_from_md > :last-child {
+#uoexdpzxxf .gt_from_md > :last-child {
   margin-bottom: 0;
 }
 
-#wvlbxzoati .gt_row {
+#uoexdpzxxf .gt_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1525,7 +1237,7 @@ Confidence level used: 0.95 </code></pre>
   overflow-x: hidden;
 }
 
-#wvlbxzoati .gt_stub {
+#uoexdpzxxf .gt_stub {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1538,7 +1250,7 @@ Confidence level used: 0.95 </code></pre>
   padding-right: 5px;
 }
 
-#wvlbxzoati .gt_stub_row_group {
+#uoexdpzxxf .gt_stub_row_group {
   color: #333333;
   background-color: #FFFFFF;
   font-size: 100%;
@@ -1552,15 +1264,15 @@ Confidence level used: 0.95 </code></pre>
   vertical-align: top;
 }
 
-#wvlbxzoati .gt_row_group_first td {
+#uoexdpzxxf .gt_row_group_first td {
   border-top-width: 2px;
 }
 
-#wvlbxzoati .gt_row_group_first th {
+#uoexdpzxxf .gt_row_group_first th {
   border-top-width: 2px;
 }
 
-#wvlbxzoati .gt_summary_row {
+#uoexdpzxxf .gt_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1570,16 +1282,16 @@ Confidence level used: 0.95 </code></pre>
   padding-right: 5px;
 }
 
-#wvlbxzoati .gt_first_summary_row {
+#uoexdpzxxf .gt_first_summary_row {
   border-top-style: solid;
   border-top-color: #D3D3D3;
 }
 
-#wvlbxzoati .gt_first_summary_row.thick {
+#uoexdpzxxf .gt_first_summary_row.thick {
   border-top-width: 2px;
 }
 
-#wvlbxzoati .gt_last_summary_row {
+#uoexdpzxxf .gt_last_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1589,7 +1301,7 @@ Confidence level used: 0.95 </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#wvlbxzoati .gt_grand_summary_row {
+#uoexdpzxxf .gt_grand_summary_row {
   color: #333333;
   background-color: #FFFFFF;
   text-transform: inherit;
@@ -1599,7 +1311,7 @@ Confidence level used: 0.95 </code></pre>
   padding-right: 5px;
 }
 
-#wvlbxzoati .gt_first_grand_summary_row {
+#uoexdpzxxf .gt_first_grand_summary_row {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1609,7 +1321,7 @@ Confidence level used: 0.95 </code></pre>
   border-top-color: #D3D3D3;
 }
 
-#wvlbxzoati .gt_last_grand_summary_row_top {
+#uoexdpzxxf .gt_last_grand_summary_row_top {
   padding-top: 8px;
   padding-bottom: 8px;
   padding-left: 5px;
@@ -1619,11 +1331,11 @@ Confidence level used: 0.95 </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#wvlbxzoati .gt_striped {
+#uoexdpzxxf .gt_striped {
   background-color: rgba(128, 128, 128, 0.05);
 }
 
-#wvlbxzoati .gt_table_body {
+#uoexdpzxxf .gt_table_body {
   border-top-style: solid;
   border-top-width: 2px;
   border-top-color: #D3D3D3;
@@ -1632,7 +1344,7 @@ Confidence level used: 0.95 </code></pre>
   border-bottom-color: #D3D3D3;
 }
 
-#wvlbxzoati .gt_footnotes {
+#uoexdpzxxf .gt_footnotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1646,7 +1358,7 @@ Confidence level used: 0.95 </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#wvlbxzoati .gt_footnote {
+#uoexdpzxxf .gt_footnote {
   margin: 0px;
   font-size: 90%;
   padding-top: 4px;
@@ -1655,7 +1367,7 @@ Confidence level used: 0.95 </code></pre>
   padding-right: 5px;
 }
 
-#wvlbxzoati .gt_sourcenotes {
+#uoexdpzxxf .gt_sourcenotes {
   color: #333333;
   background-color: #FFFFFF;
   border-bottom-style: none;
@@ -1669,7 +1381,7 @@ Confidence level used: 0.95 </code></pre>
   border-right-color: #D3D3D3;
 }
 
-#wvlbxzoati .gt_sourcenote {
+#uoexdpzxxf .gt_sourcenote {
   font-size: 90%;
   padding-top: 4px;
   padding-bottom: 4px;
@@ -1677,72 +1389,72 @@ Confidence level used: 0.95 </code></pre>
   padding-right: 5px;
 }
 
-#wvlbxzoati .gt_left {
+#uoexdpzxxf .gt_left {
   text-align: left;
 }
 
-#wvlbxzoati .gt_center {
+#uoexdpzxxf .gt_center {
   text-align: center;
 }
 
-#wvlbxzoati .gt_right {
+#uoexdpzxxf .gt_right {
   text-align: right;
   font-variant-numeric: tabular-nums;
 }
 
-#wvlbxzoati .gt_font_normal {
+#uoexdpzxxf .gt_font_normal {
   font-weight: normal;
 }
 
-#wvlbxzoati .gt_font_bold {
+#uoexdpzxxf .gt_font_bold {
   font-weight: bold;
 }
 
-#wvlbxzoati .gt_font_italic {
+#uoexdpzxxf .gt_font_italic {
   font-style: italic;
 }
 
-#wvlbxzoati .gt_super {
+#uoexdpzxxf .gt_super {
   font-size: 65%;
 }
 
-#wvlbxzoati .gt_footnote_marks {
+#uoexdpzxxf .gt_footnote_marks {
   font-size: 75%;
   vertical-align: 0.4em;
   position: initial;
 }
 
-#wvlbxzoati .gt_asterisk {
+#uoexdpzxxf .gt_asterisk {
   font-size: 100%;
   vertical-align: 0;
 }
 
-#wvlbxzoati .gt_indent_1 {
+#uoexdpzxxf .gt_indent_1 {
   text-indent: 5px;
 }
 
-#wvlbxzoati .gt_indent_2 {
+#uoexdpzxxf .gt_indent_2 {
   text-indent: 10px;
 }
 
-#wvlbxzoati .gt_indent_3 {
+#uoexdpzxxf .gt_indent_3 {
   text-indent: 15px;
 }
 
-#wvlbxzoati .gt_indent_4 {
+#uoexdpzxxf .gt_indent_4 {
   text-indent: 20px;
 }
 
-#wvlbxzoati .gt_indent_5 {
+#uoexdpzxxf .gt_indent_5 {
   text-indent: 25px;
 }
 
-#wvlbxzoati .katex-display {
+#uoexdpzxxf .katex-display {
   display: inline-flex !important;
   margin-bottom: 0.75em !important;
 }
 
-#wvlbxzoati div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
+#uoexdpzxxf div.Reactable > div.rt-table > div.rt-thead > div.rt-tr.rt-tr-group-header > div.rt-th-group:after {
   height: 0px !important;
 }
 </style>
@@ -1809,8 +1521,6 @@ Confidence level used: 0.95 </code></pre>
 </div>
 
 
-</section>
-</div>
 </section><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><hr>
 <ol>
 <li id="fn1"><p>https://nature.com/articles/294580a0<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
@@ -1818,7 +1528,7 @@ Confidence level used: 0.95 </code></pre>
 <li id="fn3"><p>https://journals.biologists.com/bio/article/9/9/bio054361/225803/Sleep-length-differences-are-associated-with<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn4"><p>https://www.nature.com/articles/s41467-017-00087-5#:~:text=In%20this%20study%2C%20we%20show,but%20aroused%20females%20sleep%20more<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
 <li id="fn5"><p>https://www.qualtrics.com/support/stats-iq/analyses/regression-guides/interpreting-residual-plots-improve-regression/<a href="#fnref5" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
-</ol></section><!-- /main --><script>
+</ol></section></main><!-- /main --><script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {
@@ -2620,7 +2330,9 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
         <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Task Four</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav><!-- /content --><footer class="footer"><div class="nav-footer">
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
     <div class="nav-footer-left">
       &nbsp;
     </div>   
