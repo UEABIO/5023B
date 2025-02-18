@@ -902,7 +902,7 @@
     "href": "task4.html#analysis",
     "title": "\n10  Task Four\n",
     "section": "\n10.2 Analysis",
-    "text": "10.2 Analysis\n\nClearly describe your statistical approach: What type of model did you use? Why was it appropriate for your data?\nExplain your variables: What are the dependent and independent variables? Were any interactions or covariates included, and why?\nDetail the software and packages used (include version number): What tools did you use for data cleaning, modeling, and visualisation?\nMention model assumptions: How did you check for normality, homoscedasticity, or multicollinearity?",
+    "text": "10.2 Analysis\n\nBriefly describe any data cleaning tasks required - that affect the analysis (imputation of missing data, removal of duplicates) standardising variable names or changing cases is less important.\nClearly describe your statistical approach: What type of model did you use? Why was it appropriate for your data?\nExplain your variables: What are the dependent and independent variables? Were any interactions or covariates included, and why?\nDetail the software and packages used (include version number): What tools did you use for data cleaning, modeling, and visualisation?\nMention model assumptions: How did you check for normality, homoscedasticity, or multicollinearity?",
     "crumbs": [
       "Linear Models",
       "<span class='chapter-number'>10</span>  <span class='chapter-title'>Task Four</span>"

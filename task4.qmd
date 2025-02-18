@@ -11,6 +11,8 @@
 
 ## Analysis
 
+- Briefly describe any data cleaning tasks required - that affect the analysis (imputation of missing data, removal of duplicates) *standardising variable names or changing cases is less important*.
+
 - Clearly describe your statistical approach: What type of model did you use? Why was it appropriate for your data?
 
 - Explain your variables: What are the dependent and independent variables? Were any interactions or covariates included, and why?
