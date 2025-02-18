@@ -49,6 +49,10 @@ book:
     chapters:
     - 04-managing-data.qmd
     - task3.qmd
+  - part: "Linear Models"
+    chapters:
+    - 06-complex-models.qmd
+    - task4.qmd
 
   appendices:
   - r-basics.qmd

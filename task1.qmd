@@ -19,8 +19,6 @@ The practice report will not be individually graded. Instead, we will release th
 
 ## Intended Learning Outcomes 
 
-- Knowledge and skills
-
 - Demonstrate the ability to use R for data wrangling and visualisation
 
 - Demonstrate the ability to use Quarto for reproducible reports
