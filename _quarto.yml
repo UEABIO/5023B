@@ -53,6 +53,11 @@ book:
     chapters:
     - 06-complex-models.qmd
     - task4.qmd
+  - part: "Generalised Linear Models"
+    chapters:
+    - 07-generalised-linear.qmd
+    - 08-poisson.qmd
+    - task5.qmd
 
   appendices:
   - r-basics.qmd

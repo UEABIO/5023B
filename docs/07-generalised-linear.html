@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.6.39">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Statistical skills for Biologists">
-<title>8&nbsp; Task Three – 5023B</title>
+<title>11&nbsp; Generalised Linear Models – 5023B</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -18,6 +18,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -26,8 +60,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./06-complex-models.html" rel="next">
-<link href="./04-managing-data.html" rel="prev">
+<link href="./08-poisson.html" rel="next">
+<link href="./task4.html" rel="prev">
 <link href="./images/logos/logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -65,7 +99,32 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
 <link rel="stylesheet" href="include/booktem.css">
 <link rel="stylesheet" href="include/webex.css">
 <link rel="stylesheet" href="include/glossary.css">
@@ -78,7 +137,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-managing-data.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./task3.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Task Three</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-generalised-linear.html">Generalised Linear Models</a></li><li class="breadcrumb-item"><a href="./07-generalised-linear.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Generalised Linear Models</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -172,7 +231,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./task3.html" class="sidebar-item-text sidebar-link active">
+  <a href="./task3.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Task Three</span></span></a>
   </div>
 </li>
@@ -212,7 +271,7 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./07-generalised-linear.html" class="sidebar-item-text sidebar-link">
+  <a href="./07-generalised-linear.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Generalised Linear Models</span></span></a>
   </div>
 </li>
@@ -309,15 +368,15 @@ ul.task-list li input[type="checkbox"] {
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#intended-learning-outcomes" id="toc-intended-learning-outcomes" class="nav-link active" data-scroll-target="#intended-learning-outcomes"><span class="header-section-number">8.1</span> Intended Learning Outcomes</a></li>
-  <li><a href="#clean-data" id="toc-clean-data" class="nav-link" data-scroll-target="#clean-data"><span class="header-section-number">8.2</span> Clean data</a></li>
-  <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link" data-scroll-target="#the-dataset"><span class="header-section-number">8.3</span> The dataset</a></li>
+<li><a href="#motivation" id="toc-motivation" class="nav-link active" data-scroll-target="#motivation"><span class="header-section-number">11.1</span> Motivation</a></li>
+  <li><a href="#generalised-linear-models-glms" id="toc-generalised-linear-models-glms" class="nav-link" data-scroll-target="#generalised-linear-models-glms"><span class="header-section-number">11.2</span> Generalised Linear Models (GLMs)</a></li>
+  <li><a href="#workflow-for-fitting-a-glm" id="toc-workflow-for-fitting-a-glm" class="nav-link" data-scroll-target="#workflow-for-fitting-a-glm"><span class="header-section-number">11.3</span> Workflow for fitting a GLM</a></li>
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-managing-data.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./task3.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Task Three</span></a></li></ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-generalised-linear.html">Generalised Linear Models</a></li><li class="breadcrumb-item"><a href="./07-generalised-linear.html"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Generalised Linear Models</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Task Three</span>
+<span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Generalised Linear Models</span>
 </h1>
 </div>
 
@@ -332,44 +391,201 @@ ul.task-list li input[type="checkbox"] {
   
 
 
-</header><section id="intended-learning-outcomes" class="level2" data-number="8.1"><h2 data-number="8.1" class="anchored" data-anchor-id="intended-learning-outcomes">
-<span class="header-section-number">8.1</span> Intended Learning Outcomes</h2>
+</header><section id="motivation" class="level2" data-number="11.1"><h2 data-number="11.1" class="anchored" data-anchor-id="motivation">
+<span class="header-section-number">11.1</span> Motivation</h2>
+<p>In the previous workshop we have seen that linear models are a powerful modelling tool. However, we have to satisfy the following assumptions:</p>
+<ol type="1">
+<li>A <strong>linear</strong> relationship between predictors and the mean response value.</li>
+<li>Variances are equal across all predicted values of the response (<strong>homoscedatic</strong>)</li>
+<li>Errors are <strong>normally</strong> distributed.</li>
+<li>Samples collected at <strong>random</strong>.</li>
+<li>No omitted variables of importance</li>
+</ol>
+<p>If assumptions 1-3 are violated we can often <em>transform</em> our response variable to try and fix this (Box-Cox &amp; transformation).</p>
+<p>However, in a lot of other cases this is either not possible (e.g binary output) or we want to explicitly model the underlying distribution (e.g count data). Instead, we can use <em>Generalized</em> Linear Models (GLMs) that let us change the <em>error structure</em> (assumption 3) to something other than a normal distribution.</p>
+</section><section id="generalised-linear-models-glms" class="level2" data-number="11.2"><h2 data-number="11.2" class="anchored" data-anchor-id="generalised-linear-models-glms">
+<span class="header-section-number">11.2</span> Generalised Linear Models (GLMs)</h2>
+<p><strong>Generalised Linear Models</strong> (GLMs) have:</p>
+<ol type="1">
+<li><p>A linear predictor.</p></li>
+<li><p>An <strong>error/variance structure</strong>.</p></li>
+<li><p>A <strong>link function</strong> (like an ‘internal’ transformation).</p></li>
+</ol>
+<p>The first (1) should be familiar, its everything that comes after the <code>~</code> in a linear model formula. Or as an equation <span class="math inline">\(\beta_0 + \beta_1\)</span>. The second (2) should also be familiar, variance measures the error structure of the model <span class="math inline">\(\epsilon\)</span>. An ordinary least squares model uses the normal distribution, but <em>GLMs</em> are able to use a wider range of distributions including poisson, binomial and Gamma. The third component (3) is less familiar, the link function is the equivalent of a transformation in an ordinary least squares model. However, rather than transforming <em>the data</em>, we transform the predictions made by the linear predictors. Common link functions are log and square root.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>Maximum Likelihood</strong> - Generalised Linear Models fit a regression line by finding the parameter values that best fit the model to the data. This is very similar to the way that ordinary least squares finds the line of best fit by reducing the sum of squared errors. In fact for data with normally distributed residuals, the particular form of maximum likelihood <strong>is</strong> least squares.</p>
+<p>However the normal (gaussian) distribution will not be a good model for lots of other types of data, binary data, is a good example and one we will investigate in this workshop.</p>
+<p>Maximum likelihood provides a more generalized approach to model fitting that includes, but is broader than, least squares.</p>
+<p>An advantage of the least squares method we have been using is that we can generate precise equations for the fit of the line. In contrast the calculations for GLMs (which are beyond the scope of this course) are approximate, essentially multiple potential best fit lines are made and compared against each other.</p>
+<p>You will see two main differences in a GLM output:</p>
+<p>If the model is one where the mean and variance are calculated <em>separately</em> (e.g.&nbsp;for most normal distributions), uncertainty estimates use the <em>t</em> distribution; and when we compare complex to simplified models (using <code><a href="https://rdrr.io/r/stats/anova.html">anova()</a></code> or <code><a href="https://rdrr.io/r/stats/add1.html">drop1()</a></code>) we use the <em>F</em>-test.</p>
+<p>However, when we provide distributions where the mean and variance are expected to change <em>together</em> (Poisson and Binomial), then we calculate uncertainty estimates using the <em>z</em> distribution, and compare models with the <em>chi-square</em> distribution.</p>
+</div>
+</div>
+<p>The simple linear regression model we have used so far is a special cases of a GLM:</p>
+<pre><code>lm(y ~ x)</code></pre>
+<p>is equivalent to</p>
+<pre><code>glm(y ~ x, family=gaussian(link=identity))</code></pre>
+<p>Compared to <a href="https://www.rdocumentation.org/packages/stats/versions/3.5.1/topics/lm"><code>lm()</code></a>, the <a href="https://www.rdocumentation.org/packages/stats/versions/3.5.1/topics/glm"><code>glm()</code></a> function takes an additional argument called <a href="https://www.rdocumentation.org/packages/stats/versions/3.5.1/topics/family"><code>family</code></a>, which specifies the error structure <strong>and</strong> link function.</p>
+<p>The default <strong>link function</strong> for the normal (Gaussian) distribution is the <strong>identity</strong>, <em>where no transformation is needed</em>i.e.&nbsp;for mean <span class="math inline">\(\mu\)</span> we have:</p>
+<p><span class="math display">\[
+\mu = \beta_0 + \beta_1 X
+\]</span></p>
+<p>Defaults are usually good choices (shown in bold below):</p>
+<table class="caption-top table">
+<thead><tr class="header">
+<th style="text-align: center;">Family</th>
+<th style="text-align: center;">Link</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;"><code>gaussian</code></td>
+<td style="text-align: center;"><strong><code>identity</code></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>binomial</code></td>
+<td style="text-align: center;">
+<strong><code>logit</code></strong>, <code>probit</code> or <code>cloglog</code>
+</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>poisson</code></td>
+<td style="text-align: center;">
+<strong><code>log</code></strong>, <code>identity</code> or <code>sqrt</code>
+</td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>Gamma</code></td>
+<td style="text-align: center;">
+<strong><code>inverse</code></strong>, <code>identity</code> or <code>log</code>
+</td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>inverse.gaussian</code></td>
+<td style="text-align: center;"><strong><code>1/mu^2</code></strong></td>
+</tr>
+<tr class="even">
+<td style="text-align: center;"><code>quasibinomial</code></td>
+<td style="text-align: center;"><strong><code>logit</code></strong></td>
+</tr>
+<tr class="odd">
+<td style="text-align: center;"><code>quasipoisson</code></td>
+<td style="text-align: center;"><strong><code>log</code></strong></td>
+</tr>
+</tbody>
+</table>
+<div class="task">
+<div class="task-header">
+<p>Fit a GLM</p>
+</div>
+<div class="task-container">
+<p>Using the fruitfly data introduced last week fit a linear model with lifespan as a response variable and sleep, type and thorax as explanatory variables.</p>
+<p>Compare this to a glm fitted with a gaussian error distribution and identity link for the mean</p>
+</div>
+</div>
+<p><code>r hide("Solution")</code></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>flyls <span class="ot">&lt;-</span> <span class="fu">lm</span>(longevity <span class="sc">~</span> type <span class="sc">+</span> thorax <span class="sc">+</span> sleep, <span class="at">data =</span> fruitfly)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">summary</span>(flyls)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = longevity ~ type + thorax + sleep, data = fruitfly)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-28.153  -6.836  -2.191   7.196  29.046 
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     -56.04502   11.17882  -5.013 1.87e-06 ***
+typeInseminated   3.62796    2.77122   1.309    0.193    
+typeVirgin      -13.24603    2.76198  -4.796 4.70e-06 ***
+thorax          144.43008   13.11616  11.012  &lt; 2e-16 ***
+sleep            -0.05281    0.06383  -0.827    0.410    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 11.23 on 120 degrees of freedom
+Multiple R-squared:  0.6046,    Adjusted R-squared:  0.5914 
+F-statistic: 45.88 on 4 and 120 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>flyglm <span class="ot">&lt;-</span> <span class="fu">glm</span>(longevity <span class="sc">~</span> type <span class="sc">+</span> thorax <span class="sc">+</span> sleep, </span>
+<span id="cb5-2"><a href="#cb5-2"></a>             <span class="at">family =</span> <span class="fu">gaussian</span>(<span class="at">link =</span> <span class="st">"identity"</span>),</span>
+<span id="cb5-3"><a href="#cb5-3"></a>             <span class="at">data =</span> fruitfly)</span>
+<span id="cb5-4"><a href="#cb5-4"></a><span class="fu">summary</span>(flyglm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = longevity ~ type + thorax + sleep, family = gaussian(link = "identity"), 
+    data = fruitfly)
+
+Coefficients:
+                 Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)     -56.04502   11.17882  -5.013 1.87e-06 ***
+typeInseminated   3.62796    2.77122   1.309    0.193    
+typeVirgin      -13.24603    2.76198  -4.796 4.70e-06 ***
+thorax          144.43008   13.11616  11.012  &lt; 2e-16 ***
+sleep            -0.05281    0.06383  -0.827    0.410    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for gaussian family taken to be 126.0381)
+
+    Null deviance: 38253  on 124  degrees of freedom
+Residual deviance: 15125  on 120  degrees of freedom
+AIC: 966.2
+
+Number of Fisher Scoring iterations: 2</code></pre>
+</div>
+</div>
+<p>They are exactly the same. This is not surprising, as the maximum likelihood being fitted here is the same as an ordinary least squares model.</p>
+</section></main>
+</div>
+
+<section id="workflow-for-fitting-a-glm" class="level2" data-number="11.3"><h2 data-number="11.3" data-anchor-id="workflow-for-fitting-a-glm">
+<span class="header-section-number">11.3</span> Workflow for fitting a GLM</h2>
 <ul>
-<li>Write a commented and reproducible script for data cleaning and exploratory analysis</li>
-</ul></section><section id="clean-data" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="clean-data">
-<span class="header-section-number">8.2</span> Clean data</h2>
+<li>Exploratory data analysis</li>
+<li>Choose suitable error term</li>
+<li>Choose suitable mean function (and link function)</li>
+<li>Fit model
 <ul>
-<li>
-<p>Your script should</p>
-<pre><code>  - Clean column names
-  - Fix typos and standardise text
-  - Check for duplications and remove
-  - Set factors
-  - Check for any missing data and deal with it appropriately</code></pre>
-</li>
-<li>
-<p>Make sure your script is reproducible:</p>
-<pre><code>  - It should contain information on all packages needed
-  - Run without errors or pauses to clean the dataset
-  - Use tidyverse functions taught in the coursebook
-  - Be clearly commented throughout</code></pre>
-</li>
+<li>Residual checks and model fit diagnostics</li>
+<li>Revise model (transformations etc.)</li>
 </ul>
-<p>I strongly recommend that you compare your script with someone else on the course when completed. Work to suggest improvements to each others work.</p>
-</section><section id="the-dataset" class="level2" data-number="8.3"><h2 data-number="8.3" class="anchored" data-anchor-id="the-dataset">
-<span class="header-section-number">8.3</span> The dataset</h2>
-<p>We are introduced to the fruitfly dataset Partridge and Farquhar (1981). From our understanding of sexual selection and reproductive biology in fruit flies, we know there is a well established ‘cost’ to reproduction in terms of reduced longevity for female fruitflies. The data from this experiment is designed to test whether increased sexual activity affects the lifespan of male fruitflies.</p>
-<p>The flies used were an outbred stock, sexual activity was manipulated by supplying males with either new virgin females each day, previously mated females ( Inseminated, so remating rates are lower), or provide no females at all (Control). All groups were otherwise treated identically.</p>
-<ul>
-<li><p>type: type of female companion (virgin, inseminated, control(partners = 0))</p></li>
-<li><p>longevity: lifespan in days</p></li>
-<li><p>thorax: length of thorax in micrometres (a proxy for body size)</p></li>
-<li><p>sleep: percentage of the day spent sleeping</p></li>
+</li>
+<li>Model simplification if required</li>
+<li>Check final model again</li>
 </ul>
-<p><strong>Push your work to Github to complete</strong></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When you transform your data e.g.&nbsp;with a log or sqrt, this changes the mean and variance at the same time (everything gets squished down). This might be fine, but can lead to difficult model fits if you need to reduce unequal variance but this leads to a change (often curvature) in the way the predictors fit to the response variable.</p>
+<p>GLMs model the mean and variability independently. So a link function produces a transformation between predictors and the mean, and the relationship between the mean and data points is modeled separately.</p>
+</div>
+</div>
 
 
-</section></main><!-- /main --><script>
+</section><!-- /main --><script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {
@@ -1162,18 +1378,16 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./04-managing-data.html" class="pagination-link" aria-label="Managing Data">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Managing Data</span></span>
+      <a href="./task4.html" class="pagination-link" aria-label="Task Four">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Task Four</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./06-complex-models.html" class="pagination-link" aria-label="Linear Models">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Linear Models</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./08-poisson.html" class="pagination-link" aria-label="Poisson regression (for count data or rate data)">
+        <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Poisson regression (for count data or rate data)</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
-</nav>
-</div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+</nav><!-- /content --><footer class="footer"><div class="nav-footer">
     <div class="nav-footer-left">
       &nbsp;
     </div>   

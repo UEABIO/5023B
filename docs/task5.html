@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.6.39">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
 <meta name="description" content="Statistical skills for Biologists">
-<title>8&nbsp; Task Three – 5023B</title>
+
+<title>13&nbsp; Task Five – 5023B</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,14 +23,15 @@ ul.task-list li input[type="checkbox"] {
 }
 </style>
 
+
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./06-complex-models.html" rel="next">
-<link href="./04-managing-data.html" rel="prev">
+<link href="./r-basics.html" rel="next">
+<link href="./08-poisson.html" rel="prev">
 <link href="./images/logos/logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -39,7 +43,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-966f60e3bc60cc6f7c6c3c8d3b3a508b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-e0b3d8e73f4d1716c2cfb9b6011ce545.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-dark-e0b3d8e73f4d1716c2cfb9b6011ce545.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -65,29 +70,39 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+}</script>
+
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
 <link rel="stylesheet" href="include/booktem.css">
 <link rel="stylesheet" href="include/webex.css">
 <link rel="stylesheet" href="include/glossary.css">
 <link rel="stylesheet" href="include/style.css">
 </head>
+
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-managing-data.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./task3.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Task Three</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-generalised-linear.html">Generalised Linear Models</a></li><li class="breadcrumb-item"><a href="./task5.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Task Five</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">5023B</a> 
         <div class="sidebar-tools-main">
@@ -102,7 +117,7 @@ ul.task-list li input[type="checkbox"] {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
@@ -116,8 +131,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./01-projects.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project-oriented workflows</span></span></a>
@@ -154,7 +169,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
@@ -163,8 +178,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-managing-data.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Managing Data</span></span></a>
@@ -172,12 +187,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./task3.html" class="sidebar-item-text sidebar-link active">
+  <a href="./task3.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Task Three</span></span></a>
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
@@ -186,8 +201,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-complex-models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Linear Models</span></span></a>
@@ -200,7 +215,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
@@ -209,8 +224,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-generalised-linear.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Generalised Linear Models</span></span></a>
@@ -224,12 +239,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./task5.html" class="sidebar-item-text sidebar-link">
+  <a href="./task5.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Task Five</span></span></a>
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
@@ -238,8 +253,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./r-basics.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span></a>
@@ -300,25 +315,29 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
       </ul>
-</li>
+  </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#intended-learning-outcomes" id="toc-intended-learning-outcomes" class="nav-link active" data-scroll-target="#intended-learning-outcomes"><span class="header-section-number">8.1</span> Intended Learning Outcomes</a></li>
-  <li><a href="#clean-data" id="toc-clean-data" class="nav-link" data-scroll-target="#clean-data"><span class="header-section-number">8.2</span> Clean data</a></li>
-  <li><a href="#the-dataset" id="toc-the-dataset" class="nav-link" data-scroll-target="#the-dataset"><span class="header-section-number">8.3</span> The dataset</a></li>
-  </ul></nav>
+  <li><a href="#intended-learning-outcomes" id="toc-intended-learning-outcomes" class="nav-link active" data-scroll-target="#intended-learning-outcomes"><span class="header-section-number">13.1</span> Intended Learning Outcomes</a></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis"><span class="header-section-number">13.2</span> Analysis</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">13.3</span> Results</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./04-managing-data.html">Exploratory Analysis</a></li><li class="breadcrumb-item"><a href="./task3.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Task Three</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title">
-<span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Task Three</span>
-</h1>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-generalised-linear.html">Generalised Linear Models</a></li><li class="breadcrumb-item"><a href="./task5.html"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Task Five</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Task Five</span></h1>
 </div>
 
 
@@ -332,44 +351,47 @@ ul.task-list li input[type="checkbox"] {
   
 
 
-</header><section id="intended-learning-outcomes" class="level2" data-number="8.1"><h2 data-number="8.1" class="anchored" data-anchor-id="intended-learning-outcomes">
-<span class="header-section-number">8.1</span> Intended Learning Outcomes</h2>
-<ul>
-<li>Write a commented and reproducible script for data cleaning and exploratory analysis</li>
-</ul></section><section id="clean-data" class="level2" data-number="8.2"><h2 data-number="8.2" class="anchored" data-anchor-id="clean-data">
-<span class="header-section-number">8.2</span> Clean data</h2>
-<ul>
-<li>
-<p>Your script should</p>
-<pre><code>  - Clean column names
-  - Fix typos and standardise text
-  - Check for duplications and remove
-  - Set factors
-  - Check for any missing data and deal with it appropriately</code></pre>
-</li>
-<li>
-<p>Make sure your script is reproducible:</p>
-<pre><code>  - It should contain information on all packages needed
-  - Run without errors or pauses to clean the dataset
-  - Use tidyverse functions taught in the coursebook
-  - Be clearly commented throughout</code></pre>
-</li>
-</ul>
-<p>I strongly recommend that you compare your script with someone else on the course when completed. Work to suggest improvements to each others work.</p>
-</section><section id="the-dataset" class="level2" data-number="8.3"><h2 data-number="8.3" class="anchored" data-anchor-id="the-dataset">
-<span class="header-section-number">8.3</span> The dataset</h2>
-<p>We are introduced to the fruitfly dataset Partridge and Farquhar (1981). From our understanding of sexual selection and reproductive biology in fruit flies, we know there is a well established ‘cost’ to reproduction in terms of reduced longevity for female fruitflies. The data from this experiment is designed to test whether increased sexual activity affects the lifespan of male fruitflies.</p>
-<p>The flies used were an outbred stock, sexual activity was manipulated by supplying males with either new virgin females each day, previously mated females ( Inseminated, so remating rates are lower), or provide no females at all (Control). All groups were otherwise treated identically.</p>
-<ul>
-<li><p>type: type of female companion (virgin, inseminated, control(partners = 0))</p></li>
-<li><p>longevity: lifespan in days</p></li>
-<li><p>thorax: length of thorax in micrometres (a proxy for body size)</p></li>
-<li><p>sleep: percentage of the day spent sleeping</p></li>
-</ul>
-<p><strong>Push your work to Github to complete</strong></p>
+</header>
 
 
-</section></main><!-- /main --><script>
+<section id="intended-learning-outcomes" class="level2" data-number="13.1">
+<h2 data-number="13.1" class="anchored" data-anchor-id="intended-learning-outcomes"><span class="header-section-number">13.1</span> Intended Learning Outcomes</h2>
+<ul>
+<li>Report an analysis and write-up for the Monarchs data</li>
+</ul>
+<blockquote class="blockquote">
+<p>This data is best suited for analysis by a Poisson GLM</p>
+</blockquote>
+<ul>
+<li><p>Produce a short qmd document with an Analysis Section &amp; Results Section</p></li>
+<li><p>Include one figure and one table</p></li>
+</ul>
+</section>
+<section id="analysis" class="level2" data-number="13.2">
+<h2 data-number="13.2" class="anchored" data-anchor-id="analysis"><span class="header-section-number">13.2</span> Analysis</h2>
+<ul>
+<li><p>Briefly describe any data cleaning tasks required - that affect the analysis (imputation of missing data, removal of duplicates) <em>standardising variable names or changing cases is less important</em>.</p></li>
+<li><p>Clearly describe your statistical approach: What type of model did you use? Why was it appropriate for your data?</p></li>
+<li><p>Explain your variables: What are the dependent and independent variables? Were any interactions or covariates included, and why?</p></li>
+<li><p>Detail the software and packages used (include version number): What tools did you use for data cleaning, modeling, and visualisation?</p></li>
+<li><p>Mention model assumptions</p></li>
+</ul>
+</section>
+<section id="results" class="level2" data-number="13.3">
+<h2 data-number="13.3" class="anchored" data-anchor-id="results"><span class="header-section-number">13.3</span> Results</h2>
+<ul>
+<li><p>State the main findings concisely: What were the key results, and were they statistically significant?</p></li>
+<li><p>Provide relevant statistical values: Include test statistics, degrees of freedom, P-values, confidence intervals, and effect sizes where applicable.</p></li>
+<li><p>Use tables and figures effectively: Summarize results using well-labeled tables and reference them in the text.</p></li>
+<li><p>Compare your findings: How do your results relate to your hypothesis? Did any unexpected patterns emerge?</p></li>
+<li><p>Interpret the biological significance: Beyond statistical significance, what do these findings mean in the context of your study?</p></li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {
@@ -574,7 +596,8 @@ window.onload = function() {
   update_total_correct();
 }
 
-</script><script>
+</script>
+<script>
 // open rdrr links externally ----
 
 var exlinks = document.querySelectorAll("a[href^='https://rdrr.io']");
@@ -601,7 +624,8 @@ function move_sidebar() {
 }
 move_sidebar();
 window.onresize = move_sidebar;
-</script><script id="quarto-html-after-body" type="application/javascript">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1161,19 +1185,22 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./04-managing-data.html" class="pagination-link" aria-label="Managing Data">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Managing Data</span></span>
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./08-poisson.html" class="pagination-link" aria-label="Poisson regression (for count data or rate data)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Poisson regression (for count data or rate data)</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./06-complex-models.html" class="pagination-link" aria-label="Linear Models">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Linear Models</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./r-basics.html" class="pagination-link" aria-label="R Basics">
+        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+<footer class="footer">
+  <div class="nav-footer">
     <div class="nav-footer-left">
       &nbsp;
     </div>   
@@ -1185,6 +1212,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+
+
 
 
 </body></html>
