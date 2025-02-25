@@ -246,7 +246,9 @@ summary(cuckoo_glm1)
 
 `r unhide()`
 
-## Activity 2: Plot the mean regression line for each species:
+## Plot the mean regression line for each species:
+
+When we have fitted a model we can use it to generate predictions and see the fit of the regression line (on a log scale)
 
 :::{.task}
 ::::{.task-header}
@@ -254,12 +256,52 @@ Plot the mean regression for each species
 ::::
 ::::{.task-container}
 
-
+- Use the emmeans function to generate mean beg rates for different mass + species values
 
 ::::
 :::
 
-### Variable scale
+
+
+`r hide("Solution")`
+
+```{r, eval = TRUE}
+
+means <- emmeans::emmeans(cuckoo_glm1, 
+                          specs = ~ Mass + Species + Mass:Species,
+                          at = list(Mass = seq(0,40, by = 5))) |> 
+  as_tibble()
+
+
+ggplot(data = means, aes(x=Mass, y= emmean, colour=Species)) + 
+  geom_point() +
+  geom_line()+
+  scale_colour_manual(values=c("green3","turquoise3"))+
+  theme_minimal()
+
+```
+
+`r unhide()`
+
+
+However, it can be more useful to view data on the "response" or "original" scale. Once a model has been fitted we can "back-transform" estimates to produce predicitons on a non-linear response. In this case exponentiating the log-term. 
+
+:::{.task}
+::::{.task-header}
+Plot the mean regression for each species *on the response scale*
+::::
+::::{.task-container}
+
+- Use the emmeans function to generate mean beg rates for different mass + species values
+
+- This time include the argument `type = "response"
+
+- Include raw data points as well
+
+- Use the help menu if needed
+
+::::
+:::
 
 
 `r hide("Solution")`
@@ -267,40 +309,53 @@ Plot the mean regression for each species
 ```{r, eval = TRUE}
 
 
-means <- emmeans::emmeans(cuckoo_glm1, 
+means_response <- emmeans::emmeans(cuckoo_glm1, 
                           specs = ~ Mass + Species + Mass:Species,
                           at = list(Mass = seq(0,40, by = 5)),
                           type = "response") |> 
   as_tibble()
 
-
-ggplot(data = means, aes(x=Mass, y= rate, colour=Species)) + 
+ggplot(data = means_response, aes(x=Mass, y= rate, colour=Species)) + 
+  geom_point(data = cuckoo,
+             aes(y = Beg,
+                 x = Mass,
+                 colour = Species),
+             alpha = .4) +
   geom_point() +
   geom_line()+
   scale_colour_manual(values=c("green3","turquoise3"))+
-  theme_minimal()
-
-```
-
-`r unhide()`
-
-
-
-`r hide("Solution")`
-
-```{r, eval = TRUE}
-ggplot(data = means, aes(x=Mass, y= rate, colour=Species)) + 
-  geom_point() +
-  geom_line()+
-  scale_colour_manual(values=c("green3","turquoise3"))+
-  scale_y_log10()+
   theme_minimal()
 ```
 
 `r unhide()`
 
 
-Compare the new Poisson model fits to the ordinary least squares model. We can see that although the homogeneity of variance is far from perfect, the curvature in the model has been drastically reduced (this makes sense as now we have a model fitted to exponential data), and the qqplot is within acceptable confidence intervals. 
+### Model checks
+
+Before attempting to interpret our model, we should check that it meets model assumptions and is a good fit for our data. 
+Unlike with OLS linear models, we can only use visual checks - we can no longer carry out checks for normality or heterogeneity as these no longer apply. 
+
+:::{.task}
+::::{.task-header}
+Discuss the model fit with a classmate
+::::
+::::{.task-container}
+
+- Does the QQplot show deviance residuals are ok?
+
+- How is the homogeneity of variance?
+
+- Are there collinearity issues
+
+- Are there any influential observations?
+
+- Is dispersion appropriate for a Poisson model?
+
+- What is the predictive check like?
+
+::::
+:::
+
 
 ```{r, eval = T}
 performance::check_model(cuckoo_glm1, 
@@ -308,6 +363,37 @@ performance::check_model(cuckoo_glm1,
                          detrend = FALSE)
 
 ```
+
+
+`r hide("Solution")`
+
+- Does the QQplot show deviance residuals are ok?
+
+> The QQplot is standardised "deviance" residuals - these show the residuals appear to fit well with a Poisson distribution
+
+- How is the homogeneity of variance?
+
+> The trend line can be misleading, while not perfect there is generally homogeneity - perhaps some clumping at low values
+
+- Are there collinearity issues
+
+> Technically yes - but this is because one of our terms is an interaction (a composite of main effects) and can be ignored
+
+- Are there any influential observations?
+
+> Yes there are four mildly influential observations - outliers can removed from models and compared to a reduced model to check "sensitivity". But outliers may resolve themselves if other issues are dealt with 
+
+- Is dispersion appropriate for a Poisson model?
+
+> This graph is new it looks at observed variance and whether it follows model predictions. This shows that observed variance is generally higher than predicted by the model. This may indicate our model has "overdispersion". 
+
+- What is the predictive check like?
+
+> Generally good - but the model appears to underpredict zeroes. 
+
+`r unhide()`
+
+### Model Summary
 
 ```{r}
 summary(cuckoo_glm1)
@@ -327,7 +413,7 @@ A reminder of how to interpret the regression coefficients of a model with an in
 Because this is a Poisson distribution where variance is fixed with the mean we are using z scores. Estimates are on a log scale because of the link function - this means so are any S.E. or confidence intervals
 :::
 
-## Estimates and Intervals
+### Estimates and Intervals
 
 Remember that not only is this **Poisson** model fitting variance using a Poisson and not Normal distribution. It is also relating the predictors to the response variable with a "*log-link*" this means we need to exponentiate our estimates to get them on the same scale as the response (y) variable. Until you do this all the model estimates are logn(y).
 
@@ -393,11 +479,15 @@ Overdispersion statistic values **> 1 = Overdispersed**
 
 Overdispersion is a result of larger than expected variance for that mean under a Poisson distribution, this is clearly an issue with our model!
 
+Model checks that helped indicate this would be an issue was the "Misspecified dispersion" plot. We can also check whether this misspecified dispersion meets a formal threshold for overdispersion with a function: 
+
 ```{r}
 # Formal test of overdispersion
 check_overdispersion(cuckoo_glm1)
 
 ```
+
+### Dealing with overdispersion
 
 Luckily a simple fix is to fit a *quasi-likelihood* model which accounts for this, think of "quasi" as "sort of but not completely" Poisson. 
 
@@ -407,6 +497,8 @@ cuckoo_glm2 <- glm(Beg ~ Mass+Species+Mass:Species, data=cuckoo, family=quasipoi
 summary(cuckoo_glm2)
 
 ```
+
+> Compare this to the first glm - Dispersion parameter was 1. (Mean and variance are assumed to be identical). Here the dispersion parameter is what? This parameter indicates by how much more variance increases over the mean. 
 
 As you can see, while none of the estimates have changed, the standard errors (and therefore our confidence intervals) have, this accounts for the greater than expected uncertainty we saw with the deviance, and applies a more cautious estimate of uncertainty. The interaction effect appears to no longer be significant at $\alpha$ = 0.05, now that we have wider standard errors.
 
@@ -456,12 +548,19 @@ There are more complex approaches we could have taken to try and account for thi
 
 - Checking and accounting for *zero-inflation*
 
+> Zero-inflation can be another cause of overdispersion, where we have more than expected zero-values in our data
+
 - Alternative distributions that allow for alternative dispersions e.g. tweedie and negative binomial models
+
+> These models have more flexible dispersion parameters
 
 - Combinations of the above
 
+> Zero-inflated poisson (ZIP), negative binomial (ZINB) and tweedie (ZIT) models are all possible 
+
 - Mixed models that can also account for overdispersion through structured data
 
+> Apparent overdispersion can be the result of group producing different starting points/intercepts. Accounting for this can reduce apparent overdispersion
 
 :::
 

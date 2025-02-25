@@ -371,22 +371,23 @@ window.Quarto = {
 <li><a href="#example-cuckoos" id="toc-example-cuckoos" class="nav-link active" data-scroll-target="#example-cuckoos"><span class="header-section-number">12.1</span> Example: Cuckoos</a></li>
   <li><a href="#activity-1-fit-the-model" id="toc-activity-1-fit-the-model" class="nav-link" data-scroll-target="#activity-1-fit-the-model"><span class="header-section-number">12.2</span> Activity 1: Fit the model</a></li>
   <li>
-<a href="#activity-2-plot-the-mean-regression-line-for-each-species" id="toc-activity-2-plot-the-mean-regression-line-for-each-species" class="nav-link" data-scroll-target="#activity-2-plot-the-mean-regression-line-for-each-species"><span class="header-section-number">12.3</span> Activity 2: Plot the mean regression line for each species:</a>
+<a href="#plot-the-mean-regression-line-for-each-species" id="toc-plot-the-mean-regression-line-for-each-species" class="nav-link" data-scroll-target="#plot-the-mean-regression-line-for-each-species"><span class="header-section-number">12.3</span> Plot the mean regression line for each species:</a>
   <ul class="collapse">
-<li><a href="#variable-scale" id="toc-variable-scale" class="nav-link" data-scroll-target="#variable-scale"><span class="header-section-number">12.3.1</span> Variable scale</a></li>
-  <li><a href="#log-scale" id="toc-log-scale" class="nav-link" data-scroll-target="#log-scale"><span class="header-section-number">12.3.2</span> Log scale</a></li>
+<li><a href="#model-checks" id="toc-model-checks" class="nav-link" data-scroll-target="#model-checks"><span class="header-section-number">12.3.1</span> Model checks</a></li>
+  <li><a href="#model-summary" id="toc-model-summary" class="nav-link" data-scroll-target="#model-summary"><span class="header-section-number">12.3.2</span> Model Summary</a></li>
+  <li><a href="#estimates-and-intervals" id="toc-estimates-and-intervals" class="nav-link" data-scroll-target="#estimates-and-intervals"><span class="header-section-number">12.3.3</span> Estimates and Intervals</a></li>
+  <li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation"><span class="header-section-number">12.3.4</span> Interpretation</a></li>
   </ul>
 </li>
   <li>
-<a href="#estimates-and-intervals" id="toc-estimates-and-intervals" class="nav-link" data-scroll-target="#estimates-and-intervals"><span class="header-section-number">12.4</span> Estimates and Intervals</a>
+<a href="#overdispersion" id="toc-overdispersion" class="nav-link" data-scroll-target="#overdispersion"><span class="header-section-number">12.4</span> Overdispersion</a>
   <ul class="collapse">
-<li><a href="#interpretation" id="toc-interpretation" class="nav-link" data-scroll-target="#interpretation"><span class="header-section-number">12.4.1</span> Interpretation</a></li>
+<li><a href="#dealing-with-overdispersion" id="toc-dealing-with-overdispersion" class="nav-link" data-scroll-target="#dealing-with-overdispersion"><span class="header-section-number">12.4.1</span> Dealing with overdispersion</a></li>
   </ul>
 </li>
-  <li><a href="#overdispersion" id="toc-overdispersion" class="nav-link" data-scroll-target="#overdispersion"><span class="header-section-number">12.5</span> Overdispersion</a></li>
-  <li><a href="#activity-3-write-up" id="toc-activity-3-write-up" class="nav-link" data-scroll-target="#activity-3-write-up"><span class="header-section-number">12.6</span> Activity 3: Write-up</a></li>
-  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">12.7</span> Summary</a></li>
-  <li><a href="#final-checklist" id="toc-final-checklist" class="nav-link" data-scroll-target="#final-checklist"><span class="header-section-number">12.8</span> Final checklist</a></li>
+  <li><a href="#activity-3-write-up" id="toc-activity-3-write-up" class="nav-link" data-scroll-target="#activity-3-write-up"><span class="header-section-number">12.5</span> Activity 3: Write-up</a></li>
+  <li><a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">12.6</span> Summary</a></li>
+  <li><a href="#final-checklist" id="toc-final-checklist" class="nav-link" data-scroll-target="#final-checklist"><span class="header-section-number">12.7</span> Final checklist</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -657,54 +658,106 @@ Number of Fisher Scoring iterations: 6</code></pre>
 <p>Note there appears to be a negative interaction effect for Species:Mass, indicating that Begging calls do not increase with mass as much as you would expect for Warblers as compared to Cuckoos.</p>
 </blockquote>
 </div>
-</section><section id="activity-2-plot-the-mean-regression-line-for-each-species" class="level2" data-number="12.3"><h2 data-number="12.3" class="anchored" data-anchor-id="activity-2-plot-the-mean-regression-line-for-each-species">
-<span class="header-section-number">12.3</span> Activity 2: Plot the mean regression line for each species:</h2>
+</section><section id="plot-the-mean-regression-line-for-each-species" class="level2" data-number="12.3"><h2 data-number="12.3" class="anchored" data-anchor-id="plot-the-mean-regression-line-for-each-species">
+<span class="header-section-number">12.3</span> Plot the mean regression line for each species:</h2>
+<p>When we have fitted a model we can use it to generate predictions and see the fit of the regression line (on a log scale)</p>
 <div class="task">
 <div class="task-header">
 <p>Plot the mean regression for each species</p>
 </div>
 <div class="task-container">
-
+<ul>
+<li>Use the emmeans function to generate mean beg rates for different mass + species values</li>
+</ul>
 </div>
 </div>
-<section id="variable-scale" class="level3" data-number="12.3.1"><h3 data-number="12.3.1" class="anchored" data-anchor-id="variable-scale">
-<span class="header-section-number">12.3.1</span> Variable scale</h3>
+<div class="webex-solution">
+<button>
+Solution
+</button>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource solution number-lines code-with-copy"><code class="sourceCode"><span id="cb7-1"><a href="#cb7-1"></a></span>
-<span id="cb7-2"><a href="#cb7-2"></a>``{r, eval = TRUE}</span>
-<span id="cb7-3"><a href="#cb7-3"></a># using augment allows you to generate fitted outcomes from the regression, make sure to set the predictions onto the response scale in order to 'back transform` the data onto the original scale</span>
-<span id="cb7-4"><a href="#cb7-4"></a></span>
-<span id="cb7-5"><a href="#cb7-5"></a>means &lt;- emmeans::emmeans(cuckoo_glm1, </span>
-<span id="cb7-6"><a href="#cb7-6"></a>                          specs = ~ Mass + Species + Mass:Species,</span>
-<span id="cb7-7"><a href="#cb7-7"></a>                          at = list(Mass = seq(0,40, by = 5)),</span>
-<span id="cb7-8"><a href="#cb7-8"></a>                          type = "response") |&gt; </span>
-<span id="cb7-9"><a href="#cb7-9"></a>  as_tibble()</span>
-<span id="cb7-10"><a href="#cb7-10"></a></span>
-<span id="cb7-11"><a href="#cb7-11"></a></span>
-<span id="cb7-12"><a href="#cb7-12"></a>ggplot(data = means, aes(x=Mass, y= rate, colour=Species)) + </span>
-<span id="cb7-13"><a href="#cb7-13"></a>  geom_point() +</span>
-<span id="cb7-14"><a href="#cb7-14"></a>  geom_line()+</span>
-<span id="cb7-15"><a href="#cb7-15"></a>  scale_colour_manual(values=c("green3","turquoise3"))+</span>
-<span id="cb7-16"><a href="#cb7-16"></a>  theme_minimal()</span>
-<span id="cb7-17"><a href="#cb7-17"></a></span>
-<span id="cb7-18"><a href="#cb7-18"></a>``</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>means <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(cuckoo_glm1, </span>
+<span id="cb7-2"><a href="#cb7-2"></a>                          <span class="at">specs =</span> <span class="sc">~</span> Mass <span class="sc">+</span> Species <span class="sc">+</span> Mass<span class="sc">:</span>Species,</span>
+<span id="cb7-3"><a href="#cb7-3"></a>                          <span class="at">at =</span> <span class="fu">list</span>(<span class="at">Mass =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">40</span>, <span class="at">by =</span> <span class="dv">5</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="fu">as_tibble</span>()</span>
+<span id="cb7-5"><a href="#cb7-5"></a></span>
+<span id="cb7-6"><a href="#cb7-6"></a></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="fu">ggplot</span>(<span class="at">data =</span> means, <span class="fu">aes</span>(<span class="at">x=</span>Mass, <span class="at">y=</span> emmean, <span class="at">colour=</span>Species)) <span class="sc">+</span> </span>
+<span id="cb7-8"><a href="#cb7-8"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"green3"</span>,<span class="st">"turquoise3"</span>))<span class="sc">+</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="08-poisson_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
 </div>
-</section><section id="log-scale" class="level3" data-number="12.3.2"><h3 data-number="12.3.2" class="anchored" data-anchor-id="log-scale">
-<span class="header-section-number">12.3.2</span> Log scale</h3>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource solution number-lines code-with-copy"><code class="sourceCode"><span id="cb8-1"><a href="#cb8-1"></a></span>
-<span id="cb8-2"><a href="#cb8-2"></a>``{r, eval = TRUE}</span>
-<span id="cb8-3"><a href="#cb8-3"></a>ggplot(data = means, aes(x=Mass, y= rate, colour=Species)) + </span>
-<span id="cb8-4"><a href="#cb8-4"></a>  geom_point() +</span>
-<span id="cb8-5"><a href="#cb8-5"></a>  geom_line()+</span>
-<span id="cb8-6"><a href="#cb8-6"></a>  scale_colour_manual(values=c("green3","turquoise3"))+</span>
-<span id="cb8-7"><a href="#cb8-7"></a>  scale_y_log10()+</span>
-<span id="cb8-8"><a href="#cb8-8"></a>  theme_minimal()</span>
-<span id="cb8-9"><a href="#cb8-9"></a>``</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Compare the new Poisson model fits to the ordinary least squares model. We can see that although the homogeneity of variance is far from perfect, the curvature in the model has been drastically reduced (this makes sense as now we have a model fitted to exponential data), and the qqplot is within acceptable confidence intervals.</p>
+</div>
+</div>
+<p>However, it can be more useful to view data on the “response” or “original” scale. Once a model has been fitted we can “back-transform” estimates to produce predicitons on a non-linear response. In this case exponentiating the log-term.</p>
+<div class="task">
+<div class="task-header">
+<p>Plot the mean regression for each species <em>on the response scale</em></p>
+</div>
+<div class="task-container">
+<ul>
+<li><p>Use the emmeans function to generate mean beg rates for different mass + species values</p></li>
+<li><p>This time include the argument `type = “response”</p></li>
+<li><p>Include raw data points as well</p></li>
+<li><p>Use the help menu if needed</p></li>
+</ul>
+</div>
+</div>
+<div class="webex-solution">
+<button>
+Solution
+</button>
 <div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(cuckoo_ls1, </span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>means_response <span class="ot">&lt;-</span> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(cuckoo_glm1, </span>
+<span id="cb8-2"><a href="#cb8-2"></a>                          <span class="at">specs =</span> <span class="sc">~</span> Mass <span class="sc">+</span> Species <span class="sc">+</span> Mass<span class="sc">:</span>Species,</span>
+<span id="cb8-3"><a href="#cb8-3"></a>                          <span class="at">at =</span> <span class="fu">list</span>(<span class="at">Mass =</span> <span class="fu">seq</span>(<span class="dv">0</span>,<span class="dv">40</span>, <span class="at">by =</span> <span class="dv">5</span>)),</span>
+<span id="cb8-4"><a href="#cb8-4"></a>                          <span class="at">type =</span> <span class="st">"response"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="fu">as_tibble</span>()</span>
+<span id="cb8-6"><a href="#cb8-6"></a></span>
+<span id="cb8-7"><a href="#cb8-7"></a><span class="fu">ggplot</span>(<span class="at">data =</span> means_response, <span class="fu">aes</span>(<span class="at">x=</span>Mass, <span class="at">y=</span> rate, <span class="at">colour=</span>Species)) <span class="sc">+</span> </span>
+<span id="cb8-8"><a href="#cb8-8"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> cuckoo,</span>
+<span id="cb8-9"><a href="#cb8-9"></a>             <span class="fu">aes</span>(<span class="at">y =</span> Beg,</span>
+<span id="cb8-10"><a href="#cb8-10"></a>                 <span class="at">x =</span> Mass,</span>
+<span id="cb8-11"><a href="#cb8-11"></a>                 <span class="at">colour =</span> Species),</span>
+<span id="cb8-12"><a href="#cb8-12"></a>             <span class="at">alpha =</span> .<span class="dv">4</span>) <span class="sc">+</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a>  <span class="fu">geom_line</span>()<span class="sc">+</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values=</span><span class="fu">c</span>(<span class="st">"green3"</span>,<span class="st">"turquoise3"</span>))<span class="sc">+</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="08-poisson_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<section id="model-checks" class="level3" data-number="12.3.1"><h3 data-number="12.3.1" class="anchored" data-anchor-id="model-checks">
+<span class="header-section-number">12.3.1</span> Model checks</h3>
+<p>Before attempting to interpret our model, we should check that it meets model assumptions and is a good fit for our data. Unlike with OLS linear models, we can only use visual checks - we can no longer carry out checks for normality or heterogeneity as these no longer apply.</p>
+<div class="task">
+<div class="task-header">
+<p>Discuss the model fit with a classmate</p>
+</div>
+<div class="task-container">
+<ul>
+<li><p>Does the QQplot show deviance residuals are ok?</p></li>
+<li><p>How is the homogeneity of variance?</p></li>
+<li><p>Are there collinearity issues</p></li>
+<li><p>Are there any influential observations?</p></li>
+<li><p>Is dispersion appropriate for a Poisson model?</p></li>
+<li><p>What is the predictive check like?</p></li>
+</ul>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(cuckoo_glm1, </span>
 <span id="cb9-2"><a href="#cb9-2"></a>                         <span class="at">residual_type =</span> <span class="st">"normal"</span>,</span>
 <span id="cb9-3"><a href="#cb9-3"></a>                         <span class="at">detrend =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
@@ -714,6 +767,49 @@ Number of Fisher Scoring iterations: 6</code></pre>
 </div>
 </div>
 </div>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<ul>
+<li>Does the QQplot show deviance residuals are ok?</li>
+</ul>
+<blockquote class="blockquote">
+<p>The QQplot is standardised “deviance” residuals - these show the residuals appear to fit well with a Poisson distribution</p>
+</blockquote>
+<ul>
+<li>How is the homogeneity of variance?</li>
+</ul>
+<blockquote class="blockquote">
+<p>The trend line can be misleading, while not perfect there is generally homogeneity - perhaps some clumping at low values</p>
+</blockquote>
+<ul>
+<li>Are there collinearity issues</li>
+</ul>
+<blockquote class="blockquote">
+<p>Technically yes - but this is because one of our terms is an interaction (a composite of main effects) and can be ignored</p>
+</blockquote>
+<ul>
+<li>Are there any influential observations?</li>
+</ul>
+<blockquote class="blockquote">
+<p>Yes there are four mildly influential observations - outliers can removed from models and compared to a reduced model to check “sensitivity”. But outliers may resolve themselves if other issues are dealt with</p>
+</blockquote>
+<ul>
+<li>Is dispersion appropriate for a Poisson model?</li>
+</ul>
+<blockquote class="blockquote">
+<p>This graph is new it looks at observed variance and whether it follows model predictions. This shows that observed variance is generally higher than predicted by the model. This may indicate our model has “overdispersion”.</p>
+</blockquote>
+<ul>
+<li>What is the predictive check like?</li>
+</ul>
+<blockquote class="blockquote">
+<p>Generally good - but the model appears to underpredict zeroes.</p>
+</blockquote>
+</div>
+</section><section id="model-summary" class="level3" data-number="12.3.2"><h3 data-number="12.3.2" class="anchored" data-anchor-id="model-summary">
+<span class="header-section-number">12.3.2</span> Model Summary</h3>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">summary</span>(cuckoo_glm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
@@ -760,8 +856,8 @@ Note
 <p>Because this is a Poisson distribution where variance is fixed with the mean we are using z scores. Estimates are on a log scale because of the link function - this means so are any S.E. or confidence intervals</p>
 </div>
 </div>
-</section></section><section id="estimates-and-intervals" class="level2" data-number="12.4"><h2 data-number="12.4" class="anchored" data-anchor-id="estimates-and-intervals">
-<span class="header-section-number">12.4</span> Estimates and Intervals</h2>
+</section><section id="estimates-and-intervals" class="level3" data-number="12.3.3"><h3 data-number="12.3.3" class="anchored" data-anchor-id="estimates-and-intervals">
+<span class="header-section-number">12.3.3</span> Estimates and Intervals</h3>
 <p>Remember that not only is this <strong>Poisson</strong> model fitting variance using a Poisson and not Normal distribution. It is also relating the predictors to the response variable with a “<em>log-link</em>” this means we need to exponentiate our estimates to get them on the same scale as the response (y) variable. Until you do this all the model estimates are logn(y).</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu">exp</span>(<span class="fu">coef</span>(cuckoo_glm1)[<span class="dv">1</span>]) <span class="do">### Intercept - Incidence rate at mean mass, and Species = Cuckoo</span></span>
@@ -850,8 +946,8 @@ Mass:SpeciesWarbler
 </div>
 </div>
 </div>
-<section id="interpretation" class="level3" data-number="12.4.1"><h3 data-number="12.4.1" class="anchored" data-anchor-id="interpretation">
-<span class="header-section-number">12.4.1</span> Interpretation</h3>
+</section><section id="interpretation" class="level3" data-number="12.3.4"><h3 data-number="12.3.4" class="anchored" data-anchor-id="interpretation">
+<span class="header-section-number">12.3.4</span> Interpretation</h3>
 <p>It is <strong>very important</strong> to remember whether you are describing the results on the log-link scale or the original scale. It would usually make more sense to provide answers on the original scale, but this means you must first exponentiate the relationship between response predictors as described above when writing the results.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -917,14 +1013,15 @@ Confidence level used: 0.95
 Intervals are back-transformed from the log scale </code></pre>
 </div>
 </div>
-</section></section><section id="overdispersion" class="level2" data-number="12.5"><h2 data-number="12.5" class="anchored" data-anchor-id="overdispersion">
-<span class="header-section-number">12.5</span> Overdispersion</h2>
+</section></section><section id="overdispersion" class="level2" data-number="12.4"><h2 data-number="12.4" class="anchored" data-anchor-id="overdispersion">
+<span class="header-section-number">12.4</span> Overdispersion</h2>
 <p>There is one <strong>extra</strong> check we need to apply to a Poisson model and that’s for <strong>overdispersion</strong></p>
 <p>Poisson (and binomial models) assume that the variance is <em>equal to the mean.</em></p>
 <p>However, if there is <strong>residual deviance that is bigger than the residual degrees of freedom</strong> then there is <em>more</em> variance than we expect from the prediction of the mean by our model.</p>
 <p>Overdispersion in Poisson models can be diagnosed by <span class="math inline">\(\frac{residual~deviance}{residual~degrees~of~freedom}\)</span> which from our example here ‘summary()’ is <span class="math inline">\(\frac{436}{47} = 9.3\)</span></p>
 <p>Overdispersion statistic values <strong>&gt; 1 = Overdispersed</strong></p>
 <p>Overdispersion is a result of larger than expected variance for that mean under a Poisson distribution, this is clearly an issue with our model!</p>
+<p>Model checks that helped indicate this would be an issue was the “Misspecified dispersion” plot. We can also check whether this misspecified dispersion meets a formal threshold for overdispersion with a function:</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Formal test of overdispersion</span></span>
 <span id="cb17-2"><a href="#cb17-2"></a><span class="fu">check_overdispersion</span>(cuckoo_glm1)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -936,6 +1033,8 @@ Intervals are back-transformed from the log scale </code></pre>
                 p-value = &lt; 0.001</code></pre>
 </div>
 </div>
+<section id="dealing-with-overdispersion" class="level3" data-number="12.4.1"><h3 data-number="12.4.1" class="anchored" data-anchor-id="dealing-with-overdispersion">
+<span class="header-section-number">12.4.1</span> Dealing with overdispersion</h3>
 <p>Luckily a simple fix is to fit a <em>quasi-likelihood</em> model which accounts for this, think of “quasi” as “sort of but not completely” Poisson.</p>
 <div class="cell" data-layout-align="center">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>cuckoo_glm2 <span class="ot">&lt;-</span> <span class="fu">glm</span>(Beg <span class="sc">~</span> Mass<span class="sc">+</span>Species<span class="sc">+</span>Mass<span class="sc">:</span>Species, <span class="at">data=</span>cuckoo, <span class="at">family=</span><span class="fu">quasipoisson</span>(<span class="at">link=</span><span class="st">"log"</span>))</span>
@@ -965,6 +1064,9 @@ AIC: NA
 Number of Fisher Scoring iterations: 6</code></pre>
 </div>
 </div>
+<blockquote class="blockquote">
+<p>Compare this to the first glm - Dispersion parameter was 1. (Mean and variance are assumed to be identical). Here the dispersion parameter is what? This parameter indicates by how much more variance increases over the mean.</p>
+</blockquote>
 <p>As you can see, while none of the estimates have changed, the standard errors (and therefore our confidence intervals) have, this accounts for the greater than expected uncertainty we saw with the deviance, and applies a more cautious estimate of uncertainty. The interaction effect appears to no longer be significant at <span class="math inline">\(\alpha\)</span> = 0.05, now that we have wider standard errors.</p>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -979,8 +1081,8 @@ Warning
 <p>Because we are now estimating the variance again, the test statistics have reverted to <em>t</em> distributions and anova and drop1 functions should specify the F-test again.</p>
 </div>
 </div>
-</section><section id="activity-3-write-up" class="level2" data-number="12.6"><h2 data-number="12.6" class="anchored" data-anchor-id="activity-3-write-up">
-<span class="header-section-number">12.6</span> Activity 3: Write-up</h2>
+</section></section><section id="activity-3-write-up" class="level2" data-number="12.5"><h2 data-number="12.5" class="anchored" data-anchor-id="activity-3-write-up">
+<span class="header-section-number">12.5</span> Activity 3: Write-up</h2>
 <div class="task">
 <div class="task-header">
 <p>How would you write up this up?</p>
@@ -1019,15 +1121,34 @@ Note
 <p>In this example we had to widen our standard errors to avoid the inflated Type 1 error risk that comes from overdispersion.</p>
 <p>There are more complex approaches we could have taken to try and account for this overdispersion that might have provided better modelling approaches, these include:</p>
 <ul>
-<li><p>Checking and accounting for <em>zero-inflation</em></p></li>
-<li><p>Alternative distributions that allow for alternative dispersions e.g.&nbsp;tweedie and negative binomial models</p></li>
-<li><p>Combinations of the above</p></li>
-<li><p>Mixed models that can also account for overdispersion through structured data</p></li>
+<li>Checking and accounting for <em>zero-inflation</em>
+</li>
 </ul>
+<blockquote class="blockquote">
+<p>Zero-inflation can be another cause of overdispersion, where we have more than expected zero-values in our data</p>
+</blockquote>
+<ul>
+<li>Alternative distributions that allow for alternative dispersions e.g.&nbsp;tweedie and negative binomial models</li>
+</ul>
+<blockquote class="blockquote">
+<p>These models have more flexible dispersion parameters</p>
+</blockquote>
+<ul>
+<li>Combinations of the above</li>
+</ul>
+<blockquote class="blockquote">
+<p>Zero-inflated poisson (ZIP), negative binomial (ZINB) and tweedie (ZIT) models are all possible</p>
+</blockquote>
+<ul>
+<li>Mixed models that can also account for overdispersion through structured data</li>
+</ul>
+<blockquote class="blockquote">
+<p>Apparent overdispersion can be the result of group producing different starting points/intercepts. Accounting for this can reduce apparent overdispersion</p>
+</blockquote>
 </div>
 </div>
-</section><section id="summary" class="level2" data-number="12.7"><h2 data-number="12.7" class="anchored" data-anchor-id="summary">
-<span class="header-section-number">12.7</span> Summary</h2>
+</section><section id="summary" class="level2" data-number="12.6"><h2 data-number="12.6" class="anchored" data-anchor-id="summary">
+<span class="header-section-number">12.6</span> Summary</h2>
 <p><strong>GLMs</strong> are powerful and flexible.</p>
 <p>They can be used to fit a wide variety of data types.</p>
 <p>Model checking becomes trickier.</p>
@@ -1043,8 +1164,8 @@ Note
 <p>For more information on Poisson and Binomial GLMs check out:</p>
 <p>https://bookdown.org/dereksonderegger/571/11-binomial-regression.html#confidence-intervals-1</p>
 <p>https://bookdown.org/ronsarafian/IntrotoDS/glm.html#poisson-regression</p>
-</section><section id="final-checklist" class="level2" data-number="12.8"><h2 data-number="12.8" class="anchored" data-anchor-id="final-checklist">
-<span class="header-section-number">12.8</span> Final checklist</h2>
+</section><section id="final-checklist" class="level2" data-number="12.7"><h2 data-number="12.7" class="anchored" data-anchor-id="final-checklist">
+<span class="header-section-number">12.7</span> Final checklist</h2>
 <ul>
 <li><p>Think carefully about the hypotheses to test, use your scientific knowledge and background reading to support this</p></li>
 <li><p>Import, clean and understand your dataset: use data visuals to investigate trends and determine if there is clear support for your hypotheses</p></li>
