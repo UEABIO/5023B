@@ -1,12 +1,14 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta charset="utf-8">
 <meta name="generator" content="quarto-1.6.39">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-<meta name="author" content="Philip Leftwich">
+
 <meta name="description" content="Statistical skills for Biologists">
-<title>5023B</title>
+
+<title>15&nbsp; Task Six – 5023B</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -21,13 +23,15 @@ ul.task-list li input[type="checkbox"] {
 }
 </style>
 
+
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./01-projects.html" rel="next">
+<link href="./r-basics.html" rel="next">
+<link href="./09-binomial.html" rel="prev">
 <link href="./images/logos/logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -39,7 +43,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="site_libs/bootstrap/bootstrap-966f60e3bc60cc6f7c6c3c8d3b3a508b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-e0b3d8e73f4d1716c2cfb9b6011ce545.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-dark-e0b3d8e73f4d1716c2cfb9b6011ce545.min.css" rel="prefetch" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -65,29 +70,39 @@ ul.task-list li input[type="checkbox"] {
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+}</script>
+
+
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
 <link rel="stylesheet" href="include/booktem.css">
 <link rel="stylesheet" href="include/webex.css">
 <link rel="stylesheet" href="include/glossary.css">
 <link rel="stylesheet" href="include/style.css">
 </head>
+
 <body class="nav-sidebar floating">
 
 <div id="quarto-search-results"></div>
-  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Overview</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-generalised-linear.html">Generalised Linear Models</a></li><li class="breadcrumb-item"><a href="./task6.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Task Six</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
         <i class="bi bi-search"></i>
       </button>
     </div>
-  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
-  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">5023B</a> 
         <div class="sidebar-tools-main">
@@ -102,9 +117,9 @@ ul.task-list li input[type="checkbox"] {
         </div>
     <div class="sidebar-menu-container"> 
     <ul class="list-unstyled mt-1">
-<li class="sidebar-item">
+        <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Overview</span></a>
   </div>
 </li>
@@ -116,8 +131,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./01-projects.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project-oriented workflows</span></span></a>
@@ -154,7 +169,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
@@ -163,8 +178,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./04-managing-data.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Managing Data</span></span></a>
@@ -177,7 +192,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
@@ -186,8 +201,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./06-complex-models.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Linear Models</span></span></a>
@@ -200,7 +215,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
@@ -209,8 +224,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./07-generalised-linear.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Generalised Linear Models</span></span></a>
@@ -236,12 +251,12 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./task6.html" class="sidebar-item-text sidebar-link">
+  <a href="./task6.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Task Six</span></span></a>
   </div>
 </li>
       </ul>
-</li>
+  </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
@@ -250,8 +265,8 @@ ul.task-list li input[type="checkbox"] {
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
-<li class="sidebar-item">
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./r-basics.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span></a>
@@ -312,45 +327,38 @@ ul.task-list li input[type="checkbox"] {
   </div>
 </li>
       </ul>
-</li>
+  </li>
     </ul>
-</div>
-</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li>
-<a href="#overview" id="toc-overview" class="nav-link active" data-scroll-target="#overview">Overview</a>
-  <ul class="collapse">
-<li><a href="#learning-outcomes" id="toc-learning-outcomes" class="nav-link" data-scroll-target="#learning-outcomes">Learning outcomes</a></li>
-  <li><a href="#how-to-use-this-book" id="toc-how-to-use-this-book" class="nav-link" data-scroll-target="#how-to-use-this-book">How to use this book</a></li>
-  <li><a href="#course-structure" id="toc-course-structure" class="nav-link" data-scroll-target="#course-structure">Course Structure</a></li>
+  <li><a href="#intended-learning-outcomes" id="toc-intended-learning-outcomes" class="nav-link active" data-scroll-target="#intended-learning-outcomes"><span class="header-section-number">15.1</span> Intended Learning Outcomes</a></li>
+  <li><a href="#outcomes" id="toc-outcomes" class="nav-link" data-scroll-target="#outcomes"><span class="header-section-number">15.2</span> Outcomes</a></li>
+  <li><a href="#scripts" id="toc-scripts" class="nav-link" data-scroll-target="#scripts"><span class="header-section-number">15.3</span> Scripts</a></li>
+  <li><a href="#tips" id="toc-tips" class="nav-link" data-scroll-target="#tips"><span class="header-section-number">15.4</span> Tips</a></li>
+  <li><a href="#analysis" id="toc-analysis" class="nav-link" data-scroll-target="#analysis"><span class="header-section-number">15.5</span> Analysis</a></li>
+  <li><a href="#results" id="toc-results" class="nav-link" data-scroll-target="#results"><span class="header-section-number">15.6</span> Results</a></li>
   </ul>
-</li>
-  </ul></nav>
+</nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><div class="quarto-title">
-<h1 class="title">5023B</h1>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-generalised-linear.html">Generalised Linear Models</a></li><li class="breadcrumb-item"><a href="./task6.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Task Six</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Task Six</span></h1>
 </div>
 
-<div>
-  <div class="description">
-    Statistical skills for Biologists
-  </div>
-</div>
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Philip Leftwich </p>
-          </div>
-  </div>
     
   
     
@@ -359,33 +367,71 @@ ul.task-list li input[type="checkbox"] {
 
 
 </header>
-<section id="overview" class="level1 unnumbered"><h1 class="unnumbered">Overview</h1><p><img src="images/logos/logo.png" title="5023B" class="quarto-cover-image img-fluid"></p>
-<p>This course will introduce scientists and practitioners interested in statistics and machine learning in R.</p>
-<section id="learning-outcomes" class="level2"><h2 class="anchored" data-anchor-id="learning-outcomes">Learning outcomes</h2>
+
+
+<section id="intended-learning-outcomes" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="intended-learning-outcomes"><span class="header-section-number">15.1</span> Intended Learning Outcomes</h2>
 <ul>
-<li><p>Understand how to create reproducible analyses</p></li>
-<li><p>Learn fundamental programming tools</p></li>
-<li><p>Learn complex statistical models</p></li>
-<li><p>An introduction to machine learning</p></li>
-</ul></section><section id="how-to-use-this-book" class="level2"><h2 class="anchored" data-anchor-id="how-to-use-this-book">How to use this book</h2>
-<p>For many of the chapters, we will provide the code you need to use. You can copy and paste from the book using the clipboard in the top-right corner.</p>
-<p>We also provide the solutions to many of the activities. No-one is going to check whether you tried to figure it out yourself rather than going straight to the solution but remember this: if you copy and paste without thinking, you will learn nothing.</p>
-<p>Finally, on occasion we will make updates to the book such as fixing typos and including additional detail or activities and as such this book should be considered a living document. Please tell me if you find any mistakes.</p>
-</section><section id="course-structure" class="level2"><h2 class="anchored" data-anchor-id="course-structure">Course Structure</h2>
-<p>We have:</p>
-<ul>
-<li>
-<p>One <strong>workshop per week</strong>, these both timetabled in-person sessions, and you should check Timetabler for up to-date information on scheduling. However, everything you need to complete workshops will be available on this site.</p>
-<ul>
-<li>If you feel unwell, or cannot attend a session in-person don’t worry you can access everything, and follow along in real time, or work at your own pace.</li>
+<li>Report an analysis and write-up for the Warbler data</li>
 </ul>
-</li>
-<li><p>One <strong>assignment per week</strong> - this will be in the form of short assignments</p></li>
-<li><p>One <strong>data analysis project</strong> - this will be a single piece of coursework</p></li>
+<blockquote class="blockquote">
+<p>This data is best suited for analysis by a Binomial GLM</p>
+</blockquote>
+<ul>
+<li><strong>Work in pairs</strong> to make this project reproducible, clear and interpretable</li>
+</ul>
+</section>
+<section id="outcomes" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="outcomes"><span class="header-section-number">15.2</span> Outcomes</h2>
+<ul>
+<li><p>Produce a short qmd document with an Analysis Section &amp; Results Section</p></li>
+<li><p>Include one figure and one table</p></li>
+<li><p>Produce a project with clear directories, well-named scripts</p></li>
+<li><p>Make sure scripts run without error, have clear comments and are well laid out</p></li>
+</ul>
+</section>
+<section id="scripts" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="scripts"><span class="header-section-number">15.3</span> Scripts</h2>
+<ul>
+<li><p>Use a style guide to help you https://style.tidyverse.org/</p></li>
+<li><p>Use AI support if needed (declare all uses and record prompts)</p></li>
+<li><p>Make sure to proof and check all code produced by human or AI</p></li>
+</ul>
+</section>
+<section id="tips" class="level2" data-number="15.4">
+<h2 data-number="15.4" class="anchored" data-anchor-id="tips"><span class="header-section-number">15.4</span> Tips</h2>
+<ul>
+<li><p>The dependent variable here is 0 or 1 - which means it can be as a variable directly in the model (no need for cbind)</p></li>
+<li><p>You should perform EDA to decide if any interactions should be included</p></li>
+<li><p>You may find there is some multicollinearity - what do you do?</p></li>
+<li><p>Set character strings to appropriate factors</p></li>
+</ul>
+</section>
+<section id="analysis" class="level2" data-number="15.5">
+<h2 data-number="15.5" class="anchored" data-anchor-id="analysis"><span class="header-section-number">15.5</span> Analysis</h2>
+<ul>
+<li><p>Briefly describe any data cleaning tasks required - that affect the analysis (imputation of missing data, removal of duplicates) <em>standardising variable names or changing cases is less important</em>.</p></li>
+<li><p>Clearly describe your statistical approach: What type of model did you use? Why was it appropriate for your data?</p></li>
+<li><p>Explain your variables: What are the dependent and independent variables? Were any interactions or covariates included, and why?</p></li>
+<li><p>Detail the software and packages used (include version number): What tools did you use for data cleaning, modeling, and visualisation?</p></li>
+<li><p>Mention model assumptions</p></li>
+</ul>
+</section>
+<section id="results" class="level2" data-number="15.6">
+<h2 data-number="15.6" class="anchored" data-anchor-id="results"><span class="header-section-number">15.6</span> Results</h2>
+<ul>
+<li><p>State the main findings concisely: What were the key results, and were they statistically significant?</p></li>
+<li><p>Provide relevant statistical values: Include test statistics, degrees of freedom, P-values, confidence intervals, and effect sizes where applicable.</p></li>
+<li><p>Use tables and figures effectively: Summarize results using well-labeled tables and reference them in the text.</p></li>
+<li><p>Compare your findings: How do your results relate to your hypothesis? Did any unexpected patterns emerge?</p></li>
+<li><p>Interpret the biological significance: Beyond statistical significance, what do these findings mean in the context of your study?</p></li>
 </ul>
 
 
-</section></section></main><!-- /main --><script>
+</section>
+
+</main> <!-- /main -->
+<script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {
@@ -590,7 +636,8 @@ window.onload = function() {
   update_total_correct();
 }
 
-</script><script>
+</script>
+<script>
 // open rdrr links externally ----
 
 var exlinks = document.querySelectorAll("a[href^='https://rdrr.io']");
@@ -617,7 +664,8 @@ function move_sidebar() {
 }
 move_sidebar();
 window.onresize = move_sidebar;
-</script><script id="quarto-html-after-body" type="application/javascript">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
     const mode = bsSheetEl.getAttribute("data-mode");
@@ -1177,16 +1225,22 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     }
   }
 });
-</script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+</script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./09-binomial.html" class="pagination-link" aria-label="Logistic regression (for binary data)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Logistic regression (for binary data)</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./01-projects.html" class="pagination-link" aria-label="Project-oriented workflows">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project-oriented workflows</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./r-basics.html" class="pagination-link" aria-label="R Basics">
+        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
 </div> <!-- /content -->
-<footer class="footer"><div class="nav-footer">
+<footer class="footer">
+  <div class="nav-footer">
     <div class="nav-footer-left">
       &nbsp;
     </div>   
@@ -1198,6 +1252,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
     </div>
   </div>
 </footer>
+
+
 
 
 </body></html>

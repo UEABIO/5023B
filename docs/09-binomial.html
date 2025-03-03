@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.6.39">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Statistical skills for Biologists">
-<title>1&nbsp; Project-oriented workflows – 5023B</title>
+<title>14&nbsp; Logistic regression (for binary data) – 5023B</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -60,8 +60,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./02-renv.html" rel="next">
-<link href="./index.html" rel="prev">
+<link href="./task6.html" rel="next">
+<link href="./task5.html" rel="prev">
 <link href="./images/logos/logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -99,7 +99,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+}</script><script src="site_libs/font-awesome-6.5.2/js/script.js"></script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
 <link rel="stylesheet" href="include/booktem.css">
 <link rel="stylesheet" href="include/webex.css">
 <link rel="stylesheet" href="include/glossary.css">
@@ -112,7 +137,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-projects.html">Reproducible Environments</a></li><li class="breadcrumb-item"><a href="./01-projects.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project-oriented workflows</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-generalised-linear.html">Generalised Linear Models</a></li><li class="breadcrumb-item"><a href="./09-binomial.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Logistic regression (for binary data)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -153,7 +178,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./01-projects.html" class="sidebar-item-text sidebar-link active">
+  <a href="./01-projects.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project-oriented workflows</span></span></a>
   </div>
 </li>
@@ -264,7 +289,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./09-binomial.html" class="sidebar-item-text sidebar-link">
+  <a href="./09-binomial.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Logistic regression (for binary data)</span></span></a>
   </div>
 </li>
@@ -355,28 +380,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li><a href="#setting-up-a-new-project" id="toc-setting-up-a-new-project" class="nav-link active" data-scroll-target="#setting-up-a-new-project"><span class="header-section-number">1.1</span> Setting up a new project</a></li>
-  <li>
-<a href="#avoiding-setwd-and-promoting-safe-file-paths" id="toc-avoiding-setwd-and-promoting-safe-file-paths" class="nav-link" data-scroll-target="#avoiding-setwd-and-promoting-safe-file-paths"><span class="header-section-number">1.2</span> Avoiding setwd() and Promoting Safe File Paths:</a>
+<li>
+<a href="#example-challenger-disaster" id="toc-example-challenger-disaster" class="nav-link active" data-scroll-target="#example-challenger-disaster"><span class="header-section-number">14.1</span> Example: Challenger Disaster</a>
   <ul class="collapse">
-<li><a href="#absolute-vs.-relative-paths" id="toc-absolute-vs.-relative-paths" class="nav-link" data-scroll-target="#absolute-vs.-relative-paths"><span class="header-section-number">1.2.1</span> Absolute vs.&nbsp;Relative Paths:</a></li>
-  <li><a href="#organizing-projects" id="toc-organizing-projects" class="nav-link" data-scroll-target="#organizing-projects"><span class="header-section-number">1.2.2</span> Organizing Projects:</a></li>
-  <li><a href="#the-here-package" id="toc-the-here-package" class="nav-link" data-scroll-target="#the-here-package"><span class="header-section-number">1.2.3</span> The <code>here</code> Package:</a></li>
-  <li><a href="#reading" id="toc-reading" class="nav-link" data-scroll-target="#reading"><span class="header-section-number">1.2.4</span> Reading</a></li>
+<li><a href="#interpreting-model-coefficients" id="toc-interpreting-model-coefficients" class="nav-link" data-scroll-target="#interpreting-model-coefficients"><span class="header-section-number">14.1.1</span> Interpreting model coefficients</a></li>
   </ul>
 </li>
   <li>
-<a href="#blank-slates" id="toc-blank-slates" class="nav-link" data-scroll-target="#blank-slates"><span class="header-section-number">1.3</span> Blank slates</a>
+<a href="#probability" id="toc-probability" class="nav-link" data-scroll-target="#probability"><span class="header-section-number">14.2</span> Probability</a>
   <ul class="collapse">
-<li><a href="#restart-r-sessions" id="toc-restart-r-sessions" class="nav-link" data-scroll-target="#restart-r-sessions"><span class="header-section-number">1.3.1</span> Restart R sessions</a></li>
+<li><a href="#making-predictions" id="toc-making-predictions" class="nav-link" data-scroll-target="#making-predictions"><span class="header-section-number">14.2.1</span> Making predictions</a></li>
+  <li><a href="#odds-and-probability" id="toc-odds-and-probability" class="nav-link" data-scroll-target="#odds-and-probability"><span class="header-section-number">14.2.2</span> Odds and Probability</a></li>
+  <li><a href="#changes-in-probability" id="toc-changes-in-probability" class="nav-link" data-scroll-target="#changes-in-probability"><span class="header-section-number">14.2.3</span> Changes in probability</a></li>
+  <li><a href="#emmeans" id="toc-emmeans" class="nav-link" data-scroll-target="#emmeans"><span class="header-section-number">14.2.4</span> Emmeans</a></li>
   </ul>
 </li>
+  <li>
+<a href="#challenger-launch" id="toc-challenger-launch" class="nav-link" data-scroll-target="#challenger-launch"><span class="header-section-number">14.3</span> Challenger launch</a>
+  <ul class="collapse">
+<li><a href="#more-predictions" id="toc-more-predictions" class="nav-link" data-scroll-target="#more-predictions"><span class="header-section-number">14.3.1</span> More predictions</a></li>
+  </ul>
+</li>
+  <li><a href="#assumptions" id="toc-assumptions" class="nav-link" data-scroll-target="#assumptions"><span class="header-section-number">14.4</span> Assumptions</a></li>
+  <li><a href="#write-ups" id="toc-write-ups" class="nav-link" data-scroll-target="#write-ups"><span class="header-section-number">14.5</span> Write-ups</a></li>
+  <li><a href="#final-checklist" id="toc-final-checklist" class="nav-link" data-scroll-target="#final-checklist"><span class="header-section-number">14.6</span> Final checklist</a></li>
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./01-projects.html">Reproducible Environments</a></li><li class="breadcrumb-item"><a href="./01-projects.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project-oriented workflows</span></a></li></ol></nav><div class="quarto-title">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./07-generalised-linear.html">Generalised Linear Models</a></li><li class="breadcrumb-item"><a href="./09-binomial.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Logistic regression (for binary data)</span></a></li></ol></nav><div class="quarto-title">
 <h1 class="title">
-<span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Project-oriented workflows</span>
+<span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Logistic regression (for binary data)</span>
 </h1>
 </div>
 
@@ -391,119 +424,555 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
 
 
-</header><p>In RStudio, a project is a way to organize your work within the IDE. It’s a fundamental concept designed to enhance your workflow by providing a structured and efficient means of managing your R-related tasks and files. Here’s why R projects are useful:</p>
-<p><strong>1. Organized File Structure:</strong> R projects encourage you to maintain a well-organized file structure for your work. Instead of having scattered R scripts, data files, and figures, you create a dedicated folder for each project. This folder typically contains all project-related materials, including data, code, figures, notes, and any other relevant files.</p>
-<p><strong>2. Working Directory Management:</strong> When you open an R project in RStudio, it automatically sets the working directory to the project’s folder. This ensures that all file paths are relative to the project’s location. This working directory intentionality eliminates the need for setting working directories manually or using absolute paths in your code.</p>
-<p><strong>3. Portability and Collaboration:</strong> R projects make your work more portable and collaborative. Since all paths are relative to the project folder, the project can be easily shared with others. It ensures that the code works consistently across different computers and for other users, promoting collaboration and reproducibility.</p>
-<p><strong>4. RStudio Integration:</strong> RStudio integrates project management seamlessly. You can designate a folder as an R project, and RStudio leaves a <code>.Rproj</code> file in that folder to store project-specific settings. When you double-click on this file, it opens a fresh instance of RStudio with the project’s working directory and file browser pointed at the project folder.</p>
-<p><strong>5. Efficient Workflow:</strong> RStudio provides various menu options and keyboard shortcuts for managing projects. This includes the ability to open existing projects, switch between projects, and even launch multiple instances of RStudio for different projects.</p>
-<p>In essence, R projects help you maintain a clean and organized workspace, improve collaboration, and ensure that your work remains reproducible and transferable across different environments and over time. It’s a best practice for data scientists and analysts working with R, as it fosters the disciplined use of relative file paths and working directories, which is crucial for the reliability and scalability of your R projects.</p>
-<section id="setting-up-a-new-project" class="level2" data-number="1.1"><h2 data-number="1.1" class="anchored" data-anchor-id="setting-up-a-new-project">
-<span class="header-section-number">1.1</span> Setting up a new project</h2>
-<p>You should start a new R project when you begin working on a distinct task, research project, or analysis. This ensures that your work is well-organized, and it’s especially beneficial when you need to collaborate, share, or revisit the project later.</p>
-<p>To create and open an R project in RStudio:</p>
-<ol type="1">
-<li><p>Go to “File” in the RStudio menu.</p></li>
-<li><p>Select “New Project…”</p></li>
-<li><p>Choose a project type or create a new directory for the project.</p></li>
-<li><p>Click “Create Project.”</p></li>
-</ol>
-<p>The new project will be created with a .Rproj file. You can open it by double-clicking on this file or by using the “File” menu in RStudio.</p>
-<p>This will set up a dedicated workspace for your project, ensuring that the working directory and file paths are appropriately managed.</p>
+</header><p>When our response variable is binary, we can use a glm with a <strong>binomial</strong> error distribution</p>
+<p>So far we have only considered continuous and discrete data as response variables. What if our response is a categorical variable (e.g passing or failing an exam, voting yes or no in a referendum, whether an egg has successfully fledged or been predated, infected/uninfected, alive/dead)?</p>
+<p>We can model the <strong>probability</strong> <span class="math inline">\(p\)</span> of being in a particular class as a function of other explanatory variables.</p>
+<p>These type of <strong>binary</strong> data are assumed to follow a <strong>Bernoulli</strong> distribution (which is a special case of <em>Binomial</em>) which has the following characteristics:</p>
+<p><span class="math display">\[
+Y \sim \mathcal{Bern}(p)
+\]</span></p>
+<ul>
+<li>
+<strong>Binary</strong> variable, taking the values 0 or 1 (yes/no, pass/fail).</li>
+<li>A <strong>probability</strong> parameter <span class="math inline">\(p\)</span>, where <span class="math inline">\(0 &lt; p &lt; 1\)</span>.</li>
+<li>
+<strong>Mean</strong> = <span class="math inline">\(p\)</span><br>
+</li>
+<li>
+<strong>Variance</strong> = <span class="math inline">\(p(1 - p)\)</span>
+</li>
+</ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="images/project.png" class="img-fluid figure-img" style="width:80.0%"></p>
-<figcaption>An example of a typical R project set-up</figcaption></figure>
-</div>
-</div>
-</div>
-</section><section id="avoiding-setwd-and-promoting-safe-file-paths" class="level2" data-number="1.2"><h2 data-number="1.2" class="anchored" data-anchor-id="avoiding-setwd-and-promoting-safe-file-paths">
-<span class="header-section-number">1.2</span> Avoiding setwd() and Promoting Safe File Paths:</h2>
-<p>To maintain a clean and efficient workflow in R, it’s advisable to avoid using <code><a href="https://rdrr.io/r/base/getwd.html">setwd()</a></code> at the beginning of each script. This practice promotes the use of safe file paths and is particularly important for projects with multiple collaborators or when working across different computers.</p>
-<div class="callout callout-style-default callout-important callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-Important
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p><a href="https://www.tidyverse.org/blog/2017/12/workflow-vs-script/">Why we use projects</a></p>
-</div>
-</div>
-<section id="absolute-vs.-relative-paths" class="level3" data-number="1.2.1"><h3 data-number="1.2.1" class="anchored" data-anchor-id="absolute-vs.-relative-paths">
-<span class="header-section-number">1.2.1</span> Absolute vs.&nbsp;Relative Paths:</h3>
-<p>While absolute file paths provide an explicit way to locate resources, they have significant drawbacks, such as incompatibility and reduced reproducibility. Relative file paths, on the other hand, are relative to the current working directory, making them shorter, more portable, and more reproducible.</p>
-<p>An <strong>Absolute file path</strong> is a path that contains the entire path to a file or directory starting from your Home directory and ending at the file or directory you wish to access e.g.</p>
-<pre><code>/home/your-username/project/data/penguins_raw.csv</code></pre>
-<ul>
-<li><p>If you share files, another user won’t have the same directory structure as you, so they will need to recreate the file paths</p></li>
-<li><p>If you alter your directory structure, you’ll need to rewrite the paths</p></li>
-<li><p>An absolute file path will likely be longer than a relative path, more of the backslashes will need to be edited, so there is more scope for error.</p></li>
-</ul>
-<p>A <strong>Relative filepath</strong> is the path that is relative to the working directory location on your computer.</p>
-<p>When you use RStudio Projects, wherever the <code>.Rproj</code> file is located is set to the working directory. This means that if the <code>.Rproj</code> file is located in your project folder then the relative path to your data is:</p>
-<pre><code>data/penguins_raw.csv</code></pre>
-<p>This filepath is shorter and it means you could share your project with someone else and the script would run without any editing.</p>
-</section><section id="organizing-projects" class="level3" data-number="1.2.2"><h3 data-number="1.2.2" class="anchored" data-anchor-id="organizing-projects">
-<span class="header-section-number">1.2.2</span> Organizing Projects:</h3>
-<p>A key aspect of this workflow is organizing each logical project into a separate folder on your computer. This ensures that files and scripts are well-structured, making it easier to manage your work.</p>
-<pre><code>my_project.RProj/
-    |- data/
-    |   |- raw/
-    |       |- penguins_raw.csv
-    |   |- processed/
-    |- scripts/
-    |   |- analysis.R
-    |- results/
-
-</code></pre>
-</section><section id="the-here-package" class="level3" data-number="1.2.3"><h3 data-number="1.2.3" class="anchored" data-anchor-id="the-here-package">
-<span class="header-section-number">1.2.3</span> The <code>here</code> Package:</h3>
-<p>To further enhance this organization and ensure that file paths are independent of specific working directories, the here package comes into play. The <code>here()</code> function provided by this package builds file paths relative to the top-level directory of your project.</p>
-<p>In the above project example you have raw data files in the data/raw directory, scripts in the scripts directory, and you want to save processed data in the data/processed directory.</p>
-<p>To access this data using a relative filepath we need:</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>raw_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"data/raw/penguins_raw.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-<p>To access this data with <code>here</code> we provide the directories and desired file, and <code>here()</code> builds the required filepath starting at the top level of our project each time</p>
-<div class="cell" data-layout-align="center">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">library</span>(here)</span>
-<span id="cb5-2"><a href="#cb5-2"></a></span>
-<span id="cb5-3"><a href="#cb5-3"></a>raw_data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"penguins.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
-</section><section id="reading" class="level3" data-number="1.2.4"><h3 data-number="1.2.4" class="anchored" data-anchor-id="reading">
-<span class="header-section-number">1.2.4</span> Reading</h3>
-<p>(https://github.com/jennybc/here_here)</p>
-<p>(https://cran.r-project.org/web/packages/here/index.html)</p>
-</section></section><section id="blank-slates" class="level2" data-number="1.3"><h2 data-number="1.3" class="anchored" data-anchor-id="blank-slates">
-<span class="header-section-number">1.3</span> Blank slates</h2>
-<p>When working on data analysis and coding projects in R, it’s crucial to ensure that your analysis remains clean, reproducible, and free from hidden dependencies.</p>
-<p>Hidden dependencies are elements in your R session that might not be immediately apparent but can significantly impact the reliability and predictability of your work.</p>
-<p>For example many data analysis scripts start with the command <code>rm(list = ls())</code>. While this command clears user-created objects from the workspace, it leaves hidden dependencies as it does not reset the R session, and can cause issues such as:</p>
-<ul>
-<li><p><strong>Hidden Dependencies:</strong> Users might unintentionally rely on packages or settings applied in the current session.</p></li>
-<li><p><strong>Incomplete Reset:</strong> Package attachments made with <code><a href="https://rdrr.io/r/base/library.html">library()</a></code> persist, and customized options remain set.</p></li>
-<li><p><strong>Working Directory:</strong> The working directory is not affected, potentially causing path-related problems in future scripts.</p></li>
-</ul>
-<section id="restart-r-sessions" class="level3" data-number="1.3.1"><h3 data-number="1.3.1" class="anchored" data-anchor-id="restart-r-sessions">
-<span class="header-section-number">1.3.1</span> Restart R sessions</h3>
-<p>Restarting R sessions and using scripts as your history is a best practice for maintaining a clean, reproducible, and efficient workflow. It addresses the limitations of <code>rm(list = ls())</code> by ensuring a complete reset and minimizing hidden dependencies, enhancing code organization, and ensuring your analysis remains robust and predictable across sessions and when shared with others.</p>
-<p>You can set up a “blank-slate” R project by navigating to the Workspace options Tools &gt; Project Options and setting all of these options to “No.”</p>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="images/rstudio-workspace.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+<figure class="figure"><p><img src="09-binomial_files/figure-html/bernplot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
+<p>Let us now place the Gaussian (simple linear regression), Poisson and logistic models next to each other:</p>
+<p><span class="math display">\[
+\begin{aligned}
+Y &amp; \sim \mathcal{N}(\mu, \sigma^2) &amp;&amp;&amp; Y  \sim \mathcal{Pois}(\lambda) &amp;&amp;&amp; Y  \sim \mathcal{Bern}(p)\\
+\mu &amp; = \beta_0 + \beta_1X &amp;&amp;&amp; \log{\lambda} = \beta_0 + \beta_1X &amp;&amp;&amp; ?? = \beta_0 + \beta_1X
+\end{aligned}
+\]</span></p>
+<p>Now we need to fill in the <code>??</code> with the appropriate term. Similar to the Poisson regression case, we cannot simply model the probabiliy as <span class="math inline">\(p = \beta_0 + \beta_1X\)</span>, because <span class="math inline">\(p\)</span> <strong>cannot</strong> be negative. <span class="math inline">\(\log{p} = \beta_0 + \beta_1X\)</span> won’t work either, because <span class="math inline">\(p\)</span> cannot be greater than 1. Instead we model the <strong>log odds</strong> <span class="math inline">\(\log\left(\frac{p}{1 - p}\right)\)</span> as a linear function. So our logistic regression model looks like this:</p>
+<p><span class="math display">\[
+\begin{aligned}
+Y  &amp; \sim \mathcal{Bern}(p)\\
+\log\left(\frac{p}{1 - p}\right) &amp;  = \beta_0 + \beta_1 X
+\end{aligned}
+\]</span></p>
+<p>Again, note that we are still “only” fitting straight lines through our data, but this time in the log odds space. As a shorthand notation we write <span class="math inline">\(\log\left(\frac{p}{1 - p}\right) = \text{logit}(p) = \beta_0 + \beta_1 X\)</span>.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="09-binomial_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can also re-arrange the above equation so that we get an expression for <span class="math inline">\(p\)</span></p>
+<p><span class="math display">\[
+p = \frac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}
+\]</span></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="09-binomial_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note how <span class="math inline">\(p\)</span> can only vary between 0 and 1.</p>
+<p>To implement the logistic regression model in R, we choose <code>family=binomial(link=logit)</code> (the Bernoulli distribution is a special case of the Binomial distribution).</p>
+<pre><code>glm(response ~ explanatory, family=binomial(link=logit))</code></pre>
+<section id="example-challenger-disaster" class="level2" data-number="14.1"><h2 data-number="14.1" class="anchored" data-anchor-id="example-challenger-disaster">
+<span class="header-section-number">14.1</span> Example: Challenger Disaster</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="images/space-shuttle.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%" alt="Space shuttle at launch"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><a href="https://en.wikipedia.org/wiki/Space_Shuttle_Challenger_disaster#O-ring_concerns">The Challenger Disaster</a></p>
+<p>In 1985, NASA made the decision to send the first civilian into space.</p>
+<p>This decision brought a huge amount of public attention to the STS-51-L mission, which would be Challenger’s 25th trip to space and school teacher Christa McAuliffe’s 1st. On the afternoon of January 28th, 1986 students around America tuned in to watch McAuliffe and six other astronauts launch from Cape Canaveral, Florida. 73 seconds into the flight, the shuttle experienced a critical failure and broke apart in mid air, resulting in the deaths of all seven crewmembers: Christa McAuliffe, Dick Scobee, Judy Resnik, Ellison Onizuka, Ronald McNair, Gregory Jarvis, and Michael Smith.</p>
+<p>After an investigation into the incident, it was discovered that the failure was caused by an O-ring in the solid rocket booster. Additionally, it was revealed that such an incident was foreseeable.</p>
+<p>In this half of the worksheet we will discuss how the right statistical model could have predicted the critical failure of an O-ring on that day.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<a href="https://github.com/UEABIO/5023B/blob/dev/files/Challenger.csv">
+<button class="btn btn-success"><i class="fa fa-save"></i> Download Challenger data as csv</button>
+</a>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">head</span>(challenger)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: right;">oring_tot</th>
+<th style="text-align: right;">oring_dt</th>
+<th style="text-align: right;">temp</th>
+<th style="text-align: right;">flight</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">66</td>
+<td style="text-align: right;">1</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">70</td>
+<td style="text-align: right;">2</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">69</td>
+<td style="text-align: right;">3</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">68</td>
+<td style="text-align: right;">4</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">67</td>
+<td style="text-align: right;">5</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">72</td>
+<td style="text-align: right;">6</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>The data columns are:</p>
+<ul>
+<li><p><strong>oring_tot</strong>: Total number of orings on the flight</p></li>
+<li><p><strong>oring_dt</strong> : number of orings that failed during a flight</p></li>
+<li><p><strong>temp</strong>: Outside temperature on the date of the flight</p></li>
+<li><p><strong>flight</strong> order of flights</p></li>
+</ul>
+<p>It was frequently discussed issue that temperature might play a role in the critical safety of the o-rings on the shuttles. One of the biggest mistakes made in assessing the flight risk for the Challenger was to only look at the flights <strong>where a failure had occurred</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>challenger <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="fu">filter</span>(oring_dt <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y=</span>oring_dt, <span class="at">x=</span>temp))<span class="sc">+</span><span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4"></a>  <span class="fu">ggtitle</span>(<span class="st">"Temperature on flight launches where an O-ring incident occurred"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="09-binomial_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>From this it was concluded that temperature did not appear to affect o-ring risk of failure, as o-ring failures were detected at a range of different temperatures.</p>
+<p>However when we compare this to the full data that was available a very different picture emerges.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>challenger <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y=</span>oring_dt, </span>
+<span id="cb4-3"><a href="#cb4-3"></a>           <span class="at">x=</span>temp))<span class="sc">+</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="fu">geom_smooth</span>(<span class="at">method=</span><span class="st">"lm"</span>)<span class="sc">+</span></span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="fu">ggtitle</span>(<span class="st">"All launch data"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="09-binomial_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>When we include the flights without incident <em>and</em> those with incident, we can see that there is a very clear relationship between temperature and the risk of an o-ring failure. It has been argued that the clear presentation of this data should have allowed even the casual observer to determine the high risk of disaster.</p>
+<p>However if we want to understand the actual relationship between temperature and risk then there are several issues with fitting a linear model here - once again the data is an integer, and bounded by zero (our model predicts negative failure rates within the observed data range).</p>
+<p>We COULD consider this as suitable for a Poisson model - but if we are really interested in determining the binary risk of <strong>having a flight with o-ring failure vs.&nbsp;no failure</strong>. Then we should implement a GLM with a Binomial distribution.</p>
+<p>We can use dplyr to generate a binary column of no incident ‘0’ and fail ‘1’ for anything &gt;0.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>challenger <span class="ot">&lt;-</span> challenger <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">mutate</span>(<span class="at">oring_int =</span> oring_tot <span class="sc">-</span> oring_dt) <span class="co"># create variable containing orings left intact</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Fitting a binary GLM</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>binary_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(oring_dt, oring_int) <span class="sc">~</span> temp, <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>), <span class="at">data =</span> challenger)</span>
+<span id="cb6-2"><a href="#cb6-2"></a></span>
+<span id="cb6-3"><a href="#cb6-3"></a>binary_model <span class="sc">|&gt;</span> </span>
+<span id="cb6-4"><a href="#cb6-4"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>(<span class="at">conf.int=</span>T)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 14%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 14%">
+<col style="width: 14%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">std.error</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+<th style="text-align: right;">conf.low</th>
+<th style="text-align: right;">conf.high</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">8.8169241</td>
+<td style="text-align: right;">3.6069715</td>
+<td style="text-align: right;">2.444412</td>
+<td style="text-align: right;">0.0145089</td>
+<td style="text-align: right;">1.9549041</td>
+<td style="text-align: right;">16.4913814</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">temp</td>
+<td style="text-align: right;">-0.1794922</td>
+<td style="text-align: right;">0.0582182</td>
+<td style="text-align: right;">-3.083096</td>
+<td style="text-align: right;">0.0020486</td>
+<td style="text-align: right;">-0.3073739</td>
+<td style="text-align: right;">-0.0725742</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p>So we are now fitting the following model</p>
+<p><span class="math display">\[
+Y \sim Bern(p)
+\]</span> <span class="math display">\[
+\log\left[ \frac { P( \operatorname{oring\_binary} = fail) }{ 1 - P( \operatorname{oring\_binary} = fail) } \right] = \beta_{0} + \beta_{1}(\operatorname{temp})
+\]</span></p>
+<p>Which in R will look like this:</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>binary_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(oring_dt, oring_int) <span class="sc">~</span> temp, <span class="at">family=</span>binomial, <span class="at">data=</span>challenger)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<ul>
+<li>Intercept = <span class="math inline">\(\beta_{0}\)</span> = 23.77</li>
+</ul>
+<p>When the temperature is 0°F the mean <em>log-odds</em> are 8.82 [95%CI: 1.95- 16.5] for a failure incident in the O-rings</p>
+<ul>
+<li>Temp = <span class="math inline">\(\beta_{1}\)</span> = -0.179 [95%CI: -0.307 - -0.0726]</li>
+</ul>
+<p>For every rise in the temperature by 1°F, the <em>log-odds</em> of a critical incident fall by 0.179.</p>
+<section id="interpreting-model-coefficients" class="level3" data-number="14.1.1"><h3 data-number="14.1.1" class="anchored" data-anchor-id="interpreting-model-coefficients">
+<span class="header-section-number">14.1.1</span> Interpreting model coefficients</h3>
+<p>We first consider why we are dealing with odds <span class="math inline">\(\frac{p}{1-p}\)</span> instead of just <span class="math inline">\(p\)</span>. They contain the same information, so the choice is somewhat arbitrary, however we’ve been using probabilities for so long that it feels unnatural to switch to odds. There are good reasons for this, however. Odds <span class="math inline">\(\frac{p}{1-p}\)</span> can take on any value from 0 to ∞ and so part of our translation of <span class="math inline">\(p\)</span> to an unrestricted domain is already done (<span class="math inline">\(P\)</span> is restricted to 0-1). Take a look at some examples below:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 50%">
+<col style="width: 28%">
+</colgroup>
+<thead><tr class="header">
+<th>Probability</th>
+<th><pre><code>          Odds</code></pre></th>
+<th><pre><code> Verbiage</code></pre></th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><span class="math inline">\(p=.95\)</span></td>
+<td><span class="math inline">\(\frac{95}{5} = \frac{19}{1} = 19\)</span></td>
+<td>19 to 1 odds for</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(p=.75\)</span></td>
+<td><span class="math inline">\(\frac{75}{25} = \frac{3}{1} = 3\)</span></td>
+<td>3 to 1 odds for</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(p=.50\)</span></td>
+<td><span class="math inline">\(\frac{50}{50} = \frac{1}{1} = 1\)</span></td>
+<td>1 to 1 odds</td>
+</tr>
+<tr class="even">
+<td><span class="math inline">\(p=.25\)</span></td>
+<td><span class="math inline">\(\frac{25}{75} = \frac{1}{3} = 0.33\)</span></td>
+<td>3 to 1 odds against</td>
+</tr>
+<tr class="odd">
+<td><span class="math inline">\(p=.05\)</span></td>
+<td><span class="math inline">\(\frac{95}{5}  = \frac{1}{19} = 0.0526\)</span></td>
+<td>19 to 1 odds against</td>
+</tr>
+</tbody>
+</table>
+<p>When we use a binomial model, we produce the ‘log-odds’, this produces a fully unconstrained linear regression as anything less than 1, can now occupy an infinite negative value -∞ to ∞.</p>
+<p><span class="math display">\[
+\log\left(\frac{p}{1-p}\right)  =   \beta_{0}+\beta_{1}x_{1}+\beta_{2}x_{2}
+\]</span></p>
+<p><span class="math display">\[
+\frac{p}{1-p}   =   e^{\beta_{0}}e^{\beta_{1}x_{1}}e^{\beta_{2}x_{2}}
+\]</span></p>
+<p>We can interpret <span class="math inline">\(\beta_{1}\)</span> and <span class="math inline">\(\beta_{2}\)</span> as the increase in the log odds for every unit increase in <span class="math inline">\(x_{1}\)</span> and <span class="math inline">\(x_{2}\)</span>. We could alternatively interpret <span class="math inline">\(\beta_{1}\)</span> and <span class="math inline">\(\beta_{2}\)</span> using the notion that a one unit change in <span class="math inline">\(x_{1}\)</span> as a percent change of <span class="math inline">\(e^{\beta_{1}}\)</span> in the odds. That is to say, <span class="math inline">\(e^{\beta_{1}}\)</span> is the odds ratio of that change.</p>
+<p>If you want to find out more about <a href="https://www.youtube.com/watch?v=8nm0G-1uJzA">Odds and log-odds head here</a></p>
+</section></section><section id="probability" class="level2" data-number="14.2"><h2 data-number="14.2" class="anchored" data-anchor-id="probability">
+<span class="header-section-number">14.2</span> Probability</h2>
+<section id="making-predictions" class="level3" data-number="14.2.1"><h3 data-number="14.2.1" class="anchored" data-anchor-id="making-predictions">
+<span class="header-section-number">14.2.1</span> Making predictions</h3>
+<p>If we use the <code>emmeans()</code> function it will convert <em>log-odds</em> to estimate the probability of o-ring failure at the mean value of x (temperature). And add confidence intervals!</p>
+<div class="task">
+<div class="task-header">
+<p>A powerful use of logisitic regression is prediction. Can we predict the probability of an event occuring using our data?</p>
+</div>
+<div class="task-container">
+<ul>
+<li><p>Use emmeans to calculate the log-odds of O-ring failure?</p></li>
+<li><p>Specify the type argument to get the “probability” of o-ring failure</p></li>
+</ul>
+</div>
+</div>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(binary_model, <span class="at">specs=</span><span class="sc">~</span>temp, </span>
+<span id="cb10-2"><a href="#cb10-2"></a>                 <span class="at">type=</span><span class="st">"response"</span>) <span class="co"># set type = "response to get calculated probabilities</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> temp   prob     SE  df asymp.LCL asymp.UCL
+ 69.6 0.0249 0.0151 Inf   0.00745    0.0797
+
+Confidence level used: 0.95 
+Intervals are back-transformed from the logit scale </code></pre>
+</div>
+</div>
+</div>
+</section><section id="odds-and-probability" class="level3" data-number="14.2.2"><h3 data-number="14.2.2" class="anchored" data-anchor-id="odds-and-probability">
+<span class="header-section-number">14.2.2</span> Odds and Probability</h3>
+<p>But how do log-odds and probability actually relate?</p>
+<p>This is the equation to work out probability using the <strong>exponent</strong> of the linear regression equation:</p>
+<p><span class="math display">\[
+P(\operatorname{risk of failure at }  X=69.6)\left[ \frac{e^{8.81+(-0.18 \times 69.6)}}{1+e^{8.81+(-0.18 \times 69.6)}} \right]
+\]</span></p>
+<p>Which produces the following result and we can confirm the risk of an o-ring failure on an <em>average</em> day is 0.025</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>odds_at_69<span class="fl">.6</span> <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">coef</span>(binary_model)[<span class="dv">1</span>]<span class="sc">+</span><span class="fu">coef</span>(binary_model)[<span class="dv">2</span>]<span class="sc">*</span><span class="fl">69.6</span>)</span>
+<span id="cb12-2"><a href="#cb12-2"></a><span class="co"># To convert from odds to a probability, divide the odds by one plus the odds</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a></span>
+<span id="cb12-4"><a href="#cb12-4"></a>probability <span class="ot">&lt;-</span>  odds_at_69<span class="fl">.6</span><span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span>odds_at_69<span class="fl">.6</span>)</span>
+<span id="cb12-5"><a href="#cb12-5"></a>probability</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(Intercept) 
+ 0.02470508 </code></pre>
+</div>
+</div>
+</section><section id="changes-in-probability" class="level3" data-number="14.2.3"><h3 data-number="14.2.3" class="anchored" data-anchor-id="changes-in-probability">
+<span class="header-section-number">14.2.3</span> Changes in probability</h3>
+<p>A useful <em>rule-of-thumb</em> can be the <strong>divide-by-four</strong> rule.</p>
+<p>This can be described as the <strong>maximum</strong> difference in probability for a unit change in <span class="math inline">\(X\)</span> is <span class="math inline">\(\beta/4\)</span>.</p>
+<p>In our example the <strong>maximum difference</strong> in probability from a one degree change in Temp is <span class="math inline">\(-0.18/4 = -0.045\)</span></p>
+<p>So the <strong>maximum difference</strong> in probability of failure corresponding to a one degree change is 4.5%</p>
+</section><section id="emmeans" class="level3" data-number="14.2.4"><h3 data-number="14.2.4" class="anchored" data-anchor-id="emmeans">
+<span class="header-section-number">14.2.4</span> Emmeans</h3>
+<p>Alternatively we can also do this calculation via emmeans</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(binary_model, </span>
+<span id="cb14-2"><a href="#cb14-2"></a>                 <span class="at">specs =</span> <span class="sc">~</span> temp, </span>
+<span id="cb14-3"><a href="#cb14-3"></a>                 <span class="at">at=</span><span class="fu">list</span>(<span class="at">temp=</span><span class="fu">c</span>(<span class="dv">66</span><span class="sc">:</span><span class="dv">27</span>)), </span>
+<span id="cb14-4"><a href="#cb14-4"></a>                 <span class="at">type=</span><span class="st">'response'</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="task">
+<div class="task-header">
+<p>Make a ggplot of the change in probability of Oring failure against temperature</p>
+</div>
+<div class="task-container">
+<ul>
+<li><p>Use emmeans to calculate the probability of failure at different temperatures?</p></li>
+<li><p>Add this to a ggplot</p></li>
+<li><p>Include 95% confidence intervals</p></li>
+</ul>
+</div>
+</div>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(binary_model, </span>
+<span id="cb15-2"><a href="#cb15-2"></a>                 <span class="at">specs =</span> <span class="sc">~</span> temp, </span>
+<span id="cb15-3"><a href="#cb15-3"></a>                 <span class="at">at=</span><span class="fu">list</span>(<span class="at">temp=</span><span class="fu">c</span>(<span class="dv">27</span><span class="sc">:</span><span class="dv">80</span>)), </span>
+<span id="cb15-4"><a href="#cb15-4"></a>                 <span class="at">type=</span><span class="st">'response'</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-5"><a href="#cb15-5"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb15-6"><a href="#cb15-6"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>temp, <span class="at">y=</span>prob))<span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>temp, <span class="at">y=</span>prob))<span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>asymp.LCL, </span>
+<span id="cb15-9"><a href="#cb15-9"></a>                  <span class="at">ymax=</span>asymp.UCL), <span class="at">alpha=</span><span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="09-binomial_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</section></section><section id="challenger-launch" class="level2" data-number="14.3"><h2 data-number="14.3" class="anchored" data-anchor-id="challenger-launch">
+<span class="header-section-number">14.3</span> Challenger launch</h2>
+<p>On the day the Challenger launched the outside air temperature was 36°F</p>
+<p>We can use our model to make predictions about the risk of o-ring failure</p>
+<section id="more-predictions" class="level3" data-number="14.3.1"><h3 data-number="14.3.1" class="anchored" data-anchor-id="more-predictions">
+<span class="header-section-number">14.3.1</span> More predictions</h3>
+<div class="task">
+<div class="task-header">
+<p>Make a specific prediction about the probability of o-ring failure on the day of the Challenger launch</p>
+</div>
+<div class="task-container">
+<ul>
+<li>Use emmeans to calculate the probability of failure at this specific temperature?</li>
+</ul>
+</div>
+</div>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<p>First - we make a new dataset with the temperature on the day of the Challenger Launch <strong>36°F</strong></p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a> emmeans<span class="sc">::</span><span class="fu">emmeans</span>(binary_model, </span>
+<span id="cb16-2"><a href="#cb16-2"></a>                 <span class="at">specs =</span> <span class="sc">~</span> temp, </span>
+<span id="cb16-3"><a href="#cb16-3"></a>                 <span class="at">at =</span> <span class="fu">list</span>(<span class="at">temp =</span> <span class="dv">36</span>),                  </span>
+<span id="cb16-4"><a href="#cb16-4"></a>                 <span class="at">type=</span><span class="st">'response'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> temp  prob    SE  df asymp.LCL asymp.UCL
+   36 0.913 0.122 Inf     0.338     0.995
+
+Confidence level used: 0.95 
+Intervals are back-transformed from the logit scale </code></pre>
+</div>
+</div>
+<p>We can see from our fitted model, an O-ring failure on the day of the Challenger launch could have been predicted with a probability of</p>
+<blockquote class="blockquote">
+<p>0.91 [91.3%CI: 0.34-99.5]</p>
+</blockquote>
+</div>
+</section></section><section id="assumptions" class="level2" data-number="14.4"><h2 data-number="14.4" class="anchored" data-anchor-id="assumptions">
+<span class="header-section-number">14.4</span> Assumptions</h2>
+<p>The <code>performance</code> package detects and alters the checks. Pay particular attention to the binned residuals plot - this is your best estimate of possible overdispersion (requiring a quasi-likelihood fit). In this case there is likely not enough data for robust checks - we could consider a quasi-likelihood model in order to have more conservative confidence intervals.</p>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(binary_model,</span>
+<span id="cb18-2"><a href="#cb18-2"></a>                         <span class="at">residual_type =</span> <span class="st">"normal"</span>,</span>
+<span id="cb18-3"><a href="#cb18-3"></a>                         <span class="at">detrend =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="09-binomial_files/figure-html/unnamed-chunk-21-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="task">
+<div class="task-header">
+<p>Try fitting a quasi-likelihood model</p>
+</div>
+<div class="task-container">
+<ul>
+<li><p>Fit a quasibinomial model</p></li>
+<li><p>How does this change the means, standard errors and significance tests</p></li>
+</ul>
+</div>
+</div>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<ul>
+<li><p>Estimates from the model will not change</p></li>
+<li><p>Standard errors will be widened by a fixed dispersion parameter (&gt; 1)</p></li>
+<li><p>This may increase p-values, but here there is no change in interpretation</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>quasibinary_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(oring_dt, oring_int) <span class="sc">~</span> temp, </span>
+<span id="cb19-2"><a href="#cb19-2"></a>                    <span class="at">family=</span>quasibinomial, <span class="co"># quasilikelihood</span></span>
+<span id="cb19-3"><a href="#cb19-3"></a>                    <span class="at">data=</span>challenger)</span>
+<span id="cb19-4"><a href="#cb19-4"></a></span>
+<span id="cb19-5"><a href="#cb19-5"></a><span class="fu">summary</span>(quasibinary_model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = cbind(oring_dt, oring_int) ~ temp, family = quasibinomial, 
+    data = challenger)
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)   
+(Intercept)  8.81692    2.93149   3.008  0.00670 **
+temp        -0.17949    0.04732  -3.794  0.00106 **
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for quasibinomial family taken to be 0.6605263)
+
+    Null deviance: 20.706  on 22  degrees of freedom
+Residual deviance:  9.527  on 21  degrees of freedom
+AIC: NA
+
+Number of Fisher Scoring iterations: 6</code></pre>
+</div>
+</div>
+</div>
+</section><section id="write-ups" class="level2" data-number="14.5"><h2 data-number="14.5" class="anchored" data-anchor-id="write-ups">
+<span class="header-section-number">14.5</span> Write-ups</h2>
+<div class="task">
+<div class="task-header">
+<p>Write up the results</p>
+</div>
+<div class="task-container">
+<ul>
+<li>How would you write up for findings from this analysis?</li>
+</ul>
+</div>
+</div>
+<div class="webex-solution">
+<button>
+Write-up
+</button>
+<p>Analysis: I used a Binomial logit-link Generalized Linear Model to analyse the effect of temperature on the likelihood of O-ring failure.</p>
+<p>All analyses were carried out in R (ver 4.1.3) (R Core Team 2021) with the following packages; tidyverse (Wickham et al 2019).</p>
+<p>Results: I found a significant negative relationship between temperature and probability of o-ring failure (logit-odds = -0.17 [95%CI: -0.31 - -0.07], <em>z</em> = -3.1, df = 21, <em>P</em> = 0.002). At an average temperature of 69.6°F the probability of o-ring failure was estimated at 0.025[0.007-0.08], but this rose to 0.91[0.34-1] at 36°F.</p>
+<blockquote class="blockquote">
+<p>Note you could use anova( test = “Chisq”) here, but as there is only one, continuous variable, we can also report directly from the summary table.</p>
+</blockquote>
+</div>
+</section><section id="final-checklist" class="level2" data-number="14.6"><h2 data-number="14.6" class="anchored" data-anchor-id="final-checklist">
+<span class="header-section-number">14.6</span> Final checklist</h2>
+<ul>
+<li><p>Think carefully about the hypotheses to test, use your scientific knowledge and background reading to support this</p></li>
+<li><p>Import, clean and understand your dataset: use data visuals to investigate trends and determine if there is clear support for your hypotheses</p></li>
+<li><p><strong>Decide on the appropriate error structure for your model (Gaussian = continuous, Poisson = count, Binomial = binary)</strong></p></li>
+<li><p><strong>Start with canonical link functions, but these can be altered if needed</strong></p></li>
+<li><p>Fit a (generalized) linear model, including interaction terms with caution</p></li>
+<li><p>Investigate the fit of your model, understand that parameters may never be perfect, but that classic patterns in residuals may indicate a poorly fitting model - sometimes this can be fixed with careful consideration of missing variables or through data transformation</p></li>
+<li><p><strong>Check for overdispersion in models where variance is not estimated independently of the mean (Poisson and Binomial) - may have to use quasi-likelihood fitting</strong></p></li>
+<li><p>Test the removal of any interaction terms from a model, look at AIC and significance tests (Remember test = “F” for Gaussian and Quasilikelihood models, “Chisq” for Poisson and Binomial models)</p></li>
+<li><p>Make sure you understand the output of a model summary, sense check this against the graphs you have made - Do estimates need converting back to the original response scale?</p></li>
+<li><p>The direction and size of any effects are the priority - produce estimates and uncertainties. Make sure the observations are clear.</p></li>
+<li><p>Write-up your significance test results, taking care to report not just significance (and all required parts of a significance test). Do you know <em>what</em> to report? Within a complex model - reporting <em>t/z</em> will indicate the slope of the line for that single term against the intercept, <em>F/Chi</em> is the overall effect of a predictor across all levels, <em>post-hoc</em> if you wish to compare across all levels.</p></li>
+<li><p>Well described tables and figures can enhance your results sections - take the time to make sure these are informative and attractive.</p></li>
+</ul>
 
 
-</section></section></main><!-- /main --><script>
+</section></main><!-- /main --><script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {
@@ -1296,13 +1765,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
   }
 });
 </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./index.html" class="pagination-link" aria-label="Overview">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Overview</span>
+      <a href="./task5.html" class="pagination-link" aria-label="Task Five">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Task Five</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./02-renv.html" class="pagination-link" aria-label="`renv`">
-        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title"><code>renv</code></span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./task6.html" class="pagination-link" aria-label="Task Six">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Task Six</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -58,6 +58,8 @@ book:
     - 07-generalised-linear.qmd
     - 08-poisson.qmd
     - task5.qmd
+    - 09-binomial.qmd
+    - task6.qmd
 
   appendices:
   - r-basics.qmd
