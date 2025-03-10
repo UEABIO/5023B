@@ -60,6 +60,10 @@ book:
     - task5.qmd
     - 09-binomial.qmd
     - task6.qmd
+  - part: "Data Visualisation"
+    chapters:
+    - 10-data-visualisation.qmd
+    - task7.qmd
 
   appendices:
   - r-basics.qmd
