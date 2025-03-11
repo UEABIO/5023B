@@ -25,12 +25,17 @@ library(gghighlight)
 ```
 
 
-```{r, eval=T, echo=F}
+```{r, eval=F, echo=T}
 library(tidyverse)
-library(rstatix)
-library(performance)
+library(palmerpenguins)
+library(showtext)
 library(patchwork)
-
+library(ggtext)
+library(ggbeeswarm)
+library(gghighlight)
+library(sjPlot)
+library(png)
+library(ggpubr)
 ```
 
 
