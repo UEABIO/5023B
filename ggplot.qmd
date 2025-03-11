@@ -843,7 +843,7 @@ marginal_1+scatterplot+marginal_2 +plot_layout(design = layout)
 
 ```
 
-# Colour and Accessibility in Biological Visualisations
+# Colour and Accessibility in Biological Visualisations {#sec-acc-col}
 
 There are two main differences when it comes to colors in `ggplot2`. Both arguments, color and fill, can be specified as single colour or assigned to variables.
 
@@ -912,6 +912,7 @@ You can explore all schemes available with the command `RColorBrewer::display.br
 :::
 
 There are also many, many extensions that provide additional colour palettes. Some of my favourite packages include [ggsci](https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html) and [wesanderson](https://github.com/karthik/wesanderson)
+[RColorBrewer](https://r-graph-gallery.com/38-rcolorbrewers-palettes.html)
 
 ```{r, eval=TRUE, echo=FALSE, out.width="80%"}
 knitr::include_graphics("images/wesanderson.png")
@@ -1312,7 +1313,7 @@ In scientific publications, a plot must be both aesthetically pleasing and scien
 
 This section covers the core principles of refining plots for publication standards, ensuring they are clean, well-labeled, and capable of standing alone within a scientific paper.
 
-### Best Practices for Publication-Ready Plots
+### Best Practices for Publication-Ready Plots {#sec-public-plot}
 
 - Clarity and Simplicity:
 
@@ -1396,6 +1397,28 @@ ggsave("outputs/YYYYMMDD_ggplot_workshop_final_plot.png", dpi=300)
 # ggsave(plot,"outputs/YYYYMMDD_ggplot_workshop_final_plot.png", dpi=300)
 
 ```
+
+:::{.callout-warning}
+
+Does your saved file look very different to your preview? 
+
+Basically, all of your sizes and especially text sizes depend on two things:
+
+- The canvas size of the image (width and height)
+
+- The resolution of the image (dots per inch, dpi for short)
+
+As you probably know, when you work in RStudio and drag around the plots pane, you actually change the canvas size of the image that you see. The resolution of your plot does not change but still the plot looks different.
+
+And even worse, when you use `ggsave()` to export your image, you do not only change the width and height of your image (unless you somehow measured the exact size of your Plots pane) but you also change the resolution.
+
+The thing is that the plots window uses a default resolution of 72 dpi whereas ggsave() uses a resolution of 300 dpi. This latter quantity is pretty standard and makes for high-quality images so you shouldn’t decrease it to 72. In summary, all of these dimensions and resolution changes mess up the way your plot looks. 
+
+You will need to spend some time with this to replicate the original intention of your image. 
+
+
+:::
+
 
 
 ## Further Reading, Guides and tips on data visualisation

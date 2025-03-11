@@ -459,7 +459,7 @@ div.csl-indent {
   </ul>
 </li>
   <li>
-<a href="#colour-and-accessibility-in-biological-visualisations" id="toc-colour-and-accessibility-in-biological-visualisations" class="nav-link" data-scroll-target="#colour-and-accessibility-in-biological-visualisations"><span class="header-section-number">J</span> Colour and Accessibility in Biological Visualisations</a>
+<a href="#sec-acc-col" id="toc-sec-acc-col" class="nav-link" data-scroll-target="#sec-acc-col"><span class="header-section-number">J</span> Colour and Accessibility in Biological Visualisations</a>
   <ul class="collapse">
 <li><a href="#choosing-and-using-colour-palettes" id="toc-choosing-and-using-colour-palettes" class="nav-link" data-scroll-target="#choosing-and-using-colour-palettes"><span class="header-section-number">J.0.1</span> Choosing and using colour palettes</a></li>
   <li><a href="#redundant-aesthetics" id="toc-redundant-aesthetics" class="nav-link" data-scroll-target="#redundant-aesthetics"><span class="header-section-number">J.0.2</span> Redundant aesthetics</a></li>
@@ -489,7 +489,7 @@ div.csl-indent {
 <li>
 <a href="#background" id="toc-background" class="nav-link" data-scroll-target="#background"><span class="header-section-number">L.1</span> Background</a>
   <ul class="collapse">
-<li><a href="#best-practices-for-publication-ready-plots" id="toc-best-practices-for-publication-ready-plots" class="nav-link" data-scroll-target="#best-practices-for-publication-ready-plots"><span class="header-section-number">L.1.1</span> Best Practices for Publication-Ready Plots</a></li>
+<li><a href="#sec-public-plot" id="toc-sec-public-plot" class="nav-link" data-scroll-target="#sec-public-plot"><span class="header-section-number">L.1.1</span> Best Practices for Publication-Ready Plots</a></li>
   </ul>
 </li>
   <li><a href="#task-take-the-unvoltine-butterfly-figure-and-make-it-publication-ready-by-following-the-tips-above" id="toc-task-take-the-unvoltine-butterfly-figure-and-make-it-publication-ready-by-following-the-tips-above" class="nav-link" data-scroll-target="#task-take-the-unvoltine-butterfly-figure-and-make-it-publication-ready-by-following-the-tips-above"><span class="header-section-number">L.2</span> Task: Take the unvoltine butterfly figure and make it publication ready by following the tips above</a></li>
@@ -845,8 +845,8 @@ Note that when specifying colour variables using <code>aes()</code> some geometr
 </div>
 </div>
 <p>Q. Why have I now included the argument outlier.shape = NA?</p>
-<div id="radio_RFEXXNAIXP" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_RFEXXNAIXP" value=""><span>To change the color of the outliers in geom_boxplot</span></label><label><input type="radio" autocomplete="off" name="radio_RFEXXNAIXP" value=""><span>To increase the size of the points displayed by geom_point</span></label><label><input type="radio" autocomplete="off" name="radio_RFEXXNAIXP" value="answer"><span>To prevent the box plot from displaying outliers, since geom_point already shows all individual data points.</span></label>
+<div id="radio_IJLTEYFVVK" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_IJLTEYFVVK" value=""><span>To change the color of the outliers in geom_boxplot</span></label><label><input type="radio" autocomplete="off" name="radio_IJLTEYFVVK" value=""><span>To increase the size of the points displayed by geom_point</span></label><label><input type="radio" autocomplete="off" name="radio_IJLTEYFVVK" value="answer"><span>To prevent the box plot from displaying outliers, since geom_point already shows all individual data points.</span></label>
 </div>
 <section id="grouped-boxplot" class="level4" data-number="G.4.4.1"><h4 data-number="G.4.4.1" class="anchored" data-anchor-id="grouped-boxplot">
 <span class="header-section-number">G.4.4.1</span> Grouped boxplot</h4>
@@ -1382,7 +1382,7 @@ Warning
 </div>
 </div>
 </div>
-</section></section><section id="colour-and-accessibility-in-biological-visualisations" class="level1" data-number="J"><h1 data-number="J">
+</section></section><section id="sec-acc-col" class="level1" data-number="J"><h1 data-number="J">
 <span class="header-section-number">J</span> Colour and Accessibility in Biological Visualisations</h1>
 <p>There are two main differences when it comes to colors in <code>ggplot2</code>. Both arguments, color and fill, can be specified as single colour or assigned to variables.</p>
 <p>As you have already seen in this tutorial, variables that are inside the aesthetics are encoded by variables and those that are outside are properties that are unrelated to the variables.</p>
@@ -1457,7 +1457,7 @@ Warning
 <div class="callout-info">
 <p>You can explore all schemes available with the command <code><a href="https://rdrr.io/pkg/RColorBrewer/man/ColorBrewer.html">RColorBrewer::display.brewer.all()</a></code></p>
 </div>
-<p>There are also many, many extensions that provide additional colour palettes. Some of my favourite packages include <a href="https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html">ggsci</a> and <a href="https://github.com/karthik/wesanderson">wesanderson</a></p>
+<p>There are also many, many extensions that provide additional colour palettes. Some of my favourite packages include <a href="https://cran.r-project.org/web/packages/ggsci/vignettes/ggsci.html">ggsci</a> and <a href="https://github.com/karthik/wesanderson">wesanderson</a> <a href="https://r-graph-gallery.com/38-rcolorbrewers-palettes.html">RColorBrewer</a></p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -1844,8 +1844,8 @@ F-statistic: 47.59 on 3 and 54 DF,  p-value: 3.512e-15</code></pre>
 </div>
 </div>
 <p>Q. What is the issue with the above figure?</p>
-<div id="radio_QRTBASRDIW" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_QRTBASRDIW" value=""><span>geom_smooth() assumes all predictors have an interaction effect by default, which skews the trend lines</span></label><label><input type="radio" autocomplete="off" name="radio_QRTBASRDIW" value="answer"><span>geom_smooth() fits separate trend lines for each level of the categorical predictor, failing to account for the additive effects across groups without interaction</span></label><label><input type="radio" autocomplete="off" name="radio_QRTBASRDIW" value=""><span>geom_smooth() only applies linear fits</span></label>
+<div id="radio_JGAZGPJAQJ" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_JGAZGPJAQJ" value=""><span>geom_smooth() assumes all predictors have an interaction effect by default, which skews the trend lines</span></label><label><input type="radio" autocomplete="off" name="radio_JGAZGPJAQJ" value="answer"><span>geom_smooth() fits separate trend lines for each level of the categorical predictor, failing to account for the additive effects across groups without interaction</span></label><label><input type="radio" autocomplete="off" name="radio_JGAZGPJAQJ" value=""><span>geom_smooth() only applies linear fits</span></label>
 </div>
 </section></section><section id="understanding-emmeans-and-when-to-estimate-trends" class="level3" data-number="K.0.4"><h3 data-number="K.0.4" class="anchored" data-anchor-id="understanding-emmeans-and-when-to-estimate-trends">
 <span class="header-section-number">K.0.4</span> Understanding emmeans and When to Estimate Trends</h3>
@@ -2046,7 +2046,7 @@ F-statistic: 47.59 on 3 and 54 DF,  p-value: 3.512e-15</code></pre>
 <span class="header-section-number">L.1</span> Background</h2>
 <p>In scientific publications, a plot must be both aesthetically pleasing and scientifically informative. Clear, readable visuals are essential to ensure that the message in your data is conveyed effectively to readers. Refining a plot for publication involves careful attention to scaling, labeling, and annotation, all of which help make data more accessible and the figure easier to interpret. Good design elements—like clean axes, appropriate scaling, minimal but helpful gridlines, and informative captions—allow readers to focus on the data rather than unnecessary elements.</p>
 <p>This section covers the core principles of refining plots for publication standards, ensuring they are clean, well-labeled, and capable of standing alone within a scientific paper.</p>
-<section id="best-practices-for-publication-ready-plots" class="level3" data-number="L.1.1"><h3 data-number="L.1.1" class="anchored" data-anchor-id="best-practices-for-publication-ready-plots">
+<section id="sec-public-plot" class="level3" data-number="L.1.1"><h3 data-number="L.1.1" class="anchored" data-anchor-id="sec-public-plot">
 <span class="header-section-number">L.1.1</span> Best Practices for Publication-Ready Plots</h3>
 <ul>
 <li>
@@ -2112,6 +2112,28 @@ F-statistic: 47.59 on 3 and 54 DF,  p-value: 3.512e-15</code></pre>
 <span id="cb57-3"><a href="#cb57-3"></a><span class="fu">ggsave</span>(<span class="st">"outputs/YYYYMMDD_ggplot_workshop_final_plot.png"</span>, <span class="at">dpi=</span><span class="dv">300</span>)</span>
 <span id="cb57-4"><a href="#cb57-4"></a></span>
 <span id="cb57-5"><a href="#cb57-5"></a><span class="co"># ggsave(plot,"outputs/YYYYMMDD_ggplot_workshop_final_plot.png", dpi=300)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Does your saved file look very different to your preview?</p>
+<p>Basically, all of your sizes and especially text sizes depend on two things:</p>
+<ul>
+<li><p>The canvas size of the image (width and height)</p></li>
+<li><p>The resolution of the image (dots per inch, dpi for short)</p></li>
+</ul>
+<p>As you probably know, when you work in RStudio and drag around the plots pane, you actually change the canvas size of the image that you see. The resolution of your plot does not change but still the plot looks different.</p>
+<p>And even worse, when you use <code>ggsave()</code> to export your image, you do not only change the width and height of your image (unless you somehow measured the exact size of your Plots pane) but you also change the resolution.</p>
+<p>The thing is that the plots window uses a default resolution of 72 dpi whereas ggsave() uses a resolution of 300 dpi. This latter quantity is pretty standard and makes for high-quality images so you shouldn’t decrease it to 72. In summary, all of these dimensions and resolution changes mess up the way your plot looks.</p>
+<p>You will need to spend some time with this to replicate the original intention of your image.</p>
+</div>
 </div>
 </section><section id="further-reading-guides-and-tips-on-data-visualisation" class="level2" data-number="L.4"><h2 data-number="L.4" class="anchored" data-anchor-id="further-reading-guides-and-tips-on-data-visualisation">
 <span class="header-section-number">L.4</span> Further Reading, Guides and tips on data visualisation</h2>

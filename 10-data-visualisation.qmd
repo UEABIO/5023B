@@ -40,13 +40,15 @@ Data visualisation is a critical skill for scientists, allowing for the clear an
 
 This chapter has taken inspiration from the following sources: 
 
-https://royal-statistical-society.github.io/datavisguide/docs/styling.html
+- [Royal Statistical Society Data Visualisation Guide](https://royal-statistical-society.github.io/datavisguide/docs/styling.html)
 
-https://www.data-to-viz.com/
+- [Data to Viz](https://www.data-to-viz.com/)
 
-https://clauswilke.com/dataviz/
+- [Fundamentals of Data Visualisation](https://clauswilke.com/dataviz/)
 
-https://knowablemagazine.org/content/article/mind/2019/science-data-visualization
+- [Why scientists need to be better at data visualization](https://knowablemagazine.org/content/article/mind/2019/science-data-visualization)
+
+Make sure to read @sec-ggplot for the basics and @sec-advanced-ggplot for even more data visualisation tips. 
 
 
 ## Choosing the right visualisation
@@ -236,17 +238,18 @@ data <- data.frame(
   Value = c(1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000) # Exponential growth
 )
 
-# Misleading Log Scale (Unlabelled)
+
 ggplot(data, aes(x = Time, y = Value)) +
   geom_line() +
   scale_y_log10(labels = scales::label_log()) +
+  theme_minimal()+
+  annotation_logticks()+
   labs(y = "Log10 scale")
-
 ```
 
 `r unhide()`
 
-```{r}
+```{r, echo = FALSE}
 
 set.seed(123)
 data <- data.frame(
@@ -254,10 +257,12 @@ data <- data.frame(
   Value = c(1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000) # Exponential growth
 )
 
-# Misleading Log Scale (Unlabelled)
+
 ggplot(data, aes(x = Time, y = Value)) +
   geom_line() +
   scale_y_log10(labels = scales::label_log()) +
+  theme_minimal()+
+  annotation_logticks()+
   labs(y = "Log10 scale")
 
 
@@ -649,6 +654,114 @@ Raw data makes it easier to spot errors
 
 It enhances the overall credibility of the published findings
 
+`r hide("Code")`
+```{r, eval = FALSE}
+# Simulated dataset
+set.seed(123)
+df <- data.frame(
+  group = rep(c("A", "B"), each = 50),
+  value = c(c(rnorm(49, mean = 10, sd = 2), 20), c(rnorm(25, mean = 12, sd = 2), rnorm(25, mean = 20, sd =2))
+))
+
+# Summary statistics for bar plot
+summary_df <- df %>%
+  group_by(group) %>%
+  summarise(mean = mean(value), se = sd(value) / sqrt(n()))
+
+# Bar plots with SE
+g_bar <- ggplot(summary_df, aes(x = group, y = mean, fill = group)) +
+  geom_bar(stat = "identity", color = "black") +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = 0.2) +
+  theme_minimal() +
+  ggtitle("Bar plot with SE")
+
+# Box plots
+g_box <- ggplot(df, aes(x = group, y = value, fill = group)) +
+  geom_boxplot() +
+  theme_minimal() +
+  ggtitle("Box plot")
+
+# Violin plots
+g_violin <- ggplot(df, aes(x = group, y = value, fill = group)) +
+  geom_violin() +
+  theme_minimal() +
+  ggtitle("Violin plot")
+
+# Raw data points with jitter
+g_jitter <- ggplot(df, aes(x = group, y = value, color = group)) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  theme_minimal() +
+  ggtitle("Jittered raw data")
+
+# Box plot with jittered points
+g_box_jitter <- ggplot(df, aes(x = group, y = value, fill = group)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  geom_jitter(aes(color = group), width = 0.2, alpha = 0.5) +
+  theme_minimal() +
+  ggtitle("Box plot with raw data")
+
+# Arrange plots in a grid using patchwork
+(g_bar | g_box) / (g_violin | g_jitter) / g_box_jitter + plot_annotation('Data revealed with raw values can be hidden in summary plots') & theme(legend.position = "none")
+
+
+```
+
+`r unhide()`
+
+```{r, echo = FALSE}
+
+# Simulated dataset
+set.seed(123)
+df <- data.frame(
+  group = rep(c("A", "B"), each = 50),
+  value = c(c(rnorm(49, mean = 10, sd = 2), 20), c(rnorm(25, mean = 12, sd = 2), rnorm(25, mean = 20, sd =2))
+))
+
+# Summary statistics for bar plot
+summary_df <- df %>%
+  group_by(group) %>%
+  summarise(mean = mean(value), se = sd(value) / sqrt(n()))
+
+# Bar plots with SE
+g_bar <- ggplot(summary_df, aes(x = group, y = mean, fill = group)) +
+  geom_bar(stat = "identity", color = "black") +
+  geom_errorbar(aes(ymin = mean - se, ymax = mean + se), width = 0.2) +
+  theme_minimal() +
+  ggtitle("Bar plot with SE")
+
+# Box plots
+g_box <- ggplot(df, aes(x = group, y = value, fill = group)) +
+  geom_boxplot() +
+  theme_minimal() +
+  ggtitle("Box plot")
+
+# Violin plots
+g_violin <- ggplot(df, aes(x = group, y = value, fill = group)) +
+  geom_violin() +
+  theme_minimal() +
+  ggtitle("Violin plot")
+
+# Raw data points with jitter
+g_jitter <- ggplot(df, aes(x = group, y = value, color = group)) +
+  geom_jitter(width = 0.2, alpha = 0.5) +
+  theme_minimal() +
+  ggtitle("Jittered raw data")
+
+# Box plot with jittered points
+g_box_jitter <- ggplot(df, aes(x = group, y = value, fill = group)) +
+  geom_boxplot(outlier.shape = NA, alpha = 0.5) +
+  geom_jitter(aes(color = group), width = 0.2, alpha = 0.5) +
+  theme_minimal() +
+  ggtitle("Box plot with raw data")
+
+# Arrange plots in a grid using patchwork
+(g_bar | g_box) / (g_violin | g_jitter) / g_box_jitter + plot_annotation('Data revealed with raw values can be hidden in summary plots') & theme(legend.position = "none") 
+
+
+
+
+```
+
 #### Overlapping data points
 
 `r hide("Code")`
@@ -728,7 +841,7 @@ penguins |>
 
 ### Avoid unnecessary colours and legends
 
-In this example - neither the colour or the figure legend add any value to the plot - the information on species is already contained withing the x-axis. In addition the colours used here are not particularly attractive. Instead consider a simple uniform colour to make the figures look more attractive, and reserve different colour use for conveying information. 
+In this example - neither the colour or the figure legend add any value to the plot - the information on species is already contained withing the x-axis. In addition the colours used here are not particularly attractive. Instead consider a simple uniform colour to make the figures look more attractive, and reserve different colour use for conveying information see @sec-acc-col
 
 `r hide("Code")`
 
@@ -791,6 +904,16 @@ layout <- "AAAABBBB
 
 ```
 
+
+:::{.callout-warning}
+
+```{r, eval=TRUE, echo=FALSE, out.width="80%", fig.alt= "Multi panel plot"}
+knitr::include_graphics("images/heatmap_illusion.png")
+```
+
+:::
+
+
 ### Theme (unnecessary grids and frames)
 
 There is already lots of information on how to customise themes in the ggplot appendices - here we visit some simple rules for maximising attractiveness: 
@@ -833,27 +956,67 @@ ggplot(penguins, aes(x= bill_length_mm,
 
 **BUT** if you remove too many gridlines - it can reduce accuracy and attractiveness. You can play with preset `themes` and customise these further to produce the figure that is right for your data. 
 
+In this example - we have retained the axis lines but removed all grids - there is an argument that we have lost anchor points for our data - that it is now harder to estimate precise values for data points: 
 
 `r hide("Code")`
 
 ```{r, eval = FALSE}
-ggplot(penguins, aes(x = species, y = bill_length_mm)) +
-  geom_boxplot(fill = "skyblue") +
-  theme_void() + # EVERYTHING IS GONE
-  ggtitle("No Grid at All: Too Minimalistic")
+ggplot(penguins, aes(x= bill_length_mm, 
+                     y= bill_depth_mm,
+                     colour=species)) +
+    geom_point()+
+  scale_colour_manual(values=colours)+
+  theme_classic()+
+    labs(x="Bill length (mm)",
+         y="Bill depth (mm)") 
 
 ```
 
 `r unhide()`
 
 ```{r, echo = FALSE}
-ggplot(penguins, aes(x = species, y = bill_length_mm)) +
-  geom_boxplot(fill = "skyblue") +
-  theme_void() + # EVERYTHING IS GONE
-  ggtitle("No Grid at All: Too Minimalistic")
+ggplot(penguins, aes(x= bill_length_mm, 
+                     y= bill_depth_mm,
+                     colour=species)) +
+    geom_point()+
+  scale_colour_manual(values=colours)+
+  theme_classic()+
+    labs(x="Bill length (mm)",
+         y="Bill depth (mm)") 
 
 ```
 
+
+Compare that with this subtle change - the gridlines are unobtrusive but anchor the datapoints:
+
+
+`r hide("Code")`
+
+```{r, eval = FALSE}
+ggplot(penguins, aes(x= bill_length_mm, 
+                     y= bill_depth_mm,
+                     colour=species)) +
+    geom_point()+
+  scale_colour_manual(values=colours)+
+  theme_minimal()+
+    labs(x="Bill length (mm)",
+         y="Bill depth (mm)") 
+
+```
+
+`r unhide()`
+
+```{r, echo = FALSE}
+ggplot(penguins, aes(x= bill_length_mm, 
+                     y= bill_depth_mm,
+                     colour=species)) +
+    geom_point()+
+  scale_colour_manual(values=colours)+
+  theme_minimal()+
+    labs(x="Bill length (mm)",
+         y="Bill depth (mm)") 
+
+```
 
 ### Fonts
 
@@ -1067,7 +1230,7 @@ ggplot(aes(x= bill_length_mm,
 
  Use colorblind-friendly palettes
 
-See [ggplot intros](https://ueabio.github.io/5023B/ggplot.html#colour-and-accessibility-in-biological-visualisations) for the summary on colour and accessibility
+See @sec-acc-col
 
 > Consider Grayscale or dashed vs. solid lines work well for black-and-white printing.
 
@@ -1284,7 +1447,7 @@ A scientific figure legend must provide sufficient context to allow the figure t
 
 - Explicit statement of the main finding: Tell the reader what the figure shows - provide a very brief discussion of the conclusion you can draw based on the data visual
 
-This comprehensive legend ensures that the figure effectively communicates its message and is readily interpretable by readers with diverse levels of familiarity with the specific research area.
+This comprehensive legend ensures that the figure effectively communicates its message and is readily interpretable by readers with diverse levels of familiarity with the specific research area. Also see @sec-public-plot.
 
 
 ### Storytelling with Data
@@ -1399,7 +1562,6 @@ penguin_pic <- png::readPNG("images/lter_penguins.png")
 penguin_fig <- ggplot() +
   background_image(penguin_pic)
 
-showtext_auto()
 
 ```
 
@@ -1412,36 +1574,37 @@ text <- tibble(
 
 
 pt <- ggplot(text, aes(x = x, y = y)) +
-  ggtext::geom_textbox(
-    aes(label = label),    # Map the 'label' column from the 'text' data to the text labels
-    box.color = NA,         # Make the text box border color transparent
-    width = unit(10, "lines"),  # Set the width of the text boxes to 15 lines
-    color = "grey40",       # Set the text color to a light gray
-    size = 3,             # Set the text size to 4 (adjust as needed)
-    lineheight = 1.4)+        # Set the line height for text within the boxes +
-  # Customize the plot coordinate system
-  coord_cartesian(expand = FALSE, clip = "off") +
-
-  # Apply a theme with a blank (void) background
-  theme_classic()+
+    ggtext::geom_textbox(
+        aes(label = label),    # Map the 'label' column from the 'text' data to the text labels
+        box.color = NA,
+        fill = "#fff6e1",
+         # Make the text box border color transparent
+        width = unit(15, "lines"),  # Set the width of the text boxes to 15 lines
+        color = "grey40",       # Set the text color to a light gray
+        size = 4,             # Set the text size to 4 (adjust as needed)
+        lineheight = 1.2)+        # Set the line height for text within the boxes +
+    # Customize the plot coordinate system
+    coord_cartesian(expand = FALSE, clip = "off") +
+    
+    # Apply a theme with a blank (void) background
+    theme_classic()+
     theme(legend.position="none",
-        plot.background = element_rect(fill = "#fff6e1"),
-        text = element_blank(), 
-        axis.ticks = element_blank(),
-        panel.background = element_rect(fill = "#fff6e1"))
+          plot.background = element_rect(fill = "#fff6e1"),
+          text = element_blank(), 
+          axis.ticks = element_blank(),
+          panel.background = element_rect(fill = "#fff6e1"))
 
 pt
-
 ```
 
 
 
 ```{r, eval = FALSE}
 layout <- "
-AAACC
-AAACC
-BBBDD
-BBBDD
+AAACCC
+AAACCC
+BBBDDD
+BBBDDD
 "
 
 p1 <- ggplot(penguins, aes(x= bill_length_mm, 
@@ -1477,6 +1640,7 @@ p1 + p2 +
         plot.background = element_rect(fill = "#fff6e1"),
         panel.background = element_rect(fill = "#fff6e1"))
 
+ggsave("Example-multi-plot.png")
 ```
 
 `r unhide()`
@@ -1489,49 +1653,10 @@ The ggtext package here is using html to add colours to the text - this is incom
 
 
 
-
-```{r, echo = FALSE}
-layout <- "
-AAACC
-AAACC
-BBBDD
-BBBDD
-"
-
-p1 <- ggplot(penguins, aes(x= bill_length_mm, 
-                     y= bill_depth_mm)) +
-    geom_point()+
-  geom_smooth(method="lm",
-              se=FALSE)+
-  theme_classic()+
-  theme(legend.position="none",
-        plot.background = element_rect(fill = "#fff6e1"),
-        panel.background = element_rect(fill = "#fff6e1"))+
-    labs(x="Bill length (mm)",
-         y="Bill depth (mm)")
-
-p2 <- ggplot(penguins, aes(x= bill_length_mm, 
-                     y= bill_depth_mm,
-                     colour=species)) +
-    geom_point(alpha = .2)+
-  geom_smooth(method="lm",
-              se=FALSE)+
-  scale_colour_manual(values=colours)+
-  theme_classic()+
-  theme(legend.position="none",
-        plot.background = element_rect(fill = "#fff6e1"),
-        panel.background = element_rect(fill = "#fff6e1"))+
-    labs(x="Bill length (mm)",
-         y="Bill depth (mm)")
-
-p1 + p2 + 
-  pt +  penguin_fig + 
-  plot_layout(design = layout) & 
-    theme(legend.position="none",
-        plot.background = element_rect(fill = "#fff6e1"),
-        panel.background = element_rect(fill = "#fff6e1"))
-
+```{r, eval=TRUE, echo=FALSE, out.width="80%", fig.alt= "Multi panel plot"}
+knitr::include_graphics("images/Example-multi-plot.png")
 ```
+
 
 
 ## Next steps
