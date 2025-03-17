@@ -64,6 +64,9 @@ book:
     chapters:
     - 10-data-visualisation.qmd
     - task7.qmd
+  - part: "Functional Programming"
+    chapters:
+    - 11-writing-functions.qmd
 
   appendices:
   - r-basics.qmd
