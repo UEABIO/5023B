@@ -67,6 +67,11 @@ book:
   - part: "Functional Programming"
     chapters:
     - 11-writing-functions.qmd
+  - part: "Machine Learning"
+    chapters:
+    - supervised-learning-regression.qmd
+    - task8.qmd
+    - supervised-classifier.qmd
 
   appendices:
   - r-basics.qmd
