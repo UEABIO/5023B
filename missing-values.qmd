@@ -1,0 +1,194 @@
+## Missing data {#sec-missing}
+
+
+```{r, echo = F, warning = F, message = F}
+library(tidyverse)
+library(janitor)
+library(here)
+source("R/booktem_setup.R")
+source("R/my_setup.R")
+penguins_clean_names <- readRDS("files/penguins_clean_names.RDS")
+```
+
+Datasets often contain missing values. However, analysis and visualisation software can differ in their default response to missing values. They might drop missing values, provide a warning about them, or return an error. We don’t always know which response we’ll get, which can cause problems for us (possibly without our knowing) during analysis later on. This is why it’s important to clean missing values effectively.
+
+Understanding the nature of missing data can also be useful for informing how you proceed with analysis. For instance, understanding whether missing data are random or not can influence what you choose to do with them (e.g. remove vs. impute), which in turn can affect the results of statistical models based on those datasets. Identifying where missing data occur in a dataset is therefore an important part of exploratory data analysis. This chapter will show you how to detect and remove missing values.
+
+:::{.callout-important collapse = "true"}
+
+## Penguin clean names dataset
+
+```{r, eval = FALSE}
+penguins_clean_names <- readRDS(url("https://UEABIO/5023B/raw/refs/heads/2026/files/penguin_clean_names.RDS"))
+
+```
+
+:::
+
+:::{.task}
+::::{.task-header}
+Your turn
+::::
+::::{.task-container}
+
+* [ ] Run this command in your console:
+
+```{r}
+penguins_clean_names |> 
+  group_by(species) |> 
+  summarise(mean = mean(body_mass_g))
+
+```
+
+- Question: Why is this happening?
+
+::::
+:::
+
+## Why check missing data patterns?
+
+Missing data isn't always random. Patterns in missingness can reveal:
+
+- Systematic data collection issues (certain measurements consistently missing)
+
+- Non-random missingness (some groups have more missing data than others)
+
+- Relationships between missing values (when one variable is missing, others tend to be too)
+
+- Equipment failures or protocol changes (missingness clustered in time)
+
+Understanding these patterns helps you decide how to handle missing data in your analysis.
+
+:::{.callout-warning}
+
+The mechanism of missingness matters:
+
+- MCAR (Missing Completely At Random): safe to remove or ignore
+
+- MAR (Missing At Random): depends on observed variables
+
+- MNAR (Missing Not At Random): missingness related to the unobserved value itself
+
+Different mechanisms require different analytical approaches.
+:::
+
+## Find Missing values
+
+There are numerous ways to identify missing values in your data. Here we illustrate a few ways with very different output types.
+
+:::{.panel-tabset}
+
+## `summary()`
+
+```{r}
+summary(penguins_clean_names)
+```
+
+
+## `skim()`
+
+```{r}
+skimr::skim(penguins_clean_names)
+
+```
+
+## `vis_miss()`
+
+```{r}
+
+naniar::vis_miss(penguins_clean_names)
+
+```
+
+
+## `upset_plot()`
+
+```{r}
+#| label: fig-upset
+#| fig-cap: "UpSet plot showing combinations of missing variables. Helps identify if certain variables tend to be missing together."
+#| fig-width: 8
+#| fig-height: 5
+
+naniar::gg_miss_upset(penguins_clean_names)
+
+```
+
+:::
+
+We can return all rows with a missing variable.
+
+```{r, eval = FALSE}
+penguins_clean_names |> 
+  filter(if_any(everything(), is.na)) |>
+  select(culmen_length_mm, culmen_depth_mm, flipper_length_mm, 
+         sex, delta_15n, delta_13c,comments,
+         everything()) # reorder columns
+
+```
+Or we can specify we just want to look at a specific columns NA:
+
+```{r}
+penguins_clean_names |> 
+  filter(if_any(culmen_length_mm, is.na))  # reorder columns
+```
+
+## Remove missing values
+
+Three main strategies: 
+
+1. Drop all rows with *any* NA (`drop_na()`): simple but can remove lots - **the nuclear option**
+
+2. Drop NAs in specific columns only.
+
+3. Keep rows, use `na.rm = TRUE` inside summary functions (least destructive).
+
+### `drop_na()` on everything before we start. 
+
+Using `drop_na()` to remove rows that contain any missing values across all variables can be useful, but it also runs the risk of losing a large portion of the data.
+
+- Pros: It's a simple, all-in-one solution for datasets where missing values are widespread and problematic.
+
+- Cons: This method may remove entire rows of data, even if the missing value is only in a single, unimportant column. This can lead to significant data loss if many rows have missing values in non-critical variables.
+
+```{r, eval = F}
+penguins_clean_names |> 
+  drop_na()
+
+```
+
+
+### `drop_na()` on a particular variable. 
+
+Another approach is to remove rows with missing data in a specific variable, such as `body_mass_g`. This is less drastic but still needs to be done thoughtfully, especially if you overwrite the original dataset with the modified version. It's often better to drop `NA`s temporarily for specific analyses or calculations.
+
+- Pros: You retain more data because you only remove rows with missing values in the column that matters for your current analysis.
+
+- Cons: You might still lose useful information from other columns. If you overwrite the dataset permanently (e.g., using `penguins_clean_names <- penguins_clean_names |> drop_na(body_mass_g))`, you can’t recover the dropped rows without reloading the data.
+
+### Use arguments inside functions 
+
+A more cautious approach is to handle missing data within summary or calculation functions, using the `na.rm = TRUE` argument. Many summary functions (like `mean()`, `median()`, or `sum()`) include this argument, which, when set to `TRUE`, excludes `NA` values from the calculation. This allows you to keep missing values in the dataset but ignore them only when performing calculations.
+
+```{r, eval = F}
+penguins_clean_names |> 
+  group_by(species) |> 
+  summarise(
+    mean_body_mass = mean(body_mass_g, na.rm = T)
+  )
+
+```
+
+- Pros: This is the least destructive option because it allows you to handle missing data without removing any rows from the dataset. You only exclude `NA` values during specific calculations.
+
+- Cons: This doesn’t remove missing data, so you need to ensure that they won’t cause issues later in other analyses (e.g., regressions or visualizations).
+
+
+## Summary
+
+This chapter showed ways to find and remove different types of missing records from your dataset. It’s important to note that there might not be a single cleaned dataset without any missing values. You might find that in the same workflow, you will clean your dataset in multiple ways to preserve rows that are missing some, but not all, information. For example, some records may have complete taxonomic identification but lack spatial coordinates, while others have spatial coordinates but lack taxonomic information. Depending on the type of analysis you intend to perform, you may need to adjust your data cleaning approach accordingly.
+
+For a more comprehensive resource about missing values, including how to clean, visually represent, and impute them, check out [The Missing Book](https://tmb.njtierney.com/).
+
+
+
+

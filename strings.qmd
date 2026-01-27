@@ -1,0 +1,333 @@
+# Strings {#sec-strings}
+
+```{r, echo = F, warning = F, message = F}
+library(tidyverse)
+library(janitor)
+library(here)
+source("R/booktem_setup.R")
+source("R/my_setup.R")
+penguins_clean_names <- readRDS("files/penguins_clean_names.RDS")
+```
+
+
+:::{.callout-important collapse = "true"}
+
+## Penguin clean names dataset
+
+```{r, eval = FALSE}
+penguins_clean_names <- readRDS(url("https://UEABIO/5023B/raw/refs/heads/2026/files/penguin_clean_names.RDS"))
+
+```
+
+:::
+
+## Learning Outcomes
+
+- Use `stringr` functions to tidy and manipulate text data.
+
+- Detect and fix inconsistencies in categorical variables.
+
+- Apply conditional replacements with `case_when()` and `if_else()`.
+
+- Split, join, and clean up messy strings efficiently.
+
+- Understand when and how to use regex patterns for flexible text matching.
+
+## Strings
+
+Strings are sequences of characters that make up spaces, letters, abbreviations, words or sentences. They can be formatted in many different ways in an individual dataset. For example, these are just some possible ways the scientific name of species could be recorded in a dataset:
+
+- "Adelie Penguin (Pygoscelis adeliae)"
+
+- "adelie penguin (pygoscelis adeliae)"
+
+- " Adelie Penguin (Pygoscelis adeliae)"
+
+- "Adelie Penguin - Pygoscelis adeliae"
+
+Terms might be capitalised (or not), have accidental spaces at the beginning or end of a word or sentence, contain typos, or include punctuation; all of these things can impact your ability to consolidate and analyse data accurately.
+
+## Basic string manipulation
+
+The `stringr` package provides lots of handy tools for cleaning and manipulating text (or “strings”) in R.
+Let’s look at some examples using the `penguins_clean_names` dataset.
+
+::: {.callout-note}
+You can think of string manipulation as tidying text variables — useful when species names, island names, or other labels contain extra spaces or unwanted characters.
+:::
+
+### Trim
+
+Trim whitespace on either side of a string.
+
+```{r}
+str_trim(" Adelie Penguin (Pygoscelis adeliae) ")
+```
+
+Or just from one side:
+
+```{r}
+str_trim("  Adelie Penguin (Pygoscelis adeliae)  ", side = "left")
+
+```
+
+### Squish
+
+Sometimes extra spaces sneak into your data.
+`str_squish()` removes leading, trailing, and extra internal whitespace, leaving only single spaces between words.
+
+```{r}
+str_squish("  Adelie    Penguin   (Pygoscelis   adeliae)  ")
+
+```
+
+### Truncate
+
+You can shorten long strings to a specific width — handy when making plots or reports.
+
+```{r}
+str_trunc("Adelie Penguin (Pygoscelis adeliae)", width = 18, side = "right")
+
+```
+
+### Split
+
+Split a string into smaller pieces based on a separator.
+For example, separating the scientific name in parentheses:
+
+```{r}
+str_split("Adelie Penguin (Pygoscelis adeliae)", " ")
+
+```
+
+### Concatenate
+
+Join pieces of text into one string.
+
+```{r}
+str_c("Adelie", "Penguin", sep = "_")
+
+```
+
+## Cleaning strings with dplyr
+
+We can look for typos by asking R to produce all of the distinct values in a variable. This is very useful for categorical data, where we expect there to be only a few distinct categories
+
+
+```{r, eval = T}
+# Print only unique character strings in this variable
+penguins_clean_names |>  
+  distinct(sex)
+
+```
+
+Here if someone had mistyped e.g. 'FMALE' it would be obvious. We could do the same thing (and probably should have before we changed the names) for species. 
+
+
+## Conditional Changes with `case_when()` and `if_else()`
+
+Sometimes you’ll want to change the text or category labels in your data based on certain conditions.  
+The functions `case_when()` and `if_else()` from **dplyr** are designed for this.
+
+### `case_when()`
+
+Use `case_when()` when you have **multiple conditions** to check and different outcomes for each one.  
+It works a bit like an “if / else if / else” ladder.
+
+```{r, eval = T, warning = F, message = F}
+# use mutate and case_when 
+# for a statement that conditionally changes 
+# the names of the values in a variable
+penguins <- penguins_clean_names |> 
+  mutate(species = case_when(
+  species == "Adelie Penguin (Pygoscelis adeliae)" ~ "Adelie",
+  species == "Gentoo penguin (Pygoscelis papua)" ~ "Gentoo",
+  species == "Chinstrap penguin (Pygoscelis antarctica)" ~ "Chinstrap",
+  .default = as.character(species)
+  )
+  )
+
+```
+
+::: {.callout-tip}
+Think of `case_when()` as a tidy way to handle many possible categories.
+:::
+
+### `if_else()`
+
+`if_else()` is simpler — it’s for two-way decisions (something is either true or false).
+
+```{r}
+
+# use mutate and if_else
+# for a statement that conditionally changes 
+# the names of the values in a variable
+penguins <- penguins_clean_names |> 
+  mutate(sex = if_else(
+    sex == "MALE", "Male", "Female"
+  )
+  )
+
+```
+
+
+::: {.callout-note}
+`if_else()` always requires:
+
+A logical test (something that’s **TRUE** or **FALSE**),
+
+A value if **TRUE**, and
+
+A value if **FALSE**.
+
+::: {.callout-note icon="false"} 
+
+## Question
+
+When might using `if_else` be dangerous for data cleaning?
+
+:::
+
+:::
+
+
+
+
+## Rename text values with stringr
+
+Datasets often contain words, and we call these words "(character) strings".
+
+Often these aren't quite how we want them to be, but we can manipulate these as much as we like. Functions in the package `stringr`, are fantastic. And the number of different types of manipulations are endless!
+
+Below we repeat the outcomes above, but with string matching: 
+
+
+```{r, eval = F, warning = F, message = F}
+# use mutate and case_when 
+# for a statement that conditionally changes 
+# the names of the values in a variable
+penguins_clean_names |> 
+  mutate(species = stringr::word(species, 1)
+  ) |> 
+  mutate(sex = stringr::str_to_title(sex))
+
+```
+
+```{r, echo = F}
+# use mutate and case_when 
+# for a statement that conditionally changes 
+# the names of the values in a variable
+penguins_clean_names |> 
+  mutate(species = stringr::word(species, 1)
+  ) |> 
+  mutate(sex = stringr::str_to_title(sex)) |>
+  head()
+
+```
+
+:::{.task}
+::::{.task-header}
+Your turn
+::::
+::::{.task-container}
+
+Convert all species names to uppercase using `str_to_upper()`.
+
+::::
+:::
+
+
+## Split columns
+
+Alternatively we could decide we want simpler species names but that we would like to keep the latin name information, but in a separate column. To do this we are using [regex](https://cran.r-project.org/web/packages/stringr/vignettes/regular-expressions.html). Regular expressions are a concise and flexible tool for describing patterns in strings.
+
+They are **however** also complex and unintuitive. ChatGPT (or any LLM) is  great for building more complex regex snippets.
+
+```{r, eval = F}
+penguins_clean_names |> 
+    separate(
+        species,
+        into = c("species", "full_latin_name"),
+        sep = "(?=\\()"
+    ) 
+```
+
+```{r, eval = T, echo = F}
+penguins_clean_names |> 
+    separate(
+        species,
+        into = c("species", "full_latin_name"),
+        sep = "(?=\\()" # regex pattern: split before the '('
+    ) |> 
+  head()
+```
+
+
+## Matching
+
+### Detect a pattern
+
+
+```{r}
+str_detect("Genus specificus", "Genus")
+```
+
+Use `str_detect()` to filter your data. Here, we filter the species names to only those containing the pattern "papua".
+
+```{r, eval = F}
+# 3 possible names in species column
+penguins_clean_names |> distinct(species)
+```
+
+```{r, echo = F}
+# 3 possible names in species column
+penguins_clean_names |> distinct(species) |> head()
+```
+
+
+```{r, eval = F}
+penguins_clean_names |>
+  filter(str_detect(species, "papua")) |>
+  select(species)
+
+```
+
+
+```{r, echo = F}
+penguins_clean_names |>
+  filter(str_detect(species, "papua")) |>
+  select(species) |> 
+  head()
+
+```
+
+### Remove a pattern
+
+```{r}
+# remove match for Genus (followed by a whitespace)
+str_remove("Genus specificus", pattern = "Genus ")
+```
+
+In the example above we split the species column into a common and latin name column - but it left some ugly brackets - we can use `str_remove` to strip away those brackets: 
+
+```{r, eval = F}
+penguins_clean_names |> 
+    separate(
+        species,
+        into = c("species", "full_latin_name"),
+        sep = "(?=\\()" # regex pattern: split before the '('
+    ) |> 
+  mutate(full_latin_name = str_remove_all(full_latin_name, "[\\(\\)]"))
+
+```
+
+```{r, echo = F}
+penguins_clean_names |> 
+    separate(
+        species,
+        into = c("species", "full_latin_name"),
+        sep = "(?=\\()" # regex pattern: split before the '('
+    ) |> 
+  mutate(full_latin_name = str_remove_all(full_latin_name, "[\\(\\)]")) |> head()
+
+```

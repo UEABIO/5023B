@@ -62,7 +62,7 @@ rna <- rna |>
 
 
 # Calculate the mean expression for each gene across all samples
-gene_means <- rowMeans(rna, na.rm = TRUE)
+gene_means <- rowMeans(rna[,-1], na.rm = TRUE)
 
 # Order genes by mean expression in descending order and select the top 200
 top200_genes <- order(gene_means, decreasing = TRUE)[1:200]
@@ -70,14 +70,15 @@ top200_genes <- order(gene_means, decreasing = TRUE)[1:200]
 # Subset your original data to keep only these top 200 genes
 rna_top200 <- rna[top200_genes, ]
 
-rna <- as.data.frame(rna)
-rownames(rna) <- rna$Name
+rna_top200 <- as.data.frame(rna_top200)
+
+rownames(rna_top200) <- rna_top200$Name
 
 # Remove the Name column
-rna <- rna[, -1]
+rna_top200 <- rna_top200[, -1]
 
 # Transpose the dataframe so that rows become samples and columns become features
-rna_transposed <- as.data.frame(t(rna))
+rna_transposed <- as.data.frame(t(rna_top200))
 
 #rna <- rna |> pivot_longer(cols = !Name,
 #                    names_to = "id",
@@ -89,28 +90,34 @@ rna_transposed <- as.data.frame(t(rna))
 # remove lowly abundant reads
 #full_rna <- full_join(rna, meta, by = "id")
 
+
+
 ```
 
 
 
 ```{r}
 
-komp_recipe <- recipe(~., data = rna) %>% 
-  step_zv(all_predictors()) |> 
-  step_impute_lower(all_predictors()) %>%
-  step_normalize(all_predictors()) %>%  
-  step_pca(all_predictors()) %>% 
-  prep()
+rna_pca <- recipe(~., data = rna_transposed) %>%  
+#    step_zv(all_predictors()) |> 
+#    step_impute_lower(all_predictors()) %>%
+    step_normalize(all_numeric_predictors()) %>%  
+    step_pca(all_numeric_predictors())
+
+
+rna_pca_prep <- rna_pca |> prep()
 
 ```
 
 
 ```{r}
 
-tidy(komp_recipe,   
-     3,               
+loadings <- tidy(rna_pca_prep,   
+     2,               
      type = "variance") %>% 
-  filter(component < 20 ) %>% 
+  filter(component < 20 )
+
+loadings %>% 
   ggplot() + 
   geom_col(aes(x = component, y = value), fill = "steelblue", alpha = 0.7) + 
   facet_wrap(~terms, scales = "free_y") + 
@@ -120,22 +127,23 @@ tidy(komp_recipe,
 
 ```{r}
 
-komp_recipe %>% 
+rna_pca_prep %>% 
     juice() %>% 
     ggplot() + 
-    geom_point(aes(x = PC1, y = PC2), size = 2, alpha = 0.7) 
+    geom_point(aes(x = PC1, y = PC2), size = 2, alpha = 0.7)
+    
+    
 
 ```
 
 
 
-Let's look the the metabolites which are mostly contributiong to PC1
-
+Let's look the the metabolites which are mostly contributing to PC1:
 
 
 ```{r fig.height=10, fig.width=7}
 
-tidy(komp_recipe, 4) %>% 
+tidy(rna_pca_prep, 2) %>% 
   filter(component %in% paste0("PC", 1)) %>% 
   arrange(value) %>% 
   mutate(terms = fct_inorder(terms)) %>% ## 
@@ -147,18 +155,32 @@ tidy(komp_recipe, 4) %>%
 
 ```
 
+## K-means clustering
 
+```{r}
+centroids <- rna_pca_prep %>% 
+    juice() |> select(PC1:PC3) |> kmeans(centers = 5)
+
+```
+
+```{r}
+rna_pca_prep %>% 
+    juice() %>% 
+    mutate(cluster = factor(clusters$cluster)) |> 
+    ggplot() + 
+    geom_point(aes(x = PC1, y = PC2, colour = cluster), size = 2, alpha = 0.7)
+
+```
 
 ### Heatmaps and hierarchical clustering
 
 ```{r}
 library(ggalign)
-library(ggheatmap)
+library(ggdendro)
+library(viridis)
 
-ggheatmap(rna_top200) + scale_fill_viridis()+
-    # we set the active context to the top annotation
-    anno_top() +
-    align_dendro()
+ggheatmap(rna_top200) + scale_fill_viridis()
+
 
 
 ```
@@ -167,25 +189,80 @@ ggheatmap(rna_top200) + scale_fill_viridis()+
 ```{r}
 
 # For example, using Euclidean distance:
-d <- dist(rna_top200)
+d <- dist(t(rna_top200))
 
 # Alternatively, if you want to use a correlation-based measure:
 # d <- as.dist(1 - cor(t(rna_top200_scaled)))
 
 hc <- hclust(d, method = "complete")
 
-
 rna_top200_ordered <- rna_top200[hc$order, ]
 
-ggheatmap(rna_top200_ordered) + scale_fill_viridis()+
-    # we set the active context to the top annotation
-    anno_top() +
-    align_dendro()
+rna_dendro <- as.dendrogram(hc)
+
+dendro_plot <- ggdendrogram(data = rna_dendro)
+
+
+
 
 ggheatmap(rna_top200) + scale_fill_viridis()+
   anno_top() +
     # we set the active context to the top annotation
-    align_hclust()+
-    
+    align_hclust(k = 5L)+
     align_dendro()
+
+# https://github.com/XiaoLuo-boy/ggheatmap
+
+```
+
+```{r}
+
+library(pheatmap)
+
+# Assuming you have:
+# - pca_df: a data frame of PCA scores (rows = samples, columns = PCs)
+# - hc: a hierarchical clustering object from hclust()
+
+# Example (if needed):
+# pca_df <- prcomp(your_data)$x[, 1:5]  # first 5 PCs
+# hc <- hclust(dist(pca_df), method = "ward.D2")
+
+# Create heatmap with dendrogram
+pheatmap(rna_top200,
+         cluster_rows = FALSE,
+         cluster_cols = hc,  # or FALSE if you don't want to cluster columns
+         scale = "none")       # scale = "row" or "column" if desired
+
+
+
+annotation_col <- data.frame(
+  Group = c(rep("GroupA", 3), rep("GroupB",3), rep("GroupC",3), rep("Group D", 15)))
+rownames(annotation_col) <- colnames(rna_top200)
+
+
+pheatmap(rna_top200,
+         annotation_col = annotation_col,
+         cluster_rows = hc,
+         cluster_cols = TRUE,  # or FALSE if you don't want to cluster columns
+         scale = "none")       # scale = "row" or "column" if desired
+
+
+
+```
+
+```{r}
+# Cut into 3 clusters
+# Cut column tree into 3 clusters
+column_clusters <- cutree(hc, k = 3)
+
+# Create annotation dataframe
+annotation_col <- data.frame(Cluster = factor(column_clusters))
+rownames(annotation_col) <- colnames(rna_top200)
+
+# Add to heatmap
+pheatmap(rna_top200,
+         cluster_cols = hc,
+         annotation_col = annotation_col)
+
+
 ```

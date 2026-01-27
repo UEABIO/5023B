@@ -4,3 +4,5 @@
 .Ruserdata
 token.txt
 /.quarto/
+
+**/*.quarto_ipynb

@@ -1,0 +1,582 @@
+# Data insights {#sec-summarise}
+
+```{r, echo = F, warning = F, message = F}
+library(tidyverse)
+library(janitor)
+library(here)
+library(colorspace)
+source("R/booktem_setup.R")
+source("R/my_setup.R")
+penguins <- readRDS(here("files", "penguins.RDS"))
+```
+
+## Learning Objectives
+
+- Use summary functions to explore the structure and completeness of a dataset.
+
+- Create simple summaries and grouped summaries using `count()`, `group_by()`, and `summarise()`.
+
+- Calculate descriptive statistics (mean, SD) across groups.
+
+- Use `janitor` tools @R-janitor to quickly tabulate and summarise categorical data.
+
+- Recognise how grouping can change the interpretation of summaries and relationships
+
+## A first glimpse
+
+When starting with a new dataset, we want to get an initial idea:
+
+- How many rows and columns are there?
+
+- What are the column names?
+
+- What types of data are in each column?
+
+- What are their possible values or ranges?
+
+- These answers are useful to know before jumping into wrangling and cleaning data.
+
+There are several ways to return an overview of your data, ranging in how comprehensively you wish to summarise your data’s structure.
+
+## The data
+
+
+```{r, eval = FALSE}
+penguins <- readRDS(url("https://UEABIO/5023B/raw/refs/heads/2026/files/penguins.RDS"))
+
+```
+
+::: {.panel-tabset}
+
+## glimpse
+
+```{r, eval = T}
+
+glimpse(penguins)
+
+```
+
+## `str()`
+
+```{r, eval = T}
+
+str(penguins)
+
+```
+
+## skim
+
+```{r, eval = T}
+library(skimr)
+
+skim(penguins)
+
+```
+
+:::
+
+At this early stage, it’s helpful to assess whether your dataset meets your expectations. Consider if the data appear as anticipated. Are the values in each column reasonable? Are there any noticeable gaps or errors that might need to be corrected, or that could potentially render the data unusable?
+
+:::{.task}
+::::{.task-header}
+Your turn
+::::
+::::{.task-container}
+
+The dataset has `r fitb(345)` rows (including the headers) and `r fitb(17)` 17 columns.
+
+It also provides information on the *type* of data in each column
+
+* `<chr>` - means character or text data
+
+* `<dbl>` - means numerical data
+
+**Q Based on our summary functions are any variables assigned to the wrong data type (should be character when numeric or vice versa)?**
+
+`r mcq(c("Yes", answer = "No"))`
+
+
+`r hide("Explanation")`
+
+Although some columns like date might not be correctly treated as character variables, they are not strictly numeric either, all other columns appear correct
+
+`r unhide()`
+
+
+**Q Based on our summary functions do we have complete data for all variables?**
+
+`r mcq(c("Yes", answer = "No"))`
+
+
+`r hide("Explanation")`
+
+No, they are 2 missing data points for body measurements (culmen, flipper, body mass), 11 missing data points for sex, 13/14 missing data points for blood isotopes (Delta N/C) and 290 missing data points for comments
+
+`r unhide()`
+
+::::
+:::
+
+
+We have just learned some ways to initially inspect our dataset. Keep in mind, we don’t expect everything to be perfect. This initial inspection is a good opportunity to identify where these issues might be and assess their severity.
+
+When you are confident that the dataset is largely as expected, you are ready to start summarising your data.
+
+## Summary counts
+
+In the previous section, we learned how to get an overview of our data’s structure, including the number of rows, the columns present, and any missing data. In this section, we will focus on summarising the data. Summarising data can provide insight into the scope and variation in our dataset, and help in evaluating its suitability for our analysis.
+
+With our data we can count the total number of occurrences for different groups either by:
+
+### Filtering
+
+```{r}
+penguins |> 
+  filter(species == "Adelie") |> 
+  count()
+
+```
+### Grouping
+
+Or by grouping :
+
+```{r}
+penguins |> 
+  group_by(species) |> 
+  count()
+```
+
+At this stage, these counts tell us *what is in our dataset*, not *how variables relate to one another*. To understand relationships, we will later need visualisations and models.
+
+
+## Frequency counts by subgroups
+
+We can apply multiple grouping parameters at the same time - for example if we wish to know the frequency of observations by species **and** sex. 
+
+We can do this using `dplyr` or with functions in the `janitor` package:
+
+:::{.panel-tabset}
+
+## Dplyr
+
+```{r}
+
+penguins |> 
+  group_by(species,sex) |> 
+  count() |> 
+  arrange(desc(n))
+
+```
+
+
+## Janitor
+
+```{r}
+penguins |>
+  tabyl(sex, species) |> 
+  adorn_percentages("all") |>
+  adorn_totals(c("row", "col")) |>
+  adorn_pct_formatting(digits = 1)
+
+```
+
+:::
+
+Grouped summaries implicitly assume that differences *between groups* may matter. Later, we will see that ignoring important grouping variables can lead to misleading conclusions
+
+## Visualising Frequencies
+
+Graphs make summaries easier to interpret at a glance.
+
+:::{.panel-tabset}
+
+## Geom_col
+
+`geom_col` by default plots single values or "identity", so numbers must be *pre-calculated*
+
+```{r}
+
+penguins |> 
+  group_by(species,sex) |> 
+  count() |> 
+  arrange(desc(n)) |> 
+  ggplot(aes(x = species,
+             y = n,
+             fill = sex))+
+  geom_col(position=position_dodge2(preserve="single"))+
+  coord_flip()+
+  labs(x = "")+
+  theme(legend.position = "bottom")
+
+```
+
+`r hide("Label the bars")`
+
+```{r}
+
+penguins |> 
+  group_by(species,sex) |> 
+  count() |> 
+  arrange(desc(n)) |> 
+  ggplot(aes(x = species,
+             y = n,
+             fill = sex))+
+  geom_col(position=position_dodge2(preserve="single"))+
+  geom_label(aes(label = n),
+             position=position_dodge2(preserve="single",
+                                      width = .9))+ #<- dodge the text and label bars
+  coord_flip()+
+  labs(x = "")+
+  theme(legend.position = "bottom")
+
+```
+
+
+`r unhide()`
+
+
+## Geom_bar
+
+`geom_bar` by default will summarise
+
+```{r}
+
+penguins |> 
+  ggplot(aes(x = species,
+             fill = sex))+
+  geom_bar(position=position_dodge2(preserve="single"))+
+  coord_flip()+
+  labs(x = "")+
+  theme(legend.position = "bottom")
+
+```
+
+:::
+
+## Exploring relationships between two variables
+
+So far, we have focused on understanding the structure of the dataset and summarising individual variables or groups of observations. In many analyses, however, we are interested in how **two variables vary together**.
+
+Exploring relationships between variables is an important step before modelling. At this stage, our goal is not to explain or predict outcomes, but to **identify patterns**, assess whether variables appear related, and consider whether these relationships differ across meaningful groups.
+
+Plots are particularly important here, as numerical summaries alone can obscure important structure in the data.
+
+### Scatterplots
+
+When both variables of interest are numeric, a scatterplot is the most informative first tool. Scatterplots allow us to see how values of one variable change in relation to another and whether any patterns are present.
+
+```{r}
+
+penguins|>
+ggplot(aes(x = culmen_length_mm,
+           y = culmen_depth_mm)) +
+geom_point(alpha = 0.7)
+
+
+```
+
+This plot shows the relationship between culmen length and culmen depth, with points coloured by penguin species.
+
+Scatterplots such as this allow us to consider questions such as:
+
+- Do the variables appear positively or negatively associated?
+
+- Is the relationship approximately linear?
+
+
+At this stage, we focus on visual comparison, rather than numerical summaries.
+
+:::{.task}
+::::{.task-header}
+Your turn
+::::
+::::{.task-container}
+
+Based on the scatterplot above, can you make a plot that includes species as an important grouping variable?
+
+How does this change your observation?
+
+`r hide("Solution")`
+
+```{r}
+
+penguins|>
+ggplot(aes(x = culmen_length_mm,
+           y = culmen_depth_mm,
+           colour = species)) +
+geom_point(alpha = 0.7)+
+scale_colour_discrete_qualitative()
+
+```
+
+We now see a striking reversal of the apparent association between culmen length and depth, demonstrating the importance of considering groups in our analysis.
+
+`r unhide()`
+::::
+:::
+
+## Correlation{#sec-cor}
+
+In some situations, it can be useful to summarise the relationship between two numeric variables using a single numerical measure. Correlation provides such a summary by describing the strength and direction of a linear association between two variables.
+
+Below, we calculate the overall correlation between culmen length and culmen depth across all observations.
+
+```{r}
+
+penguins |>
+summarise(
+r = cor(culmen_length_mm,
+        culmen_depth_mm,
+use = "complete.obs") # Important to include if there are any missing values
+)
+
+
+```
+
+:::{.task}
+::::{.task-header}
+Your turn
+::::
+::::{.task-container}
+
+How can we generate summary statistics that reflect our important subgrouping (species)?
+
+How does this change your observation?
+
+`r hide("Solution")`
+
+```{r}
+
+
+penguins |>
+  group_by(species) |> 
+summarise(
+r = cor(culmen_length_mm,
+        culmen_depth_mm,
+use = "complete.obs") # Important to include if there are any missing values
+)
+
+```
+
+
+`r unhide()`
+::::
+:::
+
+## Summary statistics
+
+We can extend our summaries to show not just counts, but also measures of central tendency (mean) and spread (standard deviation).
+
+These are powerful ways to understand variation within groups. These summaries describe *average differences*, but they do not tell us whether one variable predicts another, nor whether relationships differ across groups.
+
+```{r, eval = T, message = F, warning = F}
+
+penguins |>
+group_by(species) |> # Calculate withing groups
+summarise(
+mean_mass = mean(body_mass_g, na.rm = TRUE),
+sd_mass = sd(body_mass_g, na.rm = TRUE),
+n = n(),
+median = median(body_mass_g, na.rm = TRUE),
+iqr = IQR(body_mass_g, na.rm = TRUE)
+)
+
+```
+
+:::{.task}
+::::{.task-header}
+Your turn
+::::
+::::{.task-container}
+
+* [ ] Add sex to the `group_by()` function to see how mean and SD of body mass differ by sex within species.
+
+`r hide("Solution")`
+
+
+```{r, eval = T, message = F, warning = F}
+
+penguins |>
+group_by(species, sex) |> 
+drop_na(sex) |> # Optional remove rows where Sex is unknown
+summarise(
+mean_mass_g = mean(body_mass_g, na.rm = TRUE),
+sd_mass_g = sd(body_mass_g, na.rm = TRUE),
+n = n()
+)
+
+```
+
+
+`r unhide()`
+
+::::
+:::
+
+
+### Summarise multiple variables
+
+These functions allow us to generate
+
+- `summarise_at()`
+
+Summarise specific selected variables:
+
+```{r}
+penguins |> 
+  group_by(species) |> 
+  summarise_at(c("flipper_length_mm",
+                 "culmen_length_mm",
+                 "culmen_depth_mm"),
+               mean, na.rm =T) # mean function
+
+```
+
+- `summarise_if()`
+
+```{r}
+penguins |> 
+  group_by(species) |> 
+  summarise_if(is.numeric, # selects only numeric columns
+               mean, na.rm =T)
+
+```
+
+
+## Visualising distributions
+
+Numerical summaries such as the mean and standard deviation provide useful information about a variable, but they do not show the full distribution of values. 
+
+Visualising distributions allows us to see how values are spread, whether observations are concentrated in particular ranges, and how distributions differ across groups.
+
+Different plots are suited to different questions. In this section, we focus on choosing appropriate plots for comparing distributions across groups.
+
+### Boxplots for group comparisons
+
+A boxplot provides a compact summary of the distribution of a numeric variable. It displays the median, the spread of the central values, and potential extreme observations, making it particularly useful for comparing distributions between groups.
+
+Below, we visualise the distribution of body mass across penguin species.
+
+```{r}
+penguins |>
+ggplot(aes(x = species,
+           y = body_mass_g)) +
+geom_boxplot() +
+coord_flip()
+
+```
+
+This plot allows us to compare:
+
+- Median body mass across species,
+
+- IQR (the interquartile range) the spread of values within each species,
+
+- Whether some species show more variability than others.
+
+Boxplots are especially effective when the primary goal is comparison between groups, rather than detailed inspection of the distribution shape.
+
+When visualising distributions, the choice of plot depends on the question being asked. In some cases, we are interested in comparing groups; in others, we want to explore the shape of the distribution within a single group.
+
+:::{.task}
+::::{.task-header}
+Your turn
+::::
+::::{.task-container}
+
+You are exploring body mass in the penguin dataset.
+
+If you wanted to explore the shape of the body-mass distribution for each single species, how would you change the plot?
+(Hint: consider changing the geom rather than the data.)
+
+`r hide("Solution")`
+
+A histogram could be used by changing the geom to `geom_histogram()` and focusing on one species, as this allows closer inspection of the distribution shape within that group.
+
+
+```{r}
+penguins |> 
+  ggplot(aes(body_mass_g,
+             fill = species))+
+  geom_histogram()+
+  scale_fill_discrete_qualitative()+
+  facet_wrap(~species, # make facets by species
+             ncol = 1) # stack the plots for easier comparison
+
+```
+
+`r unhide()`
+
+
+::::
+:::
+
+## Useful `summary` functions
+
+#### Measure of location:
+
+- `mean(x)`: sum of x divided by the length
+
+- `median(x)`: 50% of x is above and 50% is below
+
+#### Measure of variation:
+
+- `sd(x)`: standard deviation
+
+- `IQR(x)`: interquartile range (robust equivalent of sd when outliers are present in the data)
+
+#### Measure of rank:
+
+- `min(x)`: minimum value of x
+
+- `max(x)`: maximum value of x
+
+- `quantile(x, 0.25)`: 25% of x is below this value
+
+#### Counts:
+
+- `n(x)`: the number of element in x
+
+- `sum(!is.na(x))`: count non-missing values
+
+- `n_distinct(x)`: count the number of unique value
+
+
+## GGally
+
+GGally is an invaluable tool in a researcher's toolkit. It seamlessly extends the capabilities of the widely used ggplot2 package. With GGally, you can effortlessly create a variety of visualizations to explore and understand distributions and correlations among your variables. Its flexibility and ease of use make it a go-to choice for streamlining the process of creating insightful plots and charts for data analysis.
+
+```{r, message = FALSE, warning = FALSE}
+library(GGally)
+penguins |> 
+  ggpairs(columns = 10:12, ggplot2::aes(colour = species))
+
+```
+
+
+
+## Summary
+
+In this section we learned to:
+
+- Inspect structure and completeness
+
+    - Use `glimpse()`, `str()`, and `skim()` to understand column types, missing data, and variable ranges.
+
+    - Confirm that variables are stored in appropriate formats (e.g. numeric vs character).
+
+- Summarise counts and categories
+
+    Count observations using `count()` and `group_by()` to explore dataset composition.
+
+    Use `janitor::tabyl()` for fast, readable cross-tabulations and percentages.
+
+- Calculate descriptive statistics
+
+    - Compute group-wise summaries with `summarise()` such as means, SDs, and counts.
+    
+- Visualise descriptive ranges and associations
+      
+    - Use ggplot to produce a range of descriptive plots  
+
+

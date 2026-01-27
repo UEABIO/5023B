@@ -1,0 +1,199 @@
+# Week 2 {#week-2}
+
+## Learning Outcomes
+
+By the end of this session, you will be able to:
+
+- Articulate data quality decisions: Explain WHAT you're fixing, WHY it matters biologically, and WHAT trade-offs you're making
+
+- Implement targeted transformations: Apply appropriate data cleaning techniques to specific issues in your dataset
+
+- Verify transformations systematically: Check that your code does what you intended both mechanically and biologically
+
+- Interpret cleaning consequences: Explain how your transformations change what your data represents and what analyses are possible
+
+- Document decisions transparently: Create clear records of your reasoning for future reference
+
+- Evaluate cleaning approaches critically: Review code and provide constructive feedback on data quality decisions
+
+## AI Use Policy for Week 2
+
+:::{.callout-important}
+
+- AI Tools (ChatGPT, Claude, GitHub Copilot, etc.) Are NOT Permitted in Week 2 
+
+:::
+
+Why we're restricting AI use at this stage:
+
+1. Decision-making is the skill, not code generation
+
+Data cleaning requires judgment about:
+
+    - What constitutes a "problem" in your specific context
+
+    - Which fix preserves biological meaning
+
+    - What trade-offs are acceptable
+
+    - What assumptions you're making
+
+AI can generate code, but it cannot make these decisions for you. If you use AI now, you'll outsource the thinking - which is the entire point of this exercise.
+
+2. Understanding consequences requires deep engagement
+
+When you write code yourself (even slowly, with errors), you:
+
+    - Think through each step
+
+    - Understand what each line does
+
+    - Notice when something unexpected happens
+
+    - Learn to debug your own thinking
+
+When AI writes code for you:
+
+    - You get a solution but not understanding
+
+    - Errors are invisible until analysis fails later
+
+    - You can't explain your own work
+
+    - You can't adapt the approach to new situations
+
+3. This is your chance to build foundational skills
+
+Week Two is about developing your mental model of data transformation:
+
+    - What happens when I remove NAs?
+
+    - How does standardization change my data?
+
+    - What information am I losing or preserving?
+    
+    
+## Session Overview
+
+1. Compare your Week 2 plans with a partner (20 min)
+
+2. Implement your top 2 cleaning fixes (75 min)
+
+3. Review each other's code (20 min)
+
+4. Add brief documentation (5 min)
+
+### What you need
+
+- Your completed between-session work (tutorials + checklists + plan)
+
+- Questions you identified in your plan
+
+- Commitment to do your own thinking and coding
+
+## Before Starting
+
+### Open your GitHub repository in a browser:
+
+- You should see all previous commits
+
+- You should see `week1/tutorial_applications.txt` with all checklists completed
+
+- You should see `week1/week2_plan.txt` with your top two issues identified
+
+## Partner Comparison
+
+
+**Share your cleaning plans**
+
+
+* [ ]  Open `week2_plan.txt` and show your partner
+
+* [ ]  Discuss your thinking "Here's issue 1 I plan to check and fix"
+
+* [ ]  Share uncertainty "Here's what I am not sure about..."
+
+* [ ]  Provide some quick feedback to your partner
+
+
+
+## Implement code
+
+* [ ]   Open `scripts/initial_exploration.R`
+
+* [ ]   Work **independently** on implementing your code fixes - using the template below
+
+* [ ]  Write a commit "Add cleaning steps to raw data"
+
+* [ ]  Push your changes
+
+
+```{r, eval = FALSE}
+
+# FIX 1: [Issue description] ====
+
+# Show the problem:
+# [Code to demonstrate issue exists]
+
+
+# Fix it:
+data_step1 <- data_raw |>
+  # YOUR CODE HERE
+  
+
+# Verify it worked:
+# [Code to check change happened]
+
+
+# What changed and why it matters:
+# [2-3 sentences explaining consequences]
+#
+
+
+# FIX 2: [Issue description]  ====
+
+# Show the problem:
+# [Code]
+
+# Fix it:
+data_step2 <- data_step1 |>
+  # YOUR CODE
+
+
+# Verify it worked:
+# [Code]
+
+# What changed and why it matters:
+# [2-3 sentences]
+#
+
+
+```
+
+
+## Code Review
+
+**Share your github repository URL with your partner**
+
+
+* [ ]   Compare what you chose to check/fix
+
+
+* [ ]   Share your reviews
+    
+    - "Here's what I understood about your approach"
+    
+    - "This part confused me"
+    
+    - "Did you consider [x]"
+    
+    
+* [ ]   OPTIONAL: Try and implement your partner's code
+
+    - If you tackled a similar problem, decide on the best approach
+    
+    - If a different fix was identified, implement this in your workflow
+    
+    - When finished write a brief commit message explaining the changes
+    
+    - Push to Github

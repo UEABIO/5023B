@@ -1,0 +1,205 @@
+# Dates {#sec-dates}
+
+```{r, echo = F, warning = F, message = F}
+library(tidyverse)
+library(janitor)
+library(here)
+source("R/booktem_setup.R")
+source("R/my_setup.R")
+penguins_clean_names <- readRDS("files/penguins_clean_names.RDS")
+```
+
+:::{.callout-important collapse = "true"}
+
+## Penguin clean names dataset
+
+```{r, eval = FALSE}
+penguins_clean_names <- readRDS(url("https://UEABIO/5023B/raw/refs/heads/2026/files/penguin_clean_names.RDS"))
+
+```
+
+:::
+
+
+Working with dates can be tricky, treating date as strictly numeric is problematic, it won't account for number of days in months or number of months in a year. 
+
+Additionally there's a lot of different ways to write the same date:
+
+* 13-10-2019
+
+* 10-13-2019
+
+* 13-10-19
+
+* 13th Oct 2019
+
+* 2019-10-13
+
+This variability makes it difficult to tell our software how to read the information, luckily we can use the functions in the `lubridate` package. 
+
+```{r}
+library(lubridate)
+
+```
+
+:::{.callout-warning}
+If you get a warning that some dates could not be parsed, then you might find the date has been inconsistently entered into the dataset.
+
+Pay attention to warning and error messages
+:::
+
+Depending on how we interpret the date ordering in a file, we can use `ymd()`, `ydm()`, `mdy()`, `dmy()` 
+
+## Reformat
+
+We can use functions in the `lubridate` package @R-lubridate to reformat dates written in different ways to *YYYY-MM-DD* format.
+
+```{r}
+date("2017-10-11T14:02:00")
+```
+
+```{r}
+dmy("11 October 2020")
+```
+
+```{r}
+mdy("10/11/2020")
+```
+
+Sometimes dates are presented in formats that do not translate cleanly into R. For example, the following date format isn’t converted correctly when we try to convert it to a date.
+
+```{r, eval = F}
+df <- tibble(
+  date = c("X2020.01.22",
+           "X2020.01.22",
+           "X2020.01.22",
+           "X2020.01.22")
+)
+
+df |> 
+  mutate(
+    date = as_date(date)
+  )
+
+```
+
+```
+Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `date = as_date(date)`.
+Caused by warning:
+! All formats failed to parse. No formats found.
+
+# A tibble: 4 × 1
+  date  
+  <date>
+1 NA    
+2 NA    
+3 NA    
+4 NA   
+
+```
+
+We can use `%` to be more explicit about what information is in each part of our date column, specifying where the 4-digit year (`%Y`), 2-digit month (`%m`) and 2 digit day (`%d`) are within each string.
+
+```{r, eval = F}
+df |> 
+  mutate(
+    date = as_date(date, format = "X%Y.%m.%d")
+  )
+
+```
+
+## Extract
+
+Sometimes we might need to extract certain elements of a longer date-time value for summarising, filtering, or plotting data.
+
+```{r}
+year("2017-11-28T14:02:00")
+```
+
+```{r}
+month("2017-11-28T14:02:00")
+```
+
+```{r}
+week("2017-11-28T14:02:00")
+```
+
+```{r}
+day("2017-11-28T14:02:00")
+```
+
+## Excel date formats
+
+Excel stores dates internally as serial numbers — counting the number of days since a specific “origin” date.
+
+- On Windows, the default origin is 1899-12-30
+
+This means that sometimes the date is imported into R as the numeric (number of days since origin). 
+
+The janitor package has a handy function `janitor::excel_numeric_to_date()` to deal with this. 
+
+```{r}
+library(janitor)
+
+excel_numeric_to_date(42370)
+```
+
+:::{.task}
+::::{.task-header}
+Your turn
+::::
+::::{.task-container}
+
+* [ ] **Question** What is the appropriate function from the above to use on the `date_egg` variable in the penguins dataset?
+
+
+`r longmcq(c("ymd()", "ydm()", "mdy()", answer="dmy()"))`
+
+
+`r hide("Solution")`
+
+
+```{r, eval = T, warning = F, message = F}
+
+penguins_clean_names <- penguins_clean_names |>
+  mutate(date_egg = lubridate::dmy(date_egg))
+
+```
+
+`r unhide()`
+
+
+Here we use the `mutate` function from `dplyr` to create a *new variable* called `date_egg_proper` based on the output of converting the characters in `date_egg` to date format. The original variable is left intact, if we had specified the "new" variable was also called `date_egg` then it would have overwritten the original variable. 
+
+::::
+:::
+
+Once we have established our date data, we are able to perform calculations or extract information. Such as the date range across which our data was collected.  
+
+### Calculations with dates
+
+```{r, eval = F}
+penguins_clean_names |> 
+  summarise(min_date=min(date_egg),
+            max_date=max(date_egg))
+```
+
+We can also extract and make new columns from our date column - such as a simple column of the year when each observation was made:
+
+```{r, eval = F}
+penguins_clean_names <- penguins_clean_names |> 
+  mutate(year = lubridate::year(date_egg))
+
+```
+
+### Filter dates
+
+We can filter datasets to include or exclude data from certain dates or date ranges.
+
+```{r, eval = FALSE}
+# return records after 2008
+plants |>
+  filter(date_egg >= ymd("2008-01-01"))
+```
+

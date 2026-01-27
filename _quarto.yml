@@ -29,49 +29,30 @@ book:
     foreground: dark
     border: true
     alignment: left
-    collapse-level: 3
+    collapse-level: 1
     pinned: true
     header: ''
     footer: ''
   margin-header: ''
-  page-footer: CC-BY (2024) Philip Leftwich
+  page-footer: CC-BY (2026) Philip Leftwich
   chapters:
   - index.qmd
-  - part: "Reproducible Environments"
+  - part: "Reproducible Research"
     chapters:
-    - 01-projects.qmd
-    - 02-renv.qmd
     - 03-github.qmd
-    - task1.qmd
-    - 05-coding-AI.qmd
-    - task2.qmd
-  - part: "Exploratory Analysis"
+    - week-1.qmd
+  - part: "Data Cleaning"
     chapters:
-    - 04-managing-data.qmd
-    - task3.qmd
-  - part: "Linear Models"
+    - strings.qmd
+    - duplicates.qmd
+    - missing-values.qmd
+    - dates.qmd
+    - numeric-plausibility.qmd
+    - week-2.qmd
+  - part: "Data Insights"
     chapters:
-    - 06-complex-models.qmd
-    - task4.qmd
-  - part: "Generalised Linear Models"
-    chapters:
-    - 07-generalised-linear.qmd
-    - 08-poisson.qmd
-    - task5.qmd
-    - 09-binomial.qmd
-    - task6.qmd
-  - part: "Data Visualisation"
-    chapters:
-    - 10-data-visualisation.qmd
-    - task7.qmd
-  - part: "Functional Programming"
-    chapters:
-    - 11-writing-functions.qmd
-  - part: "Machine Learning"
-    chapters:
-    - supervised-learning-regression.qmd
-    - task8.qmd
-    - supervised-classifier.qmd
+    - summarise.qmd
+
 
   appendices:
   - r-basics.qmd

@@ -1,0 +1,129 @@
+# Duplicates {#sec-duplicate}
+
+```{r, echo = F, warning = F, message = F}
+library(tidyverse)
+library(janitor)
+library(here)
+source("R/booktem_setup.R")
+source("R/my_setup.R")
+penguins_clean_names <- readRDS("files/penguins_clean_names.RDS")
+```
+
+It is very easy when inputting data to make mistakes, copy something in twice for example, or if someone did a lot of copy-pasting to assemble a spreadsheet (yikes!). We can check this pretty quickly
+
+:::{.callout-important collapse = "true"}
+
+## Penguin clean names dataset
+
+```{r, eval = FALSE}
+penguins_clean_names <- readRDS(url("https://UEABIO/5023B/raw/refs/heads/2026/files/penguin_clean_names.RDS"))
+
+```
+
+:::
+
+
+## Duplicated rows
+
+
+::: {.panel-tabset}
+
+## dplyr
+
+```{r, eval = F}
+# check for whole duplicate 
+# rows in the data
+penguins_clean_names |> 
+  filter(duplicated(across(everything())))
+  sum() 
+
+```
+
+```
+[1] 0
+```
+
+
+## janitor
+
+```{r}
+library(janitor)
+
+penguins_clean_names |> 
+  get_dupes()
+
+```
+
+:::
+
+Great! In our dataset we have no examples of duplicated rows of data
+
+### Working with duplications
+
+As our dataset is duplication free, lets quickly add a few dupes to our data: 
+
+```{r}
+penguins_demo <- penguins_clean_names |> 
+  slice(1:50) |> 
+  bind_rows(slice(penguins_clean_names, c(1,5,10,15,30)))
+
+```
+
+:::{.task}
+::::{.task-header}
+Your turn
+::::
+::::{.task-container}
+
+* [ ] Run the code above to make a dataset with some duplications
+
+* [ ] Re-run a duplication check
+
+::::
+:::
+
+If I did have duplications I could remove these with a few commands: 
+
+:::{.panel-tabset}
+
+## duplicated
+
+```{r, eval = F}
+
+# Keep only unduplicated data with !
+penguins_demo |> 
+  filter(!duplicated(across(everything())))
+
+```
+
+## distinct
+
+```{r, eval = F}
+
+
+penguins_demo |> 
+  distinct()
+
+```
+
+:::
+
+
+
+### Counting unique entries
+
+Using the `n_distinct()` function from dplyr, you can count the number of distinct values in an R data frame using one of the following methods.
+
+
+```{r}
+penguins_clean_names |> 
+  summarise(
+  n = n(),
+  n_distinct(individual_id)
+  )
+
+```
+
+
+
+
