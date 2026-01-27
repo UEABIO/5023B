@@ -137,7 +137,7 @@ Week Two is about developing your mental model of data transformation:
 
 
 # Fix it:
-data_step1 <- data_raw |>
+mosquito_egg_data_step1 <- mosquito_egg_raw |>
   # YOUR CODE HERE
   
 
@@ -156,7 +156,7 @@ data_step1 <- data_raw |>
 # [Code]
 
 # Fix it:
-data_step2 <- data_step1 |>
+mosquito_egg_data_step2 <- mosquito_egg_data_step1 |>
   # YOUR CODE
 
 

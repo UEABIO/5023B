@@ -598,7 +598,7 @@ downloadthis::download_link(
 
 - Move the downloaded file into `data/`
 
-- Rename it to `mosquito_egg_raw.csv`
+- Rename it to `mosquito_egg_data.csv`
 
 :::{.callout-warning}
 Never commit large data files to Git unless they're small (< 10MB) and essential. For this course, the datasets are small enough to commit. In real projects, you'd add large data files to `.gitignore`.
