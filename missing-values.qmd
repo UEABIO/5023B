@@ -19,7 +19,7 @@ Understanding the nature of missing data can also be useful for informing how yo
 ## Penguin clean names dataset
 
 ```{r, eval = FALSE}
-penguins_clean_names <- readRDS(url("https://UEABIO/5023B/raw/refs/heads/2026/files/penguin_clean_names.RDS"))
+penguins_clean_names <- readRDS(url("https://github.com/UEABIO/5023B/raw/refs/heads/2026/files/penguins.RDS"))"))
 
 ```
 
@@ -34,6 +34,7 @@ Your turn
 * [ ] Run this command in your console:
 
 ```{r}
+library(tidyverse)
 penguins_clean_names |> 
   group_by(species) |> 
   summarise(mean = mean(body_mass_g))
@@ -88,6 +89,7 @@ summary(penguins_clean_names)
 ## `skim()`
 
 ```{r}
+library(skimr)
 skimr::skim(penguins_clean_names)
 
 ```
@@ -95,7 +97,7 @@ skimr::skim(penguins_clean_names)
 ## `vis_miss()`
 
 ```{r}
-
+library(naniar)
 naniar::vis_miss(penguins_clean_names)
 
 ```

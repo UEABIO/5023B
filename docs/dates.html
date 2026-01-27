@@ -535,7 +535,7 @@ div.csl-indent {
 <div id="callout-1" class="callout-1-contents callout-collapse collapse">
 <div class="callout-body-container callout-body">
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>penguins_clean_names <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">url</span>(<span class="st">"https://UEABIO/5023B/raw/refs/heads/2026/files/penguin_clean_names.RDS"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a>penguins_clean_names <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">url</span>(<span class="st">"https://github.com/UEABIO/5023B/raw/refs/heads/2026/files/penguins.RDS"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -551,7 +551,8 @@ div.csl-indent {
 </ul>
 <p>This variability makes it difficult to tell our software how to read the information, luckily we can use the functions in the <code>lubridate</code> package.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(lubridate)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="co"># library(tidyverse)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -674,8 +675,8 @@ Caused by warning:
 <ul class="task-list">
 <li><label><input type="checkbox"><strong>Question</strong> What is the appropriate function from the above to use on the <code>date_egg</code> variable in the penguins dataset?</label></li>
 </ul>
-<div id="radio_DJSPGNFKMQ" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_DJSPGNFKMQ" value=""><span>ymd()</span></label><label><input type="radio" autocomplete="off" name="radio_DJSPGNFKMQ" value=""><span>ydm()</span></label><label><input type="radio" autocomplete="off" name="radio_DJSPGNFKMQ" value=""><span>mdy()</span></label><label><input type="radio" autocomplete="off" name="radio_DJSPGNFKMQ" value="answer"><span>dmy()</span></label>
+<div id="radio_ERANEAYBYN" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_ERANEAYBYN" value=""><span>ymd()</span></label><label><input type="radio" autocomplete="off" name="radio_ERANEAYBYN" value=""><span>ydm()</span></label><label><input type="radio" autocomplete="off" name="radio_ERANEAYBYN" value=""><span>mdy()</span></label><label><input type="radio" autocomplete="off" name="radio_ERANEAYBYN" value="answer"><span>dmy()</span></label>
 </div>
 <div class="webex-solution">
 <button>

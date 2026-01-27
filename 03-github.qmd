@@ -584,7 +584,7 @@ site: Field site location
 
 ```{r, eval = TRUE, echo = FALSE}
 downloadthis::download_link(
-  link = "https://raw.githubusercontent.com/Philip-Leftwich/Oct-Intro-Analytics/refs/heads/2026/files/mosquito_egg_data.csv",
+  link = "https://raw.githubusercontent.com/UEABIO/5023B/refs/heads/2026/files/mosquito_egg_data.csv",
   button_label = "Raw Mosquito Egg Data",
   button_type = "success",
   has_icon = TRUE,
@@ -867,5 +867,5 @@ Git has a learning curve, but you'll use it hundreds of times this term. The inv
 
 * [ ]  Can see all commits on GitHub
 
-**See** @week-1 **for tasks to complete before our next workshop**
+**See** @sec-week-1 **for tasks to complete before our next workshop**
 

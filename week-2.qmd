@@ -188,7 +188,7 @@ data_step2 <- data_step1 |>
     - "Did you consider [x]"
     
     
-* [ ]   OPTIONAL: Try and implement your partner's code
+* [ ]  Try and implement your partner's code
 
     - If you tackled a similar problem, decide on the best approach
     
@@ -196,4 +196,5 @@ data_step2 <- data_step1 |>
     
     - When finished write a brief commit message explaining the changes
     
-    - Push to Github
+
+* [ ] Push to Github

@@ -15,7 +15,7 @@ penguins_clean_names <- readRDS("files/penguins_clean_names.RDS")
 ## Penguin clean names dataset
 
 ```{r, eval = FALSE}
-penguins_clean_names <- readRDS(url("https://UEABIO/5023B/raw/refs/heads/2026/files/penguin_clean_names.RDS"))
+penguins_clean_names <- readRDS(url("https://github.com/UEABIO/5023B/raw/refs/heads/2026/files/penguins.RDS"))
 
 ```
 

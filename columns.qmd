@@ -28,7 +28,7 @@ By the end of this section, you will be able to:
 ## Penguin raw dataset
 
 ```{r, eval = FALSE}
-penguins_clean_names <- read_csv(url("https://UEABIO/5023B/raw/refs/heads/2026/files/penguins_raw.csv"))
+penguins_raw <- read_csv(url("https://raw.githubusercontent.com/UEABIO/5023B/refs/heads/2026/files/penguins_raw.csv"))
 
 
 ```

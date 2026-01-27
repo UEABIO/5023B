@@ -16,7 +16,7 @@ It is very easy when inputting data to make mistakes, copy something in twice fo
 ## Penguin clean names dataset
 
 ```{r, eval = FALSE}
-penguins_clean_names <- readRDS(url("https://UEABIO/5023B/raw/refs/heads/2026/files/penguin_clean_names.RDS"))
+penguins_clean_names <- readRDS(url("https://github.com/UEABIO/5023B/raw/refs/heads/2026/files/penguins.RDS"))
 
 ```
 
@@ -31,6 +31,7 @@ penguins_clean_names <- readRDS(url("https://UEABIO/5023B/raw/refs/heads/2026/fi
 ## dplyr
 
 ```{r, eval = F}
+library(tidyverse)
 # check for whole duplicate 
 # rows in the data
 penguins_clean_names |> 
