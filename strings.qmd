@@ -139,7 +139,7 @@ It works a bit like an “if / else if / else” ladder.
 # use mutate and case_when 
 # for a statement that conditionally changes 
 # the names of the values in a variable
-penguins <- penguins_clean_names |> 
+penguins_clean_names |> 
   mutate(species = case_when(
   species == "Adelie Penguin (Pygoscelis adeliae)" ~ "Adelie",
   species == "Gentoo penguin (Pygoscelis papua)" ~ "Gentoo",
@@ -163,7 +163,7 @@ Think of `case_when()` as a tidy way to handle many possible categories.
 # use mutate and if_else
 # for a statement that conditionally changes 
 # the names of the values in a variable
-penguins <- penguins_clean_names |> 
+penguins_clean_names |> 
   mutate(sex = if_else(
     sex == "MALE", "Male", "Female"
   )

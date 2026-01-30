@@ -119,6 +119,14 @@ Week Two is about developing your mental model of data transformation:
 
 ## Implement code
 
+:::{.callout-important}
+
+Open RStudio - before you open or change any files select "Pull" on the Gitpane.
+
+This brings any remote changes into your local workstation. 
+
+:::
+
 * [ ]   Open `scripts/initial_exploration.R`
 
 * [ ]   Work **independently** on implementing your code fixes - using the template below

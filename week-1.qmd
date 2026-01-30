@@ -5,12 +5,12 @@
 1. Work through 5 short data checking tutorials
 
     - @sec-strings
-    - @sec-duplicates
+    - @sec-duplicate
     - @sec-missing
     - @sec-dates
     - @sec-numeric-consistency
     
-Read[Missing data types](https://www.ncbi.nlm.nih.gov/books/NBK493614/)
+Read [Missing data types](https://www.ncbi.nlm.nih.gov/books/NBK493614/)
     
 2. After each tutorial complete an application checklist to YOUR data
 
@@ -22,7 +22,7 @@ Read[Missing data types](https://www.ncbi.nlm.nih.gov/books/NBK493614/)
 
 1. Make sure your Week 1 work is complete:
 
-* [ ] You have week1/data_questions.txt with at least 5 questions
+* [ ] You have week1/data_questions.txt with at least 5 questions about your data (biological or data validation)
 
 * [ ] Your questions are about YOUR specific dataset
 

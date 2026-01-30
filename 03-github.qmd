@@ -80,6 +80,78 @@ Your GitHub username will be visible on your profile and repositories. Choose so
 :::
 
 
+
+## Part 2: Create and Clone Your First Repository
+
+### What is a Repository?
+
+A **repository** (or "repo") is a project folder that Git tracks. It contains:
+- Your data files
+- Your scripts
+- Your documentation
+- A hidden `.git` folder that tracks all changes
+
+### Create a Repository on GitHub
+
+**We're doing "GitHub first"** - creating the repository online, then bringing it into RStudio.
+
+1. Go to [github.com](https://github.com/) and log in
+2. Click the **"+"** button in the top right corner
+3. Select **"New repository"**
+
+Fill in the details:
+
+| Field | What to Enter |
+|-------|---------------|
+| **Repository name** | `data-science-week1` |
+| **Description** | "Week 1 assignment: Git basics and data inspection" |
+| **Public/Private** | **Public** (for this course) |
+| **Initialize with README** | ❌ Leave unchecked |
+| **Add .gitignore** | ❌ Leave unchecked |
+| **Choose a license** | ❌ Leave unchecked |
+
+4. Click **"Create repository"**
+
+:::{.callout-warning}
+**STOP!** Before leaving this page:
+:::
+
+5. **Copy the repository URL** - it looks like:
+```
+   https://github.com/your-username/data-science-week1.git
+```
+
+:::{.callout-tip}
+Make sure you copy the **HTTPS** URL (starts with `https://`), not the SSH URL (starts with `git@`).
+:::
+
+
+
+### Clone the Repository into RStudio
+
+"Cloning" means downloading a copy of the repository to your computer.
+
+**In RStudio:**
+
+1. **File → New Project**
+2. Select **"Version Control"**
+3. Select **"Git"**
+4. **Paste your repository URL** into "Repository URL"
+5. **Project directory name** will auto-fill
+6. **Browse** to choose where to save it on your computer
+7. Click **"Create Project"**
+
+RStudio will:
+- Download the repository
+- Create an RStudio Project
+- Connect everything to GitHub
+
+You should now see a **"Git"** tab in your RStudio pane (usually top-right).
+
+:::{.callout-important}
+If you don't see the Git tab, something went wrong with the connection. Ask for help before proceeding.
+:::
+
 ### Connect RStudio to Github
 
 Now we need to introduce RStudio and GitHub to each other.
@@ -159,7 +231,21 @@ If you see a message saying everything is configured correctly, you're ready!
 :::{.callout-note}
 If working on Posit Cloud, you may need to refresh your PAT more frequently. 
 
-The easiest thing to do is to configure your RStudio environment to store the PAT there. This is marginally less secure that using a credentials manager. 
+:::{panel-tabset}
+
+## Write your PAT somewhere safe and use this at the password prompt
+
+You MUST NOT include this in any file format that will be pushed to Github - this will post your password online
+
+- Its a security risk
+
+- Github might prevent the push to prevent this.
+
+- If stored in a file, add this file name to your `.gitignore` file
+
+## Change R environ
+
+Configure your RStudio environment to store the PAT there. This is marginally less secure that using a credentials manager. 
 
 - We will store your PAT in the `.Renviron` file
 
@@ -183,80 +269,25 @@ GITHUB_PAT=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 - Restart R for changes in `.Renviron` to take effect.
 
+- You now need to use R commands when making commits and pushes to Github 
 
-:::
+```{r, eval = FALSE}
 
-## Part 2: Create and Clone Your First Repository
+library(gert)
 
-### What is a Repository?
+# Stage all changes
+gert::git_add(".")
 
-A **repository** (or "repo") is a project folder that Git tracks. It contains:
-- Your data files
-- Your scripts
-- Your documentation
-- A hidden `.git` folder that tracks all changes
+# Commit
+gert::git_commit("Your commit message")
 
-### Create a Repository on GitHub
-
-**We're doing "GitHub first"** - creating the repository online, then bringing it into RStudio.
-
-1. Go to [github.com](https://github.com/) and log in
-2. Click the **"+"** button in the top right corner
-3. Select **"New repository"**
-
-Fill in the details:
-
-| Field | What to Enter |
-|-------|---------------|
-| **Repository name** | `data-science-week1` |
-| **Description** | "Week 1 assignment: Git basics and data inspection" |
-| **Public/Private** | **Public** (for this course) |
-| **Initialize with README** | ❌ Leave unchecked |
-| **Add .gitignore** | ❌ Leave unchecked |
-| **Choose a license** | ❌ Leave unchecked |
-
-4. Click **"Create repository"**
-
-:::{.callout-warning}
-**STOP!** Before leaving this page:
-:::
-
-5. **Copy the repository URL** - it looks like:
-```
-   https://github.com/your-username/data-science-week1.git
+# Push
+gert::git_push(remote = "origin")
 ```
 
-:::{.callout-tip}
-Make sure you copy the **HTTPS** URL (starts with `https://`), not the SSH URL (starts with `git@`).
 :::
 
----
-
-### Clone the Repository into RStudio
-
-"Cloning" means downloading a copy of the repository to your computer.
-
-**In RStudio:**
-
-1. **File → New Project**
-2. Select **"Version Control"**
-3. Select **"Git"**
-4. **Paste your repository URL** into "Repository URL"
-5. **Project directory name** will auto-fill
-6. **Browse** to choose where to save it on your computer
-7. Click **"Create Project"**
-
-RStudio will:
-- Download the repository
-- Create an RStudio Project
-- Connect everything to GitHub
-
-You should now see a **"Git"** tab in your RStudio pane (usually top-right).
-
-:::{.callout-important}
-If you don't see the Git tab, something went wrong with the connection. Ask for help before proceeding.
 :::
-
 
 
 ## Part 3: Your First Git Workflow
@@ -623,7 +654,7 @@ library(tidyverse)
 library(here)
 library(naniar)
 library(janitor)
-library(skim)
+library(skimr)
 # Load data ====
 mosquito_egg_raw <- read_csv(here("data", "mosquito_egg_data.csv"),
                              name_repair = janitor::make_clean_names)
@@ -707,7 +738,7 @@ You'll need to install `tidyverse` and `here` first if you haven't already.
 
 - Save your script
 
-- Stage both `biology_data.csv` and `initial_exploration.R`
+- Stage both `mosquito_egg_data.csv` and `initial_exploration.R`
 
 - Commit with message: Add dataset and initial exploration script
 
