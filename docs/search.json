@@ -220,7 +220,7 @@
     "href": "week-1.html",
     "title": "2  Week 1",
     "section": "",
-    "text": "2.1 Overview\nReadMissing data types",
+    "text": "2.1 Overview\nRead Missing data types",
     "crumbs": [
       "Reproducible Research",
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Week 1</span>"
@@ -528,7 +528,7 @@
     "href": "week-2.html#ai-use-policy-for-week-2",
     "title": "8  Week 2",
     "section": "\n8.2 AI Use Policy for Week 2",
-    "text": "8.2 AI Use Policy for Week 2\n\n\n\n\n\n\nImportant\n\n\n\n\nAI Tools (ChatGPT, Claude, GitHub Copilot, etc.) Are NOT Permitted in Week 2\n\n\n\nWhy we’re restricting AI use at this stage:\n\nDecision-making is the skill, not code generation\n\nData cleaning requires judgment about:\n- What constitutes a \"problem\" in your specific context\n\n- Which fix preserves biological meaning\n\n- What trade-offs are acceptable\n\n- What assumptions you're making\nAI can generate code, but it cannot make these decisions for you. If you use AI now, you’ll outsource the thinking - which is the entire point of this exercise.\n\nUnderstanding consequences requires deep engagement\n\nWhen you write code yourself (even slowly, with errors), you:\n- Think through each step\n\n- Understand what each line does\n\n- Notice when something unexpected happens\n\n- Learn to debug your own thinking\nWhen AI writes code for you:\n- You get a solution but not understanding\n\n- Errors are invisible until analysis fails later\n\n- You can't explain your own work\n\n- You can't adapt the approach to new situations\n\nThis is your chance to build foundational skills\n\nWeek Two is about developing your mental model of data transformation:\n- What happens when I remove NAs?\n\n- How does standardization change my data?\n\n- What information am I losing or preserving?",
+    "text": "8.2 AI Use Policy for Week 2\n\n\n\n\n\n\nImportantAI Tools (ChatGPT, Claude, GitHub Copilot, etc.) Are NOT Permitted in Week 2\n\n\n\n\n\nWhy we’re restricting AI use at this stage:\n\nDecision-making is the skill, not code generation\n\nData cleaning requires judgment about:\n- What constitutes a \"problem\" in your specific context\n\n- Which fix preserves biological meaning\n\n- What trade-offs are acceptable\n\n- What assumptions you're making\nAI can generate code, but it cannot make these decisions for you. If you use AI now, you’ll outsource the thinking - which is the entire point of this exercise.\n\nUnderstanding consequences requires deep engagement\n\nWhen you write code yourself (even slowly, with errors), you:\n- Think through each step\n\n- Understand what each line does\n\n- Notice when something unexpected happens\n\n- Learn to debug your own thinking\nWhen AI writes code for you:\n- You get a solution but not understanding\n\n- Errors are invisible until analysis fails later\n\n- You can't explain your own work\n\n- You can't adapt the approach to new situations\n\nThis is your chance to build foundational skills\n\nWeek Two is about developing your mental model of data transformation:\n- What happens when I remove NAs?\n\n- How does standardization change my data?\n\n- What information am I losing or preserving?",
     "crumbs": [
       "Data Cleaning",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Week 2</span>"
@@ -539,7 +539,7 @@
     "href": "week-2.html#session-overview",
     "title": "8  Week 2",
     "section": "\n8.3 Session Overview",
-    "text": "8.3 Session Overview\n\nCompare your Week 2 plans with a partner (20 min)\nImplement your top 2 cleaning fixes (75 min)\nReview each other’s code (20 min)\nAdd brief documentation (5 min)\n\n\n8.3.1 What you need\n\nYour completed between-session work (tutorials + checklists + plan)\nQuestions you identified in your plan\nCommitment to do your own thinking and coding",
+    "text": "8.3 Session Overview\n\nCompare your Week 2 plans with a partner (20 min)\nImplement your top 2 cleaning fixes (20 min)\nReview each other’s code (20 min)\nImplement your partner’s code (20 min)\nCheck your project is well organised and code is organised and commented (20 min)\n\n\n8.3.1 What you need\n\nYour completed between-session work (tutorials + checklists + plan)\nQuestions you identified in your plan\nCommitment to do your own thinking and coding",
     "crumbs": [
       "Data Cleaning",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Week 2</span>"
@@ -583,7 +583,7 @@
     "href": "week-2.html#code-review",
     "title": "8  Week 2",
     "section": "\n8.7 Code Review",
-    "text": "8.7 Code Review\nShare your github repository URL with your partner\n\nCompare what you chose to check/fix\n\nShare your reviews\n\n“Here’s what I understood about your approach”\n“This part confused me”\n“Did you consider [x]”\n\n\n\nTry and implement your partner’s code\n\nIf you tackled a similar problem, decide on the best approach\nIf a different fix was identified, implement this in your workflow\nWhen finished write a brief commit message explaining the changes\n\n\nPush to Github",
+    "text": "8.7 Code Review\nShare your github repository URL with your partner\n\nCompare what you chose to check/fix\n\nShare your reviews\n\n“Here’s what I understood about your approach”\n“This part confused me”\n“Did you consider [x]”\n\n\n\nTry and implement your partner’s code\n\nIf you tackled a similar problem, decide on the best approach\nIf a different fix was identified, implement this in your workflow\nWhen finished write a brief commit message explaining the changes\n\n\n\nReview your code\n\nIs it well organised with clear comments\nDoes it run without error (Hint: clear your environment and run the script)\n\n\n\nPush to Github\n\nWrite a clear commit message on what you checked and corrected\nMake sure your Github repo is Public",
     "crumbs": [
       "Data Cleaning",
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Week 2</span>"
@@ -605,7 +605,7 @@
     "href": "summarise.html#learning-objectives",
     "title": "9  Data insights",
     "section": "",
-    "text": "Use summary functions to explore the structure and completeness of a dataset.\nCreate simple summaries and grouped summaries using count(), group_by(), and summarise().\nCalculate descriptive statistics (mean, SD) across groups.\nUse janitor tools (R-janitor?) to quickly tabulate and summarise categorical data.\nRecognise how grouping can change the interpretation of summaries and relationships",
+    "text": "Use summary functions to explore the structure and completeness of a dataset.\nCreate simple summaries and grouped summaries using count(), group_by(), and summarise().\nCalculate descriptive statistics (mean, SD) across groups.\nUse janitor tools Firke (2024) to quickly tabulate and summarise categorical data.\nRecognise how grouping can change the interpretation of summaries and relationships",
     "crumbs": [
       "Data Insights",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Data insights</span>"
@@ -737,10 +737,384 @@
     "href": "summarise.html#summary",
     "title": "9  Data insights",
     "section": "\n9.13 Summary",
-    "text": "9.13 Summary\nIn this section we learned to:\n\n\nInspect structure and completeness\n\nUse glimpse(), str(), and skim() to understand column types, missing data, and variable ranges.\nConfirm that variables are stored in appropriate formats (e.g. numeric vs character).\n\n\n\nSummarise counts and categories\nCount observations using count() and group_by() to explore dataset composition.\nUse janitor::tabyl() for fast, readable cross-tabulations and percentages.\n\n\nCalculate descriptive statistics\n\nCompute group-wise summaries with summarise() such as means, SDs, and counts.\n\n\n\nVisualise descriptive ranges and associations\n\nUse ggplot to produce a range of descriptive plots",
+    "text": "9.13 Summary\nIn this section we learned to:\n\n\nInspect structure and completeness\n\nUse glimpse(), str(), and skim() to understand column types, missing data, and variable ranges.\nConfirm that variables are stored in appropriate formats (e.g. numeric vs character).\n\n\n\nSummarise counts and categories\nCount observations using count() and group_by() to explore dataset composition.\nUse janitor::tabyl() for fast, readable cross-tabulations and percentages.\n\n\nCalculate descriptive statistics\n\nCompute group-wise summaries with summarise() such as means, SDs, and counts.\n\n\n\nVisualise descriptive ranges and associations\n\nUse ggplot to produce a range of descriptive plots\n\n\n\n\n\n\n\nFirke, S. (2024). Janitor: Simple tools for examining and cleaning dirty data. https://github.com/sfirke/janitor",
     "crumbs": [
       "Data Insights",
       "<span class='chapter-number'>9</span>  <span class='chapter-title'>Data insights</span>"
+    ]
+  },
+  {
+    "objectID": "poisson.html",
+    "href": "poisson.html",
+    "title": "\n10  Poisson regression (for count data or rate data)\n",
+    "section": "",
+    "text": "10.1 Learning objectives:",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Poisson regression (for count data or rate data)</span>"
+    ]
+  },
+  {
+    "objectID": "poisson.html#learning-objectives",
+    "href": "poisson.html#learning-objectives",
+    "title": "\n10  Poisson regression (for count data or rate data)\n",
+    "section": "",
+    "text": "Understand why linear models fail for count data\nRecognise variance-mean relationships as the organising principle\nDiagnose model misspecification vs distributional misfit\nChoose between quasi-Poisson and negative binomial based on mechanism\nCommunicate results appropriately",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Poisson regression (for count data or rate data)</span>"
+    ]
+  },
+  {
+    "objectID": "poisson.html#why-count-data-needs-different-models",
+    "href": "poisson.html#why-count-data-needs-different-models",
+    "title": "\n10  Poisson regression (for count data or rate data)\n",
+    "section": "\n10.2 Why count data needs different models",
+    "text": "10.2 Why count data needs different models\nCount or rate data are ubiquitous in the life sciences (e.g number of parasites per microlitre of blood, number of species counted in a particular area). These type of data are discrete and non-negative.\n\nCount data characteristics: discrete, bounded at zero, often right-skewed\nLinear model assumptions: continuous response, constant variance, unbounded predictions\n\nIn such cases assuming our response variable to be normally distributed is not typically sensible.",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Poisson regression (for count data or rate data)</span>"
+    ]
+  },
+  {
+    "objectID": "poisson.html#example-cuckoos",
+    "href": "poisson.html#example-cuckoos",
+    "title": "\n10  Poisson regression (for count data or rate data)\n",
+    "section": "\n10.3 Example: Cuckoos",
+    "text": "10.3 Example: Cuckoos\n\n\n\n\n\n\n\n\nIn a study by Kilner et al. (1999), the authors studied the begging rate of nestlings in relation to total mass of the brood of reed warbler chicks and cuckoo chicks.\nThe question of interest is:\n\nHow does nestling mass affect begging rates between the different species?\n\n\n\n\n Download Cuckoo data as csv\n\n\n\n\nhead(cuckoo)\n\n\n\n\nMass\nBeg\nSpecies\n\n\n\n9.637522\n0\nCuckoo\n\n\n10.229151\n0\nCuckoo\n\n\n13.103706\n0\nCuckoo\n\n\n15.217391\n0\nCuckoo\n\n\n16.231884\n0\nCuckoo\n\n\n20.120773\n0\nCuckoo\n\n\n\n\n\n\nThe data columns are:\n\n\nMass: nestling mass of chick in grams\n\nBeg: begging calls per 6 secs\n\nSpecies: Warbler or Cuckoo\n\n\nggplot(cuckoo, aes(x = Mass, y = Beg, colour = Species)) + \n  geom_point(size = 3, alpha = 0.6) +\n  scale_colour_manual(values = c(\"darkorange\", \"steelblue\")) +\n  labs(x = \"Nestling mass (g)\", \n       y = \"Begging calls per 6 seconds\") +\n  theme_minimal()\n\n\n\n\n\n\n\nThere seem to be a relationship between mass and begging calls and it could be different between species. It is tempting to fit a linear model to this data.\nIn fact, this is what the authors of the original paper did; reed warbler chicks (solid circles, dashed fitted line) and cuckoo chick (open circles, solid fitted line):",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Poisson regression (for count data or rate data)</span>"
+    ]
+  },
+  {
+    "objectID": "poisson.html#when-linear-models-fail",
+    "href": "poisson.html#when-linear-models-fail",
+    "title": "\n10  Poisson regression (for count data or rate data)\n",
+    "section": "\n10.4 When Linear models fail",
+    "text": "10.4 When Linear models fail\nLet us display the model diagnostics plots for a linear model.\n\n\nFit a linear model\n\n\nFit a linear model with interaction:\n\ncuckoo_lm &lt;- lm(Beg ~ Mass * Species, data = cuckoo)\n\nsummary(cuckoo_lm)\n\n\nCall:\nlm(formula = Beg ~ Mass * Species, data = cuckoo)\n\nResiduals:\n     Min       1Q   Median       3Q      Max \n-31.4366  -5.3476   0.8151   5.8992  22.8429 \n\nCoefficients:\n                    Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)         -20.5057     7.7542  -2.644   0.0111 *  \nMass                  1.6384     0.3086   5.310 2.93e-06 ***\nSpeciesWarbler       14.1325     8.5983   1.644   0.1069    \nMass:SpeciesWarbler  -0.4891     0.3530  -1.386   0.1724    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\nResidual standard error: 10.95 on 47 degrees of freedom\nMultiple R-squared:  0.6116,    Adjusted R-squared:  0.5868 \nF-statistic: 24.67 on 3 and 47 DF,  p-value: 9.805e-10\n\n\nExamine diagnostics:\n\ncheck_model(cuckoo_lm, detrend = FALSE)\n\nDiscussion questions: - What does the residuals vs fitted plot show? - Can this model predict negative begging calls? - Is the assumption of constant variance met?\n\n\n\n\nSolution\n\nThe residuals vs fitted plot shows clear heteroscedasticity—variance increases with fitted values. The Q-Q plot shows deviation from normality. Most critically, the model predicts negative begging calls for small nestlings:\n\n# Generate predictions\npredictions_lm &lt;- emmeans(cuckoo_lm, \n                          specs = ~ Mass + Species,\n                          at = list(Mass = seq(0, 40, by = 5))) |&gt;\n  as_tibble()\n\n# Check for negative predictions\npredictions_lm |&gt; \n  filter(emmean &lt; 0)\n\n\n\n\nMass\nSpecies\nemmean\nSE\ndf\nlower.CL\nupper.CL\n\n\n\n0\nCuckoo\n-20.505662\n7.754204\n47\n-36.105109\n-4.9062148\n\n\n5\nCuckoo\n-12.313633\n6.326688\n47\n-25.041287\n0.4140212\n\n\n10\nCuckoo\n-4.121603\n4.968631\n47\n-14.117200\n5.8739939\n\n\n0\nWarbler\n-6.373125\n3.715268\n47\n-13.847281\n1.1010303\n\n\n5\nWarbler\n-0.626695\n3.006921\n47\n-6.675841\n5.4224508\n\n\n\n\n\n\nLinear models are inappropriate when: 1. Response is bounded (cannot be negative) 2. Variance changes systematically with mean 3. Relationship is inherently non-linear\n\n\nperformance::check_model(cuckoo_lm, \n                         detrend = FALSE)",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Poisson regression (for count data or rate data)</span>"
+    ]
+  },
+  {
+    "objectID": "poisson.html#poisson-glmmodelling-counts-explicitly",
+    "href": "poisson.html#poisson-glmmodelling-counts-explicitly",
+    "title": "\n10  Poisson regression (for count data or rate data)\n",
+    "section": "\n10.5 Poisson GLM—modelling counts explicitly",
+    "text": "10.5 Poisson GLM—modelling counts explicitly\n\n10.5.1 The Poisson distribution and log-link\nThe Poisson distribution lets us model count data explicitly.\nInstead of assuming constant variance, Poisson models explicitly link variance to the mean:\nPoisson distribution properties: - Discrete, non-negative integers - Single parameter λ (rate) - Mean = λ - Variance = λ (key assumption)\n\n\nDiscrete variable, defined on the range \\(0, 1, \\dots, \\infty\\).\nA single rate parameter \\(\\lambda\\), where \\(\\lambda &gt; 0\\).\n\nMean = \\(\\lambda\\)\n\n\nVariance = \\(\\lambda\\)\n\n\n\n\n\n\n\n\n\n\nThe log link:\n\\[\n\\begin{aligned}\nY_i & \\sim \\text{Poisson}(\\lambda_i) \\\\\n\\log(\\lambda_i) & = \\beta_0 + \\beta_1 X_i\n\\end{aligned}\n\\]\nThis constrains predictions to be positive and models the exponential mean-response relationship naturally present in many biological count processes.\nWhat the log link does: - Ensures predicted counts are always positive (since e^x &gt; 0 for all x) - Creates multiplicative effects on the original scale - Models proportional rather than additive changes",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Poisson regression (for count data or rate data)</span>"
+    ]
+  },
+  {
+    "objectID": "poisson.html#fitting-a-poisson-glm",
+    "href": "poisson.html#fitting-a-poisson-glm",
+    "title": "\n10  Poisson regression (for count data or rate data)\n",
+    "section": "\n10.6 Fitting a Poisson GLM",
+    "text": "10.6 Fitting a Poisson GLM\nWe start with an additive model (parallel slopes):\n\ncuckoo_glm_add &lt;- glm(Beg ~ Mass + Species, \n                      data = cuckoo, \n                      family = poisson(link = \"log\"))\n\nsummary(cuckoo_glm_add)\n\n\nCall:\nglm(formula = Beg ~ Mass + Species, family = poisson(link = \"log\"), \n    data = cuckoo)\n\nCoefficients:\n               Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)    0.811318   0.121372   6.685 2.32e-11 ***\nMass           0.078835   0.003663  21.520  &lt; 2e-16 ***\nSpeciesWarbler 0.038744   0.072049   0.538    0.591    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for poisson family taken to be 1)\n\n    Null deviance: 970.08  on 50  degrees of freedom\nResidual deviance: 442.81  on 48  degrees of freedom\nAIC: 620.59\n\nNumber of Fisher Scoring iterations: 5\n\n\nGenerate predictions on the response scale:\n\npredictions_poisson &lt;- emmeans(cuckoo_glm_add,\n                               specs = ~ Mass + Species,\n                               at = list(Mass = seq(0, 40, by = 5)),\n                               type = \"response\") |&gt;\n  as_tibble()\n\nggplot(predictions_poisson, aes(x = Mass, y = rate, colour = Species)) +\n  geom_line(linewidth = 1) +\n  geom_point(data = cuckoo, aes(y = Beg), alpha = 0.5) +\n  scale_colour_manual(values = c(\"darkorange\", \"steelblue\")) +\n  labs(x = \"Nestling mass (g)\", \n       y = \"Begging calls per 6 seconds\",\n       title = \"Poisson GLM: Additive model\") +\n  theme_minimal()\n\n\n\n\n\n\n\nKey observations: - No negative predictions - Variance increases with mean (heteroscedasticity is expected and appropriate) - Exponential curves fit the biological relationship better than straight lines\n\n\nExamine model diagnostics\n\n\n\ncheck_model(cuckoo_glm_add, \n            residual_type = \"normal\",\n            detrend = FALSE)\n\n\n\n\n\n\n\nFocus on: 1. Q-Q plot: Are deviance residuals approximately normal?\n\nResiduals vs fitted: Is there remaining pattern?\nDispersion check: What does this plot show?\n\nCalculate dispersion manually:\n\ndispersion_add &lt;- cuckoo_glm_add$deviance / cuckoo_glm_add$df.residual\ndispersion_add\n\ncheck_overdispersion(cuckoo_glm_add)\n\n[1] 9.225245\n# Overdispersion test\n\n       dispersion ratio =   7.446\n  Pearson's Chi-Squared = 357.394\n                p-value = &lt; 0.001\n\n\nDiscussion: The dispersion ratio is [~2-3]. What might cause variance to exceed the Poisson assumption?\n\n\nPossible Solutions\n\n\nA misspecified model - are we missing key variables or ways in which existing variables might interact?\nGenuine overdispersion - our data does not fit the expectations of a Poisson distribution",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Poisson regression (for count data or rate data)</span>"
+    ]
+  },
+  {
+    "objectID": "poisson.html#diagnosing-and-addressing-model-misspecification",
+    "href": "poisson.html#diagnosing-and-addressing-model-misspecification",
+    "title": "\n10  Poisson regression (for count data or rate data)\n",
+    "section": "\n10.7 Diagnosing and addressing model misspecification",
+    "text": "10.7 Diagnosing and addressing model misspecification\n\n10.7.1 Understanding overdispersion sources\nBefore applying “fixes” for overdispersion, ask: have we correctly specified the mean function?\n\n10.7.2 Hypothesis: The interaction is missing\nLook at the data :\n\nggplot(cuckoo, aes(x = Mass, y = Beg, colour = Species)) + \n  geom_point(size = 3, alpha = 0.6) +\n  scale_colour_manual(values = c(\"darkorange\", \"steelblue\")) +\n  labs(x = \"Nestling mass (g)\", \n       y = \"Begging calls per 6 seconds\") +\n  theme_minimal()\n\n\n\n\n\n\n\nWarbler calling rate increases more slowly with mass than cuckoo rate.\nIf we force parallel slopes when they’re actually different:\n\nWe mis-specify the mean structure\nCreate systematic residual patterns\nArtificially inflate variance\nGenerate spurious overdispersion\n\nThis is unmodelled heterogeneity—a primary cause of apparent overdispersion.\n\n\nAdd the interaction term\n\n\nFit the model with Mass × Species interaction:\n\ncuckoo_glm_int &lt;- glm(Beg ~ Mass * Species, \n                      data = cuckoo, \n                      family = poisson(link = \"log\"))\n\nsummary(cuckoo_glm_int)\n\n\nCall:\nglm(formula = Beg ~ Mass * Species, family = poisson(link = \"log\"), \n    data = cuckoo)\n\nCoefficients:\n                     Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)          0.334475   0.227143   1.473  0.14088    \nMass                 0.094847   0.007261  13.062  &lt; 2e-16 ***\nSpeciesWarbler       0.674820   0.259217   2.603  0.00923 ** \nMass:SpeciesWarbler -0.021673   0.008389  -2.584  0.00978 ** \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for poisson family taken to be 1)\n\n    Null deviance: 970.08  on 50  degrees of freedom\nResidual deviance: 436.05  on 47  degrees of freedom\nAIC: 615.83\n\nNumber of Fisher Scoring iterations: 6\n\n\nCompare dispersion between models:\n\ndispersion_comparison &lt;- tibble(\n  Model = c(\"Additive (no interaction)\", \n            \"Interaction included\"),\n  Dispersion = c(\n    cuckoo_glm_add$deviance / cuckoo_glm_add$df.residual,\n    cuckoo_glm_int$deviance / cuckoo_glm_int$df.residual\n  )\n)\n\ndispersion_comparison\n\n\n\n\nModel\nDispersion\n\n\n\nAdditive (no interaction)\n9.225245\n\n\nInteraction included\n9.277570\n\n\n\n\n\n\nCritical question: Has dispersion reduced?\n\ncheck_overdispersion(cuckoo_glm_int)\n\n# Overdispersion test\n\n       dispersion ratio =   7.724\n  Pearson's Chi-Squared = 363.036\n                p-value = &lt; 0.001\n\n\n\n\n\n\nSolution\n\nDispersion has not meaningfully reduced. Adding the biologically meaningful interaction has captured substantial variance by better modelling the mean structure.\nKey insight: Much “overdispersion” is actually model misspecification. Always investigate whether: 1. Important covariates are missing 2. Relationships are non-linear (consider polynomials) 3. Interactions exist between predictors\nHowever, residual overdispersion remains (φ̂ ≈ [1.5-2]), suggesting variance still exceeds the mean even with correct mean specification.\n\n\n10.7.3 Comparing model predictions\nCompare the fits between these models:\n\nanova(cuckoo_glm_add, cuckoo_glm_int)\n\n\n\n\nResid. Df\nResid. Dev\nDf\nDeviance\nPr(&gt;Chi)\n\n\n\n48\n442.8118\nNA\nNA\nNA\n\n\n47\n436.0458\n1\n6.765991\n0.0092911\n\n\n\n\n\n\n\n# Generate predictions for both models\npred_additive &lt;- emmeans(cuckoo_glm_add,\n                         specs = ~ Mass + Species,\n                         at = list(Mass = seq(0, 40, by = 1)),\n                         type = \"response\") |&gt;\n  as_tibble() |&gt;\n  mutate(Model = \"Additive\")\n\npred_interaction &lt;- emmeans(cuckoo_glm_int,\n                            specs = ~ Mass + Species,\n                            at = list(Mass = seq(0, 40, by = 1)),\n                            type = \"response\") |&gt;\n  as_tibble() |&gt;\n  mutate(Model = \"Interaction\")\n\npredictions_combined &lt;- bind_rows(pred_additive, pred_interaction)\n\nggplot(predictions_combined, aes(x = Mass, y = rate, colour = Species)) +\n  geom_point(data = cuckoo, aes(y = Beg), alpha = 0.4) +\n  geom_line(aes(linetype = Model), linewidth = 1) +\n  scale_colour_manual(values = c(\"darkorange\", \"steelblue\")) +\n  labs(x = \"Nestling mass (g)\",\n       y = \"Begging calls per 6 seconds\",\n       title = \"Model comparison: Additive vs Interaction\") +\n  theme_minimal() +\n  theme(legend.position = \"right\")+\n  facet_wrap(~Model)\n\n\n\n\n\n\n\nThe interaction model captures the different slopes between species—warblers’ calling rate increases more slowly with mass.\n\n10.7.4 Addressing remaining model checks\n\ncheck_model(cuckoo_glm_int, \n            residual_type = \"normal\",\n            detrend = FALSE)",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Poisson regression (for count data or rate data)</span>"
+    ]
+  },
+  {
+    "objectID": "poisson.html#remaining-overdispersion-two-approaches",
+    "href": "poisson.html#remaining-overdispersion-two-approaches",
+    "title": "\n10  Poisson regression (for count data or rate data)\n",
+    "section": "\n10.8 Remaining overdispersion: Two approaches",
+    "text": "10.8 Remaining overdispersion: Two approaches\nEven with the interaction, dispersion &gt; 1. This residual variance could arise from:\n\n\nOther unmeasured covariates (brood size, hunger level, time of day)\n\nIndividual heterogeneity (some chicks intrinsically call more)\n\nMeasurement variation (observer counting differences)\n\nClustering (multiple obs per nest—not applicable here)\n\nZero inflation Another biological process determines presence of calling at all\n\nWe cannot measure everything. Two philosophical approaches for handling extra-Poisson variance:\n\n10.8.1 Quasi-Poisson: Agnostic approach\nPhilosophy: “Variance exceeds the mean by some factor φ, but I won’t specify why”\nWhat it does: - Estimates dispersion parameter from data: Var = φμ - Multiplies standard errors by √φ - Widens confidence intervals proportionally - No distributional assumption beyond scaled Poisson\nAdvantages: - Simple, honest acknowledgment of uncertainty - No additional assumptions\nLimitations: - Cannot do likelihood-based model comparison (no AIC) - Doesn’t model the mechanism - Assumes dispersion is constant across the range of fitted values\n\n10.8.2 Negative binomial: Mechanistic approach\nPhilosophy: “Individuals have different underlying rates drawn from a gamma distribution”\nWhat it assumes: - True rates (λᵢ) vary between observations - This heterogeneity follows a gamma distribution - Produces variance = μ + μ²/θ (quadratic relationship)\nAdvantages: - Explicit mechanistic model - Allows AIC-based model comparison - Models variance structure directly\nLimitations: - Requires specific variance-mean relationship - Additional parameter to estimate - May not fit if variance structure differs from quadratic\nNeither is universally “better”—choose based on: - Your beliefs about what generates heterogeneity - Whether you need model comparison - How variance scales with the mean\n\n\nFit quasi-Poisson and negative binomial models\n\n\nQuasi-Poisson:\n\ncuckoo_quasi &lt;- glm(Beg ~ Mass * Species, \n                    data = cuckoo, \n                    family = quasipoisson(link = \"log\"))\n\nsummary(cuckoo_quasi)\n\n\nCall:\nglm(formula = Beg ~ Mass * Species, family = quasipoisson(link = \"log\"), \n    data = cuckoo)\n\nCoefficients:\n                    Estimate Std. Error t value Pr(&gt;|t|)    \n(Intercept)          0.33448    0.63129   0.530    0.599    \nMass                 0.09485    0.02018   4.700  2.3e-05 ***\nSpeciesWarbler       0.67482    0.72043   0.937    0.354    \nMass:SpeciesWarbler -0.02167    0.02332  -0.930    0.357    \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for quasipoisson family taken to be 7.7242)\n\n    Null deviance: 970.08  on 50  degrees of freedom\nResidual deviance: 436.05  on 47  degrees of freedom\nAIC: NA\n\nNumber of Fisher Scoring iterations: 6\n\n\nNote the dispersion parameter estimate.\n\n\n\n\n\n\nImportant\n\n\n\n\nThe quasilikelihood model just adds a dispersion term to our SE so model fits do not change\n\n\n\nNegative binomial:\n\nlibrary(MASS)\ncuckoo_negbin &lt;- glm.nb(Beg ~ Mass * Species, \n                        data = cuckoo)\n\nsummary(cuckoo_negbin)\n\n\nCall:\nglm.nb(formula = Beg ~ Mass * Species, data = cuckoo, init.theta = 0.9028849768, \n    link = log)\n\nCoefficients:\n                    Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept)         -2.21359    0.91829  -2.411  0.01593 *  \nMass                 0.19140    0.03463   5.527 3.26e-08 ***\nSpeciesWarbler       3.09452    0.99572   3.108  0.00188 ** \nMass:SpeciesWarbler -0.11269    0.03868  -2.913  0.00358 ** \n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for Negative Binomial(0.9029) family taken to be 1)\n\n    Null deviance: 98.183  on 50  degrees of freedom\nResidual deviance: 60.376  on 47  degrees of freedom\nAIC: 357.3\n\nNumber of Fisher Scoring iterations: 1\n\n              Theta:  0.903 \n          Std. Err.:  0.226 \n\n 2 x log-likelihood:  -347.296 \n\n\nNote the theta parameter (θ)—this controls how much variance exceeds the mean.\n\n\n\n10.8.3 Model diagnostics\nLet’s compare models using AIC:\n\nAIC(cuckoo_glm_int, cuckoo_negbin)\n\n\n\n\n\ndf\nAIC\n\n\n\ncuckoo_glm_int\n4\n615.8282\n\n\ncuckoo_negbin\n5\n357.2955\n\n\n\n\n\n\nThe negative binomial has lower AIC—typically interpreted as “better fit.” But AIC measures predictive performance, not whether model assumptions are met.\nCritical check: Does the model capture the variance structure?\n\ncheck_model(cuckoo_negbin, detrend = FALSE)\n\nFocus on two key diagnostics:\n\nDispersion check (Misspecified dispersion?)\nPosterior predictive check\n\n\n\nExamine the negative binomial diagnostics\n\n\nLook carefully at:\nThe dispersion plot: - Does the grey line (predicted variance-mean relationship) match the points (observed variance)?\n\nIs the negative binomial variance function (Var = μ + μ²/θ) appropriate?\n\nThe posterior predictive check: - Do the light blue lines (simulated data from the model) match the dark blue line (observed data)?\n\nAre there systematic discrepancies?\n\nDiscussion questions:\n\nWhat pattern do you see in the dispersion plot?\nDoes the model over-predict or under-predict variance?\nWhat does the posterior predictive check suggest about model fit?\n\n\n\nSolution\n\nDispersion plot observation:\nThe negative binomial predicts that variance should increase quadratically with the mean (the curved grey line). However, the observed variance (points) increases more slowly than predicted—almost linearly rather than quadratically.\nThis means the negative binomial is over-modelling the variance structure. It’s trying to fit a strongly accelerating variance pattern when the data show more modest heterogeneity.\nPosterior predictive check observation:\nThe simulated data from the negative binomial (light blue lines) show different distributional properties than the observed data (dark blue line). Specifically: - The model may generate more extreme values than observed - The shape of the distribution doesn’t match well - There’s systematic misfit, not just random variation\nWhat this means:\nDespite having lower AIC, the negative binomial imposes an inappropriate variance structure on these data. The quadratic variance-mean relationship is too strong for the actual pattern of heterogeneity.\n\n\n\nIs the dispersion now adequately modelled?",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Poisson regression (for count data or rate data)</span>"
+    ]
+  },
+  {
+    "objectID": "poisson.html#how-do-modelling-decisions-affect-inference",
+    "href": "poisson.html#how-do-modelling-decisions-affect-inference",
+    "title": "\n10  Poisson regression (for count data or rate data)\n",
+    "section": "\n10.9 How do modelling decisions affect inference?",
+    "text": "10.9 How do modelling decisions affect inference?\nA critical question: does the interaction between Mass and Species matter? Let’s see how this answer changes depending on our modelling decisions.\n\n# Extract coefficients with confidence intervals\ncoef_poisson &lt;- tidy(cuckoo_glm_int, conf.int = TRUE) |&gt;\n  mutate(Model = \"Poisson\")\n\ncoef_quasi &lt;- tidy(cuckoo_quasi, conf.int = TRUE) |&gt;\n  mutate(Model = \"Quasi-Poisson\")\n\ncoef_negbin &lt;- tidy(cuckoo_negbin, conf.int = TRUE) |&gt;\n  mutate(Model = \"Negative Binomial\")\n\ncoef_comparison &lt;- bind_rows(coef_poisson, coef_quasi, coef_negbin) |&gt;\n  filter(term == \"Mass:SpeciesWarbler\") |&gt;  \n  dplyr::select(Model, estimate, std.error, conf.low, conf.high, p.value)\n\ncoef_comparison\n\n\n\n\n\n\n\n\n\n\n\n\nModel\nestimate\nstd.error\nconf.low\nconf.high\np.value\n\n\n\nPoisson\n-0.0216734\n0.0083890\n-0.0382142\n-0.0053172\n0.0097787\n\n\nQuasi-Poisson\n-0.0216734\n0.0233150\n-0.0682230\n0.0234428\n0.3573333\n\n\nNegative Binomial\n-0.1126887\n0.0386837\n-0.2369783\n-0.0077036\n0.0035788\n\n\n\n\n\n\nVisualise the uncertainty:\n\nggplot(coef_comparison, aes(x = Model, y = estimate)) +\n  geom_point(size = 4) +\n  geom_errorbar(aes(ymin = conf.low, ymax = conf.high), \n                width = 0.2, linewidth = 1.2) +\n  geom_hline(yintercept = 0, linetype = \"dashed\", \n             colour = \"red\", linewidth = 1) +\n  labs(y = \"Interaction coefficient (Mass:SpeciesWarbler)\",\n       x = \"\",\n       title = \"Same data, different inferences\") +\n  theme_minimal(base_size = 14) +\n  theme(panel.grid.major.x = element_blank()) +\n  coord_flip()\n\n\n\n\n\n\n\n\n10.9.1 The problem: significance depends on model choice\nLook at the p-values:\n\ncoef_comparison |&gt;\n  mutate(\n    Significant = if_else(p.value &lt; 0.05, \"Yes\", \"No\"),\n    `CI crosses zero` = if_else(conf.low &lt; 0 & conf.high &gt; 0, \"Yes\", \"No\")\n  ) |&gt;\n  dplyr::select(Model, estimate, p.value, Significant, `CI crosses zero`)\n\n\n\n\n\n\n\n\n\n\n\nModel\nestimate\np.value\nSignificant\nCI crosses zero\n\n\n\nPoisson\n-0.0216734\n0.0097787\nYes\nNo\n\n\nQuasi-Poisson\n-0.0216734\n0.3573333\nNo\nYes\n\n\nNegative Binomial\n-0.1126887\n0.0035788\nYes\nNo\n\n\n\n\n\n\nWhat we observe: - Point estimates are identical for Poisson and Quasipoisson ( around -0.02)\n\nThe Poisson model gives P &lt; 0.05 (interaction “significant”)\nThe Quasi-Poisson model gives P &gt; 0.05 (interaction “not significant”)\nThe Negative Binomial falls somewhere between - but also estimates the relationship as slightly different\n\nThe uncomfortable truth: Whether you conclude the interaction “matters” depends on which model you chose. This is a borderline result.\n\n10.9.2 Critical discussion\n\nThe Poisson model ignores overdispersion—its P-value is anti-conservative (too small). Should we trust it?\nThe Quasi-Poisson corrects for overdispersion conservatively—but does P = 0.06 really mean “no effect” compared to P = 0.04?\nIf you were reviewing this paper, what would you want the authors to report?\nDoes the magnitude of the effect (coefficient ≈ -0.02) matter more than whether P &lt; 0.05?\n\n10.9.3 How to think about borderline results\nDon’t: - Report only the model that gives P &lt; 0.05 - Conclude “no effect” if P &gt; 0.05 with one model - Pretend the threshold at 0.05 is meaningful - Hide the fact that inference is model-dependent\nDo: - Report results from the most appropriate model - Acknowledge uncertainty honestly - Focus on effect size and confidence intervals, not just P-values - Consider biological significance alongside statistical significance\n\n\n\n\n\n\nImportant\n\n\n\nThe key principle:\nWhen results are borderline, report the effect size, confidence interval, and biological interpretation rather than fixating on whether P &lt; 0.05. Statistical significance is a continuum of evidence, not a binary threshold.\nA result with P = 0.06 and a biologically meaningful effect size warrants the same scientific attention as one with P = 0.04.\n\n\n\n10.9.4 Practical implications for your research\nWhen you encounter borderline results:\n\nReport transparently: Show that inference depends on modelling assumptions\n\nContextualise statistically:\n\n“The 95% CI marginally includes zero”\n“Evidence for interaction is modest (P = 0.06)”\nNot: “There was no interaction” or “The interaction failed to reach significance”\n\n\n\nContextualise biologically:\n\nIs a 2% difference per gram body mass biologically meaningful?\nDoes it accumulate to substantial differences over the observed range?\nDoes it align with theory about begging behaviour?\n\n\n\nConsider power:\n\nWith n = 48, we have limited power to detect modest interactions\nCIs are wide—we’d be uncertain even with larger samples\nThis is weak evidence for or against the interaction\n\n\n\nAvoid HARKing:\n\nIf you predicted the interaction a priori, P = 0.06 is worth discussing\nIf you’re data mining, it’s probably noise\nDon’t retrofit hypotheses to P-values",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Poisson regression (for count data or rate data)</span>"
+    ]
+  },
+  {
+    "objectID": "poisson.html#reporting-results",
+    "href": "poisson.html#reporting-results",
+    "title": "\n10  Poisson regression (for count data or rate data)\n",
+    "section": "\n10.10 Reporting Results",
+    "text": "10.10 Reporting Results\n\n10.10.1 Visualising the biological pattern regardless of P-value\nPrinciples for effective GLM figures:\n\nShow raw data with sufficient transparency\nDisplay model predictions with uncertainty\nUse the response scale (not log scale)\nMake the biological pattern immediately clear\nAvoid chart junk—every element should serve a purpose\n\n\n## Final model predictions\npredictions_final &lt;- emmeans(cuckoo_quasi,\nspecs = ~ Mass + Species,\nat = list(Mass = seq(0, 40, by = 0.5)),\ntype = \"response\") |&gt;\nas_tibble()\n\nfig_main &lt;- ggplot(predictions_final,\naes(x = Mass, y = rate,\ncolour = Species, fill = Species)) +\ngeom_ribbon(aes(ymin = asymp.LCL, ymax = asymp.UCL),\n            alpha = 0.15, colour = NA) +\n# Mean estimate\ngeom_line(linewidth = 1.2) +\n# Raw data\ngeom_point(data = cuckoo,\naes(y = Beg),\nsize = 2.5,\nalpha = 0.6) +\n\nscale_colour_manual(values = c(\"Cuckoo\" = \"darkorange\", \"Warbler\" = \"steelblue\"),\nlabels = c(\"Cuckoo\", \"Reed warbler\")\n\n) +\nscale_fill_manual(values = c(\"Cuckoo\" = \"darkorange\", \"Warbler\" = \"steelblue\"),\nlabels = c(\"Cuckoo\", \"Reed warbler\")\n\n) +\nscale_x_continuous(breaks = seq(0, 40, by = 10)) +\nscale_y_continuous(breaks = seq(0, 100, by = 10)) +\n\n  labs(\nx = \"Nestling mass (g)\",\ny = \"Begging calls per 6 seconds\",\ncolour = NULL,\nfill = NULL\n) +\ntheme_minimal(base_size = 12)\n\n\nfig_main\n\n\n\n\n\n\n\n\n10.10.2 Writing the Results section\nThe goal: Tell the biological story whilst providing necessary statistical support.\nAvoid: - Leading with statistics (“There was a significant effect of mass, z = 5.2, P &lt; 0.001…”) - Reporting every coefficient - Using jargon without explanation - Ignoring effect sizes\nPrefer: - Lead with biology, support with statistics - Report interpretable effects (rate ratios on response scale) - Include confidence intervals - Contextualise the magnitude\nExample results text:\nVersion 1: Statistics-first (poor)\n“There was a significant effect of mass on begging calls (t = 4.7, P &lt; 0.001, quasi-Poisson GLM). There was a not a significant effect of species (t = 0.35, P = 0.35). The interaction between mass and species was not significant (t = -.93, P = 0.357).”\nVersion 2: Effect-focused (better)\n“Begging call rates increased with nestling mass, we found no significant evidence that this relationship differed between species (Mass × Species interaction: t = -.93, P = 0.357, quasi-Poisson GLM). In our model all chicks were associated with a 10% increase in calling rate (rate ratio 1.1 [95% CI: 1.06–1.15]) for each gram increase in mass.\nVersion 3: Biologically contextualised (best)\n“Begging call rates increased with nestling mass for both species. There was weak evidence that this relationship differed between species as our interaction term was significant under the Poisson GLM (Mass × Species interaction: z = -2.58, P = 0.009) but not when accounting for overdispersion with quasi-Poisson (Mass × Species interaction: t(47) = -.93, P = 0.357). Given this uncertainty, we proceeded with an additive model assuming parallel slopes for both species.\nAcross the observed mass range, each gram increase in mass was associated with a 8% increase in calling rate (rate ratio: 1.08 [95% CI: 1.07–1.09]). Reed warblers called at higher rates (1.04 [95% CI 0.9 - 1.2]) than cuckoos after accounting for body mass differences but this was not statistically significant (Species effect: t(47) = 0.54, P = 0.69).\nWhat makes Version 3 effective: - Starts with the biological pattern - Provides concrete predictions at meaningful mass values - Gives effect sizes in interpretable units (% increase per gram) - Acknowledges statistical uncertainty honestly - Links to biological theory\n\n10.10.3 Extracting key values for reporting\nHere’s how to get the numbers you need:\n\n# Exponentiated coefficients (rate ratios)\ntidy(cuckoo_quasi, exponentiate = TRUE, conf.int = TRUE)\n\n# Additive model\n\ncuckoo_quasi_add &lt;- glm(Beg ~ Mass + Species, family = poisson(link = \"log\"), data = cuckoo)\n\ntidy(cuckoo_quasi_add, exponentiate = TRUE, conf.int = TRUE)\n\n# Predictions at specific mass values\npred_key_masses &lt;- emmeans(cuckoo_quasi,\n                           specs = ~ Species + Mass,\n                           at = list(Mass = c(10, 40)),\n                           type = \"response\") |&gt;\n  as_tibble()\n\npred_key_masses\n\n# Rate ratios: how much does calling increase per gram?\n# For cuckoos: exp(β_Mass)\n# For warblers: exp(β_Mass + β_Mass:SpeciesWarbler)\n\n# Formal test of interaction\ndrop1(cuckoo_quasi, test = \"F\")\n\n\n10.10.4 Common mistakes to avoid\nMistake 1: Reporting on the wrong scale\n❌ “The coefficient for mass was 0.077 (SE = 0.015, P &lt; 0.001)”\nThis is on the log scale—readers can’t interpret it.\n✅ “Each gram increase in mass was associated with an 8% increase in calling rate (rate ratio: 1.08 [95% CI: 1.05–1.11], z = 5.2, P &lt; 0.001)”\nMistake 2: Forgetting to mention overdispersion\n❌ “We used Poisson regression…”\n✅ “We used quasi-Poisson regression to account for overdispersion (φ̂ = 1.6)…”\nMistake 3: Binary thinking about P-values\n❌ “The interaction was not significant (P = 0.057), therefore species do not differ in their responses to mass.”\n✅ “The interaction was marginally non-significant (P = 0.057), though the point estimate suggests warblers increase calling more slowly with mass (rate ratio: 0.98 [95% CI: 0.96–1.00]).”\nMistake 4: Ignoring effect magnitude\n❌ “Mass had a significant effect on calling rate (P &lt; 0.001)”\n✅ “Calling rate increased 8% per gram of mass [95% CI: 6–11%], corresponding to a 4.5-fold increase across the observed mass range”\nMistake 5: Not showing the data\n❌ Only showing the model prediction lines\n✅ Showing raw data points alongside predictions\n\n10.10.5 Summary: What this section teaches\n\nModel choice affects inference when results are borderline—this is normal, not a failure\nP = 0.049 vs P = 0.051 is not a meaningful distinction—effect sizes and CIs matter more\nStatistical significance ≠ biological importance—a modest effect can be biologically interesting even if P &gt; 0.05\nTransparency builds trust—show sensitivity to model assumptions rather than hiding it\nReport honestly—acknowledge uncertainty rather than forcing conclusions into binary categories\n\nThis is the most important statistical lesson: how to think when results aren’t clean.\n\n10.10.6 What we didn’t cover: When simple models aren’t enough\nOur quasi-Poisson model captured the variance-mean relationship adequately for inference about mass and species effects. However, careful observers will have noticed it under-predicts zeros—particularly for cuckoos at low masses.\nZero-inflation occurs when you observe more zeros than any Poisson-family model can accommodate. This suggests two processes:\n\nA “structural zero” process (chick is sleeping, satiated, or not motivated)\nA “count” process (when motivated, how often does the chick call?)\n\nZero-inflation models (ZIP, ZINB) explicitly model both processes:\n\nWhich variables predict being in the “always zero” state?\nWhich variables predict calling rate when active?\n\nFor example, you might hypothesise: - Species might affect propensity to call - Body mass predicts calling rate when active\nThis requires substantially more data and careful biological thinking about what generates “structural” vs “sampling” zeros.\nWhen is this critical? - Research focuses on presence/absence of behaviour - Zeros dominate the dataset (&gt;40-50%) - Predictions at low rates are crucial - You have mechanistic hypotheses about zero-generating processes\nWhen can you proceed without it? - Zeros are modest (&lt;20-30% of observations) - Research questions concern patterns across non-zero counts - Main effects are robust despite zero under-prediction - You acknowledge the limitation transparently\n\ncuckoo |&gt;\n    group_by(Species) |&gt;\n    summarise(\n        n = n(),\n        n_zeros = sum(Beg == 0),\n        prop_zeros = n_zeros / n,\n        pct_zeros = prop_zeros * 100\n    )\n\n\n\n\nSpecies\nn\nn_zeros\nprop_zeros\npct_zeros\n\n\n\nCuckoo\n17\n9\n0.5294118\n52.94118\n\n\nWarbler\n34\n4\n0.1176471\n11.76471\n\n\n\n\n\n\nWhilst addressing zero-inflation would refine predictions, it doesn’t change our core conclusions about how calling scales with mass or differs between species.",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>Poisson regression (for count data or rate data)</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html",
+    "href": "week-3.html",
+    "title": "11  Week 3",
+    "section": "",
+    "text": "11.1 Overview\nDuration: 90-120 minutes\nLearning objectives:",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#overview",
+    "href": "week-3.html#overview",
+    "title": "11  Week 3",
+    "section": "",
+    "text": "Apply Poisson GLM workflow to novel count data\nMake and justify model selection decisions\nProduce reproducible analysis with clear documentation\nCommunicate findings professionally",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#background",
+    "href": "week-3.html#background",
+    "title": "11  Week 3",
+    "section": "\n12.1 Background",
+    "text": "12.1 Background\nParasites rarely infect hosts in isolation. In natural populations, hosts are typically exposed to multiple parasite species, and prior infection by one parasite may alter susceptibility to subsequent infections.\nIn this study, researchers investigated whether infection with the tapeworm Schistocephalus solidus affects susceptibility to a second parasite, the trematode Diplostomum pseudospathaceum, in three-spined stickleback fish (Gasterosteus aculeatus).\nExperimental design:\n\nFish were either exposed to S. solidus tapeworm larvae or kept as uninfected controls\nAfter allowing time for tapeworm establishment, all fish (both groups) were exposed to D. pseudospathaceum trematode cercariae\nAfter a fixed exposure period, fish were dissected and trematode parasites were counted\n\nResearch question:\nDoes prior tapeworm infection affect the number of trematodes that successfully establish in stickleback hosts?\nBiological hypotheses:\n\nImmune priming: Tapeworm infection might activate the immune system, reducing trematode establishment (fewer trematodes in infected fish)\nImmune suppression: Tapeworms might suppress host immunity to evade defences, inadvertently facilitating trematode infection (more trematodes in infected fish)\nResource competition: Tapeworms might deplete host resources, making the host less suitable for trematodes (fewer trematodes in infected fish)\nNo effect: The two parasite species might not interact (similar trematode counts regardless of tapeworm status)",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#the-data",
+    "href": "week-3.html#the-data",
+    "title": "11  Week 3",
+    "section": "\n12.2 The Data",
+    "text": "12.2 The Data\nFile: parasite_coinfection.csv\nVariables:\n\nfish_id: Unique identifier for each fish (character)\n\ntreatment: Experimental treatment (character)\n\n\n\"Control\": Not exposed to tapeworm\n\n\"Infected\": Exposed to tapeworm\n\n\n\ntapeworm_present: Whether tapeworm successfully established (logical: TRUE/FALSE)\n\nNote: Not all “Infected” fish actually became infected\n\n\nfish_length_mm: Standard length of fish in millimetres (numeric)\ntrematode_count: Number of D. pseudospathaceum trematodes counted in each fish (integer)\n\nSample size: 87 fish (43 Control, 44 Infected treatment)\nData notes:\n\nSome fish in the “Infected” treatment did not successfully establish tapeworm infections (tapeworm_present == FALSE)\nFish length varies naturally in the population and may affect parasite susceptibility (larger fish = more surface area for infection)\nTrematode counts are discrete, non-negative integers\nSome fish have zero trematodes (unsuccessful infection or early-stage infection)",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#tasks",
+    "href": "week-3.html#tasks",
+    "title": "11  Week 3",
+    "section": "\n14.1 Tasks",
+    "text": "14.1 Tasks\n\n14.1.1 Script: 01_data_cleaning.R\n\nTasks:\n\nLoad required packages (at minimum: tidyverse, here, janitor, performance, emmeans, broom)\nRead in the data (parasite_coinfection.csv)\n\nExamine the data structure:\n\nCheck variable types\nIdentify any missing values\nCalculate summary statistics by treatment group\n\n\n\nCreate a binary infection variable:\n\nSince not all “Infected” treatment fish actually got tapeworms, create a new variable infection_status with two levels:\n\n\n\"Uninfected\": Control fish OR Infected treatment fish where tapeworm_present == FALSE\n\n\n\"Tapeworm\": Infected treatment fish where tapeworm_present == TRUE\n\n\n\n\n\n\nCheck for any data quality issues:\n\nAre there any impossible values (e.g., negative counts)?\nAre fish lengths in reasonable range for sticklebacks (typically 30-60 mm)?\n\n\n\nCreate an initial exploratory plot:\n\nTrematode count vs fish length, coloured by infection status\n\n\nSave cleaned data as clean_parasite_coinfection.csv (or keep in environment for script 02)",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#code-structure",
+    "href": "week-3.html#code-structure",
+    "title": "11  Week 3",
+    "section": "\n14.2 Code Structure",
+    "text": "14.2 Code Structure\n# 01_data_cleaning.R\n# Author: [Your name]\n# Date: [Date]\n# Purpose: Clean and prepare parasite co-infection data for analysis\n\n# Load packages ----\nlibrary(tidyverse)\nlibrary(janitor)\n\n# Read data ----\nparasites_raw &lt;- read_csv(\"parasite_coinfection.csv\")\n\n# Examine structure ----\n# [Your code here]\n\n# Create infection status variable ----\n# [Your code here]\n# Hint: Use case_when() or if_else()\n\n# Check data quality ----\n# [Your code here]\n\n# Exploratory plot ----\n# [Your code here]\n\n# Save cleaned data ----\n# [Your code here]",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#expected-outputs",
+    "href": "week-3.html#expected-outputs",
+    "title": "11  Week 3",
+    "section": "\n14.3 Expected Outputs",
+    "text": "14.3 Expected Outputs\n\nClean dataset with infection_status variable\nSummary table showing sample sizes by infection status\nInitial plot showing relationship between fish length and trematode count",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#tasks-1",
+    "href": "week-3.html#tasks-1",
+    "title": "11  Week 3",
+    "section": "\n15.1 Tasks",
+    "text": "15.1 Tasks\n\n15.1.1 Script: 02_analysis.R\n\nFollow the workshop workflow:\n\n\nStart simple: Fit a linear model\n\nModel: trematode_count ~ fish_length_mm + infection_status + fish_length_mm:infection_status\n\nExamine diagnostics—what problems do you see?\n\n\n\nFit Poisson GLM (additive model first)\n\nModel: trematode_count ~ fish_length_mm + infection_status\n\nCheck dispersion—is there overdispersion?\nExamine diagnostic plots\n\n\n\nTest for interaction\n\nFit model with fish_length_mm:infection_status interaction\nDoes dispersion change?\nIs the interaction significant?\nMake a justified decision about whether to include it\n\n\n\nAddress overdispersion (if present)\n\nFit quasi-Poisson model\nCompare inference to Poisson\nCheck diagnostic plots—does quasi-Poisson capture variance appropriately?\n\n\n\nConsider alternatives (if needed)\n\nIf overdispersion is severe (φ̂ &gt; 4), try negative binomial\nCompare diagnostics\nJustify your final model choice\n\n\n\nExtract key results\n\nCoefficient estimates with CIs (on response scale)\nPredictions at meaningful fish lengths (e.g., 35mm, 45mm, 55mm)\nTest statistics for key effects",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#code-structure-1",
+    "href": "week-3.html#code-structure-1",
+    "title": "11  Week 3",
+    "section": "\n15.2 Code Structure",
+    "text": "15.2 Code Structure\n# 02_analysis.R\n# Author: [Your name]\n# Date: [Date]\n# Purpose: Analyse effect of tapeworm infection on trematode counts\n\n# Load packages ----\nlibrary(tidyverse)\nlibrary(performance)\nlibrary(emmeans)\nlibrary(broom)\nlibrary(MASS)\n\n# Load cleaned data ----\n# [source(\"scripts/01_data_cleaning.R)]\n# read_csv(\"data/clean_parasite_coinfection.csv\")\n\n# 1. Linear model (demonstration of failure) ----\n# [Your code here]\n\n# 2. Poisson GLM - additive model ----\n# [Your code here]\n\n# Check overdispersion\n# [Your code here]\n\n# 3. Test interaction ----\n# [Your code here]\n\n# Compare models\n# [Your code here]\n\n# 4. Address overdispersion ----\n# [Your code here]\n\n# 5. Final model selection ----\n# [Your code here - with justification in comments]\n\n# 6. Extract results ----\n# [Your code here]\n\n# Generate predictions for plotting\n# [Your code here]",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#key-decisions",
+    "href": "week-3.html#key-decisions",
+    "title": "11  Week 3",
+    "section": "\n15.3 Key Decisions",
+    "text": "15.3 Key Decisions\nYou must make and justify:\n\nShould you include the interaction term?\nWhich model best handles overdispersion (if present)?\nWhat is your final model and why?",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#file-readme.md",
+    "href": "week-3.html#file-readme.md",
+    "title": "11  Week 3",
+    "section": "\n16.1 File: README.md\n",
+    "text": "16.1 File: README.md\n\nCreate a README that documents your analysis. Use this template:\n# Parasite Co-infection Analysis\n\n## Project Overview\n\nBrief description of the research question and dataset.\n\n## Data\n\n- **Source**: [Where data came from - you can state \"provided for course\"]\n- **Sample size**: [N fish, breakdown by treatment]\n- **Response variable**: Trematode count (integer, range: X-Y)\n- **Predictors**: \n  - Infection status (Uninfected vs Tapeworm)\n  - Fish length (mm, range: X-Y)\n\n## Files\n\n- `parasite_coinfection.csv`: Raw data\n- `01_data_cleaning.R`: Data preparation\n- `02_analysis.R`: Statistical modelling\n- `analysis_report.qmd`: Results write-up and figure\n- `README.md`: This file\n\n## Analysis Workflow\n\n1. **Data cleaning**: [Brief description of what you did]\n2. **Model selection**: [Brief description of models tested]\n3. **Final model**: [State your final model choice]\n4. **Key finding**: [One sentence summary]\n\n## Software\n\n- R version: [Your R version]\n- Key packages:\n  - tidyverse v[version]\n  - performance v[version]\n  - emmeans v[version]\n  - [others]\n\n## Results\n\n[1-2 sentences on main finding]\n\nSee `analysis_report.qmd` for full write-up and figure.\n\n## Author\n\n[Your name]  \n[Date]",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#guidance",
+    "href": "week-3.html#guidance",
+    "title": "11  Week 3",
+    "section": "\n16.2 Guidance",
+    "text": "16.2 Guidance\n\nKeep it concise but informative\nSomeone should be able to understand your project without opening any code files\nUpdate the placeholders (X-Y ranges, versions, etc.) with actual values",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#file-structure",
+    "href": "week-3.html#file-structure",
+    "title": "11  Week 3",
+    "section": "\n17.1 File Structure",
+    "text": "17.1 File Structure\n\n17.1.1 File: analysis_report.qmd\n\nCreate a Quarto document with the following YAML header:\n---\ntitle: \"Effect of Tapeworm Infection on Trematode Susceptibility in Sticklebacks\"\nauthor: \"Your Name\"\ndate: today\nformat: \n  html:\n    toc: true\n    code-fold: true\n    theme: cosmo\nexecute:\n  warning: false\n  message: false\n---",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#required-sections",
+    "href": "week-3.html#required-sections",
+    "title": "11  Week 3",
+    "section": "\n17.2 Required Sections",
+    "text": "17.2 Required Sections\n\n17.2.1 Methods\nStatistical analysis (following workshop examples):\n\nModel family and link function\nModel structure (terms tested)\nHow you assessed and addressed overdispersion\nHow you tested for interaction\nJustification of final model\n\n17.2.2 Results\nWrite-up requirements:\n\nLead with biological patterns, not statistics\nReport effect sizes on response scale (rate ratios, fold-changes)\nProvide predictions at meaningful fish lengths\nInclude confidence intervals for key estimates\nReport test statistics to support claims\nAcknowledge model uncertainty if relevant\nMention overdispersion and how it was handled\n\nFigure requirements:\nCreate ONE high-quality figure that shows:\n\nRaw data points (with appropriate transparency)\nModel predictions (lines)\nUncertainty (confidence ribbons)\nClear axis labels with units\nInformative legend\nAppropriate colours (colourblind-friendly)\n\nFigure caption requirements:\n\nWhat is shown (variables)\nSample sizes\nWhat visual elements represent (points, lines, ribbons)\nModel used\nKey finding (optional)",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#code-quality-30",
+    "href": "week-3.html#code-quality-30",
+    "title": "11  Week 3",
+    "section": "\n18.1 Code Quality (30%)",
+    "text": "18.1 Code Quality (30%)\n\n\nOrganisation: Clear script structure with meaningful section headers\n\nReadability: Informative variable names, appropriate spacing\n\nComments: Key decisions and steps explained\n\nReproducibility: Code runs without errors, paths are relative\n\nEfficiency: Follows tidyverse principles where appropriate",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#statistical-approach-30",
+    "href": "week-3.html#statistical-approach-30",
+    "title": "11  Week 3",
+    "section": "\n18.2 Statistical Approach (30%)",
+    "text": "18.2 Statistical Approach (30%)\n\n\nWorkflow: Follows logical progression (simple → complex)\n\nDiagnostics: Properly checks assumptions and model fit\n\nModel selection: Justified choices about interaction and overdispersion\n\nInterpretation: Correct understanding of coefficients and predictions\n\nHonesty: Acknowledges uncertainty and limitations",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#communication-30",
+    "href": "week-3.html#communication-30",
+    "title": "11  Week 3",
+    "section": "\n18.3 Communication (30%)",
+    "text": "18.3 Communication (30%)\n\n\nREADME: Clear, concise, informative\n\nMethods: Complete, replicable, justified\n\nResults: Effect-focused, interpretable, well-supported\n\nFigure: Professional quality, self-explanatory\n\nCaption: Comprehensive, enables understanding without main text\n\nWriting: Clear, precise, appropriate for scientific audience",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#documentation-10",
+    "href": "week-3.html#documentation-10",
+    "title": "11  Week 3",
+    "section": "\n18.4 Documentation (10%)",
+    "text": "18.4 Documentation (10%)\n\n\nFile naming: Sensible, consistent\n\nProject structure: Logical organisation\n\nReproducibility: Another analyst could recreate your work",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#data-cleaning",
+    "href": "week-3.html#data-cleaning",
+    "title": "11  Week 3",
+    "section": "\n19.1 Data Cleaning",
+    "text": "19.1 Data Cleaning\n\nCheck how many fish are in each group after creating infection_status\n\nThe numbers should make biological sense (not all exposed fish get infected)\nLook for the proportion of zeros—this will matter for model choice",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#model-selection",
+    "href": "week-3.html#model-selection",
+    "title": "11  Week 3",
+    "section": "\n19.2 Model Selection",
+    "text": "19.2 Model Selection\n\nStart simple (Poisson, no interaction) before adding complexity\nIf dispersion changes substantially when you add interaction, that’s informative\nCheck whether negative binomial is actually better than quasi-Poisson using diagnostic plots, not just AIC",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#common-pitfalls",
+    "href": "week-3.html#common-pitfalls",
+    "title": "11  Week 3",
+    "section": "\n19.3 Common Pitfalls",
+    "text": "19.3 Common Pitfalls\n\n\nDon’t report log-scale coefficients—exponentiate them\n\nDon’t claim “no effect” if P &gt; 0.05—report the effect size and CI\n\nDon’t ignore overdispersion—it will make your CIs too narrow\n\nDon’t include interaction if it’s not supported—simpler is better\n\nDon’t forget to check if your model under-predicts zeros",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#writing-results",
+    "href": "week-3.html#writing-results",
+    "title": "11  Week 3",
+    "section": "\n19.4 Writing Results",
+    "text": "19.4 Writing Results\n\nState findings in biological terms first: “Tapeworm infection reduced trematode counts by X%”\nThen provide statistical support: “(rate ratio: Y [95% CI: a-b], z = Z, P = p)”\nReport predictions at 2-3 meaningful fish lengths to make effect concrete\nIf results are borderline, discuss effect size not just P-value",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
+    ]
+  },
+  {
+    "objectID": "week-3.html#figure-design",
+    "href": "week-3.html#figure-design",
+    "title": "11  Week 3",
+    "section": "\n19.5 Figure Design",
+    "text": "19.5 Figure Design\n\nUse geom_ribbon() for uncertainty (behind lines)\nUse geom_point() with alpha = 0.5-0.7 for raw data\nConsider position = position_jitter(width = 0, height = 0.1) for discrete counts\nPut legend in whitespace, not over data\nCheck your figure renders clearly at different sizes",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>Week 3</span>"
     ]
   },
   {
@@ -1331,7 +1705,7 @@
     "href": "ggplot.html",
     "title": "Appendix G — ggplot",
     "section": "",
-    "text": "G.1 Intro to grammar\nThe ggplot2 package is widely used and valued for its simple, consistent approach to making data visuals.\nThe ‘grammar of graphics’ relates to the different components of a plot that function like different parts of linguistic grammar. For example, all plots require axes, so the x and y axes form one part of the ‘language’ of a plot. Similarly, all plots have data represented between the axes, often as points, lines or bars. The visual way that the data is represented forms another component of the grammar of graphics. Furthermore, the colour, shape or size of points and lines can be used to encode additional information in the plot. This information is usually clarified in a key, or legend, which can also be considered part of this ‘grammar’.\nThe philosophy of ggplot is much better explained by the package author, Hadley Wickham (Wickham et al. (2024)). For now, we just need to be aware that ggplots are constructed by specifying the different components that we want to display, based on underlying information in a data frame.\nAn example of what we can produce in ggplot",
+    "text": "G.1 Intro to grammar\nThe ggplot2 package is widely used and valued for its simple, consistent approach to making data visuals.\nThe ‘grammar of graphics’ relates to the different components of a plot that function like different parts of linguistic grammar. For example, all plots require axes, so the x and y axes form one part of the ‘language’ of a plot. Similarly, all plots have data represented between the axes, often as points, lines or bars. The visual way that the data is represented forms another component of the grammar of graphics. Furthermore, the colour, shape or size of points and lines can be used to encode additional information in the plot. This information is usually clarified in a key, or legend, which can also be considered part of this ‘grammar’.\nThe philosophy of ggplot is much better explained by the package author, Hadley Wickham (Wickham et al. (2025)). For now, we just need to be aware that ggplots are constructed by specifying the different components that we want to display, based on underlying information in a data frame.\nAn example of what we can produce in ggplot",
     "crumbs": [
       "Appendices",
       "<span class='chapter-number'>G</span>  <span class='chapter-title'>ggplot</span>"
@@ -1496,7 +1870,7 @@
     "href": "ggplot.html#further-reading-guides-and-tips-on-data-visualisation",
     "title": "Appendix G — ggplot",
     "section": "\nL.4 Further Reading, Guides and tips on data visualisation",
-    "text": "L.4 Further Reading, Guides and tips on data visualisation\nCheck out Appendix H for extra data visualisation resources\n\nR Cheat Sheets\nFundamentals of Data Visualization: this book tells you everything you need to know about presenting your figures for accessbility and clarity\nBeautiful Plotting in R: an incredibly handy ggplot guide for how to build and improve your figures\n\n*Why Scientist’s need to be better at Data Visualisation\n\n\nThe ggplot2 book: the original Hadley Wickham book on ggplot2\n\n\n\n\n\nWickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., Dunnington, D., & van den Brand, T. (2024). ggplot2: Create elegant data visualisations using the grammar of graphics. https://ggplot2.tidyverse.org",
+    "text": "L.4 Further Reading, Guides and tips on data visualisation\nCheck out Appendix H for extra data visualisation resources\n\nR Cheat Sheets\nFundamentals of Data Visualization: this book tells you everything you need to know about presenting your figures for accessbility and clarity\nBeautiful Plotting in R: an incredibly handy ggplot guide for how to build and improve your figures\n\n*Why Scientist’s need to be better at Data Visualisation\n\n\nThe ggplot2 book: the original Hadley Wickham book on ggplot2\n\n\n\n\n\nWickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., Dunnington, D., & van den Brand, T. (2025). ggplot2: Create elegant data visualisations using the grammar of graphics. https://ggplot2.tidyverse.org",
     "crumbs": [
       "Appendices",
       "<span class='chapter-number'>G</span>  <span class='chapter-title'>ggplot</span>"
@@ -1551,7 +1925,7 @@
     "href": "references.html",
     "title": "References",
     "section": "",
-    "text": "Iannone, R., Cheng, J., Schloerke, B., Hughes, E., Lauer, A., Seo, J.,\nBrevoort, K., & Roy, O. (2024). Gt: Easily create\npresentation-ready display tables. https://gt.rstudio.com\n\n\nMüller, K. (2020). Here: A simpler way to find your files. https://here.r-lib.org/\n\n\nSpinu, V., Grolemund, G., & Wickham, H. (2024). Lubridate: Make\ndealing with dates a little easier. https://lubridate.tidyverse.org\n\n\nWickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K.,\nWilke, C., Woo, K., Yutani, H., Dunnington, D., & van den Brand, T.\n(2024). ggplot2: Create elegant data visualisations using the\ngrammar of graphics. https://ggplot2.tidyverse.org",
+    "text": "Firke, S. (2024). Janitor: Simple tools for examining and cleaning\ndirty data. https://github.com/sfirke/janitor\n\n\nIannone, R., Cheng, J., Schloerke, B., Hughes, E., Lauer, A., Seo, J.,\nBrevoort, K., & Roy, O. (2024). Gt: Easily create\npresentation-ready display tables. https://gt.rstudio.com\n\n\nMüller, K. (2020). Here: A simpler way to find your files. https://here.r-lib.org/\n\n\nSpinu, V., Grolemund, G., & Wickham, H. (2024). Lubridate: Make\ndealing with dates a little easier. https://lubridate.tidyverse.org\n\n\nWickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K.,\nWilke, C., Woo, K., Yutani, H., Dunnington, D., & van den Brand, T.\n(2025). ggplot2: Create elegant data visualisations using the\ngrammar of graphics. https://ggplot2.tidyverse.org",
     "crumbs": [
       "Appendices",
       "References"

@@ -18,11 +18,11 @@ By the end of this session, you will be able to:
 
 ## AI Use Policy for Week 2
 
-:::{.callout-important}
+:::{.callout-important collapse=true}
 
-- AI Tools (ChatGPT, Claude, GitHub Copilot, etc.) Are NOT Permitted in Week 2 
+## AI Tools (ChatGPT, Claude, GitHub Copilot, etc.) Are NOT Permitted in Week 2 
 
-:::
+
 
 Why we're restricting AI use at this stage:
 
@@ -71,17 +71,20 @@ Week Two is about developing your mental model of data transformation:
     - How does standardization change my data?
 
     - What information am I losing or preserving?
-    
+:::
+
     
 ## Session Overview
 
 1. Compare your Week 2 plans with a partner (20 min)
 
-2. Implement your top 2 cleaning fixes (75 min)
+2. Implement your top 2 cleaning fixes (20 min)
 
 3. Review each other's code (20 min)
 
-4. Add brief documentation (5 min)
+4. Implement your partner's code (20 min)
+
+5. Check your project is well organised and code is organised and commented (20 min)
 
 ### What you need
 
@@ -121,7 +124,7 @@ Week Two is about developing your mental model of data transformation:
 
 :::{.callout-important}
 
-Open RStudio - before you open or change any files select "Pull" on the Gitpane.
+Open RStudio - **before you open or change any files** select "Pull" on the Gitpane.
 
 This brings any remote changes into your local workstation. 
 
@@ -205,4 +208,15 @@ mosquito_egg_data_step2 <- mosquito_egg_data_step1 |>
     - When finished write a brief commit message explaining the changes
     
 
+* [ ]  Review your code
+    
+    - Is it well organised with clear comments
+    
+    - Does it run without error (Hint: clear your environment and run the script)
+    
+
 * [ ] Push to Github
+
+    - Write a clear commit message on what you checked and corrected
+    
+    - Make sure your Github repo is Public

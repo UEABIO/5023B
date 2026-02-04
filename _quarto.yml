@@ -52,6 +52,10 @@ book:
   - part: "Data Insights"
     chapters:
     - summarise.qmd
+  - part: "GLM"
+    chapters:
+    - poisson.qmd
+    - week-3.qmd
 
 
   appendices:
