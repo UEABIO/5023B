@@ -264,19 +264,48 @@ check_model(cuckoo_glm_add,
 **Focus on:**
 1. Q-Q plot: Are deviance residuals approximately normal?
 
+```{r, eval = FALSE}
+
+check_model(cuckoo_glm_add, 
+            residual_type = "normal",
+            detrend = FALSE,
+            check = "qq")
+
+```
+
 2. Residuals vs fitted: Is there remaining pattern?
 
+
+```{r, eval = FALSE}
+
+check_model(cuckoo_glm_add, 
+            residual_type = "normal",
+            detrend = FALSE,
+            check = "homogeneity")
+
+```
+
 3. **Dispersion check**: What does this plot show?
+
+```{r, eval = FALSE}
+
+check_model(cuckoo_glm_add, 
+            residual_type = "normal",
+            detrend = FALSE,
+            check = "overdispersion")
+
+```
 
 Calculate dispersion manually:
 ```{r}
 dispersion_add <- cuckoo_glm_add$deviance / cuckoo_glm_add$df.residual
 dispersion_add
 
+# performance model check
 check_overdispersion(cuckoo_glm_add)
 ```
 
-**Discussion:** The dispersion ratio is [~2-3]. What might cause variance to exceed the Poisson assumption?
+**Discussion:** The dispersion ratio is [~7-9]. What might cause variance to exceed the Poisson assumption?
 
 `r hide("Possible Solutions")`
 
@@ -424,6 +453,7 @@ The interaction model captures the different slopes between species—warblers' 
 
 ### Addressing remaining model checks
 
+Overdispersion may not have been addressed - but are any of the other model checks improved?
 
 ```{r}
 check_model(cuckoo_glm_int, 
@@ -900,7 +930,7 @@ This is on the **log scale**—readers can't interpret it.
 ✅ Showing raw data points alongside predictions
 
 
-### Summary: What this section teaches
+## Summary: What this section teaches
 
 1. **Model choice affects inference** when results are borderline—this is normal, not a failure
 

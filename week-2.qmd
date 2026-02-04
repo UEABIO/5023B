@@ -198,7 +198,10 @@ mosquito_egg_data_step2 <- mosquito_egg_data_step1 |>
     
     - "Did you consider [x]"
     
-    
+
+## Code updates
+
+
 * [ ]  Try and implement your partner's code
 
     - If you tackled a similar problem, decide on the best approach

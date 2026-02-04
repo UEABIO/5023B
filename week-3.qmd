@@ -315,6 +315,10 @@ Brief description of the research question and dataset.
 
 See `analysis_report.qmd` for full write-up and figure.
 
+## Key Decisions
+
+Include the key model decisions you made
+
 ## Author
 
 [Your name]  
@@ -327,9 +331,9 @@ See `analysis_report.qmd` for full write-up and figure.
 - Someone should be able to understand your project without opening any code files
 - Update the placeholders (X-Y ranges, versions, etc.) with actual values
 
----
 
-# Part 4: Results Report {.tabset}
+
+# Part 4: Results Report [Optional]
 
 **Time allocation:** 45 minutes
 
@@ -360,6 +364,8 @@ execute:
 
 **Statistical analysis** (following workshop examples):
 
+Write a short paragraph containing: 
+
 - Model family and link function
 - Model structure (terms tested)
 - How you assessed and addressed overdispersion
@@ -368,6 +374,8 @@ execute:
 
 
 ### Results
+
+Write a short paragraph containing: 
 
 **Write-up requirements:**
 
@@ -404,7 +412,7 @@ Create ONE high-quality figure that shows:
 
 Your analysis will be evaluated on:
 
-## Code Quality (30%)
+## Code Quality (40%)
 
 - **Organisation**: Clear script structure with meaningful section headers
 - **Readability**: Informative variable names, appropriate spacing
@@ -412,7 +420,7 @@ Your analysis will be evaluated on:
 - **Reproducibility**: Code runs without errors, paths are relative
 - **Efficiency**: Follows tidyverse principles where appropriate
 
-## Statistical Approach (30%)
+## Statistical Approach (40%)
 
 - **Workflow**: Follows logical progression (simple → complex)
 - **Diagnostics**: Properly checks assumptions and model fit
@@ -420,7 +428,7 @@ Your analysis will be evaluated on:
 - **Interpretation**: Correct understanding of coefficients and predictions
 - **Honesty**: Acknowledges uncertainty and limitations
 
-## Communication (30%)
+## Communication (20%)
 
 - **README**: Clear, concise, informative
 - **Methods**: Complete, replicable, justified
@@ -437,7 +445,9 @@ Your analysis will be evaluated on:
 
 ---
 
-# Hints and Tips {.tabset}
+# Hints and Tips 
+
+:::{.panel-tabset}
 
 ## Data Cleaning
 
@@ -474,7 +484,7 @@ Your analysis will be evaluated on:
 - Put legend in whitespace, not over data
 - Check your figure renders clearly at different sizes
 
-
+:::
 
 # Submission Checklist
 
@@ -491,4 +501,4 @@ Before submitting, ensure you have:
 - [ ] Professional write-up following workshop principles
 - [ ] Honest acknowledgment of limitations
 
----
+
