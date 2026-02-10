@@ -135,7 +135,7 @@ The functions `case_when()` and `if_else()` from **dplyr** are designed for this
 Use `case_when()` when you have **multiple conditions** to check and different outcomes for each one.  
 It works a bit like an “if / else if / else” ladder.
 
-```{r, eval = T, warning = F, message = F}
+```{r, eval = F, warning = F, message = F}
 # use mutate and case_when 
 # for a statement that conditionally changes 
 # the names of the values in a variable
@@ -158,7 +158,7 @@ Think of `case_when()` as a tidy way to handle many possible categories.
 
 `if_else()` is simpler — it’s for two-way decisions (something is either true or false).
 
-```{r}
+```{r, eval = F, warning = F, message = F}
 
 # use mutate and if_else
 # for a statement that conditionally changes 

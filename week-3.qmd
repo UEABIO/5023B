@@ -11,11 +11,67 @@
 - Produce reproducible analysis with clear documentation
 - Communicate findings professionally
 
----
+> Try to keep to suggested timings below
 
-# Dataset: Parasite co-infection in three-spined sticklebacks
+## AI Use Policy for Week 2
 
-## Background
+:::{.callout-important collapse=true}
+
+## AI Tools (ChatGPT, Claude, GitHub Copilot, etc.) Are NOT *recommended* in Week 3
+
+Why we're restricting AI use at this stage:
+
+1. Decision-making is the skill, not code generation
+
+Data cleaning requires judgment about:
+
+    - What constitutes a "problem" in your specific context
+
+    - Which fix preserves biological meaning
+
+    - What trade-offs are acceptable
+
+    - What assumptions you're making
+
+AI can generate code, but it cannot make these decisions for you. If you use AI now, you'll outsource the thinking - which is the entire point of this exercise.
+
+2. Understanding consequences requires deep engagement
+
+When you write code yourself (even slowly, with errors), you:
+
+    - Think through each step
+
+    - Understand what each line does
+
+    - Notice when something unexpected happens
+
+    - Learn to debug your own thinking
+
+When AI writes code for you:
+
+    - You get a solution but not understanding
+
+    - Errors are invisible until analysis fails later
+
+    - You can't explain your own work
+
+    - You can't adapt the approach to new situations
+
+3. This is your chance to build foundational skills
+
+Week Three is about developing your mental model of data modelling:
+
+    - Try and write code for yourself
+    
+    - IF you are completely stuck try using Copilot
+    
+    - Evaluate code produce against examples from the coursebook - try to match style and evaluate your understanding of what it is doing.
+:::
+
+
+## Dataset: Parasite co-infection in three-spined sticklebacks
+
+### Background
 
 Parasites rarely infect hosts in isolation. In natural populations, hosts are typically exposed to multiple parasite species, and prior infection by one parasite may alter susceptibility to subsequent infections.
 
@@ -43,7 +99,7 @@ Does prior tapeworm infection affect the number of trematodes that successfully 
 
 4. **No effect**: The two parasite species might not interact (similar trematode counts regardless of tapeworm status)
 
-## The Data
+### The Data
 
 
 **File:** `parasite_coinfection.csv`
@@ -80,7 +136,7 @@ Does prior tapeworm infection affect the number of trematodes that successfully 
 knitr::include_graphics("images/stickleback.jpg")
 ```
 
-# Your Task
+## Your Task
 
 Complete an independent analysis following the workflow from the workshop. You will produce:
 
@@ -92,13 +148,12 @@ Complete an independent analysis following the workflow from the workshop. You w
 
 3. **A Quarto document** (`analysis_report.qmd`): Professional write-up with figure
 
----
 
-# Part 1: Data Preparation {.tabset}
 
-**Time allocation:** 20 minutes
+## Part 1: Data Preparation {.tabset}
 
-## Tasks
+**Time allocation:** 30 minutes
+
 
 ### Script: `01_data_cleaning.R`
 
@@ -127,19 +182,20 @@ Complete an independent analysis following the workflow from the workshop. You w
 
 7. Save cleaned data as `clean_parasite_coinfection.csv` (or keep in environment for script 02)
 
-## Code Structure
+8. Write a clear commit message "Data cleaning and validation [include some details on what issues were documented and fixed]" and push to Github
+
+### Code Structure
 ```r
-# 01_data_cleaning.R
-# Author: [Your name]
-# Date: [Date]
-# Purpose: Clean and prepare parasite co-infection data for analysis
+
+# Purpose: Clean and prepare parasite co-infection data for analysis ----
 
 # Load packages ----
 library(tidyverse)
 library(janitor)
+library(here)
 
 # Read data ----
-parasites_raw <- read_csv("parasite_coinfection.csv")
+parasites_raw <- read_csv(here("data", "parasite_coinfection.csv"))
 
 # Examine structure ----
 # [Your code here]
@@ -147,6 +203,8 @@ parasites_raw <- read_csv("parasite_coinfection.csv")
 # Create infection status variable ----
 # [Your code here]
 # Hint: Use case_when() or if_else()
+# Make a clean dataframe when happy
+# parasites_clean <-
 
 # Check data quality ----
 # [Your code here]
@@ -155,33 +213,34 @@ parasites_raw <- read_csv("parasite_coinfection.csv")
 # [Your code here]
 
 # Save cleaned data ----
-# [Your code here]
+# write_csv(here("data", "parasites_clean.csv"))
 ```
 
-## Expected Outputs
+### Expected Outputs
 
 - Clean dataset with `infection_status` variable
 - Summary table showing sample sizes by infection status
 - Initial plot showing relationship between fish length and trematode count
 
----
 
-# Part 2: Statistical Analysis {.tabset}
 
-**Time allocation:** 40 minutes
+## Part 2: Statistical Analysis {.tabset}
 
-## Tasks
+**Time allocation:** 45 minutes
+
 
 ### Script: `02_analysis.R`
 
-Follow the workshop workflow:
+- Follow the workshop workflow:
+
+- At each stage **try and write yourself comments on the models and code** - discuss with others
 
 1. **Start simple**: Fit a linear model
-   - Model: `trematode_count ~ fish_length_mm + infection_status + fish_length_mm:infection_status`
+   - Model: `lm(trematode_count ~ fish_length_mm + infection_status + fish_length_mm:infection_status)`
    - Examine diagnostics—what problems do you see?
 
 2. **Fit Poisson GLM** (additive model first)
-   - Model: `trematode_count ~ fish_length_mm + infection_status`
+   - Model: `glm(trematode_count ~ fish_length_mm + infection_status, family = poisson)`
    - Check dispersion—is there overdispersion?
    - Examine diagnostic plots
 
@@ -206,9 +265,9 @@ Follow the workshop workflow:
    - Predictions at meaningful fish lengths (e.g., 35mm, 45mm, 55mm)
    - Test statistics for key effects
 
-## Code Structure
+### Code Structure
 ```r
-# 02_analysis.R
+
 # Author: [Your name]
 # Date: [Date]
 # Purpose: Analyse effect of tapeworm infection on trematode counts
@@ -217,12 +276,13 @@ Follow the workshop workflow:
 library(tidyverse)
 library(performance)
 library(emmeans)
+library(here)
 library(broom)
 library(MASS)
 
 # Load cleaned data ----
-# [source("scripts/01_data_cleaning.R)]
-# read_csv("data/clean_parasite_coinfection.csv")
+# [source(here("scripts", "01_data_cleaning.R))]
+# read_csv(here("data", "clean_parasite_coinfection.csv"))
 
 # 1. Linear model (demonstration of failure) ----
 # [Your code here]
@@ -248,11 +308,11 @@ library(MASS)
 # 6. Extract results ----
 # [Your code here]
 
-# Generate predictions for plotting
+# 7. Make a suitable plot to accompany the model ----
 # [Your code here]
 ```
 
-## Key Decisions
+### Key Decisions
 
 You must make and justify:
 
@@ -260,13 +320,13 @@ You must make and justify:
 - Which model best handles overdispersion (if present)?
 - What is your final model and why?
 
----
 
-# Part 3: README Documentation
+
+## Part 3: README Documentation
 
 **Time allocation:** 15 minutes
 
-## File: `README.md`
+### File: `README.md`
 
 Create a README that documents your analysis. Use this template:
 ```markdown
@@ -290,7 +350,7 @@ Brief description of the research question and dataset.
 - `parasite_coinfection.csv`: Raw data
 - `01_data_cleaning.R`: Data preparation
 - `02_analysis.R`: Statistical modelling
-- `analysis_report.qmd`: Results write-up and figure
+- `analysis_report.qmd`: Results write-up and figure [Optional]
 - `README.md`: This file
 
 ## Analysis Workflow
@@ -325,7 +385,7 @@ Include the key model decisions you made
 [Date]
 ```
 
-## Guidance
+### Guidance
 
 - Keep it concise but informative
 - Someone should be able to understand your project without opening any code files
@@ -333,11 +393,10 @@ Include the key model decisions you made
 
 
 
-# Part 4: Results Report [Optional]
+## Part 4: Results Report [Optional]
 
-**Time allocation:** 45 minutes
+**Time allocation:** 30 minutes
 
-## File Structure
 
 ### File: `analysis_report.qmd`
 
@@ -406,13 +465,13 @@ Create ONE high-quality figure that shows:
 - Model used
 - Key finding (optional)
 
----
 
-# Assessment Criteria
+
+## Assessment Criteria
 
 Your analysis will be evaluated on:
 
-## Code Quality (40%)
+### Code Quality (40%)
 
 - **Organisation**: Clear script structure with meaningful section headers
 - **Readability**: Informative variable names, appropriate spacing
@@ -420,7 +479,7 @@ Your analysis will be evaluated on:
 - **Reproducibility**: Code runs without errors, paths are relative
 - **Efficiency**: Follows tidyverse principles where appropriate
 
-## Statistical Approach (40%)
+### Statistical Approach (40%)
 
 - **Workflow**: Follows logical progression (simple → complex)
 - **Diagnostics**: Properly checks assumptions and model fit
@@ -428,24 +487,16 @@ Your analysis will be evaluated on:
 - **Interpretation**: Correct understanding of coefficients and predictions
 - **Honesty**: Acknowledges uncertainty and limitations
 
-## Communication (20%)
+### Communication and Documentation (20%)
 
 - **README**: Clear, concise, informative
-- **Methods**: Complete, replicable, justified
-- **Results**: Effect-focused, interpretable, well-supported
-- **Figure**: Professional quality, self-explanatory
-- **Caption**: Comprehensive, enables understanding without main text
-- **Writing**: Clear, precise, appropriate for scientific audience
 
-## Documentation (10%)
 
-- **File naming**: Sensible, consistent
-- **Project structure**: Logical organisation
-- **Reproducibility**: Another analyst could recreate your work
 
----
 
-# Hints and Tips 
+
+
+## Hints and Tips 
 
 :::{.panel-tabset}
 
@@ -486,7 +537,7 @@ Your analysis will be evaluated on:
 
 :::
 
-# Submission Checklist
+## Submission Checklist
 
 Before submitting, ensure you have:
 
@@ -497,8 +548,6 @@ Before submitting, ensure you have:
 - [ ] `analysis_report.html` (knitted output)
 - [ ] All code runs without errors
 - [ ] Relative file paths (not absolute paths like `C:/Users/...`)
-- [ ] One high-quality figure in the report
-- [ ] Professional write-up following workshop principles
 - [ ] Honest acknowledgment of limitations
 
 

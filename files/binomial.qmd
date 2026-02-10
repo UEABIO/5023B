@@ -1,0 +1,497 @@
+# Logistic regression (for binary data) {#sec-logistic}
+
+
+```{r, echo = F, warning = F, message = F}
+library(tidyverse)
+library(janitor)
+library(here)
+source("R/booktem_setup.R")
+source("R/my_setup.R")
+
+```
+
+
+
+```{r, eval=T, echo=F}
+library(tidyverse)
+library(rstatix)
+library(performance)
+library(patchwork)
+library(DescTools)
+
+```
+
+
+When our response variable is binary, we can use a glm with a **binomial** error distribution
+
+So far we have only considered continuous and discrete data as response variables. What if our response is a categorical variable (e.g passing or failing an exam, voting yes or no in a referendum, whether an egg has successfully fledged or been predated, infected/uninfected, alive/dead)? 
+
+We can model the **probability** $p$ of being in a particular class as a function of other
+explanatory variables.
+
+These type of **binary** data are assumed to follow a **Bernoulli** distribution (which is a special case of *Binomial*) which has the following characteristics:
+
+$$
+Y \sim \mathcal{Bern}(p)
+$$
+
+* **Binary** variable, taking the values 0 or 1 (yes/no, pass/fail).
+* A **probability** parameter $p$, where $0 < p < 1$.
+* **Mean** = $p$  
+* **Variance** = $p(1 - p)$
+
+```{r bernplot, echo=F, eval = T, fig.width=9, fig.height=3}
+cols <- c("#377eb8", "#4daf4a", "#984ea3") # colorbrewer
+par(mfrow = c(1, 3))
+x <- 0:1
+p <- c(0.1, 0.5, 0.8)
+barplot(dbinom(x, size = 1, prob = p[1]), col = cols[1], ylab = "Probability", xlab = "X", main = paste0("p = ", p[1]), ylim = c(0, 1), names.arg = x)
+for(i in 2:length(p)) barplot(dbinom(x, size = 1, prob = p[i]), col = cols[i], ylab = "Probability", xlab = "X", main = paste0("p = ", p[i]), ylim = c(0, 1), names.arg = x)
+par(mfrow = c(1, 1))
+```
+
+Let us now place the Gaussian (simple linear regression), and logistic models next to each other:
+
+$$
+\begin{aligned}
+Y & \sim \mathcal{N}(\mu, \sigma^2)  &&& Y  \sim \mathcal{Bern}(p)\\
+\mu & = \beta_0 + \beta_1X &&&  ?? = \beta_0 + \beta_1X
+\end{aligned}
+$$
+
+Now we need to fill in the `??` with the appropriate term. 
+
+We cannot simply model the probability as $p = \beta_0 + \beta_1X$, because $p$ **cannot** be negative.
+$\log{p} = \beta_0 + \beta_1X$ won't work either, because $p$ cannot be greater than 1. 
+
+Instead we 
+model the **log odds** $\log\left(\frac{p}{1 - p}\right)$ as a linear function. So our logistic regression model looks like this:
+
+$$
+\begin{aligned}
+Y  & \sim \mathcal{Bern}(p)\\
+\log\left(\frac{p}{1 - p}\right) &  = \beta_0 + \beta_1 X
+\end{aligned}
+$$
+
+Again, note that we are still "only" fitting straight lines through our data, but this time in the log odds space.
+As a shorthand notation we write $\log\left(\frac{p}{1 - p}\right) = \text{logit}(p) = \beta_0 + \beta_1 X$.
+
+```{r, echo=F, fig.width=5, fig.height = 5}
+x <- seq(-10, 10, length = 100)
+plot(x, x, lwd=2, col='black', xlab="X", ylab="logit(p)", type = "l")
+```
+
+We can also re-arrange the above equation so that we get an expression for $p$
+
+$$
+p = \frac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}
+$$
+
+```{r, echo=F, fig.width=5, fig.height=5}
+plot(x, exp(x) / (1 + exp(x)), lwd = 2, col = 'black', xlab = "X", ylab = "p", type = "l")
+```
+
+Note how $p$ can only vary between 0 and 1. 
+
+To implement the logistic regression model in R, we choose `family=binomial(link=logit)` (the Bernoulli distribution is a special case of the Binomial distribution).
+
+```
+glm(response ~ explanatory, family=binomial(link=logit))
+```
+
+## Example: Dosage response to pesticides
+
+```{r, eval=TRUE, echo=FALSE, out.width="80%", fig.alt= ""}
+knitr::include_graphics("images/Tribolium castaneum.jpg")
+```
+
+This small dataset is from an experiment looking at mortality in batches of flour exposed to different doses of pesticides.
+
+The question of interest is: 
+
+> How does pesticide dose affect mortality in the flour beetle *Tribolium castaneum*
+
+
+```{r, echo = FALSE}
+beetles <- read_csv(here::here("files" , "beetles.csv"))
+```
+
+```{r, eval = TRUE, echo = FALSE}
+downloadthis::download_link(
+  link = "https://raw.githubusercontent.com/Philip-Leftwich/Oct-Intro-Analytics/refs/heads/dev/files/beetles.csv",
+  button_label = "Download Beetle data as csv",
+  button_type = "success",
+  has_icon = TRUE,
+  icon = "fa fa-save",
+  self_contained = FALSE
+)
+```
+
+```{r}
+head(beetles)
+```
+
+The data columns are:
+
+- **Dose**: Pesticide dosage (mg)
+
+- **Number_tested** - Number of beetles in application
+
+- **Number_killed**: Number of beetles that died
+
+- **Mortality_rate** Calculated proportion of deaths
+
+
+## Data tidying
+
+A binomial model calculates the numbers of `wins/losses` out of a series of trials, here that will refer to beetles "successfully killed" by the pesticide/ survivors. The GLM of the binomial counts will analyse the number of *each* batch of beetles killed, while taking into account the size of each group
+
+:::{.task}
+::::{.task-header}
+Your turn
+::::
+::::{.task-container}
+
+* [ ] Clean the names in the dataset
+
+* [ ] Use `mutate` to make a new column `number_survived` from the beetles not killed in each trial
+
+* [ ] Include any sensible data checks
+
+`r hide("Solution")`
+
+```{r}
+
+beetles <- beetles |> 
+  janitor::clean_names() |> # clean names
+  mutate(number_survived = number_tested-number_killed) # mutate
+ 
+```
+
+`r unhide()`
+
+::::
+
+:::
+
+:::{.callout-note collapse = "true"}
+
+## A linear model
+
+Here we can fit a standard linear model to calculated proportions.
+
+
+```{r, include = FALSE}
+
+model <- lm(mortality_rate ~ dose, data = beetles)
+
+```
+
+This shows issues with normality and linearity
+
+```{r}
+performance::check_model(model, 
+                         detrend = FALSE)
+
+```
+
+
+Predictions made from this model are also inadequate
+
+```{r, include = FALSE}
+
+means <- emmeans::emmeans(model, 
+                          specs = ~ dose, 
+                          at=list(dose=c(40:80)), 
+                          type='response')  |> 
+    as_tibble()
+
+ggplot(beetles, aes(x=dose, y=mortality_rate)) + 
+  geom_point()+
+    geom_ribbon(data = means,
+                aes(x = dose,
+                    y = emmean,
+                    ymin = lower.CL,
+                    ymax = upper.CL),
+                alpha = .2)+
+    geom_line(data = means,
+              aes(x = dose,
+                  y = emmean)) +  # regression line
+    labs(title = "Logit-link Binomial Regression",
+         x = "Dose", y = "Mortality")+
+    geom_hline(yintercept = 1,
+               linetype = "dashed")+
+    geom_hline(yintercept = 0,
+               linetype = "dashed")
+
+
+```
+
+
+:::
+
+## Fitting a binomial model
+
+```{r}
+binomial_model <- glm(cbind(number_killed,number_survived) ~ dose, 
+                      family = binomial, 
+                      data = beetles)
+
+
+```
+
+:::{.panel-tabset}
+
+## summary
+
+```{r}
+summary(binomial_model)
+
+```
+
+
+## broom
+
+```{r}
+binomial_model |> 
+  broom::tidy(conf.int=T)
+```
+
+:::
+
+
+So we are now fitting the following model
+
+$$
+ Y \sim Bern(p)
+$$
+$$
+\log\left[ \frac { P( \operatorname{oring\_binary} = fail) }{ 1 - P( \operatorname{oring\_binary} = fail) } \right] = \beta_{0} + \beta_{1}(\operatorname{temp})
+$$
+
+Which in R will look like this:
+
+
+- Intercept = $\beta_{0}$ = -14.5
+
+When pesticide dose is zero the mean *log-odds* are -14.5 [95%CI: -17.2 - -12.1] for a death in beetles
+
+- dose = $\beta_{1}$ = 0.24 [95%CI: 0.2 - 0.29]
+
+For every rise in the pesticide dose by 1mg, the *log-odds* of a death increase by 0.24.
+
+### Interpreting model coefficients
+
+We first consider why we are dealing with odds  $\frac{p}{1-p}$ instead of just $p$. They contain the same information, so the choice is somewhat arbitrary, however we’ve been using probabilities for so long that it feels unnatural to switch to odds. There are good reasons for this, however. Odds  $\frac{p}{1-p}$ can take on any value from 0 to ∞ and so part of our translation of $p$ to an unrestricted domain is already done ($P$ is restricted to 0-1). Take a look at some examples below: 
+
++----------------+-------------------------------------------+------------------------+
+|  Probability   |               Odds                        |      Verbiage          |
++================+===========================================+========================+
+|   $p=.95$      |  $\frac{95}{5} = \frac{19}{1} = 19$       |   19 to 1 odds for     |
++----------------+-------------------------------------------+------------------------+
+|   $p=.75$      |  $\frac{75}{25} = \frac{3}{1} = 3$        |   3 to 1 odds for      |
++----------------+-------------------------------------------+------------------------+
+|   $p=.50$      |  $\frac{50}{50} = \frac{1}{1} = 1$        |   1 to 1 odds          |
++----------------+-------------------------------------------+------------------------+
+|   $p=.25$      |  $\frac{25}{75} = \frac{1}{3} = 0.33$     |  3 to 1 odds against   |
++----------------+-------------------------------------------+------------------------+
+|   $p=.05$      |  $\frac{95}{5}  = \frac{1}{19} = 0.0526$  |  19 to 1 odds against  |
++----------------+-------------------------------------------+------------------------+
+
+When we use a binomial model, we produce the 'log-odds', this produces a fully unconstrained linear regression as anything less than 1, can now occupy an infinite negative value -∞ to ∞. 
+
+$$
+\log\left(\frac{p}{1-p}\right)	=	\beta_{0}+\beta_{1}x_{1}+\beta_{2}x_{2}
+$$
+
+$$
+\frac{p}{1-p}	=	e^{\beta_{0}}e^{\beta_{1}x_{1}}e^{\beta_{2}x_{2}}
+$$
+
+
+We can interpret $\beta_{1}$ and $\beta_{2}$ as the increase in the log odds for every unit increase in $x_{1}$ and $x_{2}$. We could alternatively interpret $\beta_{1}$ and $\beta_{2}$ using the notion that a one unit change in $x_{1}$ as a percent change of $e^{\beta_{1}}$ in the odds. That is to say, $e^{\beta_{1}}$ is the odds ratio of that change. 
+
+If you want to find out more about [Odds and log-odds head here](https://www.youtube.com/watch?v=8nm0G-1uJzA)
+
+
+## Probability
+
+
+### Making predictions
+
+:::{.panel-tabset}
+
+## Augment
+
+```{r}
+binomial_model |> 
+   broom::augment(data = beetles, 
+                  type.predict = "response")
+
+```
+
+
+## Emmeans
+
+```{r}
+emmeans::emmeans(binomial_model, 
+                 specs = ~ dose, 
+                 at=list(dose=c(49:77)), 
+                 type='response') 
+
+```
+:::
+
+
+:::{.task}
+::::{.task-header}
+Make a ggplot of the change in probability 
+::::
+::::{.task-container}
+
+- Take one of your model predictions 
+
+- If emmeans convert to `as_tibble()` first
+
+- Plot this on a ggplot
+
+- Include 95% confidence intervals (if possible)
+
+`r hide("Solution")`
+
+:::{.panel-tabset}
+
+## Broom
+
+```{r, eval = T}
+
+binomial_model |> 
+   broom::augment(data = beetles, 
+                  type.predict = "response",
+                  se_fit = TRUE) |> 
+  ggplot(aes(x=dose, y=mortality_rate))+
+  geom_point()+
+  geom_line(aes( x = dose, y = .fitted))+
+  geom_ribbon(aes(ymin=.fitted - (1.96 * .se.fit), ymax= .fitted + (1.96 * .se.fit)),
+               alpha=0.2)
+
+```
+
+## Emmeans
+
+```{r, eval = T}
+emmeans::emmeans(binomial_model, 
+                 specs = ~ dose, 
+                 at=list(dose=c(40:80)), 
+                 type='response') |>  
+  as_tibble() |> 
+  ggplot(aes(x=dose, y=prob))+
+  geom_point(data = beetles, aes(x = dose, y = mortality_rate))+
+  geom_line(aes(x=dose, y=prob))+
+  geom_ribbon(aes(ymin=asymp.LCL, ymax=asymp.UCL), alpha=0.2)
+
+```
+
+:::
+
+`r unhide()`
+
+::::
+:::
+
+
+:::{.task}
+::::{.task-header}
+Prediction
+::::
+::::{.task-container}
+
+Can you edit your code to produce a prediction of the mortality rate at a pesticide dose of 0mg? 
+
+`r hide("Solution")`
+
+```{r}
+emmeans::emmeans(binomial_model, 
+                 specs = ~ dose, 
+                 at=list(dose=0), 
+                 type='response') 
+```
+
+`r unhide()`
+
+::::
+:::
+
+## Assumptions
+
+The `performance` package detects and alters the checks. Pay particular attention to the binned residuals plot - this is your best estimate of possible overdispersion (requiring a quasi-likelihood fit). In this case there is likely not enough data for robust checks - we could consider a quasi-likelihood model in order to have more conservative confidence intervals. 
+
+
+```{r}
+
+performance::check_model(binomial_model,
+                         detrend = FALSE)
+
+```
+
+```{r}
+performance::check_overdispersion(binomial_model)
+```
+
+
+:::{.task}
+::::{.task-header}
+Try fitting a quasi-likelihood model
+::::
+::::{.task-container}
+
+- Fit a quasibinomial model
+
+```{r, eval = F}
+quasibinomial_model <- glm(cbind(number_killed,number_survived) ~ dose, 
+                      family = quasibinomial, 
+                      data = beetles)
+```
+
+- How does this change the means, standard errors and significance tests
+
+- Do you think we need it?
+
+::::
+:::
+
+
+## Write-ups
+
+:::{.task}
+::::{.task-header}
+Write up the results
+::::
+::::{.task-container}
+
+- How would you write up for findings from this analysis?
+
+
+`r hide("Report")`
+
+Mortality rate increased with pesticide dose in the red flour beetle (*Tribolium castaneum*). Across the observed pesticide dosage each mg of pesticide was associated with a .25 [95%CI: 0.21 - 0.29] increase in the log odds of mortality (z = 11.42, P < 0.001). At the lowest pesticide dose (49mg) we observed a mean mortality of 7% [4.4 - 11.8%], at the middle range (60mg) we observed a mean mortality of 53.9% [47.4 - 90%] and at the highest dosage (77mg) we saw almost total mortality 98.7%[97.2 - 99.4%].
+
+
+`r unhide()`
+
+::::
+:::
+
+## Binomial vs Linear Model
+
+:::{.panel-tabset collapse = "true"}
+
+## Comparison of R-squared
+
+A comparison of linear vs binomial model shows better explanatory power (R-squared) for our correctly fitted model:
+
+```{r, warning = FALSE, message = FALSE}
+DescTools::PseudoR2(binomial_model)
+summary(model)$r.squared
+```
