@@ -35,7 +35,7 @@ In this study, researchers conducted ecological surveys across multiple freshwat
 - Multiple kick-net samples taken at each site (standardised effort)
 - All mayfly individuals identified and counted
 - Water samples analysed for dissolved copper concentration (μg/L)
-- Additional environmental variables recorded (water temperature, pH, dissolved oxygen)
+- Additional environmental variables recorded (dissolved oxygen)
 
 **Research question:**
 
@@ -45,8 +45,7 @@ How does heavy metal contamination (copper concentration) affect mayfly presence
 
 1. **Threshold effect**: Mayflies are present below a critical copper concentration, absent above it
 2. **Gradual decline**: Mayfly occurrence probability decreases continuously with increasing copper
-3. **Dose-dependent**: Both presence probability AND abundance (when present) decline with copper
-4. **Confounded effects**: Temperature or dissolved oxygen, not copper directly, drive patterns
+
 
 ## The Data
 
@@ -55,16 +54,13 @@ How does heavy metal contamination (copper concentration) affect mayfly presence
 **Variables:**
 
 - `site_id`: Unique identifier for each sampling site (character)
-- `stream_name`: Name of stream system (character)
 - `latitude`: Site latitude (numeric, decimal degrees)
 - `longitude`: Site longitude (numeric, decimal degrees)
 - `samples_collected`: Number of kick-net samples at this site (integer, range: 3-8)
 - `samples_with_mayfly`: Number of samples containing at least one mayfly (integer, 0 to `samples_collected`)
-- `total_mayflies`: Total number of mayfly individuals across all samples (integer, 0-120+)
 - `copper_ugl`: Dissolved copper concentration (μg/L, numeric, range: 3.2-156.8)
 - `do_mgl`: Dissolved oxygen (mg/L, numeric, range: 5.1-11.2)
-- `temperature_c`: Water temperature (°C, numeric, range: 8.3-18.7)
-- `ph`: Water pH (numeric, range: 6.2-8.4)
+
 
 **Sample size:** 120 sites
 
@@ -73,9 +69,10 @@ How does heavy metal contamination (copper concentration) affect mayfly presence
 - **Response variable structure**: `samples_with_mayfly` and `samples_collected` form a **binomial response** (proportion data: "X successes out of N trials")
 - Sample size (`samples_collected`) varies by site → must be incorporated in model
 - Some sites have 0% mayflies, some 100%, most intermediate
-- Copper concentration is right-skewed (most sites low contamination, few highly polluted)
-- Dissolved oxygen varies naturally (8-10 mg/L typical for healthy streams)
-- Multiple sites from same stream system → potential spatial clustering (treat as independent for this analysis)
+
+
+
+
 ```{r, echo=FALSE, eval = T, fig.width = 10, fig.height = 5}
 knitr::include_graphics("images/mayfly.jpg")
 ```
@@ -153,28 +150,29 @@ glimpse(mayfly_raw)
 summary(mayfly_raw)
 
 # Calculate key variables ----
+# set up win/loss columns
 mayfly <- mayfly_raw |>
   mutate(
-    # Proportion with mayflies
-    mayfly_proportion = samples_with_mayfly / samples_collected,
-    # Binary presence
-    mayfly_present = samples_with_mayfly > 0,
-    # Log-transformed copper (add small constant to handle zeros if any)
-    log_copper = log(copper_ugl + 0.1)
+    samples_without_mayfly = samples_collected - samples_with_mayfly,
+    prop_mayfly = samples_with_mayfly/samples_collected
   )
 
 # Data quality checks ----
 # Check for impossible values
-# [Your code here]
+mayfly |>
+    filter( samples_collected < 0 | samples_with_mayfly < 0 |
+            do_mgl < 0 | copper_ugl < 0)
+    
+mayfly |> 
+   filter(samples_with mayfly > samples_collected)
 
 # Check ranges
-# [Your code here]
 
-# Summarise response variable ----
-# [Your code here - how many sites: never, always, sometimes mayfly?]
+mayfly |> 
+  summarise(across(where(is.numeric), 
+                   list(max = ~max(.x, na.rm = TRUE), 
+                        min = ~min(.x, na.rm = TRUE))))
 
-# Check predictor correlations ----
-# [Your code here]
 
 # Exploratory plots ----
 # Proportion vs copper
@@ -184,6 +182,7 @@ mayfly <- mayfly_raw |>
 # [Your code here]
 
 # Explore confounders
+# Look at correlation between copper and oxygen levels
 # [Your code here - e.g., copper vs DO relationship]
 
 # Save cleaned data ----
@@ -223,26 +222,21 @@ After running your data preparation, you should note:
    - Check for overdispersion (residual deviance vs df)
    - Examine diagnostic plots
 
-2. **Test model structure**
-   - Should copper be log-transformed?
-   - Is relationship linear on logit scale, or polynomial?
-   - Compare copper vs log(copper) using AIC and residual deviance
-   
-3. **Consider additional predictors**
+2. **Consider additional predictors**
    - Does dissolved oxygen improve model?
    - Be cautious of collinearity with copper
    
-4. **Address overdispersion if present**
+3. **Address overdispersion if present**
    - Calculate dispersion parameter: φ̂ = residual deviance / residual df
    - If φ̂ > 1.5: fit quasibinomial model
    - Compare standard errors between binomial and quasibinomial
    
-5. **Model comparison**
+4. **Model comparison**
    - Compare nested models (if not using quasibinomial)
    - Use drop1() with test = "Chisq" for binomial
    - Use drop1() with test = "F" for quasibinomial
 
-6. **Extract results for reporting**
+5. **Extract results for reporting**
    - Coefficients on log-odds scale AND odds ratios (exponentiated)
    - Predicted probabilities at low, medium, high copper concentrations
    - Concentration at which probability = 0.5 (LC₅₀ analogue)
@@ -270,9 +264,7 @@ library(MASS)
 # 1. Fit initial binomial GLM ----
 # Using cbind specification (recommended)
 # [Your code here]
-# glm(cbind(samples_with_mayfly, samples_collected - samples_with_mayfly) ~ copper_ugl,
-#     family = binomial(link = "logit"),
-#     data = mayfly)
+
 
 # Check overdispersion
 # [Your code here]
@@ -280,18 +272,12 @@ library(MASS)
 # Diagnostic plots
 # [Your code here]
 
-# 2. Test copper transformation ----
-# Compare linear copper vs log copper
-# [Your code here]
 
-# Which has lower AIC?
-# Which has lower residual deviance?
-
-# 3. Add potential confounders ----
+# 2. Add potential confounders ----
 # Does dissolved oxygen explain additional variation?
 # [Your code here]
 
-# 4. Address overdispersion ----
+# 3. Address overdispersion ----
 # If dispersion > 1.5, use quasibinomial
 # [Your code here]
 
@@ -301,10 +287,10 @@ library(MASS)
 # Compare inference: binomial vs quasibinomial
 # [Your code here]
 
-# 5. Justify final model choice ----
+# 4. Justify final model choice ----
 # [Your justification in comments]
 
-# 6. Extract key results ----
+# 5. Extract key results ----
 # Coefficients as odds ratios
 # [Your code here]
 
@@ -317,7 +303,7 @@ library(MASS)
 # Predictions at key concentrations
 # [Your code here]
 
-# 7. Generate data for publication figure ----
+# 6. Generate data for publication figure ----
 # [Your code here]
 ```
 
@@ -327,21 +313,16 @@ You must make and justify:
 
 1. **Response specification**: Did you use cbind() correctly? This is critical for binomial models.
 
-2. **Copper transformation**: Linear or log-transformed? Justify based on:
-   - AIC comparison
-   - Residual deviance
-   - Biological plausibility
-
-3. **Additional predictors**: Should dissolved oxygen be included?
+2. **Additional predictors**: Should dissolved oxygen be included?
    - Does it improve fit?
    - Is it collinear with copper?
 
-4. **Overdispersion**: Is it present? If yes:
+3. **Overdispersion**: Is it present? If yes:
    - What is the dispersion parameter?
    - How much do standard errors change with quasibinomial?
    - What might cause overdispersion?
 
-5. **Final model**: State clearly and justify
+4. **Final model**: State clearly and justify
 
 ---
 
@@ -365,7 +346,7 @@ Analysis of mayfly presence in freshwater streams across a copper contamination 
   - Proportion of samples containing mayflies (0-1)
   - Binomial: successes/trials structure
 - **Primary predictor**: Dissolved copper concentration (3.2-156.8 μg/L)
-- **Covariates**: Water temperature (°C), dissolved oxygen (mg/L), pH
+- **Covariates**: dissolved oxygen (mg/L)
 
 ## Files
 
@@ -533,12 +514,6 @@ Your analysis will be evaluated on:
 
 :::{.panel-tabset}
 
-## Data Preparation
-
-- Check how many sites are in each response category (0%, intermediate, 100%)
-- The proportion of zeros matters for model interpretation
-- Look at copper distribution—is log transformation needed?
-- Check copper-DO correlation—strong correlation complicates interpretation
 
 ## Model Selection
 

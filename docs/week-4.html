@@ -631,7 +631,7 @@ window.Quarto = {
 <li>Multiple kick-net samples taken at each site (standardised effort)</li>
 <li>All mayfly individuals identified and counted</li>
 <li>Water samples analysed for dissolved copper concentration (μg/L)</li>
-<li>Additional environmental variables recorded (water temperature, pH, dissolved oxygen)</li>
+<li>Additional environmental variables recorded (dissolved oxygen)</li>
 </ul>
 <p><strong>Research question:</strong></p>
 <p>How does heavy metal contamination (copper concentration) affect mayfly presence and abundance in freshwater streams?</p>
@@ -641,10 +641,6 @@ window.Quarto = {
 <strong>Threshold effect</strong>: Mayflies are present below a critical copper concentration, absent above it</li>
 <li>
 <strong>Gradual decline</strong>: Mayfly occurrence probability decreases continuously with increasing copper</li>
-<li>
-<strong>Dose-dependent</strong>: Both presence probability AND abundance (when present) decline with copper</li>
-<li>
-<strong>Confounded effects</strong>: Temperature or dissolved oxygen, not copper directly, drive patterns</li>
 </ol></section></section><section id="the-data" class="level2" data-number="13.3"><h2 data-number="13.3" class="anchored" data-anchor-id="the-data">
 <span class="header-section-number">13.3</span> The Data</h2>
 <p><strong>File:</strong> <code>mayfly_contamination.csv</code></p>
@@ -652,8 +648,6 @@ window.Quarto = {
 <ul>
 <li>
 <code>site_id</code>: Unique identifier for each sampling site (character)</li>
-<li>
-<code>stream_name</code>: Name of stream system (character)</li>
 <li>
 <code>latitude</code>: Site latitude (numeric, decimal degrees)</li>
 <li>
@@ -663,15 +657,9 @@ window.Quarto = {
 <li>
 <code>samples_with_mayfly</code>: Number of samples containing at least one mayfly (integer, 0 to <code>samples_collected</code>)</li>
 <li>
-<code>total_mayflies</code>: Total number of mayfly individuals across all samples (integer, 0-120+)</li>
-<li>
 <code>copper_ugl</code>: Dissolved copper concentration (μg/L, numeric, range: 3.2-156.8)</li>
 <li>
 <code>do_mgl</code>: Dissolved oxygen (mg/L, numeric, range: 5.1-11.2)</li>
-<li>
-<code>temperature_c</code>: Water temperature (°C, numeric, range: 8.3-18.7)</li>
-<li>
-<code>ph</code>: Water pH (numeric, range: 6.2-8.4)</li>
 </ul>
 <p><strong>Sample size:</strong> 120 sites</p>
 <p><strong>Data notes:</strong></p>
@@ -680,9 +668,6 @@ window.Quarto = {
 <strong>Response variable structure</strong>: <code>samples_with_mayfly</code> and <code>samples_collected</code> form a <strong>binomial response</strong> (proportion data: “X successes out of N trials”)</li>
 <li>Sample size (<code>samples_collected</code>) varies by site → must be incorporated in model</li>
 <li>Some sites have 0% mayflies, some 100%, most intermediate</li>
-<li>Copper concentration is right-skewed (most sites low contamination, few highly polluted)</li>
-<li>Dissolved oxygen varies naturally (8-10 mg/L typical for healthy streams)</li>
-<li>Multiple sites from same stream system → potential spatial clustering (treat as independent for this analysis)</li>
 </ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
@@ -781,41 +766,43 @@ window.Quarto = {
 <span id="cb1-16"><a href="#cb1-16"></a><span class="fu">summary</span>(mayfly_raw)</span>
 <span id="cb1-17"><a href="#cb1-17"></a></span>
 <span id="cb1-18"><a href="#cb1-18"></a><span class="co"># Calculate key variables ----</span></span>
-<span id="cb1-19"><a href="#cb1-19"></a>mayfly <span class="ot">&lt;-</span> mayfly_raw <span class="sc">|&gt;</span></span>
-<span id="cb1-20"><a href="#cb1-20"></a>  <span class="fu">mutate</span>(</span>
-<span id="cb1-21"><a href="#cb1-21"></a>    <span class="co"># Proportion with mayflies</span></span>
-<span id="cb1-22"><a href="#cb1-22"></a>    <span class="at">mayfly_proportion =</span> samples_with_mayfly <span class="sc">/</span> samples_collected,</span>
-<span id="cb1-23"><a href="#cb1-23"></a>    <span class="co"># Binary presence</span></span>
-<span id="cb1-24"><a href="#cb1-24"></a>    <span class="at">mayfly_present =</span> samples_with_mayfly <span class="sc">&gt;</span> <span class="dv">0</span>,</span>
-<span id="cb1-25"><a href="#cb1-25"></a>    <span class="co"># Log-transformed copper (add small constant to handle zeros if any)</span></span>
-<span id="cb1-26"><a href="#cb1-26"></a>    <span class="at">log_copper =</span> <span class="fu">log</span>(copper_ugl <span class="sc">+</span> <span class="fl">0.1</span>)</span>
-<span id="cb1-27"><a href="#cb1-27"></a>  )</span>
-<span id="cb1-28"><a href="#cb1-28"></a></span>
-<span id="cb1-29"><a href="#cb1-29"></a><span class="co"># Data quality checks ----</span></span>
-<span id="cb1-30"><a href="#cb1-30"></a><span class="co"># Check for impossible values</span></span>
-<span id="cb1-31"><a href="#cb1-31"></a><span class="co"># [Your code here]</span></span>
-<span id="cb1-32"><a href="#cb1-32"></a></span>
-<span id="cb1-33"><a href="#cb1-33"></a><span class="co"># Check ranges</span></span>
-<span id="cb1-34"><a href="#cb1-34"></a><span class="co"># [Your code here]</span></span>
-<span id="cb1-35"><a href="#cb1-35"></a></span>
-<span id="cb1-36"><a href="#cb1-36"></a><span class="co"># Summarise response variable ----</span></span>
-<span id="cb1-37"><a href="#cb1-37"></a><span class="co"># [Your code here - how many sites: never, always, sometimes mayfly?]</span></span>
-<span id="cb1-38"><a href="#cb1-38"></a></span>
-<span id="cb1-39"><a href="#cb1-39"></a><span class="co"># Check predictor correlations ----</span></span>
-<span id="cb1-40"><a href="#cb1-40"></a><span class="co"># [Your code here]</span></span>
+<span id="cb1-19"><a href="#cb1-19"></a><span class="co"># set up win/loss columns</span></span>
+<span id="cb1-20"><a href="#cb1-20"></a>mayfly <span class="ot">&lt;-</span> mayfly_raw <span class="sc">|&gt;</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb1-22"><a href="#cb1-22"></a>    <span class="at">samples_without_mayfly =</span> samples_collected <span class="sc">-</span> samples_with_mayfly,</span>
+<span id="cb1-23"><a href="#cb1-23"></a>    <span class="at">prop_mayfly =</span> samples_with_mayfly<span class="sc">/</span>samples_collected</span>
+<span id="cb1-24"><a href="#cb1-24"></a>  )</span>
+<span id="cb1-25"><a href="#cb1-25"></a></span>
+<span id="cb1-26"><a href="#cb1-26"></a><span class="co"># Data quality checks ----</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a><span class="co"># Check for impossible values</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a>mayfly <span class="sc">|&gt;</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a>    <span class="fu">filter</span>( samples_collected <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">|</span> samples_with_mayfly <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">|</span></span>
+<span id="cb1-30"><a href="#cb1-30"></a>            do_mgl <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">|</span> copper_ugl <span class="sc">&lt;</span> <span class="dv">0</span>)</span>
+<span id="cb1-31"><a href="#cb1-31"></a>    </span>
+<span id="cb1-32"><a href="#cb1-32"></a>mayfly <span class="sc">|&gt;</span> </span>
+<span id="cb1-33"><a href="#cb1-33"></a>   <span class="fu">filter</span>(samples_with mayfly <span class="sc">&gt;</span> samples_collected)</span>
+<span id="cb1-34"><a href="#cb1-34"></a></span>
+<span id="cb1-35"><a href="#cb1-35"></a><span class="co"># Check ranges</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a></span>
+<span id="cb1-37"><a href="#cb1-37"></a>mayfly <span class="sc">|&gt;</span> </span>
+<span id="cb1-38"><a href="#cb1-38"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), </span>
+<span id="cb1-39"><a href="#cb1-39"></a>                   <span class="fu">list</span>(<span class="at">max =</span> <span class="sc">~</span><span class="fu">max</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb1-40"><a href="#cb1-40"></a>                        <span class="at">min =</span> <span class="sc">~</span><span class="fu">min</span>(.x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))))</span>
 <span id="cb1-41"><a href="#cb1-41"></a></span>
-<span id="cb1-42"><a href="#cb1-42"></a><span class="co"># Exploratory plots ----</span></span>
-<span id="cb1-43"><a href="#cb1-43"></a><span class="co"># Proportion vs copper</span></span>
-<span id="cb1-44"><a href="#cb1-44"></a><span class="co"># [Your code here]</span></span>
-<span id="cb1-45"><a href="#cb1-45"></a></span>
-<span id="cb1-46"><a href="#cb1-46"></a><span class="co"># Distribution of copper</span></span>
-<span id="cb1-47"><a href="#cb1-47"></a><span class="co"># [Your code here]</span></span>
-<span id="cb1-48"><a href="#cb1-48"></a></span>
-<span id="cb1-49"><a href="#cb1-49"></a><span class="co"># Explore confounders</span></span>
-<span id="cb1-50"><a href="#cb1-50"></a><span class="co"># [Your code here - e.g., copper vs DO relationship]</span></span>
-<span id="cb1-51"><a href="#cb1-51"></a></span>
-<span id="cb1-52"><a href="#cb1-52"></a><span class="co"># Save cleaned data ----</span></span>
-<span id="cb1-53"><a href="#cb1-53"></a><span class="co"># write_csv(mayfly, here("data", "mayfly_clean.csv"))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-42"><a href="#cb1-42"></a></span>
+<span id="cb1-43"><a href="#cb1-43"></a><span class="co"># Exploratory plots ----</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a><span class="co"># Proportion vs copper</span></span>
+<span id="cb1-45"><a href="#cb1-45"></a><span class="co"># [Your code here]</span></span>
+<span id="cb1-46"><a href="#cb1-46"></a></span>
+<span id="cb1-47"><a href="#cb1-47"></a><span class="co"># Distribution of copper</span></span>
+<span id="cb1-48"><a href="#cb1-48"></a><span class="co"># [Your code here]</span></span>
+<span id="cb1-49"><a href="#cb1-49"></a></span>
+<span id="cb1-50"><a href="#cb1-50"></a><span class="co"># Explore confounders</span></span>
+<span id="cb1-51"><a href="#cb1-51"></a><span class="co"># Look at correlation between copper and oxygen levels</span></span>
+<span id="cb1-52"><a href="#cb1-52"></a><span class="co"># [Your code here - e.g., copper vs DO relationship]</span></span>
+<span id="cb1-53"><a href="#cb1-53"></a></span>
+<span id="cb1-54"><a href="#cb1-54"></a><span class="co"># Save cleaned data ----</span></span>
+<span id="cb1-55"><a href="#cb1-55"></a><span class="co"># write_csv(mayfly, here("data", "mayfly_clean.csv"))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section><section id="expected-observations" class="level3" data-number="13.6.2"><h3 data-number="13.6.2" class="anchored" data-anchor-id="expected-observations">
 <span class="header-section-number">13.6.2</span> Expected Observations</h3>
 <p>After running your data preparation, you should note:</p>
@@ -854,14 +841,6 @@ window.Quarto = {
 <li>Use cbind for successes and failures (recommended)</li>
 <li>Check for overdispersion (residual deviance vs df)</li>
 <li>Examine diagnostic plots</li>
-</ul>
-</li>
-<li>
-<strong>Test model structure</strong>
-<ul>
-<li>Should copper be log-transformed?</li>
-<li>Is relationship linear on logit scale, or polynomial?</li>
-<li>Compare copper vs log(copper) using AIC and residual deviance</li>
 </ul>
 </li>
 <li>
@@ -918,68 +897,52 @@ window.Quarto = {
 <span id="cb2-19"><a href="#cb2-19"></a><span class="co"># 1. Fit initial binomial GLM ----</span></span>
 <span id="cb2-20"><a href="#cb2-20"></a><span class="co"># Using cbind specification (recommended)</span></span>
 <span id="cb2-21"><a href="#cb2-21"></a><span class="co"># [Your code here]</span></span>
-<span id="cb2-22"><a href="#cb2-22"></a><span class="co"># glm(cbind(samples_with_mayfly, samples_collected - samples_with_mayfly) ~ copper_ugl,</span></span>
-<span id="cb2-23"><a href="#cb2-23"></a><span class="co">#     family = binomial(link = "logit"),</span></span>
-<span id="cb2-24"><a href="#cb2-24"></a><span class="co">#     data = mayfly)</span></span>
-<span id="cb2-25"><a href="#cb2-25"></a></span>
-<span id="cb2-26"><a href="#cb2-26"></a><span class="co"># Check overdispersion</span></span>
-<span id="cb2-27"><a href="#cb2-27"></a><span class="co"># [Your code here]</span></span>
-<span id="cb2-28"><a href="#cb2-28"></a></span>
-<span id="cb2-29"><a href="#cb2-29"></a><span class="co"># Diagnostic plots</span></span>
-<span id="cb2-30"><a href="#cb2-30"></a><span class="co"># [Your code here]</span></span>
-<span id="cb2-31"><a href="#cb2-31"></a></span>
-<span id="cb2-32"><a href="#cb2-32"></a><span class="co"># 2. Test copper transformation ----</span></span>
-<span id="cb2-33"><a href="#cb2-33"></a><span class="co"># Compare linear copper vs log copper</span></span>
-<span id="cb2-34"><a href="#cb2-34"></a><span class="co"># [Your code here]</span></span>
-<span id="cb2-35"><a href="#cb2-35"></a></span>
-<span id="cb2-36"><a href="#cb2-36"></a><span class="co"># Which has lower AIC?</span></span>
-<span id="cb2-37"><a href="#cb2-37"></a><span class="co"># Which has lower residual deviance?</span></span>
+<span id="cb2-22"><a href="#cb2-22"></a></span>
+<span id="cb2-23"><a href="#cb2-23"></a></span>
+<span id="cb2-24"><a href="#cb2-24"></a><span class="co"># Check overdispersion</span></span>
+<span id="cb2-25"><a href="#cb2-25"></a><span class="co"># [Your code here]</span></span>
+<span id="cb2-26"><a href="#cb2-26"></a></span>
+<span id="cb2-27"><a href="#cb2-27"></a><span class="co"># Diagnostic plots</span></span>
+<span id="cb2-28"><a href="#cb2-28"></a><span class="co"># [Your code here]</span></span>
+<span id="cb2-29"><a href="#cb2-29"></a></span>
+<span id="cb2-30"><a href="#cb2-30"></a></span>
+<span id="cb2-31"><a href="#cb2-31"></a><span class="co"># 2. Add potential confounders ----</span></span>
+<span id="cb2-32"><a href="#cb2-32"></a><span class="co"># Does dissolved oxygen explain additional variation?</span></span>
+<span id="cb2-33"><a href="#cb2-33"></a><span class="co"># [Your code here]</span></span>
+<span id="cb2-34"><a href="#cb2-34"></a></span>
+<span id="cb2-35"><a href="#cb2-35"></a><span class="co"># 3. Address overdispersion ----</span></span>
+<span id="cb2-36"><a href="#cb2-36"></a><span class="co"># If dispersion &gt; 1.5, use quasibinomial</span></span>
+<span id="cb2-37"><a href="#cb2-37"></a><span class="co"># [Your code here]</span></span>
 <span id="cb2-38"><a href="#cb2-38"></a></span>
-<span id="cb2-39"><a href="#cb2-39"></a><span class="co"># 3. Add potential confounders ----</span></span>
-<span id="cb2-40"><a href="#cb2-40"></a><span class="co"># Does dissolved oxygen explain additional variation?</span></span>
-<span id="cb2-41"><a href="#cb2-41"></a><span class="co"># [Your code here]</span></span>
-<span id="cb2-42"><a href="#cb2-42"></a></span>
-<span id="cb2-43"><a href="#cb2-43"></a><span class="co"># 4. Address overdispersion ----</span></span>
-<span id="cb2-44"><a href="#cb2-44"></a><span class="co"># If dispersion &gt; 1.5, use quasibinomial</span></span>
-<span id="cb2-45"><a href="#cb2-45"></a><span class="co"># [Your code here]</span></span>
-<span id="cb2-46"><a href="#cb2-46"></a></span>
-<span id="cb2-47"><a href="#cb2-47"></a><span class="co"># Check diagnostics</span></span>
-<span id="cb2-48"><a href="#cb2-48"></a><span class="co"># [Your code here]</span></span>
-<span id="cb2-49"><a href="#cb2-49"></a></span>
-<span id="cb2-50"><a href="#cb2-50"></a><span class="co"># Compare inference: binomial vs quasibinomial</span></span>
-<span id="cb2-51"><a href="#cb2-51"></a><span class="co"># [Your code here]</span></span>
-<span id="cb2-52"><a href="#cb2-52"></a></span>
-<span id="cb2-53"><a href="#cb2-53"></a><span class="co"># 5. Justify final model choice ----</span></span>
-<span id="cb2-54"><a href="#cb2-54"></a><span class="co"># [Your justification in comments]</span></span>
-<span id="cb2-55"><a href="#cb2-55"></a></span>
-<span id="cb2-56"><a href="#cb2-56"></a><span class="co"># 6. Extract key results ----</span></span>
-<span id="cb2-57"><a href="#cb2-57"></a><span class="co"># Coefficients as odds ratios</span></span>
-<span id="cb2-58"><a href="#cb2-58"></a><span class="co"># [Your code here]</span></span>
-<span id="cb2-59"><a href="#cb2-59"></a></span>
-<span id="cb2-60"><a href="#cb2-60"></a><span class="co"># Predicted probabilities across copper gradient</span></span>
-<span id="cb2-61"><a href="#cb2-61"></a><span class="co"># [Your code here]</span></span>
-<span id="cb2-62"><a href="#cb2-62"></a></span>
-<span id="cb2-63"><a href="#cb2-63"></a><span class="co"># Find LC₅₀ (copper concentration at 50% probability)</span></span>
-<span id="cb2-64"><a href="#cb2-64"></a><span class="co"># [Your code here]</span></span>
-<span id="cb2-65"><a href="#cb2-65"></a></span>
-<span id="cb2-66"><a href="#cb2-66"></a><span class="co"># Predictions at key concentrations</span></span>
-<span id="cb2-67"><a href="#cb2-67"></a><span class="co"># [Your code here]</span></span>
-<span id="cb2-68"><a href="#cb2-68"></a></span>
-<span id="cb2-69"><a href="#cb2-69"></a><span class="co"># 7. Generate data for publication figure ----</span></span>
-<span id="cb2-70"><a href="#cb2-70"></a><span class="co"># [Your code here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-39"><a href="#cb2-39"></a><span class="co"># Check diagnostics</span></span>
+<span id="cb2-40"><a href="#cb2-40"></a><span class="co"># [Your code here]</span></span>
+<span id="cb2-41"><a href="#cb2-41"></a></span>
+<span id="cb2-42"><a href="#cb2-42"></a><span class="co"># Compare inference: binomial vs quasibinomial</span></span>
+<span id="cb2-43"><a href="#cb2-43"></a><span class="co"># [Your code here]</span></span>
+<span id="cb2-44"><a href="#cb2-44"></a></span>
+<span id="cb2-45"><a href="#cb2-45"></a><span class="co"># 4. Justify final model choice ----</span></span>
+<span id="cb2-46"><a href="#cb2-46"></a><span class="co"># [Your justification in comments]</span></span>
+<span id="cb2-47"><a href="#cb2-47"></a></span>
+<span id="cb2-48"><a href="#cb2-48"></a><span class="co"># 5. Extract key results ----</span></span>
+<span id="cb2-49"><a href="#cb2-49"></a><span class="co"># Coefficients as odds ratios</span></span>
+<span id="cb2-50"><a href="#cb2-50"></a><span class="co"># [Your code here]</span></span>
+<span id="cb2-51"><a href="#cb2-51"></a></span>
+<span id="cb2-52"><a href="#cb2-52"></a><span class="co"># Predicted probabilities across copper gradient</span></span>
+<span id="cb2-53"><a href="#cb2-53"></a><span class="co"># [Your code here]</span></span>
+<span id="cb2-54"><a href="#cb2-54"></a></span>
+<span id="cb2-55"><a href="#cb2-55"></a><span class="co"># Find LC₅₀ (copper concentration at 50% probability)</span></span>
+<span id="cb2-56"><a href="#cb2-56"></a><span class="co"># [Your code here]</span></span>
+<span id="cb2-57"><a href="#cb2-57"></a></span>
+<span id="cb2-58"><a href="#cb2-58"></a><span class="co"># Predictions at key concentrations</span></span>
+<span id="cb2-59"><a href="#cb2-59"></a><span class="co"># [Your code here]</span></span>
+<span id="cb2-60"><a href="#cb2-60"></a></span>
+<span id="cb2-61"><a href="#cb2-61"></a><span class="co"># 6. Generate data for publication figure ----</span></span>
+<span id="cb2-62"><a href="#cb2-62"></a><span class="co"># [Your code here]</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section><section id="key-decisions" class="level3" data-number="13.7.3"><h3 data-number="13.7.3" class="anchored" data-anchor-id="key-decisions">
 <span class="header-section-number">13.7.3</span> Key Decisions</h3>
 <p>You must make and justify:</p>
 <ol type="1">
 <li><p><strong>Response specification</strong>: Did you use cbind() correctly? This is critical for binomial models.</p></li>
-<li>
-<p><strong>Copper transformation</strong>: Linear or log-transformed? Justify based on:</p>
-<ul>
-<li>AIC comparison</li>
-<li>Residual deviance</li>
-<li>Biological plausibility</li>
-</ul>
-</li>
 <li>
 <p><strong>Additional predictors</strong>: Should dissolved oxygen be included?</p>
 <ul>
@@ -1016,7 +979,7 @@ window.Quarto = {
 <span id="cb3-12"><a href="#cb3-12"></a><span class="ss">  - </span>Proportion of samples containing mayflies (0-1)</span>
 <span id="cb3-13"><a href="#cb3-13"></a><span class="ss">  - </span>Binomial: successes/trials structure</span>
 <span id="cb3-14"><a href="#cb3-14"></a><span class="ss">- </span>**Primary predictor**: Dissolved copper concentration (3.2-156.8 μg/L)</span>
-<span id="cb3-15"><a href="#cb3-15"></a><span class="ss">- </span>**Covariates**: Water temperature (°C), dissolved oxygen (mg/L), pH</span>
+<span id="cb3-15"><a href="#cb3-15"></a><span class="ss">- </span>**Covariates**: dissolved oxygen (mg/L)</span>
 <span id="cb3-16"><a href="#cb3-16"></a></span>
 <span id="cb3-17"><a href="#cb3-17"></a><span class="fu">## Files</span></span>
 <span id="cb3-18"><a href="#cb3-18"></a></span>
@@ -1190,23 +1153,14 @@ window.Quarto = {
 <span class="header-section-number">13.12</span> Hints and Tips</h2>
 <div class="tabset-margin-container"></div><div class="panel-tabset">
 <ul class="nav nav-tabs" role="tablist">
-<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Data Preparation</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Model Selection</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Common Pitfalls</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Writing Results</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Figure Design</a></li>
-<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-6-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-6" role="tab" aria-controls="tabset-1-6" aria-selected="false" href="">Understanding Binomial Models</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">Model Selection</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">Common Pitfalls</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false" href="">Writing Results</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-4-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-4" role="tab" aria-controls="tabset-1-4" aria-selected="false" href="">Figure Design</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-5-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-5" role="tab" aria-controls="tabset-1-5" aria-selected="false" href="">Understanding Binomial Models</a></li>
 </ul>
 <div class="tab-content">
 <div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
-<ul>
-<li>Check how many sites are in each response category (0%, intermediate, 100%)</li>
-<li>The proportion of zeros matters for model interpretation</li>
-<li>Look at copper distribution—is log transformation needed?</li>
-<li>Check copper-DO correlation—strong correlation complicates interpretation</li>
-</ul>
-</div>
-<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <ul>
 <li>Start with simple copper model before adding complexity</li>
 <li>Test log(copper) vs linear copper—both may be defensible</li>
@@ -1214,7 +1168,7 @@ window.Quarto = {
 <li>Don’t include both copper and log(copper) in same model!</li>
 </ul>
 </div>
-<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
 <ul>
 <li>❌ <strong>CRITICAL ERROR</strong>: Using <code>glm(mayfly_proportion ~ copper, family = binomial)</code> without weights
 <ul>
@@ -1233,11 +1187,11 @@ window.Quarto = {
 <strong>Don’t</strong> forget that coefficients are multiplicative after exponentiating</li>
 </ul>
 </div>
-<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
 <p><strong>Poor example:</strong> “Copper coefficient was -0.075 (P &lt; 0.001).”</p>
 <p><strong>Good example:</strong> “Mayfly occurrence probability declined sharply with copper concentration (quasibinomial GLM: F₁,₁₁₈ = 87.3, P &lt; 0.001). At low contamination (10 μg/L), presence probability was 0.89 [95% CI: 0.84-0.93], declining to 0.50 at 45 μg/L [95% CI: 42-48 μg/L] and to 0.11 [0.07-0.16] at 100 μg/L.”</p>
 </div>
-<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
+<div id="tabset-1-4" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-4-tab">
 <ul>
 <li>Use <code>geom_point(aes(size = samples_collected))</code> to show sample effort</li>
 <li>Use <code>geom_ribbon()</code> for uncertainty (behind line, alpha = 0.2)</li>
@@ -1247,7 +1201,7 @@ window.Quarto = {
 <li>Add horizontal line at P = 0.5 to show LC₅₀ if desired</li>
 </ul>
 </div>
-<div id="tabset-1-6" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-6-tab">
+<div id="tabset-1-5" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-5-tab">
 <p><strong>Key insight</strong>: Binomial models answer “What’s the probability of success?”</p>
 <ul>
 <li>Success = sample contains mayfly</li>
