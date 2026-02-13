@@ -485,13 +485,14 @@ Mortality rate increased with pesticide dose in the red flour beetle (*Tribolium
 
 ## Binomial vs Linear Model
 
-:::{.panel-tabset collapse = "true"}
+:::{.callout-note collapse = "true"}
 
-## Comparison of R-squared
+## Calculating R squared
 
-A comparison of linear vs binomial model shows better explanatory power (R-squared) for our correctly fitted model:
+Binomial model shows better explanatory power (R-squared) for our correctly fitted model:
 
 ```{r, warning = FALSE, message = FALSE}
 DescTools::PseudoR2(binomial_model)
-summary(model)$r.squared
 ```
+
+:::

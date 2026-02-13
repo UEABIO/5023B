@@ -1030,6 +1030,248 @@
     ]
   },
   {
+    "objectID": "binomial.html",
+    "href": "binomial.html",
+    "title": "12  Logistic regression (for binary data)",
+    "section": "",
+    "text": "12.1 Example: Dosage response to pesticides\nWhen our response variable is binary, we can use a glm with a binomial error distribution\nSo far we have only considered continuous and discrete data as response variables. What if our response is a categorical variable (e.g passing or failing an exam, voting yes or no in a referendum, whether an egg has successfully fledged or been predated, infected/uninfected, alive/dead)?\nWe can model the probability \\(p\\) of being in a particular class as a function of other explanatory variables.\nThese type of binary data are assumed to follow a Bernoulli distribution (which is a special case of Binomial) which has the following characteristics:\n\\[\nY \\sim \\mathcal{Bern}(p)\n\\]\nLet us now place the Gaussian (simple linear regression), and logistic models next to each other:\n\\[\n\\begin{aligned}\nY & \\sim \\mathcal{N}(\\mu, \\sigma^2)  &&& Y  \\sim \\mathcal{Bern}(p)\\\\\n\\mu & = \\beta_0 + \\beta_1X &&&  ?? = \\beta_0 + \\beta_1X\n\\end{aligned}\n\\]\nNow we need to fill in the ?? with the appropriate term.\nWe cannot simply model the probability as \\(p = \\beta_0 + \\beta_1X\\), because \\(p\\) cannot be negative. \\(\\log{p} = \\beta_0 + \\beta_1X\\) won’t work either, because \\(p\\) cannot be greater than 1.\nInstead we model the log odds \\(\\log\\left(\\frac{p}{1 - p}\\right)\\) as a linear function. So our logistic regression model looks like this:\n\\[\n\\begin{aligned}\nY  & \\sim \\mathcal{Bern}(p)\\\\\n\\log\\left(\\frac{p}{1 - p}\\right) &  = \\beta_0 + \\beta_1 X\n\\end{aligned}\n\\]\nAgain, note that we are still “only” fitting straight lines through our data, but this time in the log odds space. As a shorthand notation we write \\(\\log\\left(\\frac{p}{1 - p}\\right) = \\text{logit}(p) = \\beta_0 + \\beta_1 X\\).\nWe can also re-arrange the above equation so that we get an expression for \\(p\\)\n\\[\np = \\frac{e^{\\beta_0 + \\beta_1 X}}{1 + e^{\\beta_0 + \\beta_1 X}}\n\\]\nNote how \\(p\\) can only vary between 0 and 1.\nTo implement the logistic regression model in R, we choose family=binomial(link=logit) (the Bernoulli distribution is a special case of the Binomial distribution).\nThis small dataset is from an experiment looking at mortality in batches of flour exposed to different doses of pesticides.\nThe question of interest is:\nDownload Beetle data as csv\nhead(beetles)\n\n\n\n\nDose\nNumber_tested\nNumber_killed\nMortality_rate\n\n\n\n49.06\n49\n6\n0.1224490\n\n\n52.99\n60\n13\n0.2166667\n\n\n56.91\n62\n18\n0.2903226\n\n\n60.84\n56\n28\n0.5000000\n\n\n64.76\n63\n52\n0.8253968\n\n\n68.69\n59\n53\n0.8983051\nThe data columns are:",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Logistic regression (for binary data)</span>"
+    ]
+  },
+  {
+    "objectID": "binomial.html#example-dosage-response-to-pesticides",
+    "href": "binomial.html#example-dosage-response-to-pesticides",
+    "title": "12  Logistic regression (for binary data)",
+    "section": "",
+    "text": "How does pesticide dose affect mortality in the flour beetle Tribolium castaneum\n\n\n\n\n\nDose: Pesticide dosage (mg)\nNumber_tested - Number of beetles in application\nNumber_killed: Number of beetles that died\nMortality_rate Calculated proportion of deaths",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Logistic regression (for binary data)</span>"
+    ]
+  },
+  {
+    "objectID": "binomial.html#data-tidying",
+    "href": "binomial.html#data-tidying",
+    "title": "12  Logistic regression (for binary data)",
+    "section": "\n12.2 Data tidying",
+    "text": "12.2 Data tidying\nA binomial model calculates the numbers of wins/losses out of a series of trials, here that will refer to beetles “successfully killed” by the pesticide/ survivors. The GLM of the binomial counts will analyse the number of each batch of beetles killed, while taking into account the size of each group\n\n\nYour turn\n\n\n\nClean the names in the dataset\nUse mutate to make a new column number_survived from the beetles not killed in each trial\nInclude any sensible data checks\n\n\n\nSolution\n\n\nbeetles &lt;- beetles |&gt; \n  janitor::clean_names() |&gt; # clean names\n  mutate(number_survived = number_tested-number_killed) # mutate\n\n\n\n\n\n\n\n\n\n\nNoteA linear model\n\n\n\n\n\nHere we can fit a standard linear model to calculated proportions.\nThis shows issues with normality and linearity\n\nperformance::check_model(model, \n                         detrend = FALSE)\n\nPredictions made from this model are also inadequate",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Logistic regression (for binary data)</span>"
+    ]
+  },
+  {
+    "objectID": "binomial.html#fitting-a-binomial-model",
+    "href": "binomial.html#fitting-a-binomial-model",
+    "title": "12  Logistic regression (for binary data)",
+    "section": "\n12.3 Fitting a binomial model",
+    "text": "12.3 Fitting a binomial model\n\nbinomial_model &lt;- glm(cbind(number_killed,number_survived) ~ dose, \n                      family = binomial, \n                      data = beetles)\n\n\n\nsummary\nbroom\n\n\n\n\nsummary(binomial_model)\n\n\nCall:\nglm(formula = cbind(number_killed, number_survived) ~ dose, family = binomial, \n    data = beetles)\n\nCoefficients:\n             Estimate Std. Error z value Pr(&gt;|z|)    \n(Intercept) -14.57806    1.29846  -11.23   &lt;2e-16 ***\ndose          0.24554    0.02149   11.42   &lt;2e-16 ***\n---\nSignif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1\n\n(Dispersion parameter for binomial family taken to be 1)\n\n    Null deviance: 267.6624  on 7  degrees of freedom\nResidual deviance:   8.4379  on 6  degrees of freedom\nAIC: 38.613\n\nNumber of Fisher Scoring iterations: 4\n\n\n\n\n\nbinomial_model |&gt; \n  broom::tidy(conf.int=T)\n\n\n\n\n\n\n\n\n\n\n\n\n\nterm\nestimate\nstd.error\nstatistic\np.value\nconf.low\nconf.high\n\n\n\n(Intercept)\n-14.5780604\n1.2984622\n-11.22717\n0\n-17.2645230\n-12.1608424\n\n\ndose\n0.2455399\n0.0214937\n11.42381\n0\n0.2056099\n0.2900912\n\n\n\n\n\n\n\n\n\nSo we are now fitting the following model\n\\[\nY \\sim Bern(p)\n\\] \\[\n\\log\\left[ \\frac { P( \\operatorname{oring\\_binary} = fail) }{ 1 - P( \\operatorname{oring\\_binary} = fail) } \\right] = \\beta_{0} + \\beta_{1}(\\operatorname{temp})\n\\]\nWhich in R will look like this:\n\nIntercept = \\(\\beta_{0}\\) = -14.5\n\nWhen pesticide dose is zero the mean log-odds are -14.5 [95%CI: -17.2 - -12.1] for a death in beetles\n\ndose = \\(\\beta_{1}\\) = 0.24 [95%CI: 0.2 - 0.29]\n\nFor every rise in the pesticide dose by 1mg, the log-odds of a death increase by 0.24.\n\n12.3.1 Interpreting model coefficients\nWe first consider why we are dealing with odds \\(\\frac{p}{1-p}\\) instead of just \\(p\\). They contain the same information, so the choice is somewhat arbitrary, however we’ve been using probabilities for so long that it feels unnatural to switch to odds. There are good reasons for this, however. Odds \\(\\frac{p}{1-p}\\) can take on any value from 0 to ∞ and so part of our translation of \\(p\\) to an unrestricted domain is already done (\\(P\\) is restricted to 0-1). Take a look at some examples below:\n\n\n\n\n\n\n\nProbability\n          Odds\n Verbiage\n\n\n\n\\(p=.95\\)\n\\(\\frac{95}{5} = \\frac{19}{1} = 19\\)\n19 to 1 odds for\n\n\n\\(p=.75\\)\n\\(\\frac{75}{25} = \\frac{3}{1} = 3\\)\n3 to 1 odds for\n\n\n\\(p=.50\\)\n\\(\\frac{50}{50} = \\frac{1}{1} = 1\\)\n1 to 1 odds\n\n\n\\(p=.25\\)\n\\(\\frac{25}{75} = \\frac{1}{3} = 0.33\\)\n3 to 1 odds against\n\n\n\\(p=.05\\)\n\\(\\frac{95}{5}  = \\frac{1}{19} = 0.0526\\)\n19 to 1 odds against\n\n\n\nWhen we use a binomial model, we produce the ‘log-odds’, this produces a fully unconstrained linear regression as anything less than 1, can now occupy an infinite negative value -∞ to ∞.\n\\[\n\\log\\left(\\frac{p}{1-p}\\right)  =   \\beta_{0}+\\beta_{1}x_{1}+\\beta_{2}x_{2}\n\\]\n\\[\n\\frac{p}{1-p}   =   e^{\\beta_{0}}e^{\\beta_{1}x_{1}}e^{\\beta_{2}x_{2}}\n\\]\nWe can interpret \\(\\beta_{1}\\) and \\(\\beta_{2}\\) as the increase in the log odds for every unit increase in \\(x_{1}\\) and \\(x_{2}\\). We could alternatively interpret \\(\\beta_{1}\\) and \\(\\beta_{2}\\) using the notion that a one unit change in \\(x_{1}\\) as a percent change of \\(e^{\\beta_{1}}\\) in the odds. That is to say, \\(e^{\\beta_{1}}\\) is the odds ratio of that change.\nIf you want to find out more about Odds and log-odds head here",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Logistic regression (for binary data)</span>"
+    ]
+  },
+  {
+    "objectID": "binomial.html#probability",
+    "href": "binomial.html#probability",
+    "title": "12  Logistic regression (for binary data)",
+    "section": "\n12.4 Probability",
+    "text": "12.4 Probability\n\n12.4.1 Making predictions\n\n\nAugment\nEmmeans\n\n\n\n\nbinomial_model |&gt; \n   broom::augment(data = beetles, \n                  type.predict = \"response\")\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ndose\nnumber_tested\nnumber_killed\nmortality_rate\nnumber_survived\n.fitted\n.resid\n.hat\n.sigma\n.cooksd\n.std.resid\n\n\n\n49.06\n49\n6\n0.1224490\n43\n0.0736536\n1.2025499\n0.2458459\n1.141959\n0.3695718\n1.3847554\n\n\n52.99\n60\n13\n0.2166667\n47\n0.1726583\n0.8747551\n0.3477614\n1.205381\n0.3324978\n1.0831366\n\n\n56.91\n62\n18\n0.2903226\n44\n0.3533406\n-1.0542088\n0.3104417\n1.168435\n0.3517707\n-1.2695246\n\n\n60.84\n56\n28\n0.5000000\n28\n0.5891818\n-1.3455544\n0.2366298\n1.101468\n0.3736036\n-1.5400459\n\n\n64.76\n63\n52\n0.8253968\n11\n0.7896971\n0.7110658\n0.2848855\n1.243451\n0.1346649\n0.8408568\n\n\n68.69\n59\n53\n0.8983051\n6\n0.9078843\n-0.2506399\n0.2530093\n1.292579\n0.0146767\n-0.2899964\n\n\n72.61\n62\n61\n0.9838710\n1\n0.9626942\n0.9887023\n0.1992421\n1.201427\n0.1202801\n1.1048796\n\n\n76.54\n60\n60\n1.0000000\n0\n0.9854508\n1.3261731\n0.1221842\n1.134404\n0.0702320\n1.4154630\n\n\n\n\n\n\n\n\n\nemmeans::emmeans(binomial_model, \n                 specs = ~ dose, \n                 at=list(dose=c(49:77)), \n                 type='response') \n\n dose   prob      SE  df asymp.LCL asymp.UCL\n   49 0.0727 0.01830 Inf    0.0439     0.118\n   50 0.0910 0.02100 Inf    0.0574     0.141\n   51 0.1135 0.02370 Inf    0.0747     0.169\n   52 0.1406 0.02640 Inf    0.0965     0.201\n   53 0.1730 0.02880 Inf    0.1236     0.237\n   54 0.2110 0.03090 Inf    0.1568     0.278\n   55 0.2548 0.03250 Inf    0.1965     0.323\n   56 0.3041 0.03340 Inf    0.2428     0.373\n   57 0.3584 0.03380 Inf    0.2951     0.427\n   58 0.4166 0.03370 Inf    0.3524     0.484\n   59 0.4772 0.03330 Inf    0.4128     0.542\n   60 0.5385 0.03260 Inf    0.4743     0.601\n   61 0.5987 0.03190 Inf    0.5349     0.659\n   62 0.6560 0.03100 Inf    0.5930     0.714\n   63 0.7091 0.03000 Inf    0.6471     0.764\n   64 0.7570 0.02860 Inf    0.6967     0.809\n   65 0.7993 0.02700 Inf    0.7412     0.847\n   66 0.8358 0.02500 Inf    0.7808     0.879\n   67 0.8668 0.02290 Inf    0.8153     0.906\n   68 0.8927 0.02050 Inf    0.8453     0.927\n   69 0.9141 0.01820 Inf    0.8710     0.944\n   70 0.9315 0.01600 Inf    0.8928     0.957\n   71 0.9456 0.01380 Inf    0.9113     0.967\n   72 0.9569 0.01180 Inf    0.9267     0.975\n   73 0.9660 0.01010 Inf    0.9396     0.981\n   74 0.9732 0.00851 Inf    0.9504     0.986\n   75 0.9789 0.00715 Inf    0.9593     0.989\n   76 0.9834 0.00597 Inf    0.9666     0.992\n   77 0.9870 0.00496 Inf    0.9727     0.994\n\nConfidence level used: 0.95 \nIntervals are back-transformed from the logit scale \n\n\n\n\n\n\n\nMake a ggplot of the change in probability\n\n\n\nTake one of your model predictions\nIf emmeans convert to as_tibble() first\nPlot this on a ggplot\nInclude 95% confidence intervals (if possible)\n\n\n\nSolution\n\n\n\nBroom\nEmmeans\n\n\n\n\nbinomial_model |&gt; \n   broom::augment(data = beetles, \n                  type.predict = \"response\",\n                  se_fit = TRUE) |&gt; \n  ggplot(aes(x=dose, y=mortality_rate))+\n  geom_point()+\n  geom_line(aes( x = dose, y = .fitted))+\n  geom_ribbon(aes(ymin=.fitted - (1.96 * .se.fit), ymax= .fitted + (1.96 * .se.fit)),\n               alpha=0.2)\n\n\n\n\n\n\n\n\n\n\nemmeans::emmeans(binomial_model, \n                 specs = ~ dose, \n                 at=list(dose=c(40:80)), \n                 type='response') |&gt;  \n  as_tibble() |&gt; \n  ggplot(aes(x=dose, y=prob))+\n  geom_point(data = beetles, aes(x = dose, y = mortality_rate))+\n  geom_line(aes(x=dose, y=prob))+\n  geom_ribbon(aes(ymin=asymp.LCL, ymax=asymp.UCL), alpha=0.2)\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPrediction\n\n\nCan you edit your code to produce a prediction of the mortality rate at a pesticide dose of 0mg?\n\n\nSolution\n\n\nemmeans::emmeans(binomial_model, \n                 specs = ~ dose, \n                 at=list(dose=0), \n                 type='response') \n\n dose     prob       SE  df asymp.LCL asymp.UCL\n    0 4.66e-07 6.06e-07 Inf  3.66e-08  5.94e-06\n\nConfidence level used: 0.95 \nIntervals are back-transformed from the logit scale",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Logistic regression (for binary data)</span>"
+    ]
+  },
+  {
+    "objectID": "binomial.html#assumptions",
+    "href": "binomial.html#assumptions",
+    "title": "12  Logistic regression (for binary data)",
+    "section": "\n12.5 Assumptions",
+    "text": "12.5 Assumptions\nThe performance package detects and alters the checks. Pay particular attention to the binned residuals plot - this is your best estimate of possible overdispersion (requiring a quasi-likelihood fit). In this case there is likely not enough data for robust checks - we could consider a quasi-likelihood model in order to have more conservative confidence intervals.\n\nperformance::check_model(binomial_model,\n                         detrend = FALSE)\n\n\nperformance::check_overdispersion(binomial_model)\n\n# Overdispersion test\n\n dispersion ratio = 1.002\n          p-value = 0.992\n\n\n\n\nTry fitting a quasi-likelihood model\n\n\n\nFit a quasibinomial model\n\n\nquasibinomial_model &lt;- glm(cbind(number_killed,number_survived) ~ dose, \n                      family = quasibinomial, \n                      data = beetles)\n\n\nHow does this change the means, standard errors and significance tests\nDo you think we need it?",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Logistic regression (for binary data)</span>"
+    ]
+  },
+  {
+    "objectID": "binomial.html#write-ups",
+    "href": "binomial.html#write-ups",
+    "title": "12  Logistic regression (for binary data)",
+    "section": "\n12.6 Write-ups",
+    "text": "12.6 Write-ups\n\n\nWrite up the results\n\n\n\nHow would you write up for findings from this analysis?\n\n\n\nReport\n\nMortality rate increased with pesticide dose in the red flour beetle (Tribolium castaneum). Across the observed pesticide dosage each mg of pesticide was associated with a .25 [95%CI: 0.21 - 0.29] increase in the log odds of mortality (z = 11.42, P &lt; 0.001). At the lowest pesticide dose (49mg) we observed a mean mortality of 7% [4.4 - 11.8%], at the middle range (60mg) we observed a mean mortality of 53.9% [47.4 - 90%] and at the highest dosage (77mg) we saw almost total mortality 98.7%[97.2 - 99.4%].",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Logistic regression (for binary data)</span>"
+    ]
+  },
+  {
+    "objectID": "binomial.html#binomial-vs-linear-model",
+    "href": "binomial.html#binomial-vs-linear-model",
+    "title": "12  Logistic regression (for binary data)",
+    "section": "\n12.7 Binomial vs Linear Model",
+    "text": "12.7 Binomial vs Linear Model\n\n\n\n\n\n\nNoteCalculating R squared\n\n\n\n\n\nBinomial model shows better explanatory power (R-squared) for our correctly fitted model:\n\nDescTools::PseudoR2(binomial_model)\n\n McFadden \n0.9979834",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Logistic regression (for binary data)</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html",
+    "href": "week-4.html",
+    "title": "13  Week 4",
+    "section": "",
+    "text": "13.1 Overview\nDuration: 90-120 minutes\nLearning objectives:",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#overview",
+    "href": "week-4.html#overview",
+    "title": "13  Week 4",
+    "section": "",
+    "text": "Apply binomial GLM workflow to proportion/presence-absence data\nUnderstand proper specification of response variables for binomial models\nDiagnose and address overdispersion in binomial models\nDistinguish between logit scale and probability scale interpretation\nCommunicate findings with appropriate effect sizes (odds ratios, probability changes)",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#dataset-mayfly-presence-in-metal-contaminated-streams",
+    "href": "week-4.html#dataset-mayfly-presence-in-metal-contaminated-streams",
+    "title": "13  Week 4",
+    "section": "\n13.2 Dataset: Mayfly presence in metal-contaminated streams",
+    "text": "13.2 Dataset: Mayfly presence in metal-contaminated streams\n\n13.2.1 Background\nAquatic macroinvertebrates, particularly mayflies (Ephemeroptera), are sensitive bioindicators of water quality. Their presence or absence in freshwater systems can reflect pollution levels, including heavy metal contamination from mining, industry, or agricultural runoff.\nMayflies are particularly vulnerable to heavy metals because:\n\nThey have permeable exoskeletons allowing metal uptake\nTheir immature stages (nymphs) spend months to years in contaminated sediments\nThey require high dissolved oxygen, which metals can affect indirectly\nMany species cannot tolerate even moderate contamination\n\nIn this study, researchers conducted ecological surveys across multiple freshwater streams with varying levels of heavy metal contamination. At each site, they collected invertebrate samples and measured copper (Cu) concentrations in the water, which served as an indicator of overall heavy metal pollution.\nSampling design:\n\n120 sites sampled across a pollution gradient\nMultiple kick-net samples taken at each site (standardised effort)\nAll mayfly individuals identified and counted\nWater samples analysed for dissolved copper concentration (μg/L)\nAdditional environmental variables recorded (water temperature, pH, dissolved oxygen)\n\nResearch question:\nHow does heavy metal contamination (copper concentration) affect mayfly presence and abundance in freshwater streams?\nBiological hypotheses:\n\n\nThreshold effect: Mayflies are present below a critical copper concentration, absent above it\n\nGradual decline: Mayfly occurrence probability decreases continuously with increasing copper\n\nDose-dependent: Both presence probability AND abundance (when present) decline with copper\n\nConfounded effects: Temperature or dissolved oxygen, not copper directly, drive patterns",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#the-data",
+    "href": "week-4.html#the-data",
+    "title": "13  Week 4",
+    "section": "\n13.3 The Data",
+    "text": "13.3 The Data\nFile: mayfly_contamination.csv\nVariables:\n\n\nsite_id: Unique identifier for each sampling site (character)\n\nstream_name: Name of stream system (character)\n\nlatitude: Site latitude (numeric, decimal degrees)\n\nlongitude: Site longitude (numeric, decimal degrees)\n\nsamples_collected: Number of kick-net samples at this site (integer, range: 3-8)\n\nsamples_with_mayfly: Number of samples containing at least one mayfly (integer, 0 to samples_collected)\n\ntotal_mayflies: Total number of mayfly individuals across all samples (integer, 0-120+)\n\ncopper_ugl: Dissolved copper concentration (μg/L, numeric, range: 3.2-156.8)\n\ndo_mgl: Dissolved oxygen (mg/L, numeric, range: 5.1-11.2)\n\ntemperature_c: Water temperature (°C, numeric, range: 8.3-18.7)\n\nph: Water pH (numeric, range: 6.2-8.4)\n\nSample size: 120 sites\nData notes:\n\n\nResponse variable structure: samples_with_mayfly and samples_collected form a binomial response (proportion data: “X successes out of N trials”)\nSample size (samples_collected) varies by site → must be incorporated in model\nSome sites have 0% mayflies, some 100%, most intermediate\nCopper concentration is right-skewed (most sites low contamination, few highly polluted)\nDissolved oxygen varies naturally (8-10 mg/L typical for healthy streams)\nMultiple sites from same stream system → potential spatial clustering (treat as independent for this analysis)",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#your-task",
+    "href": "week-4.html#your-task",
+    "title": "13  Week 4",
+    "section": "\n13.4 Your Task",
+    "text": "13.4 Your Task\nComplete an independent analysis following binomial GLM principles. You will produce:\n\n\nTwo R scripts:\n\n\n01_data_preparation.R: Load, explore, and prepare data\n\n02_binomial_analysis.R: Fit models and generate outputs\n\n\nA README file (README.md): Document your analysis\nA Quarto document (analysis_report.qmd): Professional write-up with figure(s)",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#part-1-data-preparation",
+    "href": "week-4.html#part-1-data-preparation",
+    "title": "13  Week 4",
+    "section": "\n13.5 Part 1: Data Preparation",
+    "text": "13.5 Part 1: Data Preparation\nTime allocation: 25 minutes",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#script-01_data_preparation.r",
+    "href": "week-4.html#script-01_data_preparation.r",
+    "title": "13  Week 4",
+    "section": "\n13.6 Script: 01_data_preparation.R\n",
+    "text": "13.6 Script: 01_data_preparation.R\n\nCritical tasks:\n\nLoad required packages (tidyverse, here, janitor, performance, emmeans, broom)\nRead in the data (mayfly_contamination.csv)\n\nExamine response variable carefully:\n\nCalculate the proportion of samples with mayflies at each site\nCheck the range of samples_collected (sample size varies by site)\nIdentify sites where mayflies were never found vs always found vs sometimes found\n\n\n\nCreate analysis variables:\n\n\nmayfly_proportion: samples_with_mayfly / samples_collected\n\n\nmayfly_present: Binary (TRUE/FALSE) — mayfly found in at least one sample?\nConsider log-transforming copper (right-skewed, multiplicative effects expected)\n\n\n\nData quality checks:\n\nAre there any sites where samples_with_mayfly &gt; samples_collected? (impossible)\nAre copper values plausible for freshwater? (typically 0-200 μg/L)\nAre temperature, DO, pH in reasonable ranges?\nCheck for missing values\n\n\n\nExploratory visualisation:\n\nPlot proportion of samples with mayflies vs copper concentration\nConsider adding point size to show sample size per site\nExplore relationships with temperature and dissolved oxygen\n\n\n\nCorrelation check:\n\nAre copper, temperature, and dissolved oxygen correlated?\nThis matters for model interpretation\n\n\n\n\n13.6.1 Code Structure\n# 01_data_preparation.R\n# Author: [Your name]\n# Date: [Date]\n# Purpose: Prepare mayfly occurrence data for binomial GLM analysis ----\n\n# Load packages ----\nlibrary(tidyverse)\nlibrary(janitor)\nlibrary(here)\n\n# Read data ----\nmayfly_raw &lt;- read_csv(here(\"data\", \"mayfly_contamination.csv\"))\n\n# Examine structure ----\nglimpse(mayfly_raw)\nsummary(mayfly_raw)\n\n# Calculate key variables ----\nmayfly &lt;- mayfly_raw |&gt;\n  mutate(\n    # Proportion with mayflies\n    mayfly_proportion = samples_with_mayfly / samples_collected,\n    # Binary presence\n    mayfly_present = samples_with_mayfly &gt; 0,\n    # Log-transformed copper (add small constant to handle zeros if any)\n    log_copper = log(copper_ugl + 0.1)\n  )\n\n# Data quality checks ----\n# Check for impossible values\n# [Your code here]\n\n# Check ranges\n# [Your code here]\n\n# Summarise response variable ----\n# [Your code here - how many sites: never, always, sometimes mayfly?]\n\n# Check predictor correlations ----\n# [Your code here]\n\n# Exploratory plots ----\n# Proportion vs copper\n# [Your code here]\n\n# Distribution of copper\n# [Your code here]\n\n# Explore confounders\n# [Your code here - e.g., copper vs DO relationship]\n\n# Save cleaned data ----\n# write_csv(mayfly, here(\"data\", \"mayfly_clean.csv\"))\n\n13.6.2 Expected Observations\nAfter running your data preparation, you should note:\n\n\nResponse variable structure: How many sites have 0%, 100%, or intermediate mayfly proportions?\n\nCopper distribution: Is it right-skewed? (Suggests log transformation appropriate)\n\nSample size variation: Do some sites have more samples than others? (Important for weighting)\n\nCorrelations: Are copper and dissolved oxygen related? (Potential confounding)\n\nVisual pattern: Does mayfly proportion decline with copper? Smoothly or threshold?",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#part-2-binomial-glm-analysis",
+    "href": "week-4.html#part-2-binomial-glm-analysis",
+    "title": "13  Week 4",
+    "section": "\n13.7 Part 2: Binomial GLM Analysis",
+    "text": "13.7 Part 2: Binomial GLM Analysis\nTime allocation: 45 minutes\n\n13.7.1 Script: 02_binomial_analysis.R\n\nCritical concepts for binomial models:\n\nResponse must be specified as cbind(successes, failures) or proportion with weights\n\nLink function is logit (log odds) by default\nCoefficients are on log-odds scale — must exponentiate to get odds ratios\nPredictions are probabilities (0-1 scale)\nOverdispersion common when data are clustered or samples are not independent\n\nAnalysis workflow:\n\n\nFit binomial GLM with proper response specification\n\nUse cbind for successes and failures (recommended)\nCheck for overdispersion (residual deviance vs df)\nExamine diagnostic plots\n\n\n\nTest model structure\n\nShould copper be log-transformed?\nIs relationship linear on logit scale, or polynomial?\nCompare copper vs log(copper) using AIC and residual deviance\n\n\n\nConsider additional predictors\n\nDoes dissolved oxygen improve model?\nBe cautious of collinearity with copper\n\n\n\nAddress overdispersion if present\n\nCalculate dispersion parameter: φ̂ = residual deviance / residual df\nIf φ̂ &gt; 1.5: fit quasibinomial model\nCompare standard errors between binomial and quasibinomial\n\n\n\nModel comparison\n\nCompare nested models (if not using quasibinomial)\nUse drop1() with test = “Chisq” for binomial\nUse drop1() with test = “F” for quasibinomial\n\n\n\nExtract results for reporting\n\nCoefficients on log-odds scale AND odds ratios (exponentiated)\nPredicted probabilities at low, medium, high copper concentrations\nConcentration at which probability = 0.5 (LC₅₀ analogue)\n\n\n\n13.7.2 Code Structure\n# 02_binomial_analysis.R\n# Author: [Your name]\n# Date: [Date]\n# Purpose: Binomial GLM analysis of copper effects on mayfly occurrence ----\n\n# Load packages ----\nlibrary(tidyverse)\nlibrary(performance)\nlibrary(emmeans)\nlibrary(here)\nlibrary(broom)\nlibrary(MASS)\n\n# Load cleaned data ----\n# source(here(\"scripts\", \"01_data_preparation.R\"))\n# OR\n# mayfly &lt;- read_csv(here(\"data\", \"mayfly_clean.csv\"))\n\n# 1. Fit initial binomial GLM ----\n# Using cbind specification (recommended)\n# [Your code here]\n# glm(cbind(samples_with_mayfly, samples_collected - samples_with_mayfly) ~ copper_ugl,\n#     family = binomial(link = \"logit\"),\n#     data = mayfly)\n\n# Check overdispersion\n# [Your code here]\n\n# Diagnostic plots\n# [Your code here]\n\n# 2. Test copper transformation ----\n# Compare linear copper vs log copper\n# [Your code here]\n\n# Which has lower AIC?\n# Which has lower residual deviance?\n\n# 3. Add potential confounders ----\n# Does dissolved oxygen explain additional variation?\n# [Your code here]\n\n# 4. Address overdispersion ----\n# If dispersion &gt; 1.5, use quasibinomial\n# [Your code here]\n\n# Check diagnostics\n# [Your code here]\n\n# Compare inference: binomial vs quasibinomial\n# [Your code here]\n\n# 5. Justify final model choice ----\n# [Your justification in comments]\n\n# 6. Extract key results ----\n# Coefficients as odds ratios\n# [Your code here]\n\n# Predicted probabilities across copper gradient\n# [Your code here]\n\n# Find LC₅₀ (copper concentration at 50% probability)\n# [Your code here]\n\n# Predictions at key concentrations\n# [Your code here]\n\n# 7. Generate data for publication figure ----\n# [Your code here]\n\n13.7.3 Key Decisions\nYou must make and justify:\n\nResponse specification: Did you use cbind() correctly? This is critical for binomial models.\n\nCopper transformation: Linear or log-transformed? Justify based on:\n\nAIC comparison\nResidual deviance\nBiological plausibility\n\n\n\nAdditional predictors: Should dissolved oxygen be included?\n\nDoes it improve fit?\nIs it collinear with copper?\n\n\n\nOverdispersion: Is it present? If yes:\n\nWhat is the dispersion parameter?\nHow much do standard errors change with quasibinomial?\nWhat might cause overdispersion?\n\n\nFinal model: State clearly and justify",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#part-3-readme-documentation",
+    "href": "week-4.html#part-3-readme-documentation",
+    "title": "13  Week 4",
+    "section": "\n13.8 Part 3: README Documentation",
+    "text": "13.8 Part 3: README Documentation\nTime allocation: 15 minutes\n\n13.8.1 Template\n# Mayfly Occurrence and Heavy Metal Contamination Analysis\n\n## Project Overview\n\nAnalysis of mayfly presence in freshwater streams across a copper contamination gradient.\n\n## Data\n\n- **Source**: [Provided for course / ecological survey]\n- **Sample size**: 120 sites with [median] kick-net samples per site\n- **Response variable**: \n  - Proportion of samples containing mayflies (0-1)\n  - Binomial: successes/trials structure\n- **Primary predictor**: Dissolved copper concentration (3.2-156.8 μg/L)\n- **Covariates**: Water temperature (°C), dissolved oxygen (mg/L), pH\n\n## Files\n\n- `mayfly_contamination.csv`: Raw data\n- `01_data_preparation.R`: Data cleaning and exploration\n- `02_binomial_analysis.R`: GLM fitting and model selection\n- `analysis_report.qmd`: Results write-up and figure\n- `README.md`: This file\n\n## Analysis Workflow\n\n1. **Data preparation**: \n   - Created proportion and binary presence variables\n   - Checked for data quality issues\n   - Explored predictor correlations\n   \n2. **Model selection**: \n   - Compared linear vs log-transformed copper\n   - Tested for confounding by dissolved oxygen\n   - [State other comparisons]\n   \n3. **Final model**: \n   - [State model: e.g., \"Quasibinomial GLM with log(copper)\"]\n   - Dispersion parameter: φ̂ = [value]\n   - Justification: [Brief reason]\n\n4. **Key finding**: \n   - [One sentence summary]\n\n## Software\n\n- R version: [version]\n- Key packages:\n  - tidyverse v[version]\n  - performance v[version]\n  - emmeans v[version]\n\n## Results\n\n[2-3 sentences summarising main finding and effect size]\n\nSee `analysis_report.qmd` for full write-up and figure.\n\n## Key Decisions\n\n[List critical modelling decisions made]\n\n## Author\n\n[Your name]  \n[Date]",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#part-4-results-report-optional",
+    "href": "week-4.html#part-4-results-report-optional",
+    "title": "13  Week 4",
+    "section": "\n13.9 Part 4: Results Report [Optional]",
+    "text": "13.9 Part 4: Results Report [Optional]\nTime allocation: 45 minutes",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#yaml-header",
+    "href": "week-4.html#yaml-header",
+    "title": "13  Week 4",
+    "section": "\n13.10 YAML Header",
+    "text": "13.10 YAML Header\n---\ntitle: \"Heavy Metal Contamination and Mayfly Occurrence in Freshwater Streams\"\nauthor: \"Your Name\"\ndate: today\nformat: \n  html:\n    toc: true\n    code-fold: true\n    theme: cosmo\nexecute:\n  warning: false\n  message: false\n---\n\n13.10.1 Required Content\n\n13.10.1.1 Methods\nStatistical analysis:\nWrite a short paragraph containing:\n\nModel family (binomial/quasibinomial) and link function (logit)\nResponse variable specification (very important!)\n\n“Modelled as proportion of samples with mayflies, weighted by number of samples per site”\nOR “Modelled using binomial response (successes/failures)”\n\n\nModel structure (terms tested)\nHow copper was scaled/transformed (if applicable)\nHow overdispersion was assessed and addressed\nModel comparison approach\nJustification of final model\n\n13.10.1.2 Results\nWrite a short paragraph containing:\nWrite-up requirements:\n\nLead with biological patterns, not statistics\nReport effect sizes on interpretable scales:\n\nProbabilities at meaningful copper concentrations\nOdds ratios for copper effect\nLC₅₀ (concentration at 50% probability)\n\n\nInclude confidence intervals for key estimates\nReport test statistics to support claims\nAcknowledge overdispersion and how handled\nReference figure\n\nFigure requirements:\nCreate ONE high-quality figure that shows:\n\nRaw data points (proportion per site, sized by sample effort)\nModel predictions (line)\nUncertainty (confidence ribbon)\nClear axis labels with units\nInformative legend\nAppropriate colours (colourblind-friendly)\n\nFigure caption requirements:\n\nWhat is shown (variables)\nSample sizes\nWhat visual elements represent (points, lines, ribbons)\nModel used\nKey finding (optional)",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#assessment-criteria",
+    "href": "week-4.html#assessment-criteria",
+    "title": "13  Week 4",
+    "section": "\n13.11 Assessment Criteria",
+    "text": "13.11 Assessment Criteria\nYour analysis will be evaluated on:\n\n13.11.1 Code Quality (40%)\n\n\nOrganisation: Clear script structure with meaningful section headers\n\nReadability: Informative variable names, appropriate spacing\n\nComments: Key decisions and steps explained\n\nReproducibility: Code runs without errors, paths are relative\n\nEfficiency: Follows tidyverse principles where appropriate\n\n13.11.2 Statistical Approach (40%)\n\n\nCorrect methods: Proper binomial response specification with sample sizes\n\nModel selection: Test transformations, additional predictors, justified choices\n\nDiagnostics: Properly checks overdispersion and model fit\n\nOverdispersion handling: Calculate and report dispersion, use quasibinomial if needed\n\nInterpretation: Correct understanding of log-odds → odds ratios → probabilities\n\nHonesty: Acknowledges uncertainty and limitations\n\n13.11.3 Communication (20%)\n\n\nREADME: Clear, concise, informative\n\nMethods: Response specification clear, overdispersion handling explained\n\nResults: Probability-focused, interpretable, well-supported\n\nFigure: Professional quality, sized points showing sample effort\n\nCaption: Comprehensive, enables understanding without main text\n\nWriting: Clear, precise, appropriate for scientific audience",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#hints-and-tips",
+    "href": "week-4.html#hints-and-tips",
+    "title": "13  Week 4",
+    "section": "\n13.12 Hints and Tips",
+    "text": "13.12 Hints and Tips\n\n\nData Preparation\nModel Selection\nCommon Pitfalls\nWriting Results\nFigure Design\nUnderstanding Binomial Models\n\n\n\n\nCheck how many sites are in each response category (0%, intermediate, 100%)\nThe proportion of zeros matters for model interpretation\nLook at copper distribution—is log transformation needed?\nCheck copper-DO correlation—strong correlation complicates interpretation\n\n\n\n\nStart with simple copper model before adding complexity\nTest log(copper) vs linear copper—both may be defensible\nIf adding DO, check whether it’s significant after accounting for copper\nDon’t include both copper and log(copper) in same model!\n\n\n\n\n❌ CRITICAL ERROR: Using glm(mayfly_proportion ~ copper, family = binomial) without weights\n\nThis ignores sample size variation between sites\n\n\n✅ CORRECT: glm(cbind(samples_with_mayfly, samples_collected - samples_with_mayfly) ~ copper, family = binomial)\n\n\nDon’t report log-odds coefficients without interpretation\n\nDon’t claim “no effect” based solely on P &gt; 0.05\n\nDon’t ignore overdispersion—check φ̂ and use quasibinomial if needed\n\nDon’t forget that coefficients are multiplicative after exponentiating\n\n\n\nPoor example: “Copper coefficient was -0.075 (P &lt; 0.001).”\nGood example: “Mayfly occurrence probability declined sharply with copper concentration (quasibinomial GLM: F₁,₁₁₈ = 87.3, P &lt; 0.001). At low contamination (10 μg/L), presence probability was 0.89 [95% CI: 0.84-0.93], declining to 0.50 at 45 μg/L [95% CI: 42-48 μg/L] and to 0.11 [0.07-0.16] at 100 μg/L.”\n\n\n\nUse geom_point(aes(size = samples_collected)) to show sample effort\nUse geom_ribbon() for uncertainty (behind line, alpha = 0.2)\nSet scale_y_continuous(limits = c(0, 1)) to show full probability range\nConsider log scale for x-axis if using log(copper): scale_x_log10()\n\nAdd horizontal line at P = 0.5 to show LC₅₀ if desired\n\n\n\nKey insight: Binomial models answer “What’s the probability of success?”\n\nSuccess = sample contains mayfly\nTrials = samples collected at site\nProbability = varies with copper (and DO)\n\nThe logit link ensures probabilities stay between 0-1:\n\\[\\text{logit}(p) = \\log\\left(\\frac{p}{1-p}\\right) = \\beta_0 + \\beta_1 \\times \\text{copper}\\]\nTo interpret:\n\nExponentiate coefficients → odds ratios (multiplicative effects)\nUse emmeans(..., type = \"response\") → probabilities (0-1 scale)",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
+    "objectID": "week-4.html#submission-checklist",
+    "href": "week-4.html#submission-checklist",
+    "title": "13  Week 4",
+    "section": "\n13.13 Submission Checklist",
+    "text": "13.13 Submission Checklist\nBefore submitting, ensure you have:\n\n01_data_preparation.R with clear comments\n02_binomial_analysis.R with justified model choices\nUsed cbind() for response specification\nChecked and addressed overdispersion\nREADME.md with complete information\nanalysis_report.qmd rendered to HTML\nanalysis_report.html (knitted output)\nAll code runs without errors\nRelative file paths (not absolute paths like C:/Users/...)\nOne high-quality figure showing sample sizes\nResults report probabilities and LC₅₀, not just log-odds\nHonest acknowledgment of overdispersion and limitations\n\n\n\n\n\n\n\n\nImportantCritical Reminder\n\n\n\nCorrect binomial response specification is essential.\nIf you write:\nglm(mayfly_proportion ~ copper, family = binomial, data = mayfly)\nYou are ignoring sample size variation between sites. A site with 1/2 mayflies gets the same weight as 4/8, even though the latter is more reliable.\nAlways use:\nglm(cbind(samples_with_mayfly, samples_collected - samples_with_mayfly) ~ copper,\n    family = binomial, data = mayfly)\nThis is the most common error in binomial GLMs. Don’t make it!\n\n\nGood luck! Remember: understanding variance-mean relationships and proper model specification matters more than finding “the right answer.”",
+    "crumbs": [
+      "GLM",
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Week 4</span>"
+    ]
+  },
+  {
     "objectID": "r-basics.html",
     "href": "r-basics.html",
     "title": "Appendix A — R Basics",

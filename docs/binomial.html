@@ -5,7 +5,7 @@
 <meta name="generator" content="quarto-1.8.27">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Statistical skills for Biologists">
-<title>Appendix E — Data reshaping – 5023B</title>
+<title>12&nbsp; Logistic regression (for binary data) – 5023B</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -61,8 +61,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./quarto.html" rel="next">
-<link href="./Naming conventions.html" rel="prev">
+<link href="./week-4.html" rel="next">
+<link href="./week-3.html" rel="prev">
 <link href="./images/logos/logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -104,7 +104,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-submit-button-title": "Submit",
     "search-label": "Search"
   }
-}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+}</script><script src="site_libs/font-awesome-6.5.2/js/script.js"></script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
 <link rel="stylesheet" href="include/booktem.css">
 <link rel="stylesheet" href="include/webex.css">
 <link rel="stylesheet" href="include/glossary.css">
@@ -279,7 +304,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./r-basics.html">Appendices</a></li><li class="breadcrumb-item"><a href="./data_reshaping.html"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Data reshaping</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./poisson.html">GLM</a></li><li class="breadcrumb-item"><a href="./binomial.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Logistic regression (for binary data)</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -398,13 +423,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
  <span class="menu-text">GLM</span></a>
-          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./poisson.html" class="sidebar-item-text sidebar-link">
@@ -419,7 +444,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./binomial.html" class="sidebar-item-text sidebar-link">
+  <a href="./binomial.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Logistic regression (for binary data)</span></span></a>
   </div>
 </li>
@@ -433,13 +458,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
-            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
  <span class="menu-text">Appendices</span></a>
-          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
-      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./r-basics.html" class="sidebar-item-text sidebar-link">
@@ -466,7 +491,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./data_reshaping.html" class="sidebar-item-text sidebar-link active">
+  <a href="./data_reshaping.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Data reshaping</span></span></a>
   </div>
 </li>
@@ -510,26 +535,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
    
   <ul>
-<li>
-<a href="#using-pivot-functions" id="toc-using-pivot-functions" class="nav-link active" data-scroll-target="#using-pivot-functions"><span class="header-section-number">E.1</span> Using <code>pivot</code> functions</a>
+<li><a href="#example-dosage-response-to-pesticides" id="toc-example-dosage-response-to-pesticides" class="nav-link active" data-scroll-target="#example-dosage-response-to-pesticides"><span class="header-section-number">12.1</span> Example: Dosage response to pesticides</a></li>
+  <li><a href="#data-tidying" id="toc-data-tidying" class="nav-link" data-scroll-target="#data-tidying"><span class="header-section-number">12.2</span> Data tidying</a></li>
+  <li>
+<a href="#fitting-a-binomial-model" id="toc-fitting-a-binomial-model" class="nav-link" data-scroll-target="#fitting-a-binomial-model"><span class="header-section-number">12.3</span> Fitting a binomial model</a>
   <ul class="collapse">
-<li><a href="#overwrite-the-original-object" id="toc-overwrite-the-original-object" class="nav-link" data-scroll-target="#overwrite-the-original-object"><span class="header-section-number">E.1.1</span> Overwrite the original object</a></li>
-  <li><a href="#create-a-new-r-object" id="toc-create-a-new-r-object" class="nav-link" data-scroll-target="#create-a-new-r-object"><span class="header-section-number">E.1.2</span> Create a new r object</a></li>
+<li><a href="#interpreting-model-coefficients" id="toc-interpreting-model-coefficients" class="nav-link" data-scroll-target="#interpreting-model-coefficients"><span class="header-section-number">12.3.1</span> Interpreting model coefficients</a></li>
   </ul>
 </li>
   <li>
-<a href="#join-functions" id="toc-join-functions" class="nav-link" data-scroll-target="#join-functions"><span class="header-section-number">E.2</span> Join functions</a>
+<a href="#probability" id="toc-probability" class="nav-link" data-scroll-target="#probability"><span class="header-section-number">12.4</span> Probability</a>
   <ul class="collapse">
-<li><a href="#left-join" id="toc-left-join" class="nav-link" data-scroll-target="#left-join"><span class="header-section-number">E.2.1</span> Left join</a></li>
-  <li><a href="#right-join" id="toc-right-join" class="nav-link" data-scroll-target="#right-join"><span class="header-section-number">E.2.2</span> Right join</a></li>
-  <li><a href="#full-join" id="toc-full-join" class="nav-link" data-scroll-target="#full-join"><span class="header-section-number">E.2.3</span> Full join</a></li>
+<li><a href="#making-predictions" id="toc-making-predictions" class="nav-link" data-scroll-target="#making-predictions"><span class="header-section-number">12.4.1</span> Making predictions</a></li>
   </ul>
 </li>
+  <li><a href="#assumptions" id="toc-assumptions" class="nav-link" data-scroll-target="#assumptions"><span class="header-section-number">12.5</span> Assumptions</a></li>
+  <li><a href="#write-ups" id="toc-write-ups" class="nav-link" data-scroll-target="#write-ups"><span class="header-section-number">12.6</span> Write-ups</a></li>
+  <li><a href="#binomial-vs-linear-model" id="toc-binomial-vs-linear-model" class="nav-link" data-scroll-target="#binomial-vs-linear-model"><span class="header-section-number">12.7</span> Binomial vs Linear Model</a></li>
   </ul></nav>
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./r-basics.html">Appendices</a></li><li class="breadcrumb-item"><a href="./data_reshaping.html"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Data reshaping</span></a></li></ol></nav><div class="quarto-title">
-<h1 class="title">Appendix E — Data reshaping</h1>
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./poisson.html">GLM</a></li><li class="breadcrumb-item"><a href="./binomial.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Logistic regression (for binary data)</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-logistic" class="quarto-section-identifier"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Logistic regression (for binary data)</span></span></h1>
 </div>
 
 
@@ -543,260 +570,728 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   
 
 
-</header><p>While neither <em>wide</em> or <em>long</em> data is more correct than the other, we will work with <em>long</em> data as it is clearer how many distinct types of variables there are in our data <em>and</em> the tools we will be using from the <code>tidyverse</code> are designed to work with <em>long</em> data.</p>
-<section id="using-pivot-functions" class="level2" data-number="E.1"><h2 data-number="E.1" class="anchored" data-anchor-id="using-pivot-functions">
-<span class="header-section-number">E.1</span> Using <code>pivot</code> functions</h2>
-<p>There are functions found as part of the <code>tidyverse</code> that can help us to reshape data.</p>
+</header><p>When our response variable is binary, we can use a glm with a <strong>binomial</strong> error distribution</p>
+<p>So far we have only considered continuous and discrete data as response variables. What if our response is a categorical variable (e.g passing or failing an exam, voting yes or no in a referendum, whether an egg has successfully fledged or been predated, infected/uninfected, alive/dead)?</p>
+<p>We can model the <strong>probability</strong> <span class="math inline">\(p\)</span> of being in a particular class as a function of other explanatory variables.</p>
+<p>These type of <strong>binary</strong> data are assumed to follow a <strong>Bernoulli</strong> distribution (which is a special case of <em>Binomial</em>) which has the following characteristics:</p>
+<p><span class="math display">\[
+Y \sim \mathcal{Bern}(p)
+\]</span></p>
 <ul>
-<li><p><code><a href="https://tidyr.tidyverse.org/reference/pivot_wider.html">tidyr::pivot_wider()</a></code> - from <em>long</em> to <em>wide</em> format</p></li>
-<li><p><code><a href="https://tidyr.tidyverse.org/reference/pivot_longer.html">tidyr::pivot_longer()</a></code> - from <em>wide</em> to <em>long</em> format</p></li>
-</ul>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a> country <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"x"</span>, <span class="st">"y"</span>, <span class="st">"z"</span>)</span>
-<span id="cb1-2"><a href="#cb1-2"></a> yr1960 <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">30</span>)</span>
-<span id="cb1-3"><a href="#cb1-3"></a> yr1970 <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="dv">13</span>, <span class="dv">23</span>, <span class="dv">33</span>)</span>
-<span id="cb1-4"><a href="#cb1-4"></a> yr2010 <span class="ot">&lt;-</span>  <span class="fu">c</span>(<span class="dv">15</span>, <span class="dv">25</span>, <span class="dv">35</span>)</span>
-<span id="cb1-5"><a href="#cb1-5"></a></span>
-<span id="cb1-6"><a href="#cb1-6"></a>country_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(country, yr1960, yr1970, yr2010)</span>
-<span id="cb1-7"><a href="#cb1-7"></a>country_data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="kable-table">
-<table class="caption-top table table-sm table-striped small">
-<thead><tr class="header">
-<th style="text-align: left;">country</th>
-<th style="text-align: right;">yr1960</th>
-<th style="text-align: right;">yr1970</th>
-<th style="text-align: right;">yr2010</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">x</td>
-<td style="text-align: right;">10</td>
-<td style="text-align: right;">13</td>
-<td style="text-align: right;">15</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">y</td>
-<td style="text-align: right;">20</td>
-<td style="text-align: right;">23</td>
-<td style="text-align: right;">25</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">z</td>
-<td style="text-align: right;">30</td>
-<td style="text-align: right;">33</td>
-<td style="text-align: right;">35</td>
-</tr>
-</tbody>
-</table>
-</div>
-</div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">pivot_longer</span>(<span class="at">data =</span> country_data,</span>
-<span id="cb2-2"><a href="#cb2-2"></a>             <span class="at">cols =</span> yr1960<span class="sc">:</span>yr2010,</span>
-<span id="cb2-3"><a href="#cb2-3"></a>             <span class="at">names_to =</span> <span class="st">"year"</span>,</span>
-<span id="cb2-4"><a href="#cb2-4"></a>             <span class="at">names_prefix =</span> <span class="st">"yr"</span>,</span>
-<span id="cb2-5"><a href="#cb2-5"></a>             <span class="at">values_to =</span> <span class="st">"metric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="cell" data-layout-align="center">
-<div class="cell-output-display">
-<div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="images/tidyr_pivot.png" class="img-fluid figure-img" style="width:100.0%"></p>
-<figcaption>Reshaping data with pivot</figcaption></figure>
-</div>
-</div>
-</div>
-<p>To <em>save</em> these changes to your data format, you must assign this to an object, and you have two options</p>
-<ul>
-<li><p>Use the same name as the original R object, this will <em>overwrite</em> the original with the new format</p></li>
-<li><p>Use a <em>new</em> name for the reformatted data both R objects will exist in your Environment</p></li>
-</ul>
-<p>Neither is more <em>correct</em> than the other but be aware of what you are doing.</p>
-<section id="overwrite-the-original-object" class="level3" data-number="E.1.1"><h3 data-number="E.1.1" class="anchored" data-anchor-id="overwrite-the-original-object">
-<span class="header-section-number">E.1.1</span> Overwrite the original object</h3>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>country_data <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(<span class="at">data =</span> country_data,</span>
-<span id="cb3-2"><a href="#cb3-2"></a>             <span class="at">cols =</span> yr1960<span class="sc">:</span>yr2010,</span>
-<span id="cb3-3"><a href="#cb3-3"></a>             <span class="at">names_to =</span> <span class="st">"year"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4"></a>             <span class="at">names_prefix =</span> <span class="st">"yr"</span>,</span>
-<span id="cb3-5"><a href="#cb3-5"></a>             <span class="at">values_to =</span> <span class="st">"metric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section><section id="create-a-new-r-object" class="level3" data-number="E.1.2"><h3 data-number="E.1.2" class="anchored" data-anchor-id="create-a-new-r-object">
-<span class="header-section-number">E.1.2</span> Create a new r object</h3>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>long_country_data <span class="ot">&lt;-</span> <span class="fu">pivot_longer</span>(<span class="at">data =</span> country_data,</span>
-<span id="cb4-2"><a href="#cb4-2"></a>             <span class="at">cols =</span> yr1960<span class="sc">:</span>yr2010,</span>
-<span id="cb4-3"><a href="#cb4-3"></a>             <span class="at">names_to =</span> <span class="st">"year"</span>,</span>
-<span id="cb4-4"><a href="#cb4-4"></a>             <span class="at">names_prefix =</span> <span class="st">"yr"</span>,</span>
-<span id="cb4-5"><a href="#cb4-5"></a>             <span class="at">values_to =</span> <span class="st">"metric"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section></section><section id="join-functions" class="level2" data-number="E.2"><h2 data-number="E.2" class="anchored" data-anchor-id="join-functions">
-<span class="header-section-number">E.2</span> Join functions</h2>
-<p>Frequently, analysis of data will require merging these separately managed tables back together. There are multiple ways to join the observations in two tables, based on how the rows of one table are merged with the rows of the other.</p>
-<p>When conceptualizing merges, one can think of two tables, one on the left and one on the right. The most common (and often useful) join is when you merge the subset of rows that have matches in both the left table and the right table: this is called an INNER JOIN. Other types of join are possible as well.</p>
-<ul>
-<li><p>A LEFT JOIN takes all of the rows from the left table, and merges on the data from matching rows in the right table. Keys that don’t match from the left table are still provided with a missing value (NA) from the right table.</p></li>
-<li><p>A RIGHT JOIN is the same, except that all of the rows from the right table are included with matching data from the left, or a missing value.</p></li>
-<li><p>Finally, a FULL JOIN includes all data from all rows in both tables, and includes missing values wherever necessary.</p></li>
+<li>
+<strong>Binary</strong> variable, taking the values 0 or 1 (yes/no, pass/fail).</li>
+<li>A <strong>probability</strong> parameter <span class="math inline">\(p\)</span>, where <span class="math inline">\(0 &lt; p &lt; 1\)</span>.</li>
+<li>
+<strong>Mean</strong> = <span class="math inline">\(p\)</span><br>
+</li>
+<li>
+<strong>Variance</strong> = <span class="math inline">\(p(1 - p)\)</span>
+</li>
 </ul>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
-<figure class="figure"><p><img src="images/join-diagrams.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+<figure class="figure"><p><img src="binomial_files/figure-html/bernplot-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
 </figure>
 </div>
 </div>
 </div>
-<section id="left-join" class="level3" data-number="E.2.1"><h3 data-number="E.2.1" class="anchored" data-anchor-id="left-join">
-<span class="header-section-number">E.2.1</span> Left join</h3>
+<p>Let us now place the Gaussian (simple linear regression), and logistic models next to each other:</p>
+<p><span class="math display">\[
+\begin{aligned}
+Y &amp; \sim \mathcal{N}(\mu, \sigma^2)  &amp;&amp;&amp; Y  \sim \mathcal{Bern}(p)\\
+\mu &amp; = \beta_0 + \beta_1X &amp;&amp;&amp;  ?? = \beta_0 + \beta_1X
+\end{aligned}
+\]</span></p>
+<p>Now we need to fill in the <code>??</code> with the appropriate term.</p>
+<p>We cannot simply model the probability as <span class="math inline">\(p = \beta_0 + \beta_1X\)</span>, because <span class="math inline">\(p\)</span> <strong>cannot</strong> be negative. <span class="math inline">\(\log{p} = \beta_0 + \beta_1X\)</span> won’t work either, because <span class="math inline">\(p\)</span> cannot be greater than 1.</p>
+<p>Instead we model the <strong>log odds</strong> <span class="math inline">\(\log\left(\frac{p}{1 - p}\right)\)</span> as a linear function. So our logistic regression model looks like this:</p>
+<p><span class="math display">\[
+\begin{aligned}
+Y  &amp; \sim \mathcal{Bern}(p)\\
+\log\left(\frac{p}{1 - p}\right) &amp;  = \beta_0 + \beta_1 X
+\end{aligned}
+\]</span></p>
+<p>Again, note that we are still “only” fitting straight lines through our data, but this time in the log odds space. As a shorthand notation we write <span class="math inline">\(\log\left(\frac{p}{1 - p}\right) = \text{logit}(p) = \beta_0 + \beta_1 X\)</span>.</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="co"># Create tibbles df_primary and df_secondary</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>df_primary <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb5-3"><a href="#cb5-3"></a>  <span class="at">ID =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"F"</span>),</span>
-<span id="cb5-4"><a href="#cb5-4"></a>  <span class="at">y =</span> <span class="fu">c</span>(<span class="dv">5</span>, <span class="dv">5</span>, <span class="dv">8</span>, <span class="dv">0</span>, <span class="dv">9</span>)</span>
-<span id="cb5-5"><a href="#cb5-5"></a>)</span>
-<span id="cb5-6"><a href="#cb5-6"></a></span>
-<span id="cb5-7"><a href="#cb5-7"></a>df_secondary <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb5-8"><a href="#cb5-8"></a>  <span class="at">ID =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span>, <span class="st">"E"</span>),</span>
-<span id="cb5-9"><a href="#cb5-9"></a>  <span class="at">z =</span> <span class="fu">c</span>(<span class="dv">30</span>, <span class="dv">21</span>, <span class="dv">22</span>, <span class="dv">25</span>, <span class="dv">29</span>)</span>
-<span id="cb5-10"><a href="#cb5-10"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="binomial_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can also re-arrange the above equation so that we get an expression for <span class="math inline">\(p\)</span></p>
+<p><span class="math display">\[
+p = \frac{e^{\beta_0 + \beta_1 X}}{1 + e^{\beta_0 + \beta_1 X}}
+\]</span></p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="binomial_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Note how <span class="math inline">\(p\)</span> can only vary between 0 and 1.</p>
+<p>To implement the logistic regression model in R, we choose <code>family=binomial(link=logit)</code> (the Bernoulli distribution is a special case of the Binomial distribution).</p>
+<pre><code>glm(response ~ explanatory, family=binomial(link=logit))</code></pre>
+<section id="example-dosage-response-to-pesticides" class="level2" data-number="12.1"><h2 data-number="12.1" class="anchored" data-anchor-id="example-dosage-response-to-pesticides">
+<span class="header-section-number">12.1</span> Example: Dosage response to pesticides</h2>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="images/Tribolium castaneum.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:80.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>This small dataset is from an experiment looking at mortality in batches of flour exposed to different doses of pesticides.</p>
+<p>The question of interest is:</p>
+<blockquote class="blockquote">
+<p>How does pesticide dose affect mortality in the flour beetle <em>Tribolium castaneum</em></p>
+</blockquote>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<a href="https://raw.githubusercontent.com/Philip-Leftwich/Oct-Intro-Analytics/refs/heads/dev/files/beetles.csv">
+<button class="btn btn-success"><i class="fa fa-save"></i> Download Beetle data as csv</button>
+</a>
+</div>
 </div>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">left_join</span>(df_primary, df_secondary, <span class="at">by =</span><span class="st">'ID'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">head</span>(beetles)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="caption-top table table-sm table-striped small">
 <thead><tr class="header">
-<th style="text-align: left;">ID</th>
-<th style="text-align: right;">y</th>
-<th style="text-align: right;">z</th>
+<th style="text-align: right;">Dose</th>
+<th style="text-align: right;">Number_tested</th>
+<th style="text-align: right;">Number_killed</th>
+<th style="text-align: right;">Mortality_rate</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">30</td>
+<td style="text-align: right;">49.06</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.1224490</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">B</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">21</td>
+<td style="text-align: right;">52.99</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">0.2166667</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">C</td>
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">22</td>
+<td style="text-align: right;">56.91</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">0.2903226</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">D</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">25</td>
+<td style="text-align: right;">60.84</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.5000000</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">F</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">NA</td>
+<td style="text-align: right;">64.76</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">0.8253968</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">68.69</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">0.8983051</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 </div>
-</section><section id="right-join" class="level3" data-number="E.2.2"><h3 data-number="E.2.2" class="anchored" data-anchor-id="right-join">
-<span class="header-section-number">E.2.2</span> Right join</h3>
+<p>The data columns are:</p>
+<ul>
+<li><p><strong>Dose</strong>: Pesticide dosage (mg)</p></li>
+<li><p><strong>Number_tested</strong> - Number of beetles in application</p></li>
+<li><p><strong>Number_killed</strong>: Number of beetles that died</p></li>
+<li><p><strong>Mortality_rate</strong> Calculated proportion of deaths</p></li>
+</ul></section><section id="data-tidying" class="level2" data-number="12.2"><h2 data-number="12.2" class="anchored" data-anchor-id="data-tidying">
+<span class="header-section-number">12.2</span> Data tidying</h2>
+<p>A binomial model calculates the numbers of <code>wins/losses</code> out of a series of trials, here that will refer to beetles “successfully killed” by the pesticide/ survivors. The GLM of the binomial counts will analyse the number of <em>each</em> batch of beetles killed, while taking into account the size of each group</p>
+<div class="task">
+<div class="task-header">
+<p>Your turn</p>
+</div>
+<div class="task-container">
+<ul class="task-list">
+<li><p><label><input type="checkbox">Clean the names in the dataset</label></p></li>
+<li><p><label><input type="checkbox">Use <code>mutate</code> to make a new column <code>number_survived</code> from the beetles not killed in each trial</label></p></li>
+<li><p><label><input type="checkbox">Include any sensible data checks</label></p></li>
+</ul>
+<div class="webex-solution">
+<button>
+Solution
+</button>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">right_join</span>(df_primary, df_secondary, <span class="at">by =</span> <span class="st">'ID'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>beetles <span class="ot">&lt;-</span> beetles <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2"></a>  janitor<span class="sc">::</span><span class="fu">clean_names</span>() <span class="sc">|&gt;</span> <span class="co"># clean names</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="fu">mutate</span>(<span class="at">number_survived =</span> number_tested<span class="sc">-</span>number_killed) <span class="co"># mutate</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-1-contents" aria-controls="callout-1" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>A linear model
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-1" class="callout-1-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Here we can fit a standard linear model to calculated proportions.</p>
+<p>This shows issues with normality and linearity</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(model, </span>
+<span id="cb4-2"><a href="#cb4-2"></a>                         <span class="at">detrend =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Predictions made from this model are also inadequate</p>
+</div>
+</div>
+</div>
+</section><section id="fitting-a-binomial-model" class="level2" data-number="12.3"><h2 data-number="12.3" class="anchored" data-anchor-id="fitting-a-binomial-model">
+<span class="header-section-number">12.3</span> Fitting a binomial model</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>binomial_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(number_killed,number_survived) <span class="sc">~</span> dose, </span>
+<span id="cb5-2"><a href="#cb5-2"></a>                      <span class="at">family =</span> binomial, </span>
+<span id="cb5-3"><a href="#cb5-3"></a>                      <span class="at">data =</span> beetles)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true" href="" aria-current="page">summary</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false" href="">broom</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">summary</span>(binomial_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = cbind(number_killed, number_survived) ~ dose, family = binomial, 
+    data = beetles)
+
+Coefficients:
+             Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept) -14.57806    1.29846  -11.23   &lt;2e-16 ***
+dose          0.24554    0.02149   11.42   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 267.6624  on 7  degrees of freedom
+Residual deviance:   8.4379  on 6  degrees of freedom
+AIC: 38.613
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>binomial_model <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2"></a>  broom<span class="sc">::</span><span class="fu">tidy</span>(<span class="at">conf.int=</span>T)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="kable-table">
 <table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 15%">
+<col style="width: 15%">
+<col style="width: 13%">
+<col style="width: 13%">
+<col style="width: 10%">
+<col style="width: 15%">
+<col style="width: 15%">
+</colgroup>
 <thead><tr class="header">
-<th style="text-align: left;">ID</th>
-<th style="text-align: right;">y</th>
-<th style="text-align: right;">z</th>
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">std.error</th>
+<th style="text-align: right;">statistic</th>
+<th style="text-align: right;">p.value</th>
+<th style="text-align: right;">conf.low</th>
+<th style="text-align: right;">conf.high</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">30</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">B</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">21</td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">C</td>
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">22</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">D</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">-14.5780604</td>
+<td style="text-align: right;">1.2984622</td>
+<td style="text-align: right;">-11.22717</td>
 <td style="text-align: right;">0</td>
-<td style="text-align: right;">25</td>
+<td style="text-align: right;">-17.2645230</td>
+<td style="text-align: right;">-12.1608424</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">E</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">29</td>
+<tr class="even">
+<td style="text-align: left;">dose</td>
+<td style="text-align: right;">0.2455399</td>
+<td style="text-align: right;">0.0214937</td>
+<td style="text-align: right;">11.42381</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.2056099</td>
+<td style="text-align: right;">0.2900912</td>
 </tr>
 </tbody>
 </table>
 </div>
 </div>
 </div>
-</section><section id="full-join" class="level3" data-number="E.2.3"><h3 data-number="E.2.3" class="anchored" data-anchor-id="full-join">
-<span class="header-section-number">E.2.3</span> Full join</h3>
-<div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">full_join</span>(df_primary, df_secondary, <span class="at">by =</span> <span class="st">'ID'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output-display">
-<div class="kable-table">
-<table class="caption-top table table-sm table-striped small">
+</div>
+</div>
+</div>
+<p>So we are now fitting the following model</p>
+<p><span class="math display">\[
+Y \sim Bern(p)
+\]</span> <span class="math display">\[
+\log\left[ \frac { P( \operatorname{oring\_binary} = fail) }{ 1 - P( \operatorname{oring\_binary} = fail) } \right] = \beta_{0} + \beta_{1}(\operatorname{temp})
+\]</span></p>
+<p>Which in R will look like this:</p>
+<ul>
+<li>Intercept = <span class="math inline">\(\beta_{0}\)</span> = -14.5</li>
+</ul>
+<p>When pesticide dose is zero the mean <em>log-odds</em> are -14.5 [95%CI: -17.2 - -12.1] for a death in beetles</p>
+<ul>
+<li>dose = <span class="math inline">\(\beta_{1}\)</span> = 0.24 [95%CI: 0.2 - 0.29]</li>
+</ul>
+<p>For every rise in the pesticide dose by 1mg, the <em>log-odds</em> of a death increase by 0.24.</p>
+<section id="interpreting-model-coefficients" class="level3" data-number="12.3.1"><h3 data-number="12.3.1" class="anchored" data-anchor-id="interpreting-model-coefficients">
+<span class="header-section-number">12.3.1</span> Interpreting model coefficients</h3>
+<p>We first consider why we are dealing with odds <span class="math inline">\(\frac{p}{1-p}\)</span> instead of just <span class="math inline">\(p\)</span>. They contain the same information, so the choice is somewhat arbitrary, however we’ve been using probabilities for so long that it feels unnatural to switch to odds. There are good reasons for this, however. Odds <span class="math inline">\(\frac{p}{1-p}\)</span> can take on any value from 0 to ∞ and so part of our translation of <span class="math inline">\(p\)</span> to an unrestricted domain is already done (<span class="math inline">\(P\)</span> is restricted to 0-1). Take a look at some examples below:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 50%">
+<col style="width: 28%">
+</colgroup>
 <thead><tr class="header">
-<th style="text-align: left;">ID</th>
-<th style="text-align: right;">y</th>
-<th style="text-align: right;">z</th>
+<th>Probability</th>
+<th><pre><code>          Odds</code></pre></th>
+<th><pre><code> Verbiage</code></pre></th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td style="text-align: left;">A</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">30</td>
+<td><span class="math inline">\(p=.95\)</span></td>
+<td><span class="math inline">\(\frac{95}{5} = \frac{19}{1} = 19\)</span></td>
+<td>19 to 1 odds for</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">B</td>
-<td style="text-align: right;">5</td>
-<td style="text-align: right;">21</td>
+<td><span class="math inline">\(p=.75\)</span></td>
+<td><span class="math inline">\(\frac{75}{25} = \frac{3}{1} = 3\)</span></td>
+<td>3 to 1 odds for</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">C</td>
-<td style="text-align: right;">8</td>
-<td style="text-align: right;">22</td>
+<td><span class="math inline">\(p=.50\)</span></td>
+<td><span class="math inline">\(\frac{50}{50} = \frac{1}{1} = 1\)</span></td>
+<td>1 to 1 odds</td>
 </tr>
 <tr class="even">
-<td style="text-align: left;">D</td>
-<td style="text-align: right;">0</td>
-<td style="text-align: right;">25</td>
+<td><span class="math inline">\(p=.25\)</span></td>
+<td><span class="math inline">\(\frac{25}{75} = \frac{1}{3} = 0.33\)</span></td>
+<td>3 to 1 odds against</td>
 </tr>
 <tr class="odd">
-<td style="text-align: left;">F</td>
-<td style="text-align: right;">9</td>
-<td style="text-align: right;">NA</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">E</td>
-<td style="text-align: right;">NA</td>
-<td style="text-align: right;">29</td>
+<td><span class="math inline">\(p=.05\)</span></td>
+<td><span class="math inline">\(\frac{95}{5}  = \frac{1}{19} = 0.0526\)</span></td>
+<td>19 to 1 odds against</td>
 </tr>
 </tbody>
 </table>
+<p>When we use a binomial model, we produce the ‘log-odds’, this produces a fully unconstrained linear regression as anything less than 1, can now occupy an infinite negative value -∞ to ∞.</p>
+<p><span class="math display">\[
+\log\left(\frac{p}{1-p}\right)  =   \beta_{0}+\beta_{1}x_{1}+\beta_{2}x_{2}
+\]</span></p>
+<p><span class="math display">\[
+\frac{p}{1-p}   =   e^{\beta_{0}}e^{\beta_{1}x_{1}}e^{\beta_{2}x_{2}}
+\]</span></p>
+<p>We can interpret <span class="math inline">\(\beta_{1}\)</span> and <span class="math inline">\(\beta_{2}\)</span> as the increase in the log odds for every unit increase in <span class="math inline">\(x_{1}\)</span> and <span class="math inline">\(x_{2}\)</span>. We could alternatively interpret <span class="math inline">\(\beta_{1}\)</span> and <span class="math inline">\(\beta_{2}\)</span> using the notion that a one unit change in <span class="math inline">\(x_{1}\)</span> as a percent change of <span class="math inline">\(e^{\beta_{1}}\)</span> in the odds. That is to say, <span class="math inline">\(e^{\beta_{1}}\)</span> is the odds ratio of that change.</p>
+<p>If you want to find out more about <a href="https://www.youtube.com/watch?v=8nm0G-1uJzA">Odds and log-odds head here</a></p>
+</section></section><section id="probability" class="level2" data-number="12.4"><h2 data-number="12.4" class="anchored" data-anchor-id="probability">
+<span class="header-section-number">12.4</span> Probability</h2>
+<section id="making-predictions" class="level3" data-number="12.4.1"><h3 data-number="12.4.1" class="anchored" data-anchor-id="making-predictions">
+<span class="header-section-number">12.4.1</span> Making predictions</h3>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-2-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-1" role="tab" aria-controls="tabset-2-1" aria-selected="true" href="">Augment</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-2-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-2-2" role="tab" aria-controls="tabset-2-2" aria-selected="false" href="">Emmeans</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-2-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-2-1-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>binomial_model <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2"></a>   broom<span class="sc">::</span><span class="fu">augment</span>(<span class="at">data =</span> beetles, </span>
+<span id="cb11-3"><a href="#cb11-3"></a>                  <span class="at">type.predict =</span> <span class="st">"response"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<colgroup>
+<col style="width: 4%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 11%">
+<col style="width: 12%">
+<col style="width: 7%">
+<col style="width: 8%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 7%">
+<col style="width: 8%">
+</colgroup>
+<thead><tr class="header">
+<th style="text-align: right;">dose</th>
+<th style="text-align: right;">number_tested</th>
+<th style="text-align: right;">number_killed</th>
+<th style="text-align: right;">mortality_rate</th>
+<th style="text-align: right;">number_survived</th>
+<th style="text-align: right;">.fitted</th>
+<th style="text-align: right;">.resid</th>
+<th style="text-align: right;">.hat</th>
+<th style="text-align: right;">.sigma</th>
+<th style="text-align: right;">.cooksd</th>
+<th style="text-align: right;">.std.resid</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">49.06</td>
+<td style="text-align: right;">49</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.1224490</td>
+<td style="text-align: right;">43</td>
+<td style="text-align: right;">0.0736536</td>
+<td style="text-align: right;">1.2025499</td>
+<td style="text-align: right;">0.2458459</td>
+<td style="text-align: right;">1.141959</td>
+<td style="text-align: right;">0.3695718</td>
+<td style="text-align: right;">1.3847554</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">52.99</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">13</td>
+<td style="text-align: right;">0.2166667</td>
+<td style="text-align: right;">47</td>
+<td style="text-align: right;">0.1726583</td>
+<td style="text-align: right;">0.8747551</td>
+<td style="text-align: right;">0.3477614</td>
+<td style="text-align: right;">1.205381</td>
+<td style="text-align: right;">0.3324978</td>
+<td style="text-align: right;">1.0831366</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">56.91</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">18</td>
+<td style="text-align: right;">0.2903226</td>
+<td style="text-align: right;">44</td>
+<td style="text-align: right;">0.3533406</td>
+<td style="text-align: right;">-1.0542088</td>
+<td style="text-align: right;">0.3104417</td>
+<td style="text-align: right;">1.168435</td>
+<td style="text-align: right;">0.3517707</td>
+<td style="text-align: right;">-1.2695246</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">60.84</td>
+<td style="text-align: right;">56</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.5000000</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">0.5891818</td>
+<td style="text-align: right;">-1.3455544</td>
+<td style="text-align: right;">0.2366298</td>
+<td style="text-align: right;">1.101468</td>
+<td style="text-align: right;">0.3736036</td>
+<td style="text-align: right;">-1.5400459</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">64.76</td>
+<td style="text-align: right;">63</td>
+<td style="text-align: right;">52</td>
+<td style="text-align: right;">0.8253968</td>
+<td style="text-align: right;">11</td>
+<td style="text-align: right;">0.7896971</td>
+<td style="text-align: right;">0.7110658</td>
+<td style="text-align: right;">0.2848855</td>
+<td style="text-align: right;">1.243451</td>
+<td style="text-align: right;">0.1346649</td>
+<td style="text-align: right;">0.8408568</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">68.69</td>
+<td style="text-align: right;">59</td>
+<td style="text-align: right;">53</td>
+<td style="text-align: right;">0.8983051</td>
+<td style="text-align: right;">6</td>
+<td style="text-align: right;">0.9078843</td>
+<td style="text-align: right;">-0.2506399</td>
+<td style="text-align: right;">0.2530093</td>
+<td style="text-align: right;">1.292579</td>
+<td style="text-align: right;">0.0146767</td>
+<td style="text-align: right;">-0.2899964</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">72.61</td>
+<td style="text-align: right;">62</td>
+<td style="text-align: right;">61</td>
+<td style="text-align: right;">0.9838710</td>
+<td style="text-align: right;">1</td>
+<td style="text-align: right;">0.9626942</td>
+<td style="text-align: right;">0.9887023</td>
+<td style="text-align: right;">0.1992421</td>
+<td style="text-align: right;">1.201427</td>
+<td style="text-align: right;">0.1202801</td>
+<td style="text-align: right;">1.1048796</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">76.54</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">60</td>
+<td style="text-align: right;">1.0000000</td>
+<td style="text-align: right;">0</td>
+<td style="text-align: right;">0.9854508</td>
+<td style="text-align: right;">1.3261731</td>
+<td style="text-align: right;">0.1221842</td>
+<td style="text-align: right;">1.134404</td>
+<td style="text-align: right;">0.0702320</td>
+<td style="text-align: right;">1.4154630</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-2-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-2-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(binomial_model, </span>
+<span id="cb12-2"><a href="#cb12-2"></a>                 <span class="at">specs =</span> <span class="sc">~</span> dose, </span>
+<span id="cb12-3"><a href="#cb12-3"></a>                 <span class="at">at=</span><span class="fu">list</span>(<span class="at">dose=</span><span class="fu">c</span>(<span class="dv">49</span><span class="sc">:</span><span class="dv">77</span>)), </span>
+<span id="cb12-4"><a href="#cb12-4"></a>                 <span class="at">type=</span><span class="st">'response'</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> dose   prob      SE  df asymp.LCL asymp.UCL
+   49 0.0727 0.01830 Inf    0.0439     0.118
+   50 0.0910 0.02100 Inf    0.0574     0.141
+   51 0.1135 0.02370 Inf    0.0747     0.169
+   52 0.1406 0.02640 Inf    0.0965     0.201
+   53 0.1730 0.02880 Inf    0.1236     0.237
+   54 0.2110 0.03090 Inf    0.1568     0.278
+   55 0.2548 0.03250 Inf    0.1965     0.323
+   56 0.3041 0.03340 Inf    0.2428     0.373
+   57 0.3584 0.03380 Inf    0.2951     0.427
+   58 0.4166 0.03370 Inf    0.3524     0.484
+   59 0.4772 0.03330 Inf    0.4128     0.542
+   60 0.5385 0.03260 Inf    0.4743     0.601
+   61 0.5987 0.03190 Inf    0.5349     0.659
+   62 0.6560 0.03100 Inf    0.5930     0.714
+   63 0.7091 0.03000 Inf    0.6471     0.764
+   64 0.7570 0.02860 Inf    0.6967     0.809
+   65 0.7993 0.02700 Inf    0.7412     0.847
+   66 0.8358 0.02500 Inf    0.7808     0.879
+   67 0.8668 0.02290 Inf    0.8153     0.906
+   68 0.8927 0.02050 Inf    0.8453     0.927
+   69 0.9141 0.01820 Inf    0.8710     0.944
+   70 0.9315 0.01600 Inf    0.8928     0.957
+   71 0.9456 0.01380 Inf    0.9113     0.967
+   72 0.9569 0.01180 Inf    0.9267     0.975
+   73 0.9660 0.01010 Inf    0.9396     0.981
+   74 0.9732 0.00851 Inf    0.9504     0.986
+   75 0.9789 0.00715 Inf    0.9593     0.989
+   76 0.9834 0.00597 Inf    0.9666     0.992
+   77 0.9870 0.00496 Inf    0.9727     0.994
+
+Confidence level used: 0.95 
+Intervals are back-transformed from the logit scale </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="task">
+<div class="task-header">
+<p>Make a ggplot of the change in probability</p>
+</div>
+<div class="task-container">
+<ul>
+<li><p>Take one of your model predictions</p></li>
+<li><p>If emmeans convert to <code>as_tibble()</code> first</p></li>
+<li><p>Plot this on a ggplot</p></li>
+<li><p>Include 95% confidence intervals (if possible)</p></li>
+</ul>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist">
+<li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-3-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-1" role="tab" aria-controls="tabset-3-1" aria-selected="true" href="">Broom</a></li>
+<li class="nav-item" role="presentation"><a class="nav-link" id="tabset-3-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-3-2" role="tab" aria-controls="tabset-3-2" aria-selected="false" href="">Emmeans</a></li>
+</ul>
+<div class="tab-content">
+<div id="tabset-3-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-3-1-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>binomial_model <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2"></a>   broom<span class="sc">::</span><span class="fu">augment</span>(<span class="at">data =</span> beetles, </span>
+<span id="cb14-3"><a href="#cb14-3"></a>                  <span class="at">type.predict =</span> <span class="st">"response"</span>,</span>
+<span id="cb14-4"><a href="#cb14-4"></a>                  <span class="at">se_fit =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb14-5"><a href="#cb14-5"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>dose, <span class="at">y=</span>mortality_rate))<span class="sc">+</span></span>
+<span id="cb14-6"><a href="#cb14-6"></a>  <span class="fu">geom_point</span>()<span class="sc">+</span></span>
+<span id="cb14-7"><a href="#cb14-7"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>( <span class="at">x =</span> dose, <span class="at">y =</span> .fitted))<span class="sc">+</span></span>
+<span id="cb14-8"><a href="#cb14-8"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>.fitted <span class="sc">-</span> (<span class="fl">1.96</span> <span class="sc">*</span> .se.fit), <span class="at">ymax=</span> .fitted <span class="sc">+</span> (<span class="fl">1.96</span> <span class="sc">*</span> .se.fit)),</span>
+<span id="cb14-9"><a href="#cb14-9"></a>               <span class="at">alpha=</span><span class="fl">0.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="binomial_files/figure-html/unnamed-chunk-18-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+<div id="tabset-3-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-3-2-tab">
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(binomial_model, </span>
+<span id="cb15-2"><a href="#cb15-2"></a>                 <span class="at">specs =</span> <span class="sc">~</span> dose, </span>
+<span id="cb15-3"><a href="#cb15-3"></a>                 <span class="at">at=</span><span class="fu">list</span>(<span class="at">dose=</span><span class="fu">c</span>(<span class="dv">40</span><span class="sc">:</span><span class="dv">80</span>)), </span>
+<span id="cb15-4"><a href="#cb15-4"></a>                 <span class="at">type=</span><span class="st">'response'</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb15-5"><a href="#cb15-5"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb15-6"><a href="#cb15-6"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>dose, <span class="at">y=</span>prob))<span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> beetles, <span class="fu">aes</span>(<span class="at">x =</span> dose, <span class="at">y =</span> mortality_rate))<span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">x=</span>dose, <span class="at">y=</span>prob))<span class="sc">+</span></span>
+<span id="cb15-9"><a href="#cb15-9"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>asymp.LCL, <span class="at">ymax=</span>asymp.UCL), <span class="at">alpha=</span><span class="fl">0.2</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="binomial_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="task">
+<div class="task-header">
+<p>Prediction</p>
+</div>
+<div class="task-container">
+<p>Can you edit your code to produce a prediction of the mortality rate at a pesticide dose of 0mg?</p>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>emmeans<span class="sc">::</span><span class="fu">emmeans</span>(binomial_model, </span>
+<span id="cb16-2"><a href="#cb16-2"></a>                 <span class="at">specs =</span> <span class="sc">~</span> dose, </span>
+<span id="cb16-3"><a href="#cb16-3"></a>                 <span class="at">at=</span><span class="fu">list</span>(<span class="at">dose=</span><span class="dv">0</span>), </span>
+<span id="cb16-4"><a href="#cb16-4"></a>                 <span class="at">type=</span><span class="st">'response'</span>) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> dose     prob       SE  df asymp.LCL asymp.UCL
+    0 4.66e-07 6.06e-07 Inf  3.66e-08  5.94e-06
+
+Confidence level used: 0.95 
+Intervals are back-transformed from the logit scale </code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section></section><section id="assumptions" class="level2" data-number="12.5"><h2 data-number="12.5" class="anchored" data-anchor-id="assumptions">
+<span class="header-section-number">12.5</span> Assumptions</h2>
+<p>The <code>performance</code> package detects and alters the checks. Pay particular attention to the binned residuals plot - this is your best estimate of possible overdispersion (requiring a quasi-likelihood fit). In this case there is likely not enough data for robust checks - we could consider a quasi-likelihood model in order to have more conservative confidence intervals.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(binomial_model,</span>
+<span id="cb18-2"><a href="#cb18-2"></a>                         <span class="at">detrend =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>performance<span class="sc">::</span><span class="fu">check_overdispersion</span>(binomial_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Overdispersion test
+
+ dispersion ratio = 1.002
+          p-value = 0.992</code></pre>
+</div>
+</div>
+<div class="task">
+<div class="task-header">
+<p>Try fitting a quasi-likelihood model</p>
+</div>
+<div class="task-container">
+<ul>
+<li>Fit a quasibinomial model</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>quasibinomial_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(<span class="fu">cbind</span>(number_killed,number_survived) <span class="sc">~</span> dose, </span>
+<span id="cb21-2"><a href="#cb21-2"></a>                      <span class="at">family =</span> quasibinomial, </span>
+<span id="cb21-3"><a href="#cb21-3"></a>                      <span class="at">data =</span> beetles)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ul>
+<li><p>How does this change the means, standard errors and significance tests</p></li>
+<li><p>Do you think we need it?</p></li>
+</ul>
+</div>
+</div>
+</section><section id="write-ups" class="level2" data-number="12.6"><h2 data-number="12.6" class="anchored" data-anchor-id="write-ups">
+<span class="header-section-number">12.6</span> Write-ups</h2>
+<div class="task">
+<div class="task-header">
+<p>Write up the results</p>
+</div>
+<div class="task-container">
+<ul>
+<li>How would you write up for findings from this analysis?</li>
+</ul>
+<div class="webex-solution">
+<button>
+Report
+</button>
+<p>Mortality rate increased with pesticide dose in the red flour beetle (<em>Tribolium castaneum</em>). Across the observed pesticide dosage each mg of pesticide was associated with a .25 [95%CI: 0.21 - 0.29] increase in the log odds of mortality (z = 11.42, P &lt; 0.001). At the lowest pesticide dose (49mg) we observed a mean mortality of 7% [4.4 - 11.8%], at the middle range (60mg) we observed a mean mortality of 53.9% [47.4 - 90%] and at the highest dosage (77mg) we saw almost total mortality 98.7%[97.2 - 99.4%].</p>
+</div>
+</div>
+</div>
+</section><section id="binomial-vs-linear-model" class="level2" data-number="12.7"><h2 data-number="12.7" class="anchored" data-anchor-id="binomial-vs-linear-model">
+<span class="header-section-number">12.7</span> Binomial vs Linear Model</h2>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-2-contents" aria-controls="callout-2" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Calculating R squared
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-2" class="callout-2-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>Binomial model shows better explanatory power (R-squared) for our correctly fitted model:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>DescTools<span class="sc">::</span><span class="fu">PseudoR2</span>(binomial_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> McFadden 
+0.9979834 </code></pre>
+</div>
+</div>
 </div>
 </div>
 </div>
 
 
-</section></section></main><!-- /main --><script>
+</section></main><!-- /main --><script>
 
 /* update total correct if #webex-total_correct exists */
 update_total_correct = function() {
@@ -1441,13 +1936,13 @@ window.onresize = move_sidebar;
     }
   });
   </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
-      <a href="./Naming conventions.html" class="pagination-link" aria-label="Naming files">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Naming files</span></span>
+      <a href="./week-3.html" class="pagination-link" aria-label="Week 3">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Week 3</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./quarto.html" class="pagination-link" aria-label="Quarto">
-        <span class="nav-page-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Quarto</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./week-4.html" class="pagination-link" aria-label="Week 4">
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Week 4</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
