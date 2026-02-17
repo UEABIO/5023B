@@ -51,6 +51,8 @@ How does heavy metal contamination (copper concentration) affect mayfly presence
 
 **File:** `mayfly_contamination.csv`
 
+`r hide("Dataset Description")`
+
 **Variables:**
 
 - `site_id`: Unique identifier for each sampling site (character)
@@ -71,12 +73,11 @@ How does heavy metal contamination (copper concentration) affect mayfly presence
 - Some sites have 0% mayflies, some 100%, most intermediate
 
 
-
+`r unhide()`
 
 ```{r, echo=FALSE, eval = T, fig.width = 10, fig.height = 5}
 knitr::include_graphics("images/mayfly.jpg")
 ```
-
 
 
 ## Your Task
@@ -89,7 +90,7 @@ Complete an independent analysis following binomial GLM principles. You will pro
 
 2. **A README file** (`README.md`): Document your analysis
 
-3. **A Quarto document** (`analysis_report.qmd`): Professional write-up with figure(s)
+3. **[Optional] A Quarto document**  (`analysis_report.qmd`): Professional write-up with figure(s)
 
 
 
@@ -106,31 +107,149 @@ Complete an independent analysis following binomial GLM principles. You will pro
 2. Read in the data (`mayfly_contamination.csv`)
 
 3. **Examine response variable carefully:**
-   - Calculate the proportion of samples with mayflies at each site
+   - What is the total proportion of samples with mayflies in them?
    - Check the range of `samples_collected` (sample size varies by site)
-   - Identify sites where mayflies were never found vs always found vs sometimes found
+   - Identify sites where mayflies were never found 
    
+> Add clear comments to your code chunks
+   
+`r hide ("Proportion")`
+
+```{r, eval = FALSE}
+
+mayfly_raw |>
+  summarise(
+    total_mayfly = sum(samples_with_mayfly),
+    total_samples = sum(samples_collected),
+    prop_mayfly = total_mayfly/total_samples
+  )
+
+
+
+```
+
+`r unhide()`
+
+`r hide("Range of Samples")`
+
+```{r, eval = FALSE}
+
+
+mayfly_raw |> 
+  summarise(max = max(`samples_collected`),
+            min = min(`samples_collected`),
+            mean = mean(`samples_collected`),
+            n_sites = n(),
+            n_samples = sum(`samples_collected))
+
+
+
+```
+
+` r unhide()`
+
+`r hide("Find sites without mayfly")`
+
+```{r, eval = FALSE}
+
+
+mayfly_raw |> 
+  filter(`samples_with_mayfly` < 1)
+
+
+```   
+
+`r unhide()`
+
 4. **Create analysis variables:**
+
    - `mayfly_proportion`: `samples_with_mayfly / samples_collected`
-   - `mayfly_present`: Binary (TRUE/FALSE) — mayfly found in at least one sample?
-   - Consider log-transforming copper (right-skewed, multiplicative effects expected)
+
+`r hide("Solution")`
+
+```{r, eval = FALSE}
+mayfly <- mayfly_raw |>
+  mutate(
+    samples_without_mayfly = samples_collected - samples_with_mayfly,
+    prop_mayfly = samples_with_mayfly/samples_collected
+  )
+
+```
+
+`r unhide()`
    
 5. **Data quality checks:**
    - Are there any sites where `samples_with_mayfly > samples_collected`? (impossible)
    - Are copper values plausible for freshwater? (typically 0-200 μg/L)
    - Are temperature, DO, pH in reasonable ranges?
    - Check for missing values
+   
+`r hide("Possible solutions")`
+
+```{r,eval = FALSE}
+
+# Check for impossible values
+mayfly |>
+    filter( samples_collected < 0 | samples_with_mayfly < 0 |
+            do_mgl < 0 | copper_ugl < 0)
+    
+mayfly |> 
+   filter(samples_with mayfly > samples_collected)
+
+mayfly |> 
+  mayfly |> 
+  summarise(across(where(is.numeric), 
+                   list(max = ~max(.x, na.rm = TRUE), 
+                        min = ~min(.x, na.rm = TRUE))))
+
+mayfly |> 
+  filter(do_mgl < 3.2 | do_mgl > 156.8)
+
+
+skimr::skim(mayfly)
+  
+
+```
+
+`r unhide()`
 
 6. **Exploratory visualisation:**
-   - Plot proportion of samples with mayflies vs copper concentration
+   - Plot proportion of mayflies vs copper concentration
    - Consider adding point size to show sample size per site
    - Explore relationships with temperature and dissolved oxygen
    
+`r hide("Possible solution")`
+
+```{r, eval = FALSE}
+
+mayfly |> 
+  ggplot(aes(x = log_copper_ugl,
+             y = prop_mayfly))+
+  geom_point(aes(size = samples_collected))
+
+```
+
+`r unhide()`
+   
 7. **Correlation check:**
-   - Are copper, temperature, and dissolved oxygen correlated?
+   - Are copper and dissolved oxygen correlated?
    - This matters for model interpretation
+   
+```{r, eval = FALSE}
+mayfly |> 
+GGally::ggpairs(columns = c(6,7,9))
+
+```
 
 ### Code Structure
+
+:::{.callout-important}
+
+Do not just copy/paste all code below. Choose which code chunks YOU need and include comments about what you are doing and what the data shows
+
+:::
+
+
 ```r
 # 01_data_preparation.R
 # Author: [Your name]
@@ -151,27 +270,12 @@ summary(mayfly_raw)
 
 # Calculate key variables ----
 # set up win/loss columns
-mayfly <- mayfly_raw |>
-  mutate(
-    samples_without_mayfly = samples_collected - samples_with_mayfly,
-    prop_mayfly = samples_with_mayfly/samples_collected
-  )
+
 
 # Data quality checks ----
-# Check for impossible values
-mayfly |>
-    filter( samples_collected < 0 | samples_with_mayfly < 0 |
-            do_mgl < 0 | copper_ugl < 0)
-    
-mayfly |> 
-   filter(samples_with mayfly > samples_collected)
+
 
 # Check ranges
-
-mayfly |> 
-  summarise(across(where(is.numeric), 
-                   list(max = ~max(.x, na.rm = TRUE), 
-                        min = ~min(.x, na.rm = TRUE))))
 
 
 # Exploratory plots ----
@@ -193,13 +297,10 @@ mayfly |>
 
 After running your data preparation, you should note:
 
-- **Response variable structure**: How many sites have 0%, 100%, or intermediate mayfly proportions?
-- **Copper distribution**: Is it right-skewed? (Suggests log transformation appropriate)
 - **Sample size variation**: Do some sites have more samples than others? (Important for weighting)
 - **Correlations**: Are copper and dissolved oxygen related? (Potential confounding)
-- **Visual pattern**: Does mayfly proportion decline with copper? Smoothly or threshold?
+- **Visual pattern**: Does mayfly proportion decline with copper? Linear or non-linear?
 
----
 
 ## Part 2: Binomial GLM Analysis
 
@@ -313,7 +414,9 @@ You must make and justify:
 
 1. **Response specification**: Did you use cbind() correctly? This is critical for binomial models.
 
-2. **Additional predictors**: Should dissolved oxygen be included?
+2. **Additional predictors**: 
+   - Should dissolved oxygen be included?
+   - If so does it require an interaction term?
    - Does it improve fit?
    - Is it collinear with copper?
 
@@ -364,7 +467,6 @@ Analysis of mayfly presence in freshwater streams across a copper contamination 
    - Explored predictor correlations
    
 2. **Model selection**: 
-   - Compared linear vs log-transformed copper
    - Tested for confounding by dissolved oxygen
    - [State other comparisons]
    
@@ -400,7 +502,7 @@ See `analysis_report.qmd` for full write-up and figure.
 [Date]
 ```
 
----
+
 
 ## Part 4: Results Report [Optional]
 
@@ -576,15 +678,12 @@ Before submitting, ensure you have:
 - [ ] Used `cbind()` for response specification
 - [ ] Checked and addressed overdispersion
 - [ ] `README.md` with complete information
-- [ ] `analysis_report.qmd` rendered to HTML
-- [ ] `analysis_report.html` (knitted output)
 - [ ] All code runs without errors
 - [ ] Relative file paths (not absolute paths like `C:/Users/...`)
 - [ ] One high-quality figure showing sample sizes
 - [ ] Results report probabilities and LC₅₀, not just log-odds
 - [ ] Honest acknowledgment of overdispersion and limitations
 
----
 
 ::: {.callout-important}
 ## Critical Reminder

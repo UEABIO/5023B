@@ -1,0 +1,164 @@
+# Mixed models (for clustered data) {#sec-mixed}
+
+
+```{r, echo = F, warning = F, message = F}
+library(tidyverse)
+library(janitor)
+library(here)
+source("R/booktem_setup.R")
+source("R/my_setup.R")
+```
+
+
+
+```{r, eval=T, echo=F}
+library(tidyverse)
+library(performance)
+library(emmeans)
+library(broom)
+library(patchwork)
+library(lmerTest)
+```
+
+
+## 1. Why Independence Matters
+
+When we analyse data using standard statistical tests like t-tests or linear regression, we make a crucial assumption: that our observations are **independent**. Independence means that knowing the value of one observation tells you nothing about the value of another observation. For example, if we measure the heights of 50 randomly selected oak trees across Britain, knowing that one tree is 15 metres tall tells us nothing about how tall any other tree in our sample will be.
+
+However, biological data frequently violate this assumption. Consider measuring leaf nitrogen content in oak trees. If we collect 5 leaves from each of 10 trees (50 leaves total), *leaves from the same tree will be more similar to each other than to leaves from different trees*. Why? Because leaves on the same tree share the same genetic background, experience the same soil conditions, receive the same rainfall, and are exposed to the same microclimate. Knowing that one leaf from Tree A has high nitrogen content makes it more likely that other leaves from Tree A will also have high nitrogen content.
+
+If we ignore this non-independence and analyse all 50 leaves as if they were completely independent observations, our statistical tests become overconfident. We might conclude that differences between habitats are statistically significant when they actually are not, because we have treated 50 measurements as if they provide 50 independent pieces of information when in reality they provide only 10 independent pieces of information (one per tree). This error —treating non-independent observations as independent— **inflates the risk of false positive results**.
+
+## 2. What Random Effects Do: Variance Partitioning
+
+Mixed effects models allow us to analyse data where observations are grouped and those **within groups are more similar than those between groups**. The key insight is **variance partitioning**: total variation in our response variable can be divided into variation at different levels.
+
+
+### Example: We measure the body mass of tadpoles in 8 different ponds. 
+
+Some tadpoles are heavy, some are light. Where does this variation come from?
+
+- **Between-pond variation**: Some ponds might produce generally heavier tadpoles (perhaps due to higher food availability, warmer water, or fewer predators), whilst other ponds produce lighter tadpoles. This is variation *between* groups.
+
+- **Within-pond variation**: Even within the same pond, not all tadpoles weigh the same. Some individual tadpoles grow faster than others due to genetic differences, slight differences in where they feed within the pond, or random developmental variation. This is variation *within* groups.
+
+A mixed effects model estimates how much variation exists at each level. The output might tell us, for instance, that 60% of the total variation in tadpole mass is between ponds and 40% is within ponds. This quantifies how important pond identity is in determining tadpole mass.
+
+**Random effects** are the statistical tool we use to model this grouped structure. When we include pond as a random effect, we are saying: "Observations within the same pond are likely to be correlated, and I want to account for that correlation by estimating how much variation exists between ponds."
+
+## 3. Fixed Effects vs Random Effects: When to Use Each
+
+The distinction between fixed and random effects confuses many people, but there is a practical rule that works in most biological contexts:
+
+**Use fixed effects when:**
+
+- You want inferences about specific groups that you deliberately selected
+
+- You care about the particular levels of your grouping variable
+
+- You want to compare these specific groups to each other
+
+**Use random effects when:**
+
+- You want to generalise beyond your specific groups to a larger population
+
+- Your groups are a random sample from a wider population
+
+- You are treating group-level variation as a nuisance you need to account for, rather than something you want to compare directly
+
+- You have enough group-levels to estimate variance (minimum 5)
+
+### Example: You measure plant growth in five fields:
+
+- **Scenario 1**: These five fields represent five different fertiliser treatments you are testing. You specifically chose these treatments and want to know which fertiliser produces the best growth. → Use **fixed effects** for field/treatment. You care about these specific treatments.
+
+- **Scenario 2**: These five fields are randomly selected agricultural fields in Yorkshire, and you want to understand how variable plant growth is across farms in general in this region. → Use **random effects** for field. These fields are a sample from a population of fields, and you want to generalise beyond these specific five.
+
+The decision depends on your research question and what you want to infer from your data, not on properties of the data itself.
+
+## 4. Recognising Hierarchical Structure
+
+Hierarchical data has observations organised in levels, where units at one level are nested within units at a higher level. This structure comes from your experimental design—from how you collected the data—not from how the data are arranged in a spreadsheet.
+
+### Simple Hierarchy
+
+```
+Region
+  └── Site (within region)
+      └── Quadrat (within site)
+          └── Individual plant (within quadrat)
+```
+
+If you measured plant heights, individual plants are grouped within quadrats, quadrats are grouped within sites, and sites are grouped within regions. Observations at each level might be correlated: plants in the same quadrat are more similar than plants in different quadrats (because they experience the same microclimate), quadrats in the same site are more similar than quadrats in different sites, and so on.
+
+### Repeated measures
+
+```
+Individual bird
+  └── Measurement occasion
+```
+
+If you measured heart rate in 20 birds, with 5 measurements per bird over time, measurements within the same bird are likely correlated (because they come from the same individual with the same physiology), whilst measurements from different birds are independent.
+
+Identifying hierarchical structure requires thinking about the physical organisation of your study:
+
+- What did you measure?
+
+- What units did you measure it on?
+
+- Are those units grouped in any way?
+
+- What sources of similarity exist within groups?
+
+Drawing a diagram of your study structure—even a simple sketch—is often the clearest way to identify the hierarchy before you fit any statistical model.
+
+
+## Check Your Understanding
+
+Answer these questions and submit them before the workshop:
+
+1. You measure wing length in butterflies. You sample 30 butterflies from each of 6 meadows. Why might butterflies from the same meadow be more similar to each other than to butterflies from different meadows?
+
+`r hide("Possible Solution")`
+
+Butterflies from the same meadow might be genetically more closely related. But more likely they will have experienced similar environmental conditions that may have affected growth or development
+
+`r unhide()`
+
+2. You want to know whether caffeine affects reaction time. You measure reaction time in 15 people twice: once after drinking coffee and once after drinking decaffeinated coffee. Should "person" be a fixed or random effect? Why?
+
+`r hide("Possible Solution")`
+
+Person should be a random effect *if* the study included at least 5 different people.
+
+Each measurement of reaction time should be correlated within person (different people will have different baseline reaction times)
+
+`r unhide()`
+
+3. You measure plant height in 4 different greenhouses. Each greenhouse contains 20 pots, and you measure the height of the plant in each pot. Why might plants in the same greenhouse be more similar to each other than plants in different greenhouses?
+
+`r hide("Possible Solution")`
+Plants in the same greenhouse will experience the same temperature, humidity, light conditions, and watering regime. They may also be exposed to the same pests or pathogens. All of these shared environmental factors could make plants within a greenhouse more similar to each other.
+`r unhide()`
+
+4. You want to test whether three different diets (low-fat, low-carb, Mediterranean) affect weight loss. You recruit 60 participants and randomly assign 20 to each diet. Should "diet" be a fixed or random effect?
+
+`r hide("Possible Solution")`
+Diet should be a fixed effect. You specifically chose these three diets and want to know which one produces the most weight loss. You care about comparing these particular diets to each other, not generalising to diets in general.
+`r unhide()`
+
+5. You measure parasite load in fish from 8 lakes. From each lake, you sample 15 fish. If most of the variation in parasite load is *between* lakes rather than *within* lakes, what does this tell you about the importance of lake identity?
+
+`r hide("Possible Solution")`
+If most variation is between lakes, this tells us that lake identity is very important in determining parasite load. Fish from the same lake are much more similar to each other than to fish from different lakes. This suggests that lake-specific factors (water quality, temperature, presence of intermediate hosts, etc.) strongly influence parasite load.
+`r unhide()`
+
+6. You sample 10 trees from a forest. From each tree, you collect 5 leaves and measure their nitrogen content. Draw a simple diagram showing the hierarchical structure of this data. What are the two levels?
+
+`r hide("Possible Solution")`
+```
+Tree
+  └── Leaf (within tree)
+```
+The two levels are: trees (higher level) and leaves within trees (lower level). Leaves are nested within trees.
+`r unhide()`
