@@ -545,7 +545,44 @@ window.Quarto = {
   <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data"><span class="header-section-number">13.3</span> The Data</a></li>
   <li><a href="#your-task" id="toc-your-task" class="nav-link" data-scroll-target="#your-task"><span class="header-section-number">13.4</span> Your Task</a></li>
   <li><a href="#part-1-data-preparation" id="toc-part-1-data-preparation" class="nav-link" data-scroll-target="#part-1-data-preparation"><span class="header-section-number">13.5</span> Part 1: Data Preparation</a></li>
-  <li><a href="#script-01_data_preparation.r" id="toc-script-01_data_preparation.r" class="nav-link" data-scroll-target="#script-01_data_preparation.r"><span class="header-section-number">13.6</span> Script: <code>01_data_preparation.R</code></a></li>
+  <li>
+<a href="#script-01_data_preparation.r" id="toc-script-01_data_preparation.r" class="nav-link" data-scroll-target="#script-01_data_preparation.r"><span class="header-section-number">13.6</span> Script: <code>01_data_preparation.R</code></a>
+  <ul class="collapse">
+<li><a href="#code-structure" id="toc-code-structure" class="nav-link" data-scroll-target="#code-structure"><span class="header-section-number">13.6.1</span> Code Structure</a></li>
+  <li><a href="#expected-observations" id="toc-expected-observations" class="nav-link" data-scroll-target="#expected-observations"><span class="header-section-number">13.6.2</span> Expected Observations</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#part-2-binomial-glm-analysis" id="toc-part-2-binomial-glm-analysis" class="nav-link" data-scroll-target="#part-2-binomial-glm-analysis"><span class="header-section-number">13.7</span> Part 2: Binomial GLM Analysis</a>
+  <ul class="collapse">
+<li><a href="#script-02_binomial_analysis.r" id="toc-script-02_binomial_analysis.r" class="nav-link" data-scroll-target="#script-02_binomial_analysis.r"><span class="header-section-number">13.7.1</span> Script: <code>02_binomial_analysis.R</code></a></li>
+  <li><a href="#code-structure-1" id="toc-code-structure-1" class="nav-link" data-scroll-target="#code-structure-1"><span class="header-section-number">13.7.2</span> Code Structure</a></li>
+  <li><a href="#key-decisions" id="toc-key-decisions" class="nav-link" data-scroll-target="#key-decisions"><span class="header-section-number">13.7.3</span> Key Decisions</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#part-3-readme-documentation" id="toc-part-3-readme-documentation" class="nav-link" data-scroll-target="#part-3-readme-documentation"><span class="header-section-number">13.8</span> Part 3: README Documentation</a>
+  <ul class="collapse">
+<li><a href="#template" id="toc-template" class="nav-link" data-scroll-target="#template"><span class="header-section-number">13.8.1</span> Template</a></li>
+  </ul>
+</li>
+  <li><a href="#part-4-results-report-optional" id="toc-part-4-results-report-optional" class="nav-link" data-scroll-target="#part-4-results-report-optional"><span class="header-section-number">13.9</span> Part 4: Results Report [Optional]</a></li>
+  <li>
+<a href="#yaml-header" id="toc-yaml-header" class="nav-link" data-scroll-target="#yaml-header"><span class="header-section-number">13.10</span> YAML Header</a>
+  <ul class="collapse">
+<li><a href="#required-content" id="toc-required-content" class="nav-link" data-scroll-target="#required-content"><span class="header-section-number">13.10.1</span> Required Content</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#assessment-criteria" id="toc-assessment-criteria" class="nav-link" data-scroll-target="#assessment-criteria"><span class="header-section-number">13.11</span> Assessment Criteria</a>
+  <ul class="collapse">
+<li><a href="#code-quality-40" id="toc-code-quality-40" class="nav-link" data-scroll-target="#code-quality-40"><span class="header-section-number">13.11.1</span> Code Quality (40%)</a></li>
+  <li><a href="#statistical-approach-40" id="toc-statistical-approach-40" class="nav-link" data-scroll-target="#statistical-approach-40"><span class="header-section-number">13.11.2</span> Statistical Approach (40%)</a></li>
+  <li><a href="#communication-20" id="toc-communication-20" class="nav-link" data-scroll-target="#communication-20"><span class="header-section-number">13.11.3</span> Communication (20%)</a></li>
+  </ul>
+</li>
+  <li><a href="#hints-and-tips" id="toc-hints-and-tips" class="nav-link" data-scroll-target="#hints-and-tips"><span class="header-section-number">13.12</span> Hints and Tips</a></li>
+  <li><a href="#submission-checklist" id="toc-submission-checklist" class="nav-link" data-scroll-target="#submission-checklist"><span class="header-section-number">13.13</span> Submission Checklist</a></li>
   </ul></nav>
     </div>
 <!-- main -->
@@ -707,7 +744,7 @@ Range of Samples
 <span id="cb2-5"><a href="#cb2-5"></a>            <span class="at">n_sites =</span> <span class="fu">n</span>(),</span>
 <span id="cb2-6"><a href="#cb2-6"></a>            <span class="at">n_samples =</span> <span class="fu">sum</span>(<span class="st">`</span><span class="at">samples_collected))</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p><code>r unhide()</code></p>
+</div>
 <div class="webex-solution">
 <button>
 Find sites without mayfly
@@ -875,7 +912,7 @@ Important
 <strong>Correlations</strong>: Are copper and dissolved oxygen related? (Potential confounding)</li>
 <li>
 <strong>Visual pattern</strong>: Does mayfly proportion decline with copper? Linear or non-linear?</li>
-</ul></section><section id="part-2-binomial-glm-analysis" class="level2" data-number="13.7"><h2 data-number="13.7" class="anchored" data-anchor-id="part-2-binomial-glm-analysis">
+</ul></section></section><section id="part-2-binomial-glm-analysis" class="level2" data-number="13.7"><h2 data-number="13.7" class="anchored" data-anchor-id="part-2-binomial-glm-analysis">
 <span class="header-section-number">13.7</span> Part 2: Binomial GLM Analysis</h2>
 <p><strong>Time allocation:</strong> 45 minutes</p>
 <section id="script-02_binomial_analysis.r" class="level3" data-number="13.7.1"><h3 data-number="13.7.1" class="anchored" data-anchor-id="script-02_binomial_analysis.r">
@@ -1314,8 +1351,6 @@ Important
 <p><strong>Good luck! Remember: understanding variance-mean relationships and proper model specification matters more than finding “the right answer.”</strong></p>
 
 
-</section>
-</div>
 </section></main><!-- /main --><script>
 
 /* update total correct if #webex-total_correct exists */

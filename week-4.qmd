@@ -146,7 +146,7 @@ mayfly_raw |>
 
 ```
 
-` r unhide()`
+`r unhide()`
 
 `r hide("Find sites without mayfly")`
 
