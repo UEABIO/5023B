@@ -58,7 +58,10 @@ book:
     - week-3.qmd
     - binomial.qmd
     - week-4.qmd
-
+  - part: "Mixed Models"
+    chapters:
+    - mixed-model.qmd
+    - intro-mixed-model.qmd
 
   appendices:
   - r-basics.qmd

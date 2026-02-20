@@ -1,0 +1,2897 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="Statistical skills for Biologists">
+<title>15&nbsp; Foundations of Mixed Modelling – 5023B</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./r-basics.html" rel="next">
+<link href="./mixed-model.html" rel="prev">
+<link href="./images/logos/logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b754b9fd3853d7e56faef54c29c5d52b.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-de8274a4d1ecc1e6aaeaf6e5564b5074.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b754b9fd3853d7e56faef54c29c5d52b.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e0a43ceb7c9e63dd117097429fd00833.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-d7d11905500e7839d0ae783f44cd34c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-e0a43ceb7c9e63dd117097429fd00833.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script src="site_libs/font-awesome-6.5.2/js/script.js"></script><link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script><script src="site_libs/viz-1.8.2/viz.js"></script><link href="site_libs/DiagrammeR-styles-0.2/styles.css" rel="stylesheet">
+<script src="site_libs/grViz-binding-1.0.11/grViz.js"></script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+<link rel="stylesheet" href="include/booktem.css">
+<link rel="stylesheet" href="include/webex.css">
+<link rel="stylesheet" href="include/glossary.css">
+<link rel="stylesheet" href="include/style.css">
+</head>
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./mixed-model.html">Mixed Models</a></li><li class="breadcrumb-item"><a href="./intro-mixed-model.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Foundations of Mixed Modelling</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">5023B</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Reproducible Research</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Git Basics and First Data Contact</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week-1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Week 1</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Data Cleaning</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./strings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Strings</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./duplicates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Duplicates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./missing-values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Missing data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Dates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./numeric-plausibility.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Check Data Consistency</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Week 2</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Data Insights</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summarise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Data insights</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">GLM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./poisson.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Poisson regression (for count data or rate data)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week-3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Week 3</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./binomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Logistic regression (for binary data)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week-4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Week 4</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Mixed Models</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mixed-model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mixed models (for clustered data)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro-mixed-model.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Foundations of Mixed Modelling</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./import.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Basic Import/Export</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./script.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Scripts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Naming conventions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Naming files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_reshaping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Data reshaping</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">ggplot</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./advanced_ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">ggplot extras</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary-table.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Summary tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">15.1</span> Introduction</a></li>
+  <li>
+<a href="#what-is-a-mixed-model" id="toc-what-is-a-mixed-model" class="nav-link" data-scroll-target="#what-is-a-mixed-model"><span class="header-section-number">15.2</span> What is a Mixed Model?</a>
+  <ul class="collapse">
+<li><a href="#the-study" id="toc-the-study" class="nav-link" data-scroll-target="#the-study"><span class="header-section-number">15.2.1</span> The Study</a></li>
+  <li><a href="#visualising-the-problem" id="toc-visualising-the-problem" class="nav-link" data-scroll-target="#visualising-the-problem"><span class="header-section-number">15.2.2</span> Visualising the Problem</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#three-approaches-compared" id="toc-three-approaches-compared" class="nav-link" data-scroll-target="#three-approaches-compared"><span class="header-section-number">15.3</span> Three Approaches Compared</a>
+  <ul class="collapse">
+<li><a href="#approach-1-pooled-model-ignoring-groups" id="toc-approach-1-pooled-model-ignoring-groups" class="nav-link" data-scroll-target="#approach-1-pooled-model-ignoring-groups"><span class="header-section-number">15.3.1</span> Approach 1: Pooled Model (Ignoring Groups)</a></li>
+  <li><a href="#approach-2-fixed-effect-model" id="toc-approach-2-fixed-effect-model" class="nav-link" data-scroll-target="#approach-2-fixed-effect-model"><span class="header-section-number">15.3.2</span> Approach 2: Fixed-Effect Model</a></li>
+  <li><a href="#approach-3-mixed-effects-model" id="toc-approach-3-mixed-effects-model" class="nav-link" data-scroll-target="#approach-3-mixed-effects-model"><span class="header-section-number">15.3.3</span> Approach 3: Mixed-Effects Model</a></li>
+  <li><a href="#comparing-standard-errors" id="toc-comparing-standard-errors" class="nav-link" data-scroll-target="#comparing-standard-errors"><span class="header-section-number">15.3.4</span> Comparing Standard Errors</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#when-are-mixed-models-actually-necessary" id="toc-when-are-mixed-models-actually-necessary" class="nav-link" data-scroll-target="#when-are-mixed-models-actually-necessary"><span class="header-section-number">15.4</span> When Are Mixed Models Actually Necessary?</a>
+  <ul class="collapse">
+<li><a href="#mixed-models-provide-clear-advantages-when" id="toc-mixed-models-provide-clear-advantages-when" class="nav-link" data-scroll-target="#mixed-models-provide-clear-advantages-when"><span class="header-section-number">15.4.1</span> Mixed models provide clear advantages when:</a></li>
+  <li><a href="#fixed-effect-models-are-perfectly-adequate-when" id="toc-fixed-effect-models-are-perfectly-adequate-when" class="nav-link" data-scroll-target="#fixed-effect-models-are-perfectly-adequate-when"><span class="header-section-number">15.4.2</span> Fixed-effect models are perfectly adequate when:</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#making-predictions" id="toc-making-predictions" class="nav-link" data-scroll-target="#making-predictions"><span class="header-section-number">15.5</span> Making Predictions</a>
+  <ul class="collapse">
+<li><a href="#group-specific-predictions" id="toc-group-specific-predictions" class="nav-link" data-scroll-target="#group-specific-predictions"><span class="header-section-number">15.5.1</span> Group-specific predictions</a></li>
+  </ul>
+</li>
+  <li><a href="#model-fit" id="toc-model-fit" class="nav-link" data-scroll-target="#model-fit"><span class="header-section-number">15.6</span> Model Fit</a></li>
+  <li><a href="#checking-model-assumptions" id="toc-checking-model-assumptions" class="nav-link" data-scroll-target="#checking-model-assumptions"><span class="header-section-number">15.7</span> Checking Model Assumptions</a></li>
+  <li>
+<a href="#presenting-results" id="toc-presenting-results" class="nav-link" data-scroll-target="#presenting-results"><span class="header-section-number">15.8</span> Presenting Results</a>
+  <ul class="collapse">
+<li><a href="#interpreting-summary-output" id="toc-interpreting-summary-output" class="nav-link" data-scroll-target="#interpreting-summary-output"><span class="header-section-number">15.8.1</span> Interpreting <code>summary()</code> output</a></li>
+  <li><a href="#model-fit-statistics" id="toc-model-fit-statistics" class="nav-link" data-scroll-target="#model-fit-statistics"><span class="header-section-number">15.8.2</span> Model fit statistics</a></li>
+  <li><a href="#creating-tables" id="toc-creating-tables" class="nav-link" data-scroll-target="#creating-tables"><span class="header-section-number">15.8.3</span> Creating tables</a></li>
+  <li><a href="#creating-figures" id="toc-creating-figures" class="nav-link" data-scroll-target="#creating-figures"><span class="header-section-number">15.8.4</span> Creating figures</a></li>
+  <li><a href="#example-write-up" id="toc-example-write-up" class="nav-link" data-scroll-target="#example-write-up"><span class="header-section-number">15.8.5</span> Example write-up</a></li>
+  </ul>
+</li>
+  <li><a href="#when-to-use-each-approach" id="toc-when-to-use-each-approach" class="nav-link" data-scroll-target="#when-to-use-each-approach"><span class="header-section-number">15.9</span> When to Use Each Approach</a></li>
+  <li>
+<a href="#worked-example-1---dolphins" id="toc-worked-example-1---dolphins" class="nav-link" data-scroll-target="#worked-example-1---dolphins"><span class="header-section-number">15.10</span> Worked Example 1 - Dolphins</a>
+  <ul class="collapse">
+<li><a href="#deciding-between-fixed-and-random-effects" id="toc-deciding-between-fixed-and-random-effects" class="nav-link" data-scroll-target="#deciding-between-fixed-and-random-effects"><span class="header-section-number">15.10.1</span> Deciding Between Fixed and Random Effects</a></li>
+  <li><a href="#the-study-1" id="toc-the-study-1" class="nav-link" data-scroll-target="#the-study-1"><span class="header-section-number">15.10.2</span> The Study</a></li>
+  <li><a href="#fitting-the-model" id="toc-fitting-the-model" class="nav-link" data-scroll-target="#fitting-the-model"><span class="header-section-number">15.10.3</span> Fitting the Model</a></li>
+  <li><a href="#visualising-predictions" id="toc-visualising-predictions" class="nav-link" data-scroll-target="#visualising-predictions"><span class="header-section-number">15.10.4</span> Visualising Predictions</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#worked-example-2---nested-random-effects" id="toc-worked-example-2---nested-random-effects" class="nav-link" data-scroll-target="#worked-example-2---nested-random-effects"><span class="header-section-number">15.11</span> Worked Example 2 - Nested Random Effects</a>
+  <ul class="collapse">
+<li><a href="#crossed-vs-nested-designs" id="toc-crossed-vs-nested-designs" class="nav-link" data-scroll-target="#crossed-vs-nested-designs"><span class="header-section-number">15.11.1</span> Crossed vs Nested Designs</a></li>
+  <li><a href="#the-study-2" id="toc-the-study-2" class="nav-link" data-scroll-target="#the-study-2"><span class="header-section-number">15.11.2</span> The Study</a></li>
+  <li><a href="#fitting-the-model-1" id="toc-fitting-the-model-1" class="nav-link" data-scroll-target="#fitting-the-model-1"><span class="header-section-number">15.11.3</span> Fitting the Model</a></li>
+  <li><a href="#visualising-results" id="toc-visualising-results" class="nav-link" data-scroll-target="#visualising-results"><span class="header-section-number">15.11.4</span> Visualising Results</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#worked-example-3---overdispersion-in-binomial-models" id="toc-worked-example-3---overdispersion-in-binomial-models" class="nav-link" data-scroll-target="#worked-example-3---overdispersion-in-binomial-models"><span class="header-section-number">15.12</span> Worked Example 3 - Overdispersion in Binomial Models</a>
+  <ul class="collapse">
+<li><a href="#the-problem" id="toc-the-problem" class="nav-link" data-scroll-target="#the-problem"><span class="header-section-number">15.12.1</span> The Problem</a></li>
+  <li><a href="#the-study-3" id="toc-the-study-3" class="nav-link" data-scroll-target="#the-study-3"><span class="header-section-number">15.12.2</span> The Study</a></li>
+  <li><a href="#using-random-effects-to-account-for-overdispersion" id="toc-using-random-effects-to-account-for-overdispersion" class="nav-link" data-scroll-target="#using-random-effects-to-account-for-overdispersion"><span class="header-section-number">15.12.3</span> Using Random Effects to Account for Overdispersion</a></li>
+  <li><a href="#visualising-results-1" id="toc-visualising-results-1" class="nav-link" data-scroll-target="#visualising-results-1"><span class="header-section-number">15.12.4</span> Visualising Results</a></li>
+  </ul>
+</li>
+  <li>
+<a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary"><span class="header-section-number">15.13</span> Summary</a>
+  <ul class="collapse">
+<li><a href="#when-should-i-use-mixed-models" id="toc-when-should-i-use-mixed-models" class="nav-link" data-scroll-target="#when-should-i-use-mixed-models"><span class="header-section-number">15.13.1</span> When Should I Use Mixed Models?</a></li>
+  <li><a href="#quick-reference-table" id="toc-quick-reference-table" class="nav-link" data-scroll-target="#quick-reference-table"><span class="header-section-number">15.13.2</span> Quick Reference Table</a></li>
+  <li><a href="#common-issues-and-solutions" id="toc-common-issues-and-solutions" class="nav-link" data-scroll-target="#common-issues-and-solutions"><span class="header-section-number">15.13.3</span> Common Issues and Solutions</a></li>
+  <li><a href="#key-concepts-to-remember" id="toc-key-concepts-to-remember" class="nav-link" data-scroll-target="#key-concepts-to-remember"><span class="header-section-number">15.13.4</span> Key Concepts to Remember</a></li>
+  <li><a href="#further-reading" id="toc-further-reading" class="nav-link" data-scroll-target="#further-reading"><span class="header-section-number">15.13.5</span> Further Reading</a></li>
+  </ul>
+</li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./mixed-model.html">Mixed Models</a></li><li class="breadcrumb-item"><a href="./intro-mixed-model.html"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Foundations of Mixed Modelling</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title">
+<span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Foundations of Mixed Modelling</span>
+</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><section id="introduction" class="level2" data-number="15.1"><h2 data-number="15.1" class="anchored" data-anchor-id="introduction">
+<span class="header-section-number">15.1</span> Introduction</h2>
+<p>All our previous analyses assumed <strong>independence</strong> between observations. However, this assumption breaks down when:</p>
+<ul>
+<li>We make repeated measurements on individuals or groups</li>
+<li>We repeat experiments across different times or locations</li>
+<li>Samples are processed in batches (different days, machines, technicians)</li>
+<li>We use paired or matched designs</li>
+</ul>
+<p>When observations are grouped in this way, measurements within the same group tend to be more similar to each other than to measurements from different groups. Ignoring this structure leads to incorrect conclusions.</p>
+</section><section id="what-is-a-mixed-model" class="level2" data-number="15.2"><h2 data-number="15.2" class="anchored" data-anchor-id="what-is-a-mixed-model">
+<span class="header-section-number">15.2</span> What is a Mixed Model?</h2>
+<p>Mixed models extend linear regression by including two types of effects:</p>
+<ul>
+<li><p><strong>Fixed effects</strong>: Variables we are directly interested in testing (e.g., treatment, dose, temperature). We estimate specific coefficients for these predictors.</p></li>
+<li><p><strong>Random effects</strong>: Grouping factors that create non-independence (e.g., individual, batch, field site). Rather than estimating separate coefficients for each group, we estimate how much groups vary around an overall average.</p></li>
+</ul>
+<p>Think of random effects as accounting for “nuisance variation” - variation we need to control for, but are not primarily interested in.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>When to use random effects
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Use a variable as a random effect when:</p>
+<ul>
+<li>It is categorical with multiple levels (typically 5+)</li>
+<li>You want to generalise beyond the specific groups in your study</li>
+<li>Group sample sizes are unbalanced or some data are missing</li>
+<li>You are not interested in comparing specific groups to each other</li>
+</ul>
+</div>
+</div>
+<section id="the-study" class="level3" data-number="15.2.1"><h3 data-number="15.2.1" class="anchored" data-anchor-id="the-study">
+<span class="header-section-number">15.2.1</span> The Study</h3>
+<p>This dataset comes from replicate feeding experiments investigating how <em>Spodoptera frugiperda</em> (Fall Army Worm) larvae respond to plant defensive compounds. Larvae were reared on artificial diet containing different concentrations of the benzoxazinoid DIMBOA, and researchers measured a composite detoxification capacity index.</p>
+<p><strong>Why replicate experiments?</strong> Larval responses can vary substantially between experimental batches due to factors like:</p>
+<ul>
+<li>Slight differences in rearing conditions</li>
+<li>Variation in larval age at testing</li>
+<li>Day-to-day environmental fluctuations</li>
+<li>Unmeasured genetic variation between cohorts</li>
+</ul>
+<p>By running multiple independent replicates, researchers ensure their findings are robust and generalisable.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="images/Spodoptera_frugiperda.jpg" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:60.0%" alt="Fall Army Worm"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Variables:</strong></p>
+<ul>
+<li><p><code>benzo_um</code>: Toxin concentration in diet (µM)</p></li>
+<li><p><code>detox_exp</code>: Detoxification capacity index (higher = stronger response)</p></li>
+<li><p><code>group</code>: Experimental replicate (1–5)</p></li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<a href="https://raw.githubusercontent.com/Philip-Leftwich/Oct-Intro-Analytics/refs/heads/dev/files/benzo.csv">
+<button class="btn btn-success"><i class="fa fa-save"></i> Download benzoxazinoid data as csv</button>
+</a>
+</div>
+</div>
+</section><section id="visualising-the-problem" class="level3" data-number="15.2.2"><h3 data-number="15.2.2" class="anchored" data-anchor-id="visualising-the-problem">
+<span class="header-section-number">15.2.2</span> Visualising the Problem</h3>
+<p>If we ignore the group structure and plot all data together, we see an apparent positive relationship:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">ggplot</span>(benzo_data, <span class="fu">aes</span>(<span class="at">x =</span> benzo_um, <span class="at">y =</span> detox_exp)) <span class="sc">+</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb1-3"><a href="#cb1-3"></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-4"><a href="#cb1-4"></a>    <span class="at">x =</span> <span class="st">"Toxin concentration (µM)"</span>,</span>
+<span id="cb1-5"><a href="#cb1-5"></a>    <span class="at">y =</span> <span class="st">"Detoxification capacity"</span></span>
+<span id="cb1-6"><a href="#cb1-6"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-7"><a href="#cb1-7"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>All data pooled together, ignoring experimental batch</figcaption></figure>
+</div>
+</div>
+</div>
+<p>However, when we colour points by experimental batch, a more complex picture emerges:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">ggplot</span>(benzo_data, <span class="fu">aes</span>(<span class="at">x =</span> benzo_um, <span class="at">y =</span> detox_exp, <span class="at">colour =</span> group)) <span class="sc">+</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="fu">labs</span>(</span>
+<span id="cb2-4"><a href="#cb2-4"></a>    <span class="at">x =</span> <span class="st">"Toxin concentration (µM)"</span>,</span>
+<span id="cb2-5"><a href="#cb2-5"></a>    <span class="at">y =</span> <span class="st">"Detoxification capacity"</span></span>
+<span id="cb2-6"><a href="#cb2-6"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-7"><a href="#cb2-7"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"right"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Data coloured by experimental batch reveals group-level variation</figcaption></figure>
+</div>
+</div>
+</div>
+<p>The groups differ substantially in their baseline detoxification capacity. Some batches show higher average responses than others, even at the same toxin concentration.</p>
+<div class="task">
+<div class="task-header">
+<p>Explore group differences</p>
+</div>
+<div class="task-container">
+<p>Create a boxplot showing how detoxification capacity varies between experimental batches.</p>
+<div class="webex-solution">
+<button>
+Solution
+</button>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">ggplot</span>(benzo_data, <span class="fu">aes</span>(<span class="at">x =</span> group, <span class="at">y =</span> detox_exp, <span class="at">fill =</span> group)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="fu">geom_boxplot</span>() <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-4"><a href="#cb3-4"></a>    <span class="at">x =</span> <span class="st">"Experimental batch"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5"></a>    <span class="at">y =</span> <span class="st">"Detoxification capacity"</span></span>
+<span id="cb3-6"><a href="#cb3-6"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Baseline detoxification varies substantially between batches</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Group 2 has consistently higher detoxification capacity, whilst Group 4 is substantially lower. This batch-to-batch variation must be accounted for.</p>
+</div>
+</div>
+</div>
+</section></section><section id="three-approaches-compared" class="level2" data-number="15.3"><h2 data-number="15.3" class="anchored" data-anchor-id="three-approaches-compared">
+<span class="header-section-number">15.3</span> Three Approaches Compared</h2>
+<section id="approach-1-pooled-model-ignoring-groups" class="level3" data-number="15.3.1"><h3 data-number="15.3.1" class="anchored" data-anchor-id="approach-1-pooled-model-ignoring-groups">
+<span class="header-section-number">15.3.1</span> Approach 1: Pooled Model (Ignoring Groups)</h3>
+<p>This treats all observations as independent:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>pooled_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(detox_exp <span class="sc">~</span> benzo_um, <span class="at">data =</span> benzo_data)</span>
+<span id="cb4-2"><a href="#cb4-2"></a><span class="fu">summary</span>(pooled_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = detox_exp ~ benzo_um, data = benzo_data)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-37.23 -12.11  -2.36  11.00  44.53 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  21.0546     1.6490  12.768   &lt;2e-16 ***
+benzo_um      2.5782     0.2854   9.034   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 16.96 on 428 degrees of freedom
+Multiple R-squared:  0.1602,    Adjusted R-squared:  0.1582 
+F-statistic: 81.62 on 1 and 428 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p><strong>Problem</strong>: The standard errors are artificially small because we are treating 430 observations as independent when they are not. This inflates our confidence in the estimate.</p>
+</section><section id="approach-2-fixed-effect-model" class="level3" data-number="15.3.2"><h3 data-number="15.3.2" class="anchored" data-anchor-id="approach-2-fixed-effect-model">
+<span class="header-section-number">15.3.2</span> Approach 2: Fixed-Effect Model</h3>
+<p>Include group explicitly as a predictor:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>fixed_model <span class="ot">&lt;-</span> <span class="fu">lm</span>(detox_exp <span class="sc">~</span> benzo_um <span class="sc">+</span> group, <span class="at">data =</span> benzo_data)</span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">summary</span>(fixed_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+lm(formula = detox_exp ~ benzo_um + group, data = benzo_data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-26.3011  -6.3665  -0.3373   6.6295  31.5816 
+
+Coefficients:
+            Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  11.7808     1.2931   9.111  &lt; 2e-16 ***
+benzo_um      2.0242     0.1704  11.883  &lt; 2e-16 ***
+group2        3.8771     1.4214   2.728 0.006642 ** 
+group3       36.3036     1.4286  25.412  &lt; 2e-16 ***
+group4        9.2323     1.4215   6.495 2.33e-10 ***
+group5        8.0609     2.0922   3.853 0.000135 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 10.05 on 424 degrees of freedom
+Multiple R-squared:  0.7077,    Adjusted R-squared:  0.7042 
+F-statistic: 205.3 on 5 and 424 DF,  p-value: &lt; 2.2e-16</code></pre>
+</div>
+</div>
+<p><strong>When this works well:</strong></p>
+<ul>
+<li>Few groups (&lt; 5)</li>
+<li>Large, balanced sample sizes per group</li>
+<li>You want to make inferences about these specific batches only</li>
+</ul>
+<p><strong>Limitations:</strong></p>
+<ul>
+<li>Cannot generalise to future batches</li>
+<li>Uses many degrees of freedom estimating group differences</li>
+<li>Struggles with unbalanced designs or missing data</li>
+</ul></section><section id="approach-3-mixed-effects-model" class="level3" data-number="15.3.3"><h3 data-number="15.3.3" class="anchored" data-anchor-id="approach-3-mixed-effects-model">
+<span class="header-section-number">15.3.3</span> Approach 3: Mixed-Effects Model</h3>
+<p>Model group-to-group variation as random:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">library</span>(lmerTest)</span>
+<span id="cb8-2"><a href="#cb8-2"></a></span>
+<span id="cb8-3"><a href="#cb8-3"></a>mixed_model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(detox_exp <span class="sc">~</span> benzo_um <span class="sc">+</span> (<span class="dv">1</span> <span class="sc">|</span> group), <span class="at">data =</span> benzo_data)</span>
+<span id="cb8-4"><a href="#cb8-4"></a><span class="fu">summary</span>(mixed_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: detox_exp ~ benzo_um + (1 | group)
+   Data: benzo_data
+
+REML criterion at convergence: 3224.4
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.61968 -0.63654 -0.03584  0.66113  3.13597 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ group    (Intercept) 205      14.32   
+ Residual             101      10.05   
+Number of obs: 430, groups:  group, 5
+
+Fixed effects:
+            Estimate Std. Error       df t value Pr(&gt;|t|)    
+(Intercept)  23.2692     6.4818   4.1570    3.59   0.0215 *  
+benzo_um      2.0271     0.1703 424.0815   11.90   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+         (Intr)
+benzo_um -0.131</code></pre>
+</div>
+</div>
+<p>The notation <code>(1|group)</code> specifies a <strong>random intercept</strong> - each group has its own baseline value, but the slope (effect of toxin) is assumed constant.</p>
+<p><strong>Random Effects:</strong></p>
+<pre><code> Groups   Name        Variance Std.Dev.
+ group    (Intercept) 205.0    14.32   
+ Residual             101.0    10.05   </code></pre>
+<p>This tells us that groups differ in their intercepts with a standard deviation of 14.32. The proportion of remaining variance explained by groups is:</p>
+<pre><code>205 / (205 + 101) = 0.67</code></pre>
+<p>So experimental batch accounts for 67% of the variation not explained by toxin concentration.</p>
+<p><strong>Fixed Effects:</strong></p>
+<pre><code>            Estimate Std. Error      df t value Pr(&gt;|t|)    
+(Intercept)  19.8348     6.5163  4.3098   3.044   0.0339 *  
+benzo_um      2.0261     0.1701 424.0888  11.909  &lt; 2e-16 ***</code></pre>
+<p>The effect of toxin concentration is 2.03 units increase in detoxification per µM increase in toxin (95% CI: 1.69–2.36).</p>
+</section><section id="comparing-standard-errors" class="level3" data-number="15.3.4"><h3 data-number="15.3.4" class="anchored" data-anchor-id="comparing-standard-errors">
+<span class="header-section-number">15.3.4</span> Comparing Standard Errors</h3>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: left;">Approach</th>
+<th style="text-align: left;">term</th>
+<th style="text-align: right;">estimate</th>
+<th style="text-align: right;">std.error</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Pooled</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">21.055</td>
+<td style="text-align: right;">1.649</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Pooled</td>
+<td style="text-align: left;">benzo_um</td>
+<td style="text-align: right;">2.578</td>
+<td style="text-align: right;">0.285</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fixed Effect</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">11.781</td>
+<td style="text-align: right;">1.293</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Fixed Effect</td>
+<td style="text-align: left;">benzo_um</td>
+<td style="text-align: right;">2.024</td>
+<td style="text-align: right;">0.170</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Mixed Model</td>
+<td style="text-align: left;">(Intercept)</td>
+<td style="text-align: right;">23.269</td>
+<td style="text-align: right;">6.482</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Mixed Model</td>
+<td style="text-align: left;">benzo_um</td>
+<td style="text-align: right;">2.027</td>
+<td style="text-align: right;">0.170</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>Notice:</p>
+<ul>
+<li>
+<strong>Pooled</strong>: Intercept SE is unrealistically small (ignores batch variation)</li>
+<li>
+<strong>Fixed</strong>: Smallest SE, but only describes Group 1</li>
+<li>
+<strong>Mixed</strong>: Larger intercept SE (correctly reflects batch uncertainty), reasonable slope SE</li>
+</ul></section></section><section id="when-are-mixed-models-actually-necessary" class="level2" data-number="15.4"><h2 data-number="15.4" class="anchored" data-anchor-id="when-are-mixed-models-actually-necessary">
+<span class="header-section-number">15.4</span> When Are Mixed Models Actually Necessary?</h2>
+<p>Looking at our results, you might notice something important: the slope estimates are nearly identical across all three approaches:</p>
+<ul>
+<li>Pooled model: 2.58 (SE = 0.29)</li>
+<li>Fixed-effect model: 2.04 (SE = 0.17)</li>
+<li>Mixed model: 2.03 (SE = 0.17)</li>
+</ul>
+<p>The fixed-effect and mixed models give essentially the same answer for the toxin effect. <strong>This is common</strong>. Mixed models often don’t change your conclusions about fixed effects dramatically—so when is the extra complexity worth it?</p>
+<section id="mixed-models-provide-clear-advantages-when" class="level3" data-number="15.4.1"><h3 data-number="15.4.1" class="anchored" data-anchor-id="mixed-models-provide-clear-advantages-when">
+<span class="header-section-number">15.4.1</span> Mixed models provide clear advantages when:</h3>
+<ol type="1">
+<li><p><strong>Unbalanced designs</strong>: Some groups have far fewer observations than others. Notice Group 5 has only 30 observations whilst Groups 1–4 have 100 each. The fixed-effect model treats Group 5’s estimate as equally reliable, whilst the mixed model appropriately reflects this uncertainty.</p></li>
+<li><p><strong>Generalisation</strong>: We want to generalise to future experimental batches, not just describe these five specific ones. Random effects model batch-to-batch variability, allowing predictions for new batches.</p></li>
+<li><p><strong>Missing data</strong>: If some groups have missing predictor values, mixed models handle this elegantly whilst fixed-effect models struggle.</p></li>
+<li><p><strong>Many groups</strong>: With 10+ groups, fixed-effect models consume many degrees of freedom. Mixed models are more parsimonious.</p></li>
+<li><p><strong>Hierarchical structure matters</strong>: When group-level variance is substantial (here, batch explains 67% of residual variance), acknowledging this structure improves model interpretation even if slope estimates barely change.</p></li>
+</ol></section><section id="fixed-effect-models-are-perfectly-adequate-when" class="level3" data-number="15.4.2"><h3 data-number="15.4.2" class="anchored" data-anchor-id="fixed-effect-models-are-perfectly-adequate-when">
+<span class="header-section-number">15.4.2</span> Fixed-effect models are perfectly adequate when:</h3>
+<ol type="1">
+<li>
+<strong>Few groups</strong> (&lt; 5) with balanced designs</li>
+<li>
+<strong>Large sample sizes</strong> per group<br>
+</li>
+<li>
+<strong>No interest in generalisation</strong> beyond these specific groups</li>
+<li>
+<strong>Complete data</strong> with no missing values</li>
+</ol>
+<p><strong>For this dataset</strong>: Either the fixed-effect or mixed model would be defensible. The mixed model is preferable because (a) we have unbalanced groups, and (b) we want to generalise to future experiments, not just describe these five batches. But if you only cared about these specific batches, the fixed-effect model would be simpler and yield the same scientific conclusion.</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Don’t use mixed models blindly
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Mixed models are not always better than simpler alternatives. Use them when the data structure requires it, not because they seem more sophisticated. If a fixed-effect model answers your research question adequately, the added complexity of random effects may be unnecessary.</p>
+</div>
+</div>
+</section></section><section id="making-predictions" class="level2" data-number="15.5"><h2 data-number="15.5" class="anchored" data-anchor-id="making-predictions">
+<span class="header-section-number">15.5</span> Making Predictions</h2>
+<p>We can make predictions from mixed models using tools you’re already familiar with. The <code>emmeans</code> package works for mixed models just as it does for standard linear models, producing estimated marginal means averaged across random effects:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb13-2"><a href="#cb13-2"></a></span>
+<span id="cb13-3"><a href="#cb13-3"></a><span class="fu">emmeans</span>(mixed_model, </span>
+<span id="cb13-4"><a href="#cb13-4"></a>        <span class="at">specs =</span> <span class="st">"benzo_um"</span>, </span>
+<span id="cb13-5"><a href="#cb13-5"></a>        <span class="at">at =</span> <span class="fu">list</span>(<span class="at">benzo_um =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fl">2.5</span>, <span class="dv">5</span>, <span class="fl">7.5</span>, <span class="dv">10</span>)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> benzo_um emmean   SE   df lower.CL upper.CL
+      0.0   23.3 6.48 4.14     5.51     41.0
+      2.5   28.3 6.44 4.03    10.52     46.2
+      5.0   33.4 6.43 4.00    15.56     51.2
+      7.5   38.5 6.44 4.04    20.65     56.3
+     10.0   43.5 6.48 4.14    25.78     61.3
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<p>These predictions represent the <strong>population-average</strong> response—what we’d expect for a “typical” experimental batch. The values are averaged across all groups, with uncertainty reflecting both within-group variation and between-group differences.</p>
+<p>We can visualise these marginal means:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">emmeans</span>(mixed_model, </span>
+<span id="cb15-2"><a href="#cb15-2"></a>        <span class="at">specs =</span> <span class="st">"benzo_um"</span>, </span>
+<span id="cb15-3"><a href="#cb15-3"></a>        <span class="at">at =</span> <span class="fu">list</span>(<span class="at">benzo_um =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">10</span>, <span class="fl">0.5</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> benzo_um, <span class="at">y =</span> emmean)) <span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower.CL, <span class="at">ymax =</span> upper.CL), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a>  <span class="fu">labs</span>(</span>
+<span id="cb15-9"><a href="#cb15-9"></a>    <span class="at">x =</span> <span class="st">"Toxin concentration (µM)"</span>,</span>
+<span id="cb15-10"><a href="#cb15-10"></a>    <span class="at">y =</span> <span class="st">"Detoxification capacity"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11"></a>    <span class="at">title =</span> <span class="st">"Population-average predictions"</span></span>
+<span id="cb15-12"><a href="#cb15-12"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Estimated marginal means at different toxin concentrations</figcaption></figure>
+</div>
+</div>
+</div>
+<section id="group-specific-predictions" class="level3" data-number="15.5.1"><h3 data-number="15.5.1" class="anchored" data-anchor-id="group-specific-predictions">
+<span class="header-section-number">15.5.1</span> Group-specific predictions</h3>
+<p>However, mixed models allow us to do something standard linear models cannot: predict responses for <strong>specific groups</strong>. Whilst <code>emmeans</code> focuses on population averages, the <code>ggeffects</code> package can show predictions for individual batches:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="fu">library</span>(ggeffects)</span>
+<span id="cb16-2"><a href="#cb16-2"></a></span>
+<span id="cb16-3"><a href="#cb16-3"></a><span class="co"># Population-level predictions (equivalent to emmeans)</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a><span class="fu">ggpredict</span>(mixed_model,</span>
+<span id="cb16-5"><a href="#cb16-5"></a>  <span class="at">terms =</span> <span class="st">"benzo_um"</span>,</span>
+<span id="cb16-6"><a href="#cb16-6"></a>  <span class="at">type =</span> <span class="st">"fixed"</span></span>
+<span id="cb16-7"><a href="#cb16-7"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a>  <span class="fu">plot</span>(<span class="at">show_data =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb16-9"><a href="#cb16-9"></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-10"><a href="#cb16-10"></a>    <span class="at">x =</span> <span class="st">"Toxin concentration (µM)"</span>,</span>
+<span id="cb16-11"><a href="#cb16-11"></a>    <span class="at">y =</span> <span class="st">"Detoxification capacity"</span></span>
+<span id="cb16-12"><a href="#cb16-12"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Predicted relationship accounting for batch variation (population average)</figcaption></figure>
+</div>
+</div>
+</div>
+<p>This shows the average (population-level) relationship with 95% confidence intervals—essentially the same information as our <code>emmeans</code> plot above, just formatted differently.</p>
+<p>To see group-specific predictions:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="fu">ggpredict</span>(mixed_model,</span>
+<span id="cb17-2"><a href="#cb17-2"></a>  <span class="at">terms =</span> <span class="fu">c</span>(<span class="st">"benzo_um"</span>, <span class="st">"group"</span>),</span>
+<span id="cb17-3"><a href="#cb17-3"></a>  <span class="at">type =</span> <span class="st">"random"</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a>  <span class="fu">plot</span>(<span class="at">show_data =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>group) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a>  <span class="fu">labs</span>(</span>
+<span id="cb17-8"><a href="#cb17-8"></a>    <span class="at">x =</span> <span class="st">"Toxin concentration (µM)"</span>,</span>
+<span id="cb17-9"><a href="#cb17-9"></a>    <span class="at">y =</span> <span class="st">"Detoxification capacity"</span></span>
+<span id="cb17-10"><a href="#cb17-10"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Group-specific predictions showing batch-to-batch variation</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Each panel shows predictions for a specific batch, illustrating how baseline detoxification differs whilst the slope remains similar. These conditional predictions account for each group’s specific intercept whilst maintaining the common slope estimated by the fixed effect.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span><code>emmeans</code> vs <code>ggpredict</code>
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Use <strong><code>emmeans</code></strong> when you want numerical marginal means, pairwise comparisons, or contrasts (as in previous chapters). It focuses on population-average estimates.</p></li>
+<li><p>Use <strong><code>ggpredict</code></strong> when you want to visualise predictions or show group-specific effects. It can produce both population-level and conditional (group-specific) predictions.</p></li>
+<li><p>Both produce equivalent population-level estimates for fixed effects—the difference is in presentation and the ability to show group-specific predictions.</p></li>
+</ul>
+</div>
+</div>
+</section></section><section id="model-fit" class="level2" data-number="15.6"><h2 data-number="15.6" class="anchored" data-anchor-id="model-fit">
+<span class="header-section-number">15.6</span> Model Fit</h2>
+<p>We can assess overall model performance using R² values:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a><span class="fu">library</span>(MuMIn)</span>
+<span id="cb18-2"><a href="#cb18-2"></a><span class="fu">r.squaredGLMM</span>(mixed_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            R2m       R2c
+[1,] 0.09949133 0.7027654</code></pre>
+</div>
+</div>
+<ul>
+<li>
+<strong>R²m (marginal)</strong>: Variance explained by fixed effects alone (toxin concentration) = 10%</li>
+<li>
+<strong>R²c (conditional)</strong>: Variance explained by full model (fixed + random effects) = 70%</li>
+</ul>
+<p>The large difference shows that experimental batch explains substantial variation beyond the toxin effect.</p>
+</section><section id="checking-model-assumptions" class="level2" data-number="15.7"><h2 data-number="15.7" class="anchored" data-anchor-id="checking-model-assumptions">
+<span class="header-section-number">15.7</span> Checking Model Assumptions</h2>
+<p>Mixed models make the same assumptions as linear models (linearity, homoscedasticity, normality of residuals), plus an additional assumption: that random effects are normally distributed.</p>
+<p>The <code>performance</code> package provides diagnostic plots for mixed models:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="fu">library</span>(performance)</span>
+<span id="cb20-2"><a href="#cb20-2"></a><span class="fu">check_model</span>(mixed_model, <span class="at">detrend =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Key diagnostics to examine:</strong></p>
+<ul>
+<li>
+<strong>Posterior Predictive Check</strong>: Do simulated data from the model resemble observed data?</li>
+<li>
+<strong>Linearity</strong>: Is the relationship between predictors and response linear?</li>
+<li>
+<strong>Homogeneity of Variance</strong>: Is residual spread constant across fitted values?</li>
+<li>
+<strong>Normality of Residuals</strong>: Do residuals follow a normal distribution?</li>
+<li>
+<strong>Normality of Random Effects</strong>: Do group-level intercepts follow a normal distribution?</li>
+</ul>
+<p>If assumptions are violated, you may need to transform variables, add polynomial terms, or use a generalised linear mixed model (GLMM).</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>DHARMa package
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The <code>performance</code> package uses simulated residuals from the <code>DHARMa</code> package for mixed model diagnostics. This approach is more reliable than examining raw residuals, particularly for detecting heteroscedasticity and non-normality.</p>
+</div>
+</div>
+</section><section id="presenting-results" class="level2" data-number="15.8"><h2 data-number="15.8" class="anchored" data-anchor-id="presenting-results">
+<span class="header-section-number">15.8</span> Presenting Results</h2>
+<section id="interpreting-summary-output" class="level3" data-number="15.8.1"><h3 data-number="15.8.1" class="anchored" data-anchor-id="interpreting-summary-output">
+<span class="header-section-number">15.8.1</span> Interpreting <code>summary()</code> output</h3>
+<p>The <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> function provides essential information for understanding and reporting your model:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">summary</span>(mixed_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: detox_exp ~ benzo_um + (1 | group)
+   Data: benzo_data
+
+REML criterion at convergence: 3224.4
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.61968 -0.63654 -0.03584  0.66113  3.13597 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ group    (Intercept) 205      14.32   
+ Residual             101      10.05   
+Number of obs: 430, groups:  group, 5
+
+Fixed effects:
+            Estimate Std. Error       df t value Pr(&gt;|t|)    
+(Intercept)  23.2692     6.4818   4.1570    3.59   0.0215 *  
+benzo_um      2.0271     0.1703 424.0815   11.90   &lt;2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+         (Intr)
+benzo_um -0.131</code></pre>
+</div>
+</div>
+<p><strong>Random effects section</strong> shows: - Between-group variance (how much groups differ) - Residual variance (within-group variation) - Standard deviations for each variance component</p>
+<p><strong>Fixed effects section</strong> shows: - Coefficient estimates - Standard errors - Degrees of freedom (calculated using Satterthwaite approximation) - <em>t</em>-values and <em>p</em>-values</p>
+</section><section id="model-fit-statistics" class="level3" data-number="15.8.2"><h3 data-number="15.8.2" class="anchored" data-anchor-id="model-fit-statistics">
+<span class="header-section-number">15.8.2</span> Model fit statistics</h3>
+<p>The <code>MuMIn</code> package calculates R² values for mixed models:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="fu">library</span>(MuMIn)</span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="fu">r.squaredGLMM</span>(mixed_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            R2m       R2c
+[1,] 0.09949133 0.7027654</code></pre>
+</div>
+</div>
+<ul>
+<li>
+<strong>R²m (marginal)</strong>: Proportion of variance explained by fixed effects alone</li>
+<li>
+<strong>R²c (conditional)</strong>: Proportion of variance explained by the complete model (fixed + random effects)</li>
+</ul>
+<p>The difference between R²c and R²m indicates how much variance the random effects explain.</p>
+</section><section id="creating-tables" class="level3" data-number="15.8.3"><h3 data-number="15.8.3" class="anchored" data-anchor-id="creating-tables">
+<span class="header-section-number">15.8.3</span> Creating tables</h3>
+<p>The <code>sjPlot</code> package produces publication-ready tables:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1"></a><span class="fu">library</span>(sjPlot)</span>
+<span id="cb25-2"><a href="#cb25-2"></a></span>
+<span id="cb25-3"><a href="#cb25-3"></a><span class="fu">tab_model</span>(mixed_model, </span>
+<span id="cb25-4"><a href="#cb25-4"></a>          <span class="at">show.re.var =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb25-5"><a href="#cb25-5"></a>          <span class="at">show.icc =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb25-6"><a href="#cb25-6"></a>          <span class="at">show.r2 =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<table style="border-collapse:collapse; border:none;">
+<tbody><tr>
+<th style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm;  text-align:left; ">&nbsp;</th>
+<th colspan="3" style="border-top: double; text-align:center; font-style:normal; font-weight:bold; padding:0.2cm; ">detox exp</th>
+</tr>
+<tr>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  text-align:left; ">Predictors</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">Estimates</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">CI</td>
+<td style=" text-align:center; border-bottom:1px solid; font-style:italic; font-weight:normal;  ">p</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">(Intercept)</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">23.27</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">10.53&nbsp;–&nbsp;36.01</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; ">benzo um</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">2.03</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  ">1.69&nbsp;–&nbsp;2.36</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:center;  "><strong>&lt;0.001</strong></td>
+</tr>
+<tr>
+<td colspan="4" style="font-weight:bold; text-align:left; padding-top:.8em;">Random Effects</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">σ<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">101.01</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">τ<sub>00</sub><sub>group</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">205.00</td>
+
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">ICC</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.67</td>
+
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">N <sub>group</sub>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">5</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm; border-top:1px solid;">Observations</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left; border-top:1px solid;" colspan="3">430</td>
+</tr>
+<tr>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; text-align:left; padding-top:0.1cm; padding-bottom:0.1cm;">Marginal R<sup>2</sup> / Conditional R<sup>2</sup>
+</td>
+<td style=" padding:0.2cm; text-align:left; vertical-align:top; padding-top:0.1cm; padding-bottom:0.1cm; text-align:left;" colspan="3">0.099 / 0.703</td>
+</tr>
+</tbody></table>
+</div>
+</div>
+<p>This table includes: - Fixed effect estimates with 95% confidence intervals - Random effect variance components<br>
+- Model fit statistics (R²m and R²c) - Number of observations and groups</p>
+</section><section id="creating-figures" class="level3" data-number="15.8.4"><h3 data-number="15.8.4" class="anchored" data-anchor-id="creating-figures">
+<span class="header-section-number">15.8.4</span> Creating figures</h3>
+<p>We have already used <code><a href="https://strengejacke.github.io/ggeffects/reference/ggpredict.html">ggeffects::ggpredict()</a></code> for predictions. You can customise these plots for presentation:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1"></a><span class="fu">ggpredict</span>(mixed_model, </span>
+<span id="cb26-2"><a href="#cb26-2"></a>          <span class="at">terms =</span> <span class="fu">c</span>(<span class="st">"benzo_um"</span>, <span class="st">"group"</span>), </span>
+<span id="cb26-3"><a href="#cb26-3"></a>          <span class="at">type =</span> <span class="st">"random"</span>) <span class="sc">|&gt;</span>  </span>
+<span id="cb26-4"><a href="#cb26-4"></a>  <span class="fu">plot</span>(<span class="at">show_data =</span> <span class="cn">TRUE</span>) <span class="sc">+</span> </span>
+<span id="cb26-5"><a href="#cb26-5"></a>  <span class="fu">scale_colour_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb26-6"><a href="#cb26-6"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Dark2"</span>) <span class="sc">+</span></span>
+<span id="cb26-7"><a href="#cb26-7"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>group) <span class="sc">+</span></span>
+<span id="cb26-8"><a href="#cb26-8"></a>  <span class="fu">labs</span>(</span>
+<span id="cb26-9"><a href="#cb26-9"></a>    <span class="at">x =</span> <span class="st">"Toxin concentration (µM)"</span>,</span>
+<span id="cb26-10"><a href="#cb26-10"></a>    <span class="at">y =</span> <span class="st">"Detoxification capacity"</span></span>
+<span id="cb26-11"><a href="#cb26-11"></a>  ) <span class="sc">+</span></span>
+<span id="cb26-12"><a href="#cb26-12"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb26-13"><a href="#cb26-13"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Customised prediction plot showing group-specific responses</figcaption></figure>
+</div>
+</div>
+</div>
+</section><section id="example-write-up" class="level3" data-number="15.8.5"><h3 data-number="15.8.5" class="anchored" data-anchor-id="example-write-up">
+<span class="header-section-number">15.8.5</span> Example write-up</h3>
+<blockquote class="blockquote">
+<p>We fitted a linear mixed model (estimated using REML and implemented in the <code>lmerTest</code> package) to examine the effect of dietary toxin concentration on larval detoxification capacity. The model included experimental batch as a random intercept to account for the repeated-measures experimental design. The model’s conditional R² was 0.70, whilst the marginal R² was 0.10, indicating that experimental batch explained substantial variance beyond the effect of toxin concentration. Detoxification capacity increased by 2.03 units per µM increase in toxin (95% CI: 1.69–2.36; <em>t</em><sub>424</sub> = 11.9, <em>p</em> &lt; 0.001). Between-batch variance (σ² = 205) was approximately twice the residual variance (σ² = 101), confirming considerable baseline differences between experimental replicates.</p>
+</blockquote>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Reporting checklist
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When reporting mixed model results, include:</p>
+<ol type="1">
+<li>Model specification (which package, estimation method)</li>
+<li>Fixed effect estimates with 95% CIs and <em>p</em>-values</li>
+<li>Method for calculating degrees of freedom (Satterthwaite or Kenward-Roger)</li>
+<li>Variance components for random effects</li>
+<li>Model fit statistics (R²m and R²c)</li>
+<li>Number of observations and groups</li>
+<li>Statement about assumption checking</li>
+</ol>
+</div>
+</div>
+</section></section><section id="when-to-use-each-approach" class="level2" data-number="15.9"><h2 data-number="15.9" class="anchored" data-anchor-id="when-to-use-each-approach">
+<span class="header-section-number">15.9</span> When to Use Each Approach</h2>
+<p><strong>Use a pooled model when:</strong></p>
+<ul>
+<li>Observations are genuinely independent</li>
+<li>No grouping structure exists in the data</li>
+</ul>
+<p><strong>Use fixed effects for groups when:</strong></p>
+<ul>
+<li>Few groups (&lt; 5)</li>
+<li>Large, balanced samples per group</li>
+<li>You only want to make inferences about these specific groups</li>
+<li>Groups represent treatments of direct interest</li>
+</ul>
+<p><strong>Use random effects when:</strong></p>
+<ul>
+<li>Many groups (5+)</li>
+<li>Unbalanced group sizes or missing data</li>
+<li>You want to generalise to future groups</li>
+<li>Groups represent nuisance variation to control for</li>
+</ul></section><section id="worked-example-1---dolphins" class="level2" data-number="15.10"><h2 data-number="15.10" class="anchored" data-anchor-id="worked-example-1---dolphins">
+<span class="header-section-number">15.10</span> Worked Example 1 - Dolphins</h2>
+<section id="deciding-between-fixed-and-random-effects" class="level3" data-number="15.10.1"><h3 data-number="15.10.1" class="anchored" data-anchor-id="deciding-between-fixed-and-random-effects">
+<span class="header-section-number">15.10.1</span> Deciding Between Fixed and Random Effects</h3>
+<p>When building mixed models, use these questions to guide your decisions:</p>
+<ol type="1">
+<li>
+<strong>Are you directly interested in testing this effect?</strong> → Fixed effect</li>
+<li>
+<strong>Is the variable continuous?</strong> → Fixed effect<br>
+</li>
+<li>
+<strong>Does the variable have fewer than five levels?</strong> → Fixed effect</li>
+<li>
+<strong>Is the variable a grouping factor creating non-independence?</strong> → Random effect</li>
+</ol></section><section id="the-study-1" class="level3" data-number="15.10.2"><h3 data-number="15.10.2" class="anchored" data-anchor-id="the-study-1">
+<span class="header-section-number">15.10.2</span> The Study</h3>
+<p>This dataset measured resting lung function in bottlenose dolphins. Researchers recorded tidal volume (<span class="math inline">\(V_T\)</span>, in litres) as an index of lung capacity, measuring each dolphin between one and four times during both inhalation and exhalation.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<a href="https://raw.githubusercontent.com/UEABIO/intro-mixed-models/main/book/files/dolphins.csv">
+<button class="btn btn-success"><i class="fa fa-save"></i> Download Dolphins data</button>
+</a>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb27-1"><a href="#cb27-1"></a>dolphins <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"files/dolphins.csv"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb27-2"><a href="#cb27-2"></a>  <span class="fu">mutate</span>(<span class="at">direction =</span> <span class="fu">factor</span>(direction)) <span class="sc">|&gt;</span></span>
+<span id="cb27-3"><a href="#cb27-3"></a>  <span class="fu">drop_na</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Research question</strong>: How does body mass affect tidal volume, and does this differ between inhalation and exhalation?</p>
+<p><strong>Variables</strong>: - <code>vt</code>: Tidal volume (litres) - response variable - <code>bodymass</code>: Body mass (kg) - predictor of interest - <code>direction</code>: Breath direction (1 = exhalation, 2 = inhalation) - potential modifier - <code>animal</code>: Individual dolphin ID - creates non-independence</p>
+<div class="task">
+<div class="task-header">
+<p>Identify fixed and random effects</p>
+</div>
+<div class="task-container">
+<p>For each variable, decide whether it should be a fixed or random effect:</p>
+<ol type="1">
+<li><p>Body mass: <select class="webex-select"><option value="blank"></option>
+<option value="">Random Effect</option>
+<option value="answer">Fixed Effect</option></select></p></li>
+<li><p>Direction: <select class="webex-select"><option value="blank"></option>
+<option value="">Random Effect</option>
+<option value="answer">Fixed Effect</option></select></p></li>
+<li><p>Animal ID: <select class="webex-select"><option value="blank"></option>
+<option value="answer">Random Effect</option>
+<option value="">Fixed Effect</option></select></p></li>
+</ol>
+<div class="webex-solution">
+<button>
+Reasoning
+</button>
+<ol type="1">
+<li><p><strong>Body mass</strong> - Fixed effect. We are directly interested in how body mass affects lung capacity (continuous variable, primary research question).</p></li>
+<li><p><strong>Direction</strong> - Fixed effect. Only two levels (in/out), and we want to test whether the relationship differs by breath direction.</p></li>
+<li><p><strong>Animal ID</strong> - Random effect. Individual dolphins were measured multiple times. If we ignored this, we would treat measurements from the same dolphin as independent (pseudoreplication). The random intercept accounts for individual variation in baseline lung capacity.</p></li>
+</ol>
+</div>
+</div>
+</div>
+</section><section id="fitting-the-model" class="level3" data-number="15.10.3"><h3 data-number="15.10.3" class="anchored" data-anchor-id="fitting-the-model">
+<span class="header-section-number">15.10.3</span> Fitting the Model</h3>
+<p>Using the formula structure <code>y ~ fixed_effects + (1|random_effect)</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1"></a><span class="fu">library</span>(lmerTest)</span>
+<span id="cb28-2"><a href="#cb28-2"></a></span>
+<span id="cb28-3"><a href="#cb28-3"></a>dolphmod <span class="ot">&lt;-</span> <span class="fu">lmer</span>(vt <span class="sc">~</span> bodymass <span class="sc">+</span> direction <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>animal), <span class="at">data =</span> dolphins)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Check the model summary:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb29-1"><a href="#cb29-1"></a><span class="fu">summary</span>(dolphmod)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: vt ~ bodymass + direction + (1 | animal)
+   Data: dolphins
+
+REML criterion at convergence: 387.4
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-2.30795 -0.51983  0.04156  0.62404  2.26396 
+
+Random effects:
+ Groups   Name        Variance Std.Dev.
+ animal   (Intercept) 1.039    1.019   
+ Residual             1.158    1.076   
+Number of obs: 112, groups:  animal, 31
+
+Fixed effects:
+             Estimate Std. Error        df t value Pr(&gt;|t|)    
+(Intercept)  2.226398   0.627115 28.758081   3.550  0.00135 ** 
+bodymass     0.016782   0.003259 26.720390   5.150  2.1e-05 ***
+direction2   1.114821   0.203389 77.414421   5.481  5.1e-07 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+           (Intr) bdymss
+bodymass   -0.927       
+direction2 -0.162  0.000</code></pre>
+</div>
+</div>
+<p><strong>Random effects:</strong></p>
+<pre><code> Groups   Name        Variance Std.Dev.
+ animal   (Intercept) 1.1293   1.0627  
+ Residual             0.5664   0.7526  </code></pre>
+<p>Individual dolphins vary in their baseline tidal volume (SD = 1.06 L). This accounts for 67% of residual variance [1.13/(1.13 + 0.57)], confirming that accounting for individual differences was important.</p>
+<p><strong>Fixed effects:</strong></p>
+<pre><code>              Estimate Std. Error       df t value Pr(&gt;|t|)    
+(Intercept)  -3.025455   0.632299 29.40753  -4.785 4.72e-05 ***
+bodymass      0.015605   0.003743 29.40651   4.169 0.000249 ***
+direction2    1.114655   0.204816 31.00000   5.443 6.24e-06 ***</code></pre>
+<ul>
+<li>For every 1 kg increase in body mass, tidal volume increases by 0.016 L (95% CI: 0.008–0.024 L)</li>
+<li>Inhalation has 1.11 L greater tidal volume than exhalation (95% CI: 0.71–1.52 L)</li>
+</ul></section><section id="visualising-predictions" class="level3" data-number="15.10.4"><h3 data-number="15.10.4" class="anchored" data-anchor-id="visualising-predictions">
+<span class="header-section-number">15.10.4</span> Visualising Predictions</h3>
+<p>Population-level predictions using <code>emmeans</code>:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1"></a><span class="fu">library</span>(emmeans)</span>
+<span id="cb33-2"><a href="#cb33-2"></a></span>
+<span id="cb33-3"><a href="#cb33-3"></a><span class="co"># Predictions at mean body mass for each breath direction</span></span>
+<span id="cb33-4"><a href="#cb33-4"></a><span class="fu">emmeans</span>(dolphmod, <span class="at">specs =</span> <span class="st">"direction"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> direction emmean    SE   df lower.CL upper.CL
+ 1           5.26 0.235 42.6     4.78     5.73
+ 2           6.37 0.235 42.6     5.90     6.84
+
+Degrees-of-freedom method: kenward-roger 
+Confidence level used: 0.95 </code></pre>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1"></a><span class="co"># Visualise the body mass effect</span></span>
+<span id="cb35-2"><a href="#cb35-2"></a><span class="fu">emmeans</span>(dolphmod, </span>
+<span id="cb35-3"><a href="#cb35-3"></a>        <span class="at">specs =</span> <span class="st">"bodymass"</span>,</span>
+<span id="cb35-4"><a href="#cb35-4"></a>        <span class="at">at =</span> <span class="fu">list</span>(<span class="at">bodymass =</span> <span class="fu">seq</span>(<span class="dv">130</span>, <span class="dv">260</span>, <span class="dv">10</span>))) <span class="sc">|&gt;</span></span>
+<span id="cb35-5"><a href="#cb35-5"></a>  <span class="fu">as.data.frame</span>() <span class="sc">|&gt;</span></span>
+<span id="cb35-6"><a href="#cb35-6"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> bodymass, <span class="at">y =</span> emmean)) <span class="sc">+</span></span>
+<span id="cb35-7"><a href="#cb35-7"></a>  <span class="fu">geom_ribbon</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> lower.CL, <span class="at">ymax =</span> upper.CL), <span class="at">alpha =</span> <span class="fl">0.3</span>) <span class="sc">+</span></span>
+<span id="cb35-8"><a href="#cb35-8"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb35-9"><a href="#cb35-9"></a>  <span class="fu">labs</span>(</span>
+<span id="cb35-10"><a href="#cb35-10"></a>    <span class="at">x =</span> <span class="st">"Body mass (kg)"</span>,</span>
+<span id="cb35-11"><a href="#cb35-11"></a>    <span class="at">y =</span> <span class="st">"Tidal volume (L)"</span></span>
+<span id="cb35-12"><a href="#cb35-12"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Population-average relationship between body mass and tidal volume</figcaption></figure>
+</div>
+</div>
+</div>
+<p>Comparing breath directions:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1"></a><span class="fu">library</span>(ggeffects)</span>
+<span id="cb36-2"><a href="#cb36-2"></a></span>
+<span id="cb36-3"><a href="#cb36-3"></a><span class="fu">ggpredict</span>(dolphmod, </span>
+<span id="cb36-4"><a href="#cb36-4"></a>          <span class="at">terms =</span> <span class="fu">c</span>(<span class="st">"bodymass"</span>, <span class="st">"direction"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb36-5"><a href="#cb36-5"></a>  <span class="fu">plot</span>(<span class="at">show_data =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb36-6"><a href="#cb36-6"></a>  <span class="fu">labs</span>(</span>
+<span id="cb36-7"><a href="#cb36-7"></a>    <span class="at">x =</span> <span class="st">"Body mass (kg)"</span>,</span>
+<span id="cb36-8"><a href="#cb36-8"></a>    <span class="at">y =</span> <span class="st">"Tidal volume (L)"</span></span>
+<span id="cb36-9"><a href="#cb36-9"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Effect of body mass differs by breath direction</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Reporting checklist
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When reporting this analysis, include:</p>
+<ul>
+<li>Model specification: Linear mixed model with random intercepts for individual dolphins</li>
+<li>Sample size: 32 dolphins, 1–4 measurements per individual</li>
+<li>Fixed effect estimates with 95% CIs and <em>p</em>-values</li>
+<li>Random effect variance components</li>
+<li>Model fit (R²m and R²c)</li>
+<li>Statement about assumptions</li>
+</ul>
+</div>
+</div>
+<hr></section></section><section id="worked-example-2---nested-random-effects" class="level2" data-number="15.11"><h2 data-number="15.11" class="anchored" data-anchor-id="worked-example-2---nested-random-effects">
+<span class="header-section-number">15.11</span> Worked Example 2 - Nested Random Effects</h2>
+<section id="crossed-vs-nested-designs" class="level3" data-number="15.11.1"><h3 data-number="15.11.1" class="anchored" data-anchor-id="crossed-vs-nested-designs">
+<span class="header-section-number">15.11.1</span> Crossed vs Nested Designs</h3>
+<p>When you have multiple random effects, they can be <strong>crossed</strong> or <strong>nested</strong>:</p>
+<p><strong>Crossed</strong>: Levels of one grouping variable appear across all levels of another. - Example: Multiple woodlands studied across multiple years—every woodland appears in every year. - Formula: <code>(1|woodland) + (1|year)</code></p>
+<p><strong>Nested</strong>: Levels of one variable are unique within levels of another. - Example: Individual females are unique to specific woodlands—female ID only makes sense within its woodland. - Formula: <code>(1|woodland/female)</code></p>
+</section><section id="the-study-2" class="level3" data-number="15.11.2"><h3 data-number="15.11.2" class="anchored" data-anchor-id="the-study-2">
+<span class="header-section-number">15.11.2</span> The Study</h3>
+<p>Researchers investigated whether experimental treatments affected liver glycogen levels in rats. The design was:</p>
+<ul>
+<li>3 treatments</li>
+<li>2 rats per treatment (6 rats total)</li>
+<li>3 liver samples per rat</li>
+<li>2 glycogen measurements per liver sample</li>
+</ul>
+<p>This created <strong>36 measurements total</strong>, but these are not independent observations.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<a href="https://raw.githubusercontent.com/UEABIO/intro-mixed-models/main/book/files/rats.rds">
+<button class="btn btn-success"><i class="fa fa-save"></i> Download rats data</button>
+</a>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1"></a>rats <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"rats.rds"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Sources of variation</strong>:</p>
+<ol type="1">
+<li>Measurement error within liver samples</li>
+<li>Heterogeneity between liver sections within a rat</li>
+<li>Individual variation between rats</li>
+<li>Treatment effects</li>
+</ol>
+<div class="task">
+<div class="task-header">
+<p>Understanding the nested structure</p>
+</div>
+<div class="task-container">
+<p>Examine the data structure:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1"></a>rats <span class="sc">|&gt;</span></span>
+<span id="cb38-2"><a href="#cb38-2"></a>  <span class="fu">aggregate</span>(Glycogen <span class="sc">~</span> Rat <span class="sc">+</span> Treatment <span class="sc">+</span> Liver, <span class="at">data =</span> _, mean) <span class="sc">|&gt;</span></span>
+<span id="cb38-3"><a href="#cb38-3"></a>  <span class="fu">head</span>(<span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: left;">Rat</th>
+<th style="text-align: left;">Treatment</th>
+<th style="text-align: left;">Liver</th>
+<th style="text-align: right;">Glycogen</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">130.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">149.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">151.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">153.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">129.5</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: right;">139.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">128.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">1</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">141.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">148.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">4</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">147.0</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">5</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">138.0</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">6</td>
+<td style="text-align: left;">3</td>
+<td style="text-align: left;">2</td>
+<td style="text-align: right;">138.5</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<p><strong>Questions</strong>:</p>
+<ol type="1">
+<li><p>Are the liver sample IDs (1, 2, 3) the same piece of tissue across different rats?</p></li>
+<li><p>Is “Liver 1” from Rat 1 comparable to “Liver 1” from Rat 2?</p></li>
+</ol>
+<div class="webex-solution">
+<button>
+Answer
+</button>
+<p>No.&nbsp;Each rat has its own three liver samples. “Liver 1” simply means “the first sample taken from this particular rat”—it’s not the same anatomical location across rats.</p>
+<p>Therefore, liver samples are <strong>nested within</strong> individual rats. The coding (1, 2, 3) is reused for each rat, but these represent different physical samples.</p>
+</div>
+</div>
+</div>
+</section><section id="fitting-the-model-1" class="level3" data-number="15.11.3"><h3 data-number="15.11.3" class="anchored" data-anchor-id="fitting-the-model-1">
+<span class="header-section-number">15.11.3</span> Fitting the Model</h3>
+<p><strong>Incorrect approach</strong> (treating effects as crossed):</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1"></a><span class="co"># WRONG - treats this as 2 rats and 3 liver types studied across all rats</span></span>
+<span id="cb39-2"><a href="#cb39-2"></a>rats_wrong <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Glycogen <span class="sc">~</span> Treatment <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Rat) <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Liver), <span class="at">data =</span> rats)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>This incorrectly assumes liver sample “1” is comparable across all rats.</p>
+<p><strong>Correct approach</strong> (nested design):</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1"></a>rats_correct <span class="ot">&lt;-</span> <span class="fu">lmer</span>(Glycogen <span class="sc">~</span> Treatment <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Rat<span class="sc">/</span>Liver), <span class="at">data =</span> rats)</span>
+<span id="cb40-2"><a href="#cb40-2"></a><span class="fu">summary</span>(rats_correct)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Linear mixed model fit by REML. t-tests use Satterthwaite's method [
+lmerModLmerTest]
+Formula: Glycogen ~ Treatment + (1 | Rat/Liver)
+   Data: rats
+
+REML criterion at convergence: 219.6
+
+Scaled residuals: 
+     Min       1Q   Median       3Q      Max 
+-1.48212 -0.47263  0.03062  0.42934  1.82935 
+
+Random effects:
+ Groups    Name        Variance Std.Dev.
+ Liver:Rat (Intercept) 14.17    3.764   
+ Rat       (Intercept) 36.06    6.005   
+ Residual              21.17    4.601   
+Number of obs: 36, groups:  Liver:Rat, 18; Rat, 6
+
+Fixed effects:
+            Estimate Std. Error      df t value Pr(&gt;|t|)    
+(Intercept)  140.500      4.707   3.000  29.848 8.26e-05 ***
+Treatment2    10.500      6.657   3.000   1.577    0.213    
+Treatment3    -5.333      6.657   3.000  -0.801    0.482    
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+           (Intr) Trtmn2
+Treatment2 -0.707       
+Treatment3 -0.707  0.500</code></pre>
+</div>
+</div>
+<p>The formula <code>(1|Rat/Liver)</code> is equivalent to <code>(1|Rat) + (1|Rat:Liver)</code>, creating: - Random intercepts for each rat (accounting for individual variation) - Random intercepts for each liver sample within each rat (accounting for within-rat heterogeneity)</p>
+<p><strong>Random effects:</strong></p>
+<pre><code> Groups     Name        Variance Std.Dev.
+ Liver:Rat  (Intercept) 18.333   4.282   
+ Rat        (Intercept) 26.083   5.107   
+ Residual               36.333   6.028   </code></pre>
+<p>Check the number of groups matches your design: - 6 rats ✓ - 18 liver samples (6 rats × 3 samples) ✓</p>
+</section><section id="visualising-results" class="level3" data-number="15.11.4"><h3 data-number="15.11.4" class="anchored" data-anchor-id="visualising-results">
+<span class="header-section-number">15.11.4</span> Visualising Results</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1"></a><span class="fu">ggpredict</span>(rats_correct, <span class="at">terms =</span> <span class="st">"Treatment"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb43-2"><a href="#cb43-2"></a>  <span class="fu">plot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-36-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Treatment effects on liver glycogen levels</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1"></a><span class="fu">ggpredict</span>(rats_correct, </span>
+<span id="cb44-2"><a href="#cb44-2"></a>          <span class="at">terms =</span> <span class="fu">c</span>(<span class="st">"Treatment"</span>, <span class="st">"Rat"</span>),</span>
+<span id="cb44-3"><a href="#cb44-3"></a>          <span class="at">type =</span> <span class="st">"random"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb44-4"><a href="#cb44-4"></a>  <span class="fu">plot</span>(<span class="at">show_data =</span> <span class="cn">TRUE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-37-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Rat-specific predictions showing individual variation</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Common mistake
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Always check that the number of groups in your random effects summary matches your experimental design. If <code>(1|Rat)</code> shows 2 groups instead of 6, you’ve made a coding error.</p>
+</div>
+</div>
+<hr></section></section><section id="worked-example-3---overdispersion-in-binomial-models" class="level2" data-number="15.12"><h2 data-number="15.12" class="anchored" data-anchor-id="worked-example-3---overdispersion-in-binomial-models">
+<span class="header-section-number">15.12</span> Worked Example 3 - Overdispersion in Binomial Models</h2>
+<section id="the-problem" class="level3" data-number="15.12.1"><h3 data-number="15.12.1" class="anchored" data-anchor-id="the-problem">
+<span class="header-section-number">15.12.1</span> The Problem</h3>
+<p>Binomial GLMs assume variance follows a specific relationship with the mean. When observed variance exceeds this expectation (<strong>overdispersion</strong>), model assumptions are violated, leading to:</p>
+<ul>
+<li>Underestimated standard errors</li>
+<li>Overconfident <em>p</em>-values</li>
+<li>Poor model fit</li>
+</ul>
+<p><strong>Common causes</strong>: Variation between experimental batches, individual differences, clustered observations.</p>
+</section><section id="the-study-3" class="level3" data-number="15.12.2"><h3 data-number="15.12.2" class="anchored" data-anchor-id="the-study-3">
+<span class="header-section-number">15.12.2</span> The Study</h3>
+<p>Researchers investigated egg hatching rates in <em>Drosophila</em> crosses. The experimental design involved:</p>
+<ul>
+<li>Different genetic crosses</li>
+<li>Multiple replicate experiments</li>
+<li>Multiple females per replicate</li>
+<li>Egg batches from each female</li>
+</ul>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<a href="https://raw.githubusercontent.com/Philip-Leftwich/Oct-Intro-Analytics/refs/heads/dev/files/egg_hatch_mixed.csv">
+<button class="btn btn-success"><i class="fa fa-save"></i> Download Egg Hatching data</button>
+</a>
+</div>
+</div>
+<div class="task">
+<div class="task-header">
+<p>Fit a standard Binomial GLM</p>
+</div>
+<div class="task-container">
+<p>Create the success/failure response variable and fit a binomial model:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1"></a>egg_hatch_data <span class="ot">&lt;-</span> egg_hatch_data <span class="sc">|&gt;</span></span>
+<span id="cb45-2"><a href="#cb45-2"></a>  <span class="fu">mutate</span>(<span class="at">unhatched_eggs =</span> number_of_eggs <span class="sc">-</span> number_of_larvae)</span>
+<span id="cb45-3"><a href="#cb45-3"></a></span>
+<span id="cb45-4"><a href="#cb45-4"></a>binomial_model <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb45-5"><a href="#cb45-5"></a>  <span class="fu">cbind</span>(number_of_larvae, unhatched_eggs) <span class="sc">~</span> cross,</span>
+<span id="cb45-6"><a href="#cb45-6"></a>  <span class="at">family =</span> binomial,</span>
+<span id="cb45-7"><a href="#cb45-7"></a>  <span class="at">data =</span> egg_hatch_data</span>
+<span id="cb45-8"><a href="#cb45-8"></a>)</span>
+<span id="cb45-9"><a href="#cb45-9"></a></span>
+<span id="cb45-10"><a href="#cb45-10"></a><span class="fu">summary</span>(binomial_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Call:
+glm(formula = cbind(number_of_larvae, unhatched_eggs) ~ cross, 
+    family = binomial, data = egg_hatch_data)
+
+Coefficients:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)  1.05143    0.04658  22.573  &lt; 2e-16 ***
+crossB       0.38815    0.09124   4.254  2.1e-05 ***
+crossC       1.29224    0.11812  10.940  &lt; 2e-16 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 1307.6  on 54  degrees of freedom
+Residual deviance: 1157.3  on 52  degrees of freedom
+AIC: 1363.6
+
+Number of Fisher Scoring iterations: 4</code></pre>
+</div>
+</div>
+<p>Check for overdispersion:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb47-1"><a href="#cb47-1"></a>performance<span class="sc">::</span><span class="fu">check_overdispersion</span>(binomial_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Overdispersion test
+
+ dispersion ratio =   1.703
+          p-value = &lt; 0.001</code></pre>
+</div>
+</div>
+<div class="webex-solution">
+<button>
+Expected output
+</button>
+<pre><code># Overdispersion test
+       dispersion ratio =   4.832
+  Pearson's Chi-Squared = 289.934
+                p-value =  &lt; 0.001</code></pre>
+<p>Dispersion ratio &gt;&gt; 1 indicates severe overdispersion.</p>
+</div>
+<p>Examine model diagnostics:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1"></a>performance<span class="sc">::</span><span class="fu">check_model</span>(binomial_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>Problems</strong>: Outliers, poor quantile distribution, systematic under-prediction.</p>
+</div>
+</div>
+</section><section id="using-random-effects-to-account-for-overdispersion" class="level3" data-number="15.12.3"><h3 data-number="15.12.3" class="anchored" data-anchor-id="using-random-effects-to-account-for-overdispersion">
+<span class="header-section-number">15.12.3</span> Using Random Effects to Account for Overdispersion</h3>
+<div class="task">
+<div class="task-header">
+<p>Fit Binomial GLMMs</p>
+</div>
+<div class="task-container">
+<p><strong>Question</strong>: Which variables create non-independence in this dataset?</p>
+<div class="webex-solution">
+<button>
+Answer
+</button>
+<ul>
+<li>
+<strong>Replicate</strong>: Experiments conducted on different days may have different baseline hatching rates</li>
+<li>
+<strong>Female</strong>: Multiple egg batches from the same female are not independent</li>
+<li>
+<strong>Nesting</strong>: Female IDs are unique within each replicate (nested structure)</li>
+</ul>
+</div>
+<p>Fit models with different random effect structures:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb51-1"><a href="#cb51-1"></a><span class="fu">library</span>(lme4)</span>
+<span id="cb51-2"><a href="#cb51-2"></a></span>
+<span id="cb51-3"><a href="#cb51-3"></a><span class="co"># Random intercept for replicate only</span></span>
+<span id="cb51-4"><a href="#cb51-4"></a>binomial_mixed_rep <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb51-5"><a href="#cb51-5"></a>  <span class="fu">cbind</span>(number_of_larvae, unhatched_eggs) <span class="sc">~</span> cross <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>replicate),</span>
+<span id="cb51-6"><a href="#cb51-6"></a>  <span class="at">family =</span> binomial,</span>
+<span id="cb51-7"><a href="#cb51-7"></a>  <span class="at">data =</span> egg_hatch_data</span>
+<span id="cb51-8"><a href="#cb51-8"></a>)</span>
+<span id="cb51-9"><a href="#cb51-9"></a></span>
+<span id="cb51-10"><a href="#cb51-10"></a><span class="co"># Random intercepts for replicate AND female (nested)</span></span>
+<span id="cb51-11"><a href="#cb51-11"></a>binomial_mixed_rep_fem <span class="ot">&lt;-</span> <span class="fu">glmer</span>(</span>
+<span id="cb51-12"><a href="#cb51-12"></a>  <span class="fu">cbind</span>(number_of_larvae, unhatched_eggs) <span class="sc">~</span> cross <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>replicate<span class="sc">/</span>female_num),</span>
+<span id="cb51-13"><a href="#cb51-13"></a>  <span class="at">family =</span> binomial,</span>
+<span id="cb51-14"><a href="#cb51-14"></a>  <span class="at">data =</span> egg_hatch_data</span>
+<span id="cb51-15"><a href="#cb51-15"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Compare models:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1"></a><span class="fu">AIC</span>(binomial_model, binomial_mixed_rep, binomial_mixed_rep_fem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: left;"></th>
+<th style="text-align: right;">df</th>
+<th style="text-align: right;">AIC</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">binomial_model</td>
+<td style="text-align: right;">3</td>
+<td style="text-align: right;">1363.551</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">binomial_mixed_rep</td>
+<td style="text-align: right;">4</td>
+<td style="text-align: right;">1263.221</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">binomial_mixed_rep_fem</td>
+<td style="text-align: right;">5</td>
+<td style="text-align: right;">644.059</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<pre><code>                        df      AIC
+binomial_model           4 335.9344
+binomial_mixed_rep       5 297.1752
+binomial_mixed_rep_fem   6 245.7040  # Best fit</code></pre>
+<p>Check overdispersion in the best model:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>performance<span class="sc">::</span><span class="fu">check_overdispersion</span>(binomial_mixed_rep_fem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code># Overdispersion test
+
+ dispersion ratio = 1.153
+          p-value = 0.224</code></pre>
+</div>
+</div>
+<div class="webex-solution">
+<button>
+Expected output
+</button>
+<pre><code># Overdispersion test
+       dispersion ratio = 0.912
+  Pearson's Chi-Squared = 54.734
+                p-value = 0.684</code></pre>
+<p>Overdispersion resolved ✓</p>
+</div>
+<p>Examine the random effects:</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a><span class="fu">summary</span>(binomial_mixed_rep_fem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
+  Approximation) [glmerMod]
+ Family: binomial  ( logit )
+Formula: 
+cbind(number_of_larvae, unhatched_eggs) ~ cross + (1 | replicate/female_num)
+   Data: egg_hatch_data
+
+     AIC      BIC   logLik deviance df.resid 
+   644.1    654.1   -317.0    634.1       50 
+
+Scaled residuals: 
+    Min      1Q  Median      3Q     Max 
+-5.2142 -0.9049  0.0332  1.0933  6.0739 
+
+Random effects:
+ Groups               Name        Variance Std.Dev.
+ female_num:replicate (Intercept) 1.71879  1.3110  
+ replicate            (Intercept) 0.01343  0.1159  
+Number of obs: 55, groups:  female_num:replicate, 34; replicate, 5
+
+Fixed effects:
+            Estimate Std. Error z value Pr(&gt;|z|)    
+(Intercept)   1.2471     0.2426   5.140 2.74e-07 ***
+crossB        0.9274     0.1341   6.916 4.65e-12 ***
+crossC        0.6958     0.1464   4.752 2.02e-06 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Correlation of Fixed Effects:
+       (Intr) crossB
+crossB -0.131       
+crossC -0.145  0.146</code></pre>
+</div>
+</div>
+<pre><code>Random effects:
+ Groups              Name        Variance Std.Dev.
+ female_num:replicate (Intercept) 0.28438  0.5333  
+ replicate            (Intercept) 0.01139  0.1067  </code></pre>
+<p><strong>Interpretation</strong>:</p>
+<ul>
+<li>Most variation is <strong>between females</strong> (SD = 0.53)</li>
+<li>Very little variation <strong>between replicates</strong> (SD = 0.11)</li>
+<li>But the nested structure <code>(1|replicate/female_num)</code> is essential because female IDs are only meaningful within their replicate</li>
+</ul>
+<p>Check the number of groups:</p>
+<pre><code>Number of obs: 60, groups:  female_num:replicate, 20; replicate, 3</code></pre>
+<p>This matches the design: 3 replicates, ~7 females per replicate ✓</p>
+</div>
+</div>
+</section><section id="visualising-results-1" class="level3" data-number="15.12.4"><h3 data-number="15.12.4" class="anchored" data-anchor-id="visualising-results-1">
+<span class="header-section-number">15.12.4</span> Visualising Results</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="fu">ggpredict</span>(binomial_mixed_rep_fem, <span class="at">terms =</span> <span class="st">"cross"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb61-2"><a href="#cb61-2"></a>  <span class="fu">plot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>Cross effects on hatching probability (population average)</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Key lesson
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>When binomial or Poisson GLMs show overdispersion, consider whether random effects can account for the extra-binomial/extra-Poisson variation. If your data have a hierarchical structure (batches, individuals, blocks), random intercepts often resolve overdispersion by modelling the source of extra variance.</p>
+</div>
+</div>
+</section></section><section id="summary" class="level2" data-number="15.13"><h2 data-number="15.13" class="anchored" data-anchor-id="summary">
+<span class="header-section-number">15.13</span> Summary</h2>
+<section id="when-should-i-use-mixed-models" class="level3" data-number="15.13.1"><h3 data-number="15.13.1" class="anchored" data-anchor-id="when-should-i-use-mixed-models">
+<span class="header-section-number">15.13.1</span> When Should I Use Mixed Models?</h3>
+<p>Use this decision guide to determine the best approach for your data:</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="grViz html-widget html-fill-item" id="htmlwidget-b8005e42c347f2b82027" style="width:100%;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-b8005e42c347f2b82027">{"x":{"diagram":"\ndigraph decision_tree {\n  \n  graph [rankdir = TB, fontsize = 10]\n  \n  node [shape = box, style = rounded, fontname = Helvetica]\n  \n  start [label = \"Do observations come\nfrom distinct groups?\", shape = diamond]\n  q1 [label = \"Are groups experimental\ntreatments of interest?\", shape = diamond]\n  q2 [label = \"Are there 5+ groups\nsampled randomly?\", shape = diamond]\n \n  \n  pool [label = \"Pool observations\n(standard linear model)\", shape = ellipse]\n  fixed [label = \"Use Fixed Effects\", shape = ellipse]\n  random [label = \"Use Random Effects\n(Mixed model)\", shape = ellipse]\n  \n  start -> pool [label = \"No\"]\n  start -> q1 [label = \"Yes\"]\n  q1 -> fixed [label = \"Yes\"]\n  q1 -> q2 [label = \"No\"]\n  q2 -> random [label = \"Yes\"]\n  q2 -> fixed [label = \"No\"]\n\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><p>Decision tree for choosing between pooled, fixed, and random effects</p>
+</div>
+</div>
+</section><section id="quick-reference-table" class="level3" data-number="15.13.2"><h3 data-number="15.13.2" class="anchored" data-anchor-id="quick-reference-table">
+<span class="header-section-number">15.13.2</span> Quick Reference Table</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 43%">
+<col style="width: 32%">
+<col style="width: 24%">
+</colgroup>
+<thead><tr class="header">
+<th>Your Situation</th>
+<th>What To Do</th>
+<th>Example</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Experimental treatments you want to compare</td>
+<td><strong>Fixed effects</strong></td>
+<td>Comparing 3 diet treatments</td>
+</tr>
+<tr class="even">
+<td>Many randomly sampled groups (5+)</td>
+<td><strong>Random effects</strong></td>
+<td>20 field sites, 50 individual animals</td>
+</tr>
+<tr class="odd">
+<td>Few groups (&lt; 5) creating non-independence</td>
+<td><strong>Fixed effects</strong></td>
+<td>3 experimental batches</td>
+</tr>
+<tr class="even">
+<td>Truly independent observations</td>
+<td><strong>Pool (standard model)</strong></td>
+<td>Single measurement per individual</td>
+</tr>
+<tr class="odd">
+<td>Repeated measures on individuals</td>
+<td><strong>Random effects</strong></td>
+<td>Multiple measurements per person over time</td>
+</tr>
+<tr class="even">
+<td>Nested structure (samples within groups)</td>
+<td><strong>Random effects (nested)</strong></td>
+<td>Liver samples within rats</td>
+</tr>
+</tbody>
+</table></section><section id="common-issues-and-solutions" class="level3" data-number="15.13.3"><h3 data-number="15.13.3" class="anchored" data-anchor-id="common-issues-and-solutions">
+<span class="header-section-number">15.13.3</span> Common Issues and Solutions</h3>
+<p><strong>Singular fit warning</strong>: <code>boundary (singular) fit: see help('isSingular')</code></p>
+<p>Your model fitted, but one or more random effects have estimated variance near zero. This suggests:</p>
+<ul>
+<li>The random effect explains very little variance (perhaps not needed)</li>
+<li>You may have too few groups for that random effect</li>
+<li>The model may be overparameterised (too complex for your data)</li>
+</ul>
+<p><strong>What to do</strong>: - Check if the random effect variance is close to zero in <code><a href="https://rdrr.io/r/base/summary.html">summary()</a></code> - Consider removing random effects with near-zero variance - Try a simpler random effects structure</p>
+<p><strong>Convergence warnings</strong>: The optimisation algorithm failed to find the best parameter estimates.</p>
+<p><strong>Solutions</strong> (try in this order):</p>
+<ol type="1">
+<li>
+<strong>Rescale continuous predictors</strong>: Large differences in variable scales can cause convergence problems.</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb62-2"><a href="#cb62-2"></a>  <span class="fu">mutate</span>(<span class="at">predictor_scaled =</span> <span class="fu">scale</span>(predictor))</span>
+<span id="cb62-3"><a href="#cb62-3"></a></span>
+<span id="cb62-4"><a href="#cb62-4"></a><span class="co"># Refit with scaled predictor</span></span>
+<span id="cb62-5"><a href="#cb62-5"></a>model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(response <span class="sc">~</span> predictor_scaled <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>group), <span class="at">data =</span> data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol start="2" type="1">
+<li>
+<strong>Try a different optimiser</strong>:</li>
+</ol>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(response <span class="sc">~</span> predictor <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>group), </span>
+<span id="cb63-2"><a href="#cb63-2"></a>              <span class="at">data =</span> data,</span>
+<span id="cb63-3"><a href="#cb63-3"></a>              <span class="at">control =</span> <span class="fu">lmerControl</span>(<span class="at">optimizer =</span> <span class="st">"bobyqa"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<ol start="3" type="1">
+<li><p><strong>Simplify the model</strong>: Remove random slopes or interactions if present, keeping only random intercepts.</p></li>
+<li><p><strong>Check your data</strong>: Ensure there are no coding errors, sufficient observations per group, and reasonable variance in predictors.</p></li>
+</ol>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Convergence warnings are serious
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Unlike singular fit warnings, convergence failures mean the model results are unreliable. Do not interpret or report a model that failed to converge without first resolving the issue.</p>
+</div>
+</div>
+</section><section id="key-concepts-to-remember" class="level3" data-number="15.13.4"><h3 data-number="15.13.4" class="anchored" data-anchor-id="key-concepts-to-remember">
+<span class="header-section-number">15.13.4</span> Key Concepts to Remember</h3>
+<ol type="1">
+<li><p><strong>Mixed models account for non-independence</strong> created by grouping structures in your data</p></li>
+<li><p><strong>Random effects model variance</strong>, not specific group means</p></li>
+<li>
+<p><strong>Fixed effects are appropriate when</strong>:</p>
+<ul>
+<li>You have few groups (&lt; 5)</li>
+<li>Groups represent treatments you want to compare</li>
+<li>You only want to make inferences about these specific groups</li>
+</ul>
+</li>
+<li>
+<p><strong>Random effects are appropriate when</strong>:</p>
+<ul>
+<li>You have many groups (5+)</li>
+<li>Groups are randomly sampled from a larger population</li>
+<li>You want to generalise to new groups</li>
+<li>Design is unbalanced or has missing data</li>
+</ul>
+</li>
+<li><p><strong>Model checking is essential</strong>: Always verify assumptions using diagnostic plots before interpreting results</p></li>
+<li><p><strong>Report thoroughly</strong>: Include sample sizes, number of groups, variance components, fixed effect estimates with CIs, and model fit statistics</p></li>
+</ol></section><section id="further-reading" class="level3" data-number="15.13.5"><h3 data-number="15.13.5" class="anchored" data-anchor-id="further-reading">
+<span class="header-section-number">15.13.5</span> Further Reading</h3>
+<p>Essential resources for deepening your understanding:</p>
+<ul>
+<li><p><a href="https://peerj.com/articles/4794/">A brief introduction to mixed effects modelling and multi-model inference in ecology</a> - Accessible introduction with ecological examples</p></li>
+<li><p><a href="https://peerj.com/articles/9522/">Perils and pitfalls of mixed-effects regression models in biology</a> - Common mistakes and how to avoid them</p></li>
+<li><p><a href="https://dynamicecology.wordpress.com/2015/11/04/is-it-a-fixed-or-random-effect/">Is it a fixed or random effect?</a> - Blog post clarifying a persistent confusion</p></li>
+<li><p><a href="https://link.springer.com/book/10.1007/978-0-387-87458-6">Mixed Effects Models and Extensions in Ecology with R</a> - Comprehensive textbook (advanced)</p></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Practice makes perfect
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The best way to become comfortable with mixed models is to practice with your own data. Start simple with random intercepts only, verify your models fit properly, then gradually increase complexity as needed.</p>
+</div>
+</div>
+
+
+</section></section></main><!-- /main --><script>
+
+/* update total correct if #webex-total_correct exists */
+update_total_correct = function() {
+  console.log("webex: update total_correct");
+
+  var t = document.getElementsByClassName("webex-total_correct");
+  for (var i = 0; i < t.length; i++) {
+    p = t[i].parentElement;
+    var correct = p.getElementsByClassName("webex-correct").length;
+    var solvemes = p.getElementsByClassName("webex-solveme").length;
+    var radiogroups = p.getElementsByClassName("webex-radiogroup").length;
+    var selects = p.getElementsByClassName("webex-select").length;
+
+    t[i].innerHTML = correct + " of " + (solvemes + radiogroups + selects) + " correct";
+  }
+}
+
+/* webex-solution button toggling function */
+b_func = function() {
+  console.log("webex: toggle hide");
+
+  var cl = this.parentElement.classList;
+  if (cl.contains('open')) {
+    cl.remove("open");
+  } else {
+    cl.add("open");
+  }
+}
+
+/* check answers */
+check_func = function() {
+  console.log("webex: check answers");
+
+  var cl = this.parentElement.classList;
+  if (cl.contains('unchecked')) {
+    cl.remove("unchecked");
+    this.innerHTML = "Hide Answers";
+  } else {
+    cl.add("unchecked");
+    this.innerHTML = "Show Answers";
+  }
+}
+
+/* function for checking solveme answers */
+solveme_func = function(e) {
+  console.log("webex: check solveme");
+
+  var real_answers = JSON.parse(this.dataset.answer);
+  var my_answer = this.value;
+  var cl = this.classList;
+  if (cl.contains("ignorecase")) {
+    my_answer = my_answer.toLowerCase();
+  }
+  if (cl.contains("nospaces")) {
+    my_answer = my_answer.replace(/ /g, "")
+  }
+
+  if (my_answer == "") {
+    cl.remove("webex-correct");
+    cl.remove("webex-incorrect");
+  } else if (real_answers.includes(my_answer)) {
+    cl.add("webex-correct");
+    cl.remove("webex-incorrect");
+  } else {
+    cl.add("webex-incorrect");
+    cl.remove("webex-correct");
+  }
+
+  // match numeric answers within a specified tolerance
+  if(this.dataset.tol > 0){
+    var tol = JSON.parse(this.dataset.tol);
+    var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+    if (matches.reduce((a, b) => a + b, 0) > 0) {
+      cl.add("webex-correct");
+    } else {
+      cl.remove("webex-correct");
+    }
+  }
+
+  // added regex bit
+  if (cl.contains("regex")){
+    answer_regex = RegExp(real_answers.join("|"))
+    if (answer_regex.test(my_answer)) {
+      cl.add("webex-correct");
+    }
+  }
+
+  update_total_correct();
+}
+
+/* function for checking select answers */
+select_func = function(e) {
+  console.log("webex: check select");
+
+  var cl = this.classList
+
+  /* add style */
+  cl.remove("webex-incorrect");
+  cl.remove("webex-correct");
+  if (this.value == "answer") {
+    cl.add("webex-correct");
+  } else if (this.value != "blank") {
+    cl.add("webex-incorrect");
+  }
+
+  update_total_correct();
+}
+
+/* function for checking radiogroups answers */
+radiogroups_func = function(e) {
+  console.log("webex: check radiogroups");
+
+  var checked_button = document.querySelector('input[name=' + this.id + ']:checked');
+  var cl = checked_button.parentElement.classList;
+  var labels = checked_button.parentElement.parentElement.children;
+
+  /* get rid of styles */
+  for (i = 0; i < labels.length; i++) {
+    labels[i].classList.remove("webex-incorrect");
+    labels[i].classList.remove("webex-correct");
+  }
+
+  /* add style */
+  if (checked_button.value == "answer") {
+    cl.add("webex-correct");
+  } else {
+    cl.add("webex-incorrect");
+  }
+
+  update_total_correct();
+}
+
+window.onload = function() {
+  console.log("webex onload");
+  /* set up solution buttons */
+  var buttons = document.getElementsByTagName("button");
+
+  for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i].parentElement.classList.contains('webex-solution')) {
+      buttons[i].onclick = b_func;
+    }
+  }
+
+  var check_sections = document.getElementsByClassName("webex-check");
+  console.log("check:", check_sections.length);
+  for (var i = 0; i < check_sections.length; i++) {
+    check_sections[i].classList.add("unchecked");
+
+    let btn = document.createElement("button");
+    btn.innerHTML = "Show Answers";
+    btn.classList.add("webex-check-button");
+    btn.onclick = check_func;
+    check_sections[i].appendChild(btn);
+
+    let spn = document.createElement("span");
+    spn.classList.add("webex-total_correct");
+    check_sections[i].appendChild(spn);
+  }
+
+  /* set up webex-solveme inputs */
+  var solveme = document.getElementsByClassName("webex-solveme");
+
+  for (var i = 0; i < solveme.length; i++) {
+    /* make sure input boxes don't auto-anything */
+    solveme[i].setAttribute("autocomplete","off");
+    solveme[i].setAttribute("autocorrect", "off");
+    solveme[i].setAttribute("autocapitalize", "off");
+    solveme[i].setAttribute("spellcheck", "false");
+    solveme[i].value = "";
+
+    /* adjust answer for ignorecase or nospaces */
+    var cl = solveme[i].classList;
+    var real_answer = solveme[i].dataset.answer;
+    if (cl.contains("ignorecase")) {
+      real_answer = real_answer.toLowerCase();
+    }
+    if (cl.contains("nospaces")) {
+      real_answer = real_answer.replace(/ /g, "");
+    }
+    solveme[i].dataset.answer = real_answer;
+
+    /* attach checking function */
+    solveme[i].onkeyup = solveme_func;
+    solveme[i].onchange = solveme_func;
+
+    solveme[i].insertAdjacentHTML("afterend", " <span class='webex-icon'></span>")
+  }
+
+  /* set up radiogroups */
+  var radiogroups = document.getElementsByClassName("webex-radiogroup");
+  for (var i = 0; i < radiogroups.length; i++) {
+    radiogroups[i].onchange = radiogroups_func;
+  }
+
+  /* set up selects */
+  var selects = document.getElementsByClassName("webex-select");
+  for (var i = 0; i < selects.length; i++) {
+    selects[i].onchange = select_func;
+    selects[i].insertAdjacentHTML("afterend", " <span class='webex-icon'></span>")
+  }
+
+  update_total_correct();
+}
+
+</script><script>
+// open rdrr links externally ----
+
+var exlinks = document.querySelectorAll("a[href^='https://rdrr.io']");
+var exlink_func = function(){
+  window.open(this.href);
+  return false;
+};
+for (var i = 0; i < exlinks.length; i++) {
+    exlinks[i].addEventListener('click', exlink_func, false);
+}
+
+// visible second sidebar in mobile ----
+
+function move_sidebar() {
+  var toc = document.getElementById("TOC");
+  var small_sidebar = document.querySelector("#quarto-sidebar .sidebar-menu-container");
+  var right_sidebar = document.getElementById("quarto-margin-sidebar");
+
+  if (window.innerWidth < 768) {
+    small_sidebar.append(toc);
+  } else {
+    right_sidebar.append(toc);
+  }
+}
+move_sidebar();
+window.onresize = move_sidebar;
+</script><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./mixed-model.html" class="pagination-link" aria-label="Mixed models (for clustered data)">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mixed models (for clustered data)</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./r-basics.html" class="pagination-link" aria-label="R Basics">
+        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>CC-BY (2026) Philip Leftwich</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+</body></html>

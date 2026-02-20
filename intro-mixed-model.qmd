@@ -28,6 +28,7 @@ library(emmeans)
 library(downloadthis)
 library(report)
 library(MuMIn)
+library(colorspace)
 
  report_p <- function(p, digits = 3) {
      reported <- if_else(p < 0.001,
@@ -72,29 +73,7 @@ Use a variable as a random effect when:
 - You are not interested in comparing specific groups to each other
 :::
 
-## The Problem: Ignoring Group Structure
-```{r, eval = TRUE, echo = FALSE}
-# Generating dataset
-set.seed(123)
 
-rand_eff 
-  (\(df) left_join(df, rand_eff, by = "group"))() |>
-  (\(df) mutate(
-    df,
-    x = runif(n = nrow(df), 0, 10),
-    B0 = 20,
-    B1 = 2,
-    E = rnorm(n = nrow(df), 0, 10)
-  ))() |>
-  (\(df) mutate(df, y = B0 + b0 + x * (B1 + b1) + E))() |>
-  dplyr::select(x, group, y)
-
-benzo_data 
-  rename(
-    "benzo_um" = x,
-    "detox_exp" = y
-  )
-```
 
 ### The Study
 
@@ -115,8 +94,11 @@ knitr::include_graphics("images/Spodoptera_frugiperda.jpg")
 **Variables:**
 
 - `benzo_um`: Toxin concentration in diet (µM)
+
 - `detox_exp`: Detoxification capacity index (higher = stronger response)
+
 - `group`: Experimental replicate (1–5)
+
 ```{r, eval = TRUE, echo = FALSE}
 downloadthis::download_link(
   link = "https://raw.githubusercontent.com/Philip-Leftwich/Oct-Intro-Analytics/refs/heads/dev/files/benzo.csv",
@@ -131,7 +113,14 @@ downloadthis::download_link(
 ### Visualising the Problem
 
 If we ignore the group structure and plot all data together, we see an apparent positive relationship:
+
+```{r, include = FALSE}
+benzo_data <- read_csv(here::here("files", "benzo.csv")) |> 
+  mutate(group = as.character(group))
+```
+
 ```{r, fig.cap = "All data pooled together, ignoring experimental batch"}
+
 ggplot(benzo_data, aes(x = benzo_um, y = detox_exp)) +
   geom_point(alpha = 0.6) +
   labs(
@@ -249,18 +238,15 @@ The effect of toxin concentration is 2.03 units increase in detoxification per �
 
 ### Comparing Standard Errors
 ```{r, echo = FALSE}
-pooled 
-  broom::tidy() |>
+pooled <- broom::tidy(pooled_model) |>
   mutate(Approach = "Pooled") |>
   dplyr::select(Approach, term, estimate, std.error)
 
-fixed 
-  broom::tidy() |>
+fixed <- broom::tidy(fixed_model) |>
   mutate(Approach = "Fixed Effect") |>
   dplyr::select(Approach, term, estimate, std.error)
 
-mixed 
-  broom.mixed::tidy() |>
+mixed <- broom.mixed::tidy(mixed_model) |>
   mutate(Approach = "Mixed Model") |>
   dplyr::select(Approach, term, estimate, std.error)
 
@@ -464,9 +450,10 @@ The difference between R²c and R²m indicates how much variance the random effe
 The `sjPlot` package produces publication-ready tables:
 ```{r}
 library(sjPlot)
+
 tab_model(mixed_model, 
           show.re.var = TRUE,
-          show.icc = FALSE,
+          show.icc = TRUE,
           show.r2 = TRUE)
 ```
 
@@ -954,6 +941,7 @@ performance::check_overdispersion(binomial_mixed_rep_fem)
 ```
 
 `r hide("Expected output")`
+
 ```
 # Overdispersion test
        dispersion ratio = 0.912
