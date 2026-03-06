@@ -61,7 +61,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./r-basics.html" rel="next">
+<link href="./causal-models.html" rel="next">
 <link href="./mixed-model.html" rel="prev">
 <link href="./images/logos/logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
@@ -484,12 +484,29 @@ window.Quarto = {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
- <span class="menu-text">Appendices</span></a>
+ <span class="menu-text">Causal Inference</span></a>
           <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
       </div>
       <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./causal-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Causal Inference with DAGs</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">
 <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./r-basics.html" class="sidebar-item-text sidebar-link">
@@ -1969,13 +1986,9 @@ Answer
 </div>
 </div>
 </div>
-<pre><code>                        df      AIC
-binomial_model           4 335.9344
-binomial_mixed_rep       5 297.1752
-binomial_mixed_rep_fem   6 245.7040  # Best fit</code></pre>
 <p>Check overdispersion in the best model:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1"></a>performance<span class="sc">::</span><span class="fu">check_overdispersion</span>(binomial_mixed_rep_fem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1"></a>performance<span class="sc">::</span><span class="fu">check_overdispersion</span>(binomial_mixed_rep_fem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code># Overdispersion test
 
@@ -1987,15 +2000,11 @@ binomial_mixed_rep_fem   6 245.7040  # Best fit</code></pre>
 <button>
 Expected output
 </button>
-<pre><code># Overdispersion test
-       dispersion ratio = 0.912
-  Pearson's Chi-Squared = 54.734
-                p-value = 0.684</code></pre>
 <p>Overdispersion resolved ✓</p>
 </div>
 <p>Examine the random effects:</p>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1"></a><span class="fu">summary</span>(binomial_mixed_rep_fem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1"></a><span class="fu">summary</span>(binomial_mixed_rep_fem)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Generalized linear mixed model fit by maximum likelihood (Laplace
   Approximation) [glmerMod]
@@ -2031,10 +2040,6 @@ crossB -0.131
 crossC -0.145  0.146</code></pre>
 </div>
 </div>
-<pre><code>Random effects:
- Groups              Name        Variance Std.Dev.
- female_num:replicate (Intercept) 0.28438  0.5333  
- replicate            (Intercept) 0.01139  0.1067  </code></pre>
 <p><strong>Interpretation</strong>:</p>
 <ul>
 <li>Most variation is <strong>between females</strong> (SD = 0.53)</li>
@@ -2049,8 +2054,8 @@ crossC -0.145  0.146</code></pre>
 </section><section id="visualising-results-1" class="level3" data-number="15.12.4"><h3 data-number="15.12.4" class="anchored" data-anchor-id="visualising-results-1">
 <span class="header-section-number">15.12.4</span> Visualising Results</h3>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1"></a><span class="fu">ggpredict</span>(binomial_mixed_rep_fem, <span class="at">terms =</span> <span class="st">"cross"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb61-2"><a href="#cb61-2"></a>  <span class="fu">plot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb58-1"><a href="#cb58-1"></a><span class="fu">ggpredict</span>(binomial_mixed_rep_fem, <span class="at">terms =</span> <span class="st">"cross"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb58-2"><a href="#cb58-2"></a>  <span class="fu">plot</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure"><p><img src="intro-mixed-model_files/figure-html/unnamed-chunk-47-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
@@ -2078,8 +2083,8 @@ crossC -0.145  0.146</code></pre>
 <p>Use this decision guide to determine the best approach for your data:</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
-<div class="grViz html-widget html-fill-item" id="htmlwidget-b8005e42c347f2b82027" style="width:100%;height:480px;"></div>
-<script type="application/json" data-for="htmlwidget-b8005e42c347f2b82027">{"x":{"diagram":"\ndigraph decision_tree {\n  \n  graph [rankdir = TB, fontsize = 10]\n  \n  node [shape = box, style = rounded, fontname = Helvetica]\n  \n  start [label = \"Do observations come\nfrom distinct groups?\", shape = diamond]\n  q1 [label = \"Are groups experimental\ntreatments of interest?\", shape = diamond]\n  q2 [label = \"Are there 5+ groups\nsampled randomly?\", shape = diamond]\n \n  \n  pool [label = \"Pool observations\n(standard linear model)\", shape = ellipse]\n  fixed [label = \"Use Fixed Effects\", shape = ellipse]\n  random [label = \"Use Random Effects\n(Mixed model)\", shape = ellipse]\n  \n  start -> pool [label = \"No\"]\n  start -> q1 [label = \"Yes\"]\n  q1 -> fixed [label = \"Yes\"]\n  q1 -> q2 [label = \"No\"]\n  q2 -> random [label = \"Yes\"]\n  q2 -> fixed [label = \"No\"]\n\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><p>Decision tree for choosing between pooled, fixed, and random effects</p>
+<div class="grViz html-widget html-fill-item" id="htmlwidget-25b10a12e3caf1923a6f" style="width:100%;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-25b10a12e3caf1923a6f">{"x":{"diagram":"\ndigraph decision_tree {\n  \n  graph [rankdir = TB, fontsize = 10]\n  \n  node [shape = box, style = rounded, fontname = Helvetica]\n  \n  start [label = \"Do observations come\nfrom distinct groups?\", shape = diamond]\n  q1 [label = \"Are groups experimental\ntreatments of interest?\", shape = diamond]\n  q2 [label = \"Are there 5+ groups\nsampled randomly?\", shape = diamond]\n \n  \n  pool [label = \"Pool observations\n(standard linear model)\", shape = ellipse]\n  fixed [label = \"Use Fixed Effects\", shape = ellipse]\n  random [label = \"Use Random Effects\n(Mixed model)\", shape = ellipse]\n  \n  start -> pool [label = \"No\"]\n  start -> q1 [label = \"Yes\"]\n  q1 -> fixed [label = \"Yes\"]\n  q1 -> q2 [label = \"No\"]\n  q2 -> random [label = \"Yes\"]\n  q2 -> fixed [label = \"No\"]\n\n}\n","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script><p>Decision tree for choosing between pooled, fixed, and random effects</p>
 </div>
 </div>
 </section><section id="quick-reference-table" class="level3" data-number="15.13.2"><h3 data-number="15.13.2" class="anchored" data-anchor-id="quick-reference-table">
@@ -2144,20 +2149,20 @@ crossC -0.145  0.146</code></pre>
 <strong>Rescale continuous predictors</strong>: Large differences in variable scales can cause convergence problems.</li>
 </ol>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
-<span id="cb62-2"><a href="#cb62-2"></a>  <span class="fu">mutate</span>(<span class="at">predictor_scaled =</span> <span class="fu">scale</span>(predictor))</span>
-<span id="cb62-3"><a href="#cb62-3"></a></span>
-<span id="cb62-4"><a href="#cb62-4"></a><span class="co"># Refit with scaled predictor</span></span>
-<span id="cb62-5"><a href="#cb62-5"></a>model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(response <span class="sc">~</span> predictor_scaled <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>group), <span class="at">data =</span> data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1"></a>data <span class="ot">&lt;-</span> data <span class="sc">|&gt;</span></span>
+<span id="cb59-2"><a href="#cb59-2"></a>  <span class="fu">mutate</span>(<span class="at">predictor_scaled =</span> <span class="fu">scale</span>(predictor))</span>
+<span id="cb59-3"><a href="#cb59-3"></a></span>
+<span id="cb59-4"><a href="#cb59-4"></a><span class="co"># Refit with scaled predictor</span></span>
+<span id="cb59-5"><a href="#cb59-5"></a>model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(response <span class="sc">~</span> predictor_scaled <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>group), <span class="at">data =</span> data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol start="2" type="1">
 <li>
 <strong>Try a different optimiser</strong>:</li>
 </ol>
 <div class="cell" data-layout-align="center">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(response <span class="sc">~</span> predictor <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>group), </span>
-<span id="cb63-2"><a href="#cb63-2"></a>              <span class="at">data =</span> data,</span>
-<span id="cb63-3"><a href="#cb63-3"></a>              <span class="at">control =</span> <span class="fu">lmerControl</span>(<span class="at">optimizer =</span> <span class="st">"bobyqa"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb60-1"><a href="#cb60-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(response <span class="sc">~</span> predictor <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>group), </span>
+<span id="cb60-2"><a href="#cb60-2"></a>              <span class="at">data =</span> data,</span>
+<span id="cb60-3"><a href="#cb60-3"></a>              <span class="at">control =</span> <span class="fu">lmerControl</span>(<span class="at">optimizer =</span> <span class="st">"bobyqa"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <ol start="3" type="1">
 <li><p><strong>Simplify the model</strong>: Remove random slopes or interactions if present, keeping only random intercepts.</p></li>
@@ -2874,8 +2879,8 @@ window.onresize = move_sidebar;
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./r-basics.html" class="pagination-link" aria-label="R Basics">
-        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./causal-models.html" class="pagination-link" aria-label="Causal Inference with DAGs">
+        <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Causal Inference with DAGs</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

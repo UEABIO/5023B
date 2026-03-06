@@ -549,6 +549,7 @@ downloadthis::download_link(
   self_contained = FALSE
 )
 ```
+
 ```{r}
 dolphins <- read_csv("files/dolphins.csv") |>
   mutate(direction = factor(direction)) |>
@@ -791,6 +792,7 @@ Check the number of groups matches your design:
 ggpredict(rats_correct, terms = "Treatment") |>
   plot()
 ```
+
 ```{r, fig.cap = "Rat-specific predictions showing individual variation"}
 ggpredict(rats_correct, 
           terms = c("Treatment", "Rat"),
@@ -836,6 +838,7 @@ downloadthis::download_link(
   self_contained = FALSE
 )
 ```
+
 ```{r, echo = FALSE}
 egg_hatch_data <- read_csv("files/egg_hatch_mixed.csv")
 ```
@@ -928,26 +931,15 @@ Compare models:
 ```{r}
 AIC(binomial_model, binomial_mixed_rep, binomial_mixed_rep_fem)
 ```
-```
-                        df      AIC
-binomial_model           4 335.9344
-binomial_mixed_rep       5 297.1752
-binomial_mixed_rep_fem   6 245.7040  # Best fit
-```
+
 
 Check overdispersion in the best model:
+
 ```{r}
 performance::check_overdispersion(binomial_mixed_rep_fem)
 ```
 
 `r hide("Expected output")`
-
-```
-# Overdispersion test
-       dispersion ratio = 0.912
-  Pearson's Chi-Squared = 54.734
-                p-value = 0.684
-```
 
 Overdispersion resolved ✓
 
@@ -957,12 +949,7 @@ Examine the random effects:
 ```{r}
 summary(binomial_mixed_rep_fem)
 ```
-```
-Random effects:
- Groups              Name        Variance Std.Dev.
- female_num:replicate (Intercept) 0.28438  0.5333  
- replicate            (Intercept) 0.01139  0.1067  
-```
+
 
 **Interpretation**: 
 

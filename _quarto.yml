@@ -62,6 +62,9 @@ book:
     chapters:
     - mixed-model.qmd
     - intro-mixed-model.qmd
+  - part: "Causal Inference"
+    chapters:
+    - causal-models.qmd
 
   appendices:
   - r-basics.qmd
