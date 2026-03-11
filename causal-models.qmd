@@ -374,8 +374,11 @@ ggdag_collider(fly_dag)
 ```
 type → sleep ← partners
 ```
+When sleep is a collider between partners and type, it means both partners and type independently cause sleep. 
 
-This means the path `type → sleep ← partners → longevity` is **blocked by the collider**.
+If you leave sleep out of the model, there is no spurious association induced between partners and type via this path — this is what we want when our goal is to estimate the effect of mating type on longevity.
+
+The problem arises the moment you condition on sleep by including it as a covariate in a regression. Conditioning on a collider opens the path between its parents, inducing a statistical association between partners and type that is entirely non-causal — this is called **collider bias**.
 
 #### Is sleep also a mediator?
 
@@ -386,11 +389,20 @@ type → sleep → longevity
 
 So sleep is **both** a collider AND a mediator. This is not uncommon in real data.
 
+First, as described above, conditioning on sleep induces collider bias between type and partners. Second, conditioning on a mediator blocks the indirect pathway through which type affects longevity — meaning you would underestimate the total effect of mating type on longevity. Whether you should condition on sleep therefore depends entirely on your research question: if you want the total effect of type on longevity, sleep should be excluded; if you want only the direct effect of type on longevity not operating through sleep, conditioning on sleep is appropriate but collider bias remains a concern.
+
 ### What should we adjust for?
 
 ```{r}
 ggdag_adjustment_set(fly_dag)
 ```
+
+```{r}
+
+adjustmentSets(fly_dag)
+
+```
+
 
 The adjustment set is **empty** `{ }` or contains only `{ thorax }`.
 
@@ -419,7 +431,7 @@ This estimates the **total effect** of mating type on longevity, including all p
 ## With precision variable
 
 ```{r}
-model_precise <- lm(longevity ~ type + thorax, data = fly_data)
+model_precise <- lm(longevity ~ type + thorax + partners, data = fly_data)
 
 broom::tidy(model_precise, conf.int = TRUE)
 ```
@@ -429,7 +441,7 @@ Same causal effect, but potentially more precise estimates by accounting for bod
 ## Wrong model (for comparison)
 
 ```{r}
-model_wrong <- lm(longevity ~ type + sleep, data = fly_data)
+model_wrong <- lm(longevity ~ type + thorax  + partners + sleep , data = fly_data)
 
 broom::tidy(model_wrong, conf.int = TRUE)
 ```
@@ -449,11 +461,13 @@ The effect estimate is biased.
 
 sjPlot::tab_model(model_total, model_precise, model_wrong,
           dv.labels = c("Total Effect", 
-                                 "With Thorax", 
+                                 "With Thorax and partners", 
                                  "Wrong (Collider/Mediator)"))
 ```
 
-Notice how the `type` coefficient changes dramatically in the wrong model due to collider bias and blocked mediation.
+Notice how the `type` coefficient changes in the wrong model due to collider bias.
+
+In this example *not by a lot* probably because sleep doesn't actually account for much of an effect in longevity. 
 
 ### Model diagnostics
 
@@ -730,8 +744,3 @@ Note: Motivation might also be a mediator if the new method increases motivation
 Draw your DAG BEFORE fitting your model. Let the causal structure guide your statistical choices, not the other way around.
 :::
 
-## Session Info
-
-```{r}
-sessionInfo()
-```

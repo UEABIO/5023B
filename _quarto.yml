@@ -65,6 +65,9 @@ book:
   - part: "Causal Inference"
     chapters:
     - causal-models.qmd
+  - part: "Power analysis"
+    chapters:
+    - power_analysis_chapter.qmd
 
   appendices:
   - r-basics.qmd
