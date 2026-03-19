@@ -1,0 +1,1375 @@
+
+# AI-Assisted R Programming {#sec-ai}
+
+
+```{r, echo = F, warning = F, message = F}
+library(tidyverse)
+library(ggdag)
+library(dagitty)
+library(here)
+source("R/booktem_setup.R")
+source("R/my_setup.R")
+```
+
+## Introduction
+
+This workshop introduces AI-assisted programming tools to help you write better R code and create publication-ready visualisations. You'll learn to use GitHub Copilot for code suggestions and GitHub Copilot Chat for planning and problem-solving.
+
+**Workshop focus**: Creating code you understand and can verify, with emphasis on debugging and high-quality data visualisation.
+
+### What Are Large Language Models?
+
+GitHub Copilot uses Large Language Models (LLMs) - AI systems trained on vast amounts of code to predict and generate programming solutions.
+
+**What they can do:**
+- Suggest code completions as you type
+- Generate code from natural language descriptions
+- Help identify and fix errors
+- Answer questions about R functions
+
+**Critical limitations:**
+- May generate incorrect or outdated code
+- Cannot understand your specific data or research context
+- Suggestions vary in quality
+- No guarantee of correctness
+
+::: {.callout-warning}
+## You Are Responsible
+
+Always verify AI suggestions. Test code with your data, ensure you understand what it does, and confirm it produces correct results. AI accelerates learning - it doesn't replace understanding.
+:::
+
+### Learning Objectives
+
+By the end of this workshop, you will:
+
+1. Use GitHub Copilot for code completion in RStudio
+2. Write effective prompts for high-quality suggestions
+3. **Use AI to debug and understand errors in your code**
+4. Use GitHub Chat for project organisation
+5. Create publication-ready visualisations following best practices
+6. Critically evaluate and verify all AI suggestions
+
+---
+
+## Part 1: Getting Started
+
+### Access GitHub Copilot
+
+**Prerequisites:**
+1. Verify student status at [https://education.github.com/](https://education.github.com/)
+2. Activate free GitHub Copilot access
+3. Have RStudio installed
+
+
+### Enable Copilot in RStudio
+
+**Steps:**
+
+1. Open RStudio
+2. Navigate to **Tools > Global Options > Copilot**
+3. Check **"Enable GitHub Copilot"**
+4. Click **"Sign in to GitHub"** and authenticate
+
+**Verify it works:**
+
+Create a new R script and type:
+```{r, eval = FALSE}
+# Calculate the mean of
+```
+
+You should see grey "ghost text" suggesting a completion.
+
+**Key controls:**
+- **Tab** = Accept suggestion
+- **Esc** = Reject suggestion
+- **Keep typing** = Get new suggestion
+
+### Controlling Copilot Behaviour
+
+Sometimes you want to work without AI assistance to test your understanding.
+
+**To temporarily disable Copilot:**
+
+**Method 1: Command Palette**
+1. Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (Mac)
+2. Type "Copilot: Disable Completions"
+3. Press Enter
+
+**Method 2: Status Bar**
+1. Look for the Copilot icon in the bottom-right of RStudio
+2. Click it to see options
+3. Toggle "Completions" off
+
+**To re-enable:**
+- Use the same methods and select "Enable Completions"
+
+::: {.callout-tip}
+## Practise Without AI
+
+After completing exercises with Copilot:
+1. Turn it off
+2. Try recreating the code yourself
+3. This tests whether you understood the suggestions or just accepted them
+
+This is crucial for learning - AI should accelerate understanding, not replace it.
+:::
+
+::: {.callout-note}
+## Troubleshooting
+
+If suggestions don't appear:
+- Check you're signed into GitHub in RStudio
+- Verify internet connection
+- Restart RStudio if needed
+- Ensure Copilot is enabled in Global Options
+:::
+
+---
+
+## Part 2: How Context Influences Suggestions
+
+### The Context Principle
+
+Copilot learns from **the current file only**. To demonstrate this, we'll work with the `palmerpenguins` dataset throughout this workshop - a biological dataset perfect for understanding ecological patterns.
+
+
+### Understanding What Influences Suggestions
+
+**High impact on Copilot suggestions:**
+1. ✅ Comments immediately before your code
+2. ✅ Code patterns earlier in the same file
+3. ✅ Variable names already defined
+4. ✅ Library calls at the top of your script
+
+**Low/No impact:**
+- ❌ Files open in other tabs
+- ❌ Other files in your project
+- ❌ Separate style guide files
+- ❌ Previous conversations with Chat
+
+### Exercise 1: Context Matters - Before and After
+
+We'll create the same code twice - once with no context, once with context - to see the difference.
+
+:::{.callout-note}
+
+These exercises are designed to work with Github copilot, but can be adapted for use with Microsoft copilot or other chat tools if needed, just type these comments into an LLM chat instead
+
+:::
+
+#### Version A: No Context (Poor Suggestions)
+
+**Task:** Open a NEW blank script (don't include any setup code).
+
+Type only this:
+
+```{r, eval = FALSE}
+# Calculate mean body mass by species
+```
+
+Pause and observe what Copilot suggests:
+
+**What you might get:**
+```{r, eval = FALSE}
+mean(body_mass)  # Generic, doesn't know data frame or variable names
+# or
+mean(x$body_mass)  # Assumes unknown variable names
+```
+
+**Problems with these suggestions:**
+- Doesn't know the data frame is called `penguins`
+- Doesn't know the variable is `body_mass_g` (with units)
+- Doesn't group by species
+- Might not even run without errors
+
+#### Version B: With Context (Better Suggestions)
+
+**Now start a NEW script with context at the top:**
+
+```{r, eval = FALSE}
+# Penguin body mass analysis
+# Data: palmerpenguins package
+# Method: tidyverse with native pipe |>
+
+library(tidyverse)
+library(palmerpenguins)
+data("penguins")
+
+# Example: tidyverse style analysis
+example <- penguins |>
+  filter(!is.na(flipper_length_mm)) |>
+  select(species, body_mass_g)
+
+# Now calculate mean body mass by species
+```
+
+Pause after typing the comment and observe what Copilot suggests.
+
+**Expected better suggestion:**
+```{r, eval = FALSE}
+penguins |>
+  group_by(species) |>
+  summarise(mean_mass = mean(body_mass_g, na.rm = TRUE))
+```
+
+**This is better because:**
+- Uses correct data frame name (`penguins`)
+- Uses correct variable name (`body_mass_g`)
+- Includes grouping by species
+- Handles missing values (`na.rm = TRUE`)
+- Uses tidyverse pipe style
+
+::: {.callout-note}
+## Class Activity: Compare Results
+
+**Turn to a partner and discuss:**
+
+1. What did Copilot suggest in Version A?
+2. What did it suggest in Version B?
+3. Were your suggestions identical to your partner's? 
+4. Did you need to modify the suggestion to get the answer you needed?
+
+**Share with class:** What was most surprising about the difference?
+:::
+
+### Exercise 2: Your Turn - Build Context
+
+:::{.task}
+::::{.task-header}
+Calculate the **median** bill length and bill depth for male and female penguins of each species.
+::::
+::::{.task-container}
+
+1. Turn Copilot OFF (use Ctrl+Shift+P, "Copilot: Disable")
+2. On paper, write:
+   - What variables you need
+   - What grouping you need
+   - What summary statistics to calculate
+3. Turn Copilot back ON
+4. Write a detailed comment with all this context
+5. Observe what Copilot suggests
+
+::: {.callout-tip collapse="true"}
+## Example Context Comment
+
+```{r, eval = FALSE}
+# Data: penguins dataset
+# Variables: species, sex, bill_length_mm, bill_depth_mm
+# Remove rows with missing sex values
+# Group by species AND sex
+# Calculate median bill length and median bill depth
+# Include sample size for each group
+# Use tidyverse with native pipe |>
+```
+
+**Expected suggestion:**
+```{r, eval = FALSE}
+penguins |>
+  filter(!is.na(sex)) |>
+  group_by(species, sex) |>
+  summarise(
+    median_bill_length = median(bill_length_mm, na.rm = TRUE),
+    median_bill_depth = median(bill_depth_mm, na.rm = TRUE),
+    n = n(),
+    .groups = "drop"
+  )
+```
+:::
+
+::::
+:::
+
+### What Actually Influences Inline Suggestions - Summary
+
+**What helps most:**
+
+1. **Detailed comment immediately before code** - this matters most
+   - Be specific about data frame names
+   - List exact variable names
+   - Specify method (tidyverse, base R, etc.)
+   - State what output should look like
+
+2. **Code patterns earlier in same file** - helps moderately
+   - Example code using your style
+   - Library calls showing which packages you use
+   - Variable names already defined
+
+3. **Things that DON'T help:**
+   - Other files in your project
+   - Files open in other tabs
+   - Previous sessions or scripts
+
+::: {.callout-important}
+## Key Takeaway
+
+To get good suggestions from Copilot:
+
+**Write detailed, specific comments immediately before your code.**
+
+That's it. That's the secret.
+
+Everything else has minimal impact.
+:::
+
+---
+
+## Part 3: Using AI for Debugging (25 minutes)
+
+AI is **most useful** for debugging - finding and fixing errors in code YOU wrote. This is where AI truly shines because:
+
+- You wrote the code (you understand the intent)
+- AI spots syntax errors you missed
+- Explaining errors helps you understand them
+- You maintain ownership of the logic and learning
+
+### Why Debugging with AI is Better Than Using AI to Write Code
+
+**When AI writes code:**
+- ⚠️ You might not understand it
+- ⚠️ You can't verify if it's correct
+- ⚠️ You don't learn the logic
+- ⚠️ You can't modify it later
+
+**When AI helps you debug:**
+- ✅ You wrote the original code (you know what you intended)
+- ✅ AI helps you understand YOUR mistakes
+- ✅ You learn from errors
+- ✅ You can apply fixes to future code
+
+::: {.callout-important}
+## Debugging First, Writing Second
+
+In this workshop, we emphasise debugging over code generation because:
+
+1. **You learn more** from fixing mistakes than accepting suggestions
+2. **You maintain control** over logic and approach
+3. **You build skills** that transfer to new problems
+4. **You understand** what went wrong and why
+
+Use AI to help you fix YOUR code, not to write code you don't understand.
+:::
+
+### Setup: Load Data for Debugging Examples
+
+Make **a new script** and make  sure you have this at the top of your script:
+
+```{r, eval = FALSE}
+# Load packages and data for debugging exercises
+library(tidyverse)
+library(palmerpenguins)
+data("penguins")
+```
+
+### Error Type 1: Simple Syntax Errors
+
+**Scenario**: You want to create a bar plot showing the count of penguins for each species.
+
+**Your broken code:**
+```{r, eval = FALSE}
+ggplot(penguins, aes(x = species)) +
+  geom_barchart()
+```
+
+**Error message:**
+```
+Error in geom_barchart(): could not find function "geom_barchart"
+```
+
+#### Exercise: Debug with Copilot
+
+**Instructions:**
+
+1. Copy BOTH the code AND the error message
+2. Paste them as a comment in your script:
+
+```{r, eval = FALSE}
+# This code gives an error:
+# ggplot(penguins, aes(x = species)) +
+#   geom_barchart()
+# 
+# Error: could not find function "geom_barchart"
+#
+# Fix this code:
+```
+
+3. Let Copilot suggest a fix after the "Fix this code:" line
+4. **Don't just accept it** - read the suggestion first
+
+::: {.callout-tip collapse="true"}
+## Expected Fix
+
+```{r, eval = FALSE}
+ggplot(penguins, aes(x = species)) +
+  geom_bar()  # Correct function name is geom_bar()
+```
+
+**What you should learn:**
+
+1. **Why the error occurred:** The function is `geom_bar()` not `geom_barchart()`
+2. **How to verify:** Check ggplot2 documentation or type `??geom_bar`
+3. **How to find this yourself:** Read the error carefully - "could not find function" means typo or wrong package
+
+**Check your understanding:**
+- What happens if you type `??geom_barchart`? (Help says "No documentation")
+- What happens if you type `??geom_bar`? (Help shows correct documentation)
+- How would you have found this without AI? (Read the error, check spelling, search "ggplot bar plot")
+:::
+
+### Error Type 2: Logic Errors (More Complex)
+
+These are **harder** because there's no error message - the code runs but gives wrong results.
+
+**Scenario**: You want the mean body mass for Biscoe island penguins.
+
+**Your code (runs but gives wrong answer):**
+```{r, eval = FALSE}
+biscoe_penguins <- penguins |>
+  filter(island == "biscoe")  # PROBLEM: wrong capitalisation
+
+biscoe_penguins |>
+  summarise(mean_mass = mean(body_mass_g))
+```
+
+**Output:**
+```{r, eval = FALSE}
+# A tibble: 1 × 1
+  mean_mass
+      <dbl>
+1       NaN
+```
+
+#### Understanding the Problem
+
+**This is tricky because:**
+- ❌ No error message (code runs successfully)
+- ❌ Result looks plausible (NaN could mean missing data)
+- ✅ Need to understand your data to spot the issue
+- ✅ Need to know what reasonable values should be
+
+#### Exercise: Debug with Context
+
+**Step 1: Understand your data**
+
+Before asking AI for help, check the data structure:
+
+```{r, eval = FALSE}
+# Check how island is coded in the data
+summary(penguins$island)
+```
+
+
+**What this tells you:**
+- There ARE Biscoe penguins 
+- Island names are capitalised
+- Your filter should have found them
+
+**Step 2: Count how many penguins your filter found**
+
+```{r, eval = FALSE}
+biscoe_penguins <- penguins |>
+  filter(island == "biscoe")
+
+# How many did we get?
+nrow(biscoe_penguins)
+```
+
+**Result:** 0 rows! That's the problem.
+
+**Step 3: Now ask AI with full context**
+
+Copy this into a comment or paste into GitHub Chat:
+
+```{r, eval = FALSE}
+# I'm trying to calculate mean body mass for Biscoe island penguins.
+
+# My code:
+
+#biscoe_penguins <- penguins |>
+#  filter(island == "biscoe")
+
+#biscoe_penguins |>
+#  summarise(mean_mass = mean(body_mass_g))
+
+
+#Result: NaN
+
+#Data structure shows:
+
+# summary(penguins$island)
+# Biscoe (168), Dream (124), Torgersen (52)
+
+# But my filtered data has 0 rows. Why?
+```
+
+
+::: {.callout-tip collapse="true"}
+## Expected AI Response
+
+AI should identify:
+
+1. **The problem:** `island == "biscoe"` uses lowercase
+2. **The data:** Island values are "Biscoe" (capitalised)
+3. **The effect:** Filter returns 0 rows
+4. **The result:** `mean()` of empty vector gives NaN
+
+**Correct code:**
+```{r, eval = FALSE}
+biscoe_penguins <- penguins |>
+  filter(island == "Biscoe")  # Correct capitalisation
+
+biscoe_penguins |>
+  summarise(mean_mass = mean(body_mass_g, na.rm = TRUE))
+```
+
+:::
+
+
+### Error Type 3: Variable Mapping in ggplot2
+
+**Scenario**: You want to show bill length vs bill depth, coloured by species.
+
+**Your code:**
+```{r, eval = FALSE}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(color = species) +
+  labs(title = "Bill Dimensions by Species")
+```
+
+**Error:**
+```
+Error in layer(data = data, mapping = mapping, stat = stat, geom = GeomPoint,  : 
+  object 'species' not found
+```
+
+#### Exercise: Debug This
+
+**Instructions:**
+
+1. Copy code and error
+2. Paste as a comment in your script
+3. Type "Fix:" and let Copilot suggest
+4. **Before accepting:** Can you figure out what's wrong?
+
+**Hint:** Look at the coursebook chapter on ggplot2 aesthetics.
+
+::: {.callout-tip collapse="true"}
+## Solution
+
+**The error:** `species` is a variable in the data, so it must be inside `aes()`.
+
+**Why:** Variables that map to visual properties MUST be in `aes()`. Fixed values (like `color = "red"`) go outside `aes()`.
+
+**Correct code:**
+```{r, eval = FALSE}
+ggplot(penguins, aes(x = bill_length_mm, y = bill_depth_mm)) +
+  geom_point(aes(color = species)) +  # species inside aes()
+  labs(title = "Bill Dimensions by Species")
+```
+
+**Reference Coursebook:**
+> "If specifying a fixed aesthetic e.g. red for everything it DOES NOT go inside aes()... If you wish to modify an aesthetic according to a variable in your data THEN it DOES go inside aes()"
+
+**Check understanding:**
+- When would you use `color = "red"`? (When all points should be red)
+- When would you use `aes(color = species)`? (When colour represents data)
+:::
+
+### Debugging Checklist
+
+When code doesn't work, follow these steps:
+
+**Before asking AI:**
+
+1. ✅ **Read the error message carefully**
+   - What function failed?
+   - What does the error say?
+   
+2. ✅ **Check your data structure**
+   - `glimpse(penguins)` - see variables and types
+   - `summary(penguins)` - see value ranges
+   - `names(penguins)` - check exact spelling
+   
+3. ✅ **Verify variable names**
+   - Check capitalisation
+   - Check spelling
+   - Check units (is it `body_mass` or `body_mass_g`?)
+   
+4. ✅ **Test with small data**
+   - Try `penguins |> slice(1:5)` to test on just 5 rows
+   - Easier to spot problems in small output
+
+**When asking AI:**
+
+1. ✅ **Provide complete error message** (copy-paste exactly)
+2. ✅ **Include your code** (the exact code that failed)
+3. ✅ **Explain what you intended** ("I wanted to calculate...")
+4. ✅ **Show relevant data structure** (`str()`, `summary()`, `glimpse()`)
+
+**After AI suggests a fix:**
+
+1. ✅ **Understand WHY the error occurred**
+   - What was wrong?
+   - Why did it cause this specific error?
+   
+2. ✅ **Understand WHY the fix works**
+   - What did the fix change?
+   - How does it solve the problem?
+   
+3. ✅ **Test the corrected code**
+   - Does it run without errors?
+   - Does it give expected results?
+   - Do the values make biological sense?
+   
+4. ✅ **Add a comment explaining the fix**
+   ```{r, eval = FALSE}
+   # Fixed: Changed "biscoe" to "Biscoe" - island names are capitalised in data
+   biscoe_penguins <- penguins |>
+     filter(island == "Biscoe")
+   ```
+
+::: {.callout-note}
+## Class Discussion: Debugging Experiences
+
+**Turn to a partner and discuss:**
+
+1. Which error type was hardest to debug?
+2. When was AI most helpful vs least helpful?
+3. When did understanding the data help you spot errors AI couldn't see?
+4. How does debugging with AI compare to debugging alone?
+5. What's one debugging skill you learned that you'll use in future?
+
+:::
+
+---
+
+## Part 4: GitHub Chat for Project Organisation
+
+### What Is GitHub Chat?
+
+GitHub Chat is a conversational AI tool accessed through your web browser. It helps you plan projects, understand errors, and make coding decisions.
+
+**Key difference from inline Copilot:**
+- **Inline Copilot**: Completes code as you type (sees only current file)
+- **GitHub Chat**: Answers questions and discusses problems (you provide context)
+
+::: {.callout-warning}
+## Important: Chat Has No Memory
+
+**Chat does NOT automatically know:**
+- ❌ What files are in your repository
+- ❌ What code you've written
+- ❌ Previous conversations
+- ❌ Your data or research context
+
+**You must provide ALL context in EACH question.**
+:::
+
+### Accessing GitHub Chat
+
+**Simple method:**
+1. Navigate to your repository on GitHub.com
+2. Look for the Copilot icon (top-right)
+3. Click to open Chat
+
+### How to Share Code with Chat
+
+There are two simple ways to give Chat the information it needs:
+
+#### Method 1: Copy-Paste (Simplest)
+
+**Use for:** Quick debugging, specific errors
+
+**How:**
+```
+I'm getting an error:
+
+penguins |>
+  filter(island == "biscoe") |>
+  summarise(mean_mass = mean(body_mass_g))
+
+Error: Result is NaN
+
+The data has 168 Biscoe penguins but my filter returns 0 rows. Why?
+```
+
+**Best for beginners** - works immediately, no setup needed.
+
+#### Method 2: Reference Repository Files
+
+**Use for:** Planning projects, reviewing entire files
+
+**Requirement:** Code must be committed and pushed to GitHub first
+
+**How:**
+```
+Look at my file scripts/01_data_cleaning.R
+
+Should I split the quality checks into a separate section?
+```
+
+Or use the `#` shortcut - type `#` and select from your files:
+```
+Review my analysis structure:
+#scripts/01_data_cleaning.R
+#scripts/02_analysis.R
+
+Is this logical?
+```
+
+::: {.callout-tip}
+## Beginner Workflow
+
+1. **While coding:** Copy-paste code snippets for quick help
+2. **After committing:** Reference files for structure review
+3. **For planning:** Ask about organisation before writing code
+
+Don't feel pressured to commit just to ask Chat - copy-paste works fine!
+:::
+
+
+## Using AI Style Guides
+
+### Why Create a Style Guide for AI?
+
+When working with AI coding assistants like GitHub Copilot, you'll ask dozens of questions throughout a project. Without guidance, the AI might suggest code using different styles each time—sometimes base R, sometimes tidyverse; sometimes `%>%`, sometimes `|>`; sometimes camelCase, sometimes snake_case. This inconsistency makes your code harder to read, harder to debug, and harder to understand.
+
+A **coding style guide** solves this problem by giving the AI a consistent set of instructions about how you want it to behave. Think of it as setting expectations at the start of a collaboration: "I always use tidyverse with the native pipe `|>`, I name variables in snake_case, and I always use colourblind-safe colour palettes." The AI then tailors its suggestions to match your preferences, creating more consistent, readable code throughout your project.
+
+### How GitHub Copilot Uses Style Guides
+
+GitHub Copilot Chat looks for a special file called `copilot-instructions.md` in the `.github/` folder of your repository:
+```
+your-project/
+├── .github/
+│   └── copilot-instructions.md    # AI reads this automatically
+├── data/
+├── scripts/
+└── figures/
+```
+
+When you ask Copilot Chat a question, it automatically reads this file to understand your coding standards (*but you can # include it in specific chats to be sure*). You don't need to repeat yourself—the AI already knows your preferences.
+
+**Important distinction:**
+
+- **GitHub Copilot Chat** (browser-based conversational tool): Reads `copilot-instructions.md` automatically
+
+- **Inline Copilot** (code completion in RStudio): Only sees the current file you're editing
+
+This means you still need detailed comments in your R scripts for inline suggestions, but Chat will follow your style guide for planning, debugging, and code review.
+
+### What Goes in a Style Guide?
+
+An effective style guide tells the AI about:
+
+**1. Project Context**
+```
+This project analyses Palmer penguin morphological data to understand species differences and ecological patterns.
+```
+
+**2. Required Packages and Syntax**
+```
+- ALWAYS use tidyverse with native pipe |>
+- ALWAYS use <- for assignment (not =)
+- Load ALL packages at top of script with library()
+```
+
+**3. Naming Conventions**
+```
+- Variables: snake_case (e.g., body_mass_g, mean_flipper_length)
+- Data frames: Add _df suffix (e.g., penguin_summary_df)
+- Plots: Add _plot suffix (e.g., mass_comparison_plot)
+```
+
+**4. Code Organisation**
+```
+- Maximum 10-15 lines per code chunk
+- Comment every chunk explaining WHY, not just WHAT
+- Use section headers with ---- to organise scripts
+```
+
+**5. Common Mistakes to Avoid**
+```
+- Not checking variable capitalisation (island == "biscoe" vs "Biscoe")
+- Using fill instead of colour for points
+- Forgetting na.rm = TRUE in summary functions
+```
+
+### Benefits Beyond AI
+
+Creating a style guide isn't just for AI—it benefits **you**:
+
+- **Consistency**: Your own code follows the same patterns
+
+- **Documentation**: New collaborators understand your approach
+
+- **Quality control**: Checklist ensures you don't skip important steps
+
+- **Learning**: Codifies best practices you want to remember
+
+The act of writing down your standards helps you think critically about what makes code readable, maintainable, and reproducible.
+
+### Context Injection: The Broader Pattern
+
+The `.github/copilot-instructions.md` file is an example of **context injection** or **system prompts**—a pattern used across many AI tools. The idea is simple: instead of providing the same instructions repeatedly, you give the AI a persistent set of guidelines that shape all future responses.
+
+**Other examples of context injection:**
+- ChatGPT "Custom Instructions" (set preferences once, apply to all chats)
+
+- Claude "Projects" (provide project context and style guides)
+
+- AI coding tools reading `.cursorrules` or `.aicoderc` files
+
+The key principle: **AI tools can only work with the context you provide**. A style guide is a way to provide that context once, efficiently, rather than repeating yourself in every interaction.
+
+::: {.callout-tip}
+## Start Simple, Grow Over Time
+
+Don't try to write a perfect style guide on day one. Start with the basics:
+
+1. Which packages do you use?
+2. Which pipe operator?
+3. What naming convention?
+
+As you encounter issues (capitalisation errors, colour accessibility problems, etc.), add them to your "Common Mistakes" section. Your style guide becomes a living document that captures lessons learned throughout your project.
+:::
+
+::: {.callout-important}
+## Remember: You're Still Responsible
+
+A style guide helps AI give better suggestions, but **you must still verify everything**:
+
+- Does the code run without errors?
+- Does it produce correct results?
+- Does it follow your standards?
+- Do you understand what it does?
+
+The AI follows your guide, but doesn't understand your data, your research context, or what "correct" means for your specific analysis. Always test, always verify, always understand.
+:::
+
+### Exercise: Build Your Coding Standards
+
+Instead of receiving a complete template, let's identify what standards YOUR project needs.
+
+#### Step 1: Create the File
+
+In your repository, create:
+```
+.github/copilot-instructions.md
+```
+
+**Why `.github/` folder?** This is where GitHub Chat looks for project standards.
+
+#### Step 2: What Standards Do You Need? (Pair Work)
+
+**Discuss with a partner and write down:**
+
+1. **Packages:** Which will you always use? Where should `library()` calls go?
+
+2. **Syntax:** 
+   - Native pipe `|>` or magrittr `%>%`? 
+   - Assignment `<-` or `=`?
+   - Variable naming: snake_case, camelCase, or other?
+
+3. **Code Organisation:**
+   - How long should code chunks be?
+   - What should comments explain?
+
+4. **Mistakes to Avoid:**
+   - What errors did you encounter in Part 3?
+   - What feedback have you had on your code in the past?
+   - How could standards prevent them?
+
+#### Step 3: Build Your Template
+
+Start with this structure and fill in **YOUR** decisions and additions:
+
+::: {.callout-note collapse="true"}
+```
+# R Coding Standards for [Your Project]
+
+## Project Context
+[2-3 sentences: What are you analysing and why?]
+
+## Package Management
+**Required packages:**
+- tidyverse
+- palmerpenguins  
+- viridis
+
+**Rules:**
+- Load ALL packages at top of script
+- Use `library()` not `require()`
+
+## Syntax Preferences
+**Pipe:** Always use `|>` (not `%>%`)
+**Assignment:** Always use `<-` (not `=`)
+**Naming:** snake_case for all variables
+
+## Code Organisation
+**Chunks:** 10-15 lines maximum
+**Comments:** Explain WHY, not just WHAT
+**Headers:** Use `----` to create sections
+
+## File Organization
+
+### Directory Structureproject/
+├── data/
+│   ├── raw/           # Original data - NEVER modify
+│   └── processed/     # Cleaned data
+├── scripts/
+│   ├── 01_data_cleaning.R
+│   ├── 02_exploratory_analysis.R
+│   ├── 03_statistical_tests.R
+│   └── 04_create_figures.R
+├── figures/
+│   ├── exploratory/   # Quick plots for checking
+│   └── publication/   # Final figures for paper
+├── output/
+│   └── results/       # Statistical test outputs
+└── README.md
+
+## Visualisation Standards
+**Required:**
+- Colourblind-safe palettes (viridis)
+- Axis labels with units
+- Sample sizes where relevant
+- Professional theme (theme_minimal)
+
+## Common Mistakes to Avoid
+[Add mistakes from Part 3:]
+- Not checking capitalisation (island == "biscoe" vs "Biscoe")
+- Using fill instead of colour for points
+- Forgetting na.rm = TRUE
+- [Add others you encountered]
+
+## Getting Help from Chat
+**Always provide:**
+1. Your code (exact copy-paste)
+2. Error message (complete text)
+3. What you expected vs what happened
+4. Data structure (glimpse() output)
+```
+
+:::
+
+
+
+### Using Chat for Project Planning
+
+Now use Chat to validate and extend your thinking.
+
+**Commit your `.github/copilot-instructions.md` file, then ask:**
+
+```
+I'm analysing Palmer penguin data to compare body size between species.
+
+My coding standards are in:
+#.github/copilot-instructions.md
+
+Questions:
+1. What R scripts should I create and in what order?
+2. What should each script do?
+3. What should my first analysis steps be?
+```
+
+**Chat will review your standards and suggest a project structure.**
+
+::: {.callout-note}
+## Class Discussion
+
+**Compare Chat's responses:**
+
+1. What structure did Chat suggest?
+2. Are suggestions similar across groups?
+3. How did your standards file help Chat?
+4. What would you modify?
+
+**Share one insight from Chat that surprised you.**
+:::
+
+### When to Use Chat vs Inline Copilot
+
+| Task | Inline Copilot | Chat |
+|------|---------------|------|
+| Writing code | ✅ Fast | ❌ Too slow |
+| Simple syntax fix | ✅ Instant | ❌ Overkill |
+| Planning project | ❌ Can't help | ✅ Excellent |
+| Understanding errors | ⚠️ Brief hint | ✅ Full explanation |
+| Choosing approaches | ❌ Just suggests | ✅ Explains trade-offs |
+| Quick debugging | ✅ One-line fix | ❌ Too much |
+
+**Simple rule:** Chat for thinking and planning, Copilot for typing and fixing.
+
+### Tips for Effective Chat Questions
+
+**✅ Good question structure:**
+```
+Context: I'm analysing penguin body mass by species
+
+My code:
+[paste code]
+
+Error/Issue: [what's wrong]
+
+Question: [specific question]
+```
+
+**❌ Avoid vague questions:**
+```
+"My code doesn't work"
+"Help with ggplot"
+"Make this better"
+```
+
+**✅ Be specific:**
+```
+"Why does my filter return 0 rows when the data has 168 Biscoe penguins?"
+"Should I use faceted or grouped boxplots for 3 species × 3 islands?"
+```
+
+::: {.callout-tip}
+## Quick Reference: Good Chat Habits
+
+1. **Start fresh** if Chat seems confused (click "New chat")
+
+2. **Copy-paste exactly** - don't retype code or errors
+
+3. **Provide context** every time - Chat doesn't remember
+
+4. **Ask for explanation** not just solutions
+
+5. **Verify everything** Chat suggests - it can be wrong
+:::
+
+### Brief Note: Chat vs Agents
+
+You may hear about "AI agents" - autonomous systems that can execute multiple steps and make decisions independently.
+
+**For this workshop, we're using Chat because:**
+- ✅ You control every decision
+- ✅ You learn by engaging with each step  
+- ✅ Better for understanding and skill-building
+
+**Agents** are powerful but can hide the learning process. Master Chat first, explore agents later.
+
+---
+
+## Part 5: Publication-Ready Visualisations
+
+This section focuses on creating high-quality plots following data visualisation best practices from your Coursebook.
+
+**Key principle:** AI can generate code quickly, but YOU must ensure it follows best practices for publication-quality figures.
+
+### Visualisation Best Practices Review
+
+Before creating plots with AI, review these principles from your Coursebook:
+
+**From the ggplot2 chapter:**
+
+- Data must map clearly to visual properties
+
+- Choose appropriate geoms for your data type
+
+- Layer elements thoughtfully
+
+- Use clear, informative labels
+
+- Use appropriate axis limits and breaks
+
+- Transform scales when needed for clarity
+
+- Order categories logically
+
+- Use colourblind-friendly palettes
+
+- Ensure sufficient contrast
+
+- Test how plot looks in greyscale
+
+### Exercise 1: Evaluate AI Colour Choices
+
+**Scenario:** Compare body mass across penguin species.
+
+**Basic prompt:**
+```{r, eval = FALSE}
+# Create boxplot of body mass by species
+# Colour by species
+```
+
+**What AI might generate:**
+```{r, eval = FALSE}
+ggplot(penguins, aes(x = species, y = body_mass_g, fill = species)) +
+  geom_boxplot() +
+  labs(
+    title = "Body Mass by Species",
+    x = "Species",
+    y = "Body Mass (g)"
+  )
+```
+
+#### Critical Evaluation
+
+**Ask yourself (reference Coursebook colour chapter):**
+
+1. **Are these colours colourblind-friendly?**
+   - Default ggplot2 colours are NOT colourblind-safe
+   - Red-green combinations are particularly problematic
+   
+2. **Is the legend necessary?**
+   - X-axis already shows species names
+   - Legend is redundant
+   
+3. **Can you see individual data points?**
+   - Boxplot shows summary only
+   - Hides the distribution and outliers
+
+**Test your understanding:**
+- How would you check if colours are colourblind-safe?
+- What palette should you use instead?
+- How could you show both summary AND raw data?
+
+::: {.callout-tip collapse="true"}
+## Improved Version - Following Best Practices
+
+**Better prompt referencing Coursebook standards:**
+
+```{r, eval = FALSE}
+# Create publication-ready boxplot following Coursebook standards
+# Body mass by species
+# Use colourblind-friendly viridis palette
+# Add semi-transparent jittered points to show raw data
+# Remove redundant legend
+# Include sample sizes in x-axis labels
+# Use theme_minimal with readable text
+```
+
+
+**Why this is better:**
+- ✅ Colourblind-safe viridis palette
+- ✅ Shows both summary (boxplot) AND raw data (points)
+- ✅ Transparency prevents overplotting
+- ✅ Sample sizes provide context
+- ✅ No redundant legend
+- ✅ Professional, clean theme
+- ✅ Title explains what is shown
+:::
+
+::: {.callout-note}
+## Class Activity: Colour Accessibility Check
+
+**Working in pairs:**
+
+1. Generate the basic plot (first version)
+2. Generate the improved plot (second version)
+3. Take a photo of each on your phone
+4. Apply greyscale filter (phone settings or photo app)
+5. Compare: Can you still distinguish species in both versions?
+
+:::
+
+::: {.callout-note  collapse="true"}
+
+- The R package `colorBlindness` has a function `colorBlindness::cvdPlot()` That will do this for you.
+
+:::
+
+**Discuss:**
+- Which version works better in greyscale?
+- Why does the viridis palette work better?
+- What other improvements make the second version clearer?
+
+
+### Exercise 2: Raw Data + Model Summary
+
+**Scenario:** Examine the relationship between flipper length and body mass.
+
+**Poor prompt:**
+```{r, eval = FALSE}
+# plot flipper vs mass
+```
+
+**What this generates:**
+```{r, eval = FALSE}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point()
+```
+
+**Problems:**
+- Just points, no relationship shown
+- No indication of species differences
+- Default colours
+- Missing labels
+
+**Better prompt:**
+
+```{r, eval = FALSE}
+# Create publication-ready scatter plot following Coursebook
+# Show relationship between flipper length and body mass
+# Include BOTH raw data AND linear model (layered geoms)
+# Colour by species with viridis palette
+# Use semi-transparent points to show density (alpha)
+# Add regression lines per species with confidence intervals
+# Include informative labels with units
+# Use theme_minimal
+```
+
+
+### Exercise 3: Your Turn - Complete Publication Figure
+
+**Create a complete publication-ready figure using ALL Coursebook best practices.**
+
+**Scenario:** Show how bill dimensions (length vs depth) differ between species.
+
+**Your task:**
+
+1. **Plan first** (on paper):
+   - What plot type? 
+   - What colours?
+   - Raw data + model? 
+   - What labels needed? 
+
+2. **Write detailed prompt** including all requirements
+
+3. **Generate plot**
+
+4. **Evaluate against checklist** (below)
+
+5. **Iterate to fix any issues**
+
+#### Publication Figure Checklist
+
+Use this to evaluate your figure:
+
+**Essential elements:**
+
+- [ ] Raw data visible (with transparency if needed)
+
+- [ ] Summary/model shown
+
+- [ ] Colourblind-friendly palette (viridis)
+
+- [ ] Axis labels with units
+
+- [ ] Informative title
+
+- [ ] Professional theme
+
+- [ ] Sample sizes reported
+
+- [ ] Saved at 300 DPI
+
+
+### Key Visualisation Principles
+
+**When evaluating ANY plot (AI-generated or your own):**
+
+**Accessibility:** Colourblind-friendly? Works in greyscale? Readable text?
+
+**Information:** Shows raw data? Shows summary? Shows uncertainty?
+
+**Clarity:** Informative labels? Appropriate scales? Professional theme?
+
+:::{.callout-important}
+## AI Doesn't Know Best Practices
+
+**AI will generate code that runs**, but it won't automatically follow visualisation best practices unless you specify them.
+
+**You must know and specify:**
+- Colourblind-safe palettes (it defaults to rainbow or ggplot2 defaults)
+- When to show raw data vs summaries (it might show only one)
+- Clear labelling requirements (it uses variable names as labels)
+- Sample size reporting (it won't include unless asked)
+
+**Your expertise + AI's speed = Publication-quality figures**
+
+Always evaluate critically and iterate based on Coursebook principles.
+:::
+
+---
+
+## Part 6: Best Practices and Responsible Use 
+### Using AI Responsibly in Research
+
+**DO:**
+- ✅ Use AI to help debug YOUR code
+- ✅ Verify ALL suggestions before accepting
+- ✅ Test code thoroughly with your data
+- ✅ Learn from AI suggestions (ask yourself "why?")
+- ✅ Reference Coursebook for best practices
+
+**DON'T:**
+- ❌ Accept code you don't understand
+- ❌ Skip testing and verification
+- ❌ Let AI make scientific decisions
+- ❌ Use AI when explicitly prohibited
+- ❌ Claim AI work as entirely your own
+
+### Academic Integrity Checklist
+
+Before submitting any work involving AI assistance:
+
+**Understanding:**
+- [ ] I can explain every line of code
+- [ ] I can modify the code if requirements change
+- [ ] I understand why this approach was chosen
+- [ ] I could write similar code independently
+
+**Verification:**
+- [ ] Code runs without errors
+- [ ] Results are correct and make sense
+- [ ] Visualisations follow best practices
+- [ ] Statistical methods are appropriate
+
+**Attribution:**
+- [ ] AI assistance is disclosed where required
+- [ ] My original contributions are clear
+- [ ] Sources (including Coursebook) are cited
+
+**Scientific Integrity:**
+- [ ] Data interpretation is my own
+- [ ] Statistical decisions are justified
+- [ ] Results are reported honestly
+
+
+## Summary and Practice Assignment
+
+### What We Learned Today
+
+**Key Skills:**
+
+1. **Context influences AI suggestions** - detailed comments matter most
+2. **Debugging is the best use of AI** - maintains your ownership of learning
+3. **Project organisation matters** - standards guide both you and AI
+4. **Visualisation requires critical evaluation** - you ensure quality, not AI
+5. **Verification is essential** - always test and understand
+
+
+## Additional Resources
+
+### R Resources
+
+**Data visualisation:**
+- ggplot2 book: [https://ggplot2-book.org/](https://ggplot2-book.org/)
+- Data visualisation principles: [https://clauswilke.com/dataviz/](https://clauswilke.com/dataviz/)
+
+**General R:**
+- R for Data Science: [https://r4ds.had.co.nz/](https://r4ds.had.co.nz/)
+- RStudio Cheatsheets: [https://posit.co/resources/cheatsheets/](https://posit.co/resources/cheatsheets/)
+
+**AI tools:**
+- GitHub Copilot docs: [https://docs.github.com/copilot](https://docs.github.com/copilot)
+
+::: {.callout-note}
+## Remember the Core Principle
+
+**AI is a tool to accelerate learning, not replace it.**
+
+The goal is to:
+- Understand your code
+- Make informed decisions
+- Follow best practices
+- Produce quality research
+
+Use AI strategically, verify everything, and maintain scientific rigour.
+:::

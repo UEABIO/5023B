@@ -68,6 +68,9 @@ book:
   - part: "Power analysis"
     chapters:
     - power_analysis_chapter.qmd
+  - part: "AI-assisted programming"
+    chapters:
+    - AI-programming.qmd
 
   appendices:
   - r-basics.qmd
