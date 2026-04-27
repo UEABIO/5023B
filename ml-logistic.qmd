@@ -1,0 +1,504 @@
+
+# Logistic classification {#sec-ml-logistic}
+
+```{r, include = FALSE}
+library(tidyverse)
+library(here)
+library(tidymodels)
+library(glmnet)
+source("R/booktem_setup.R")
+source("R/my_setup.R")
+source("R/clean_penguins.R")
+
+
+
+```
+
+## Introduction
+
+In the previous workshop we predicted a continuous outcome — bat age — from methylation data. Here the question is different. We want to predict whether a dog is affected by cleft lip based on its SNP genotype profile. The outcome is binary: affected or unaffected. This requires a different modelling approach.
+
+Logistic regression is the natural extension of linear regression to binary outcomes. Rather than predicting a continuous value directly, it predicts the probability that an observation belongs to a particular class. A probability above 0.5 is classified as affected; below 0.5 as unaffected. The model's coefficients still represent the relationship between predictors and the outcome, but now in terms of log-odds rather than raw units.
+
+The dataset comes from Greer et al. (2015, *PLOS Genetics*), who investigated the genetic basis of cleft lip in Nova Scotia Duck Tolling Retrievers. SNP genotypes are coded as 0, 1, or 2, representing the count of the reference allele at each locus. We are working with a reduced dataset containing 0.5% of SNP loci randomly selected from chromosomes 25 to 29 — the genomic region implicated in the original study. This subset exists for computational convenience; results should not be interpreted as a full GWAS analysis.
+
+### A note on evaluation
+
+In the previous workshop we used RMSE to evaluate model performance. RMSE is appropriate for continuous outcomes but meaningless for binary classification. Here we use a different set of metrics: the confusion matrix, sensitivity, specificity, and the ROC curve. Each is introduced when it is needed rather than all at once.
+
+### A note on how we use AI in this workshop
+
+As in the previous workshop, AI assistance is appropriate for data exploration where outputs are immediately verifiable. All modelling code is written by you. This is not an arbitrary rule — if you do not write the modelling code you will not develop the understanding needed to judge when a model is correct, incomplete, or quietly wrong.
+
+### Learning Objectives
+
+By the end of this workshop you will be able to:
+
+1. Load and prepare a non-standard plain text genomic dataset in R
+2. Recode a PLINK phenotype variable into a binary factor appropriate for classification
+3. Fit a logistic regression model using `tidymodels`
+4. Interpret a confusion matrix, sensitivity, specificity, and ROC-AUC
+5. Visualise predicted probability distributions and the ROC curve
+6. Extract and interpret SNP coefficients on the log-odds scale
+7. Explain why evaluation metrics differ between regression and classification tasks
+
+---
+
+## Setup
+
+Clone the GitHub Classroom repository using the link on your course page and open the RStudio project. Open `scripts/01_explore.R` to begin.
+
+```r
+library(tidyverse)
+library(tidymodels)
+```
+
+---
+
+## Part 1 — AI-Assisted Data Exploration
+
+### What we are doing and why
+
+The dataset is in PLINK plain text format — a space-separated file with pedigree columns, a phenotype column, and SNP genotype columns. Before modelling we need to understand its structure, check for missing genotypes, and confirm the phenotype distribution. These checks are verifiable without any modelling knowledge, making this an appropriate place for AI assistance.
+
+### Accessing GitHub Copilot Chat in Agent Mode
+
+Navigate to your repository on github.com and open GitHub Copilot Chat in agent mode, as in the previous workshop.
+
+### Writing Your Instructions
+
+Write your instructions in full before submitting anything to Copilot. Your instructions must ask Copilot to do all of the following, written in your own words:
+
+Load the dataset from `data/cleft_lip_snps.txt`. This file is space-separated, not comma-separated — specify this explicitly. Report the dimensions of the dataset. Identify and describe the non-SNP columns: FID, IID, PAT, MAT, SEX, PHENOTYPE. Report the frequency of each phenotype value and note that PLINK codes phenotype as 1 for unaffected and 2 for affected. Check for missing values across all columns. Report the distribution of genotype values (0, 1, 2) across a sample of SNP columns. Produce a bar chart of phenotype counts and save it to `outputs/`. Produce genotype frequency distributions for a sample of SNP columns and save to `outputs/`. Use the base R pipe `|>` throughout. Begin every code block with a plain English comment explaining what it does and why.
+
+```
+My instructions to Copilot:
+
+
+
+
+```
+
+Paste your instructions into Copilot Chat. Read the generated script carefully, paste it into `scripts/01_explore.R`, and run it section by section. Verify each output against the checkpoints below.
+
+**Checkpoint 1 — File loading**
+Space-separated files require `read_table()` or `read_delim()` with the correct delimiter, not `read_csv()`. If Copilot used `read_csv()` the columns will not parse correctly. Check that the number of columns matches the number of SNPs plus six pedigree and phenotype columns.
+
+**Checkpoint 2 — Phenotype distribution**
+PLINK codes phenotype as 1 (unaffected) and 2 (affected). How many dogs are in each group? Note whether the classes are balanced or imbalanced — this affects how you interpret accuracy later.
+
+**Checkpoint 3 — Genotype values**
+SNP genotypes should take values 0, 1, or 2 only. Are there any values outside this range? Are missing values coded as something other than NA — for instance as -9, which is a common PLINK missing value code?
+
+**Checkpoint 4 — Non-predictor columns**
+FID, IID, PAT, and MAT are pedigree identifiers with no biological predictive value. SEX is a genuine biological variable but is not being used as a predictor in this session without explicit justification. Confirm these columns are identified and would need to be removed before modelling.
+
+**Checkpoint 5 — Code conventions**
+Does the script use `read_table()` or equivalent, `|>`, and a plain English comment on every code block? If not, identify where your instructions were ambiguous.
+
+> **Reflect: Prompt Quality**
+>
+> The most common failure at Checkpoint 1 is using `read_csv()` for a space-separated file. If this happened, what would you add to your instructions to prevent it? Specifying the file format explicitly — "space-separated, not comma-separated" — is the simplest fix. Precision in written instructions matters here exactly as it does when writing methods sections.
+
+---
+
+## Part 2 — Loading and Preparing the Data
+
+Open `scripts/02_model.R`. All remaining code in this workshop goes here.
+
+```r
+# Load the dataset
+# read_table() handles space-separated files with variable whitespace
+dogs <- read_table("data/cleft_lip_snps.txt")
+
+glimpse(dogs)
+```
+
+```r
+# Remove pedigree columns that are not biological predictors
+# Recode PHENOTYPE from PLINK coding (1/2) to a binary factor
+# In PLINK: 1 = unaffected, 2 = affected
+# The level listed first ("affected") is treated as the positive class
+dogs_model <- dogs |>
+  select(-FID, -IID, -PAT, -MAT, -SEX) |>
+  mutate(PHENOTYPE = factor(
+    if_else(PHENOTYPE == 2, "affected", "unaffected"),
+    levels = c("affected", "unaffected")
+  ))
+
+# Confirm the recoding
+dogs_model |>
+  count(PHENOTYPE)
+```
+
+> **Why recode PHENOTYPE?**
+>
+> Leaving PHENOTYPE as a numeric 1/2 variable would cause `tidymodels` to treat this as a regression problem rather than a classification problem. Recoding it as a named factor with two levels tells the model to predict class membership rather than a continuous value. The level listed first — "affected" — is treated as the positive class. This matters when interpreting sensitivity and specificity.
+
+> **Reflection 1**
+>
+> What does it mean for "affected" to be the positive class in this context?
+>
+> In a disease genetics study, why might you prefer to optimise sensitivity — correctly identifying affected dogs — over specificity — correctly identifying unaffected dogs?
+>
+> SEX has been removed from the predictors without analysis. Under what circumstances might this be an important omission, and how would you investigate it?
+
+---
+
+## Part 3 — The Train/Test Split
+
+The same logic applies as in Workshop 1. We withhold a test set before training and evaluate only on that held-out portion. For classification, `initial_split()` accepts a `strata` argument that ensures the proportion of affected and unaffected dogs is similar in both training and test sets. This is called stratified splitting and is good practice for binary outcomes.
+
+```r
+# Stratified split: maintains class proportions in both sets
+set.seed(42)
+
+dog_split <- initial_split(dogs_model, prop = 0.8, strata = PHENOTYPE)
+dog_train <- training(dog_split)
+dog_test  <- testing(dog_split)
+
+# Confirm class balance is maintained in each set
+dog_train |> count(PHENOTYPE)
+dog_test  |> count(PHENOTYPE)
+```
+
+Now examine sensitivity to split choices, changing one thing at a time as in Workshop 1. Here we use accuracy rather than RMSE — the proportion of dogs correctly classified.
+
+```r
+# Split 1: baseline — 80/20, seed 42
+set.seed(42)
+split_1 <- initial_split(dogs_model, prop = 0.8, strata = PHENOTYPE)
+train_1 <- training(split_1)
+test_1  <- testing(split_1)
+
+rec_1 <- recipe(PHENOTYPE ~ ., data = train_1) |>
+  step_normalize(all_numeric_predictors())
+
+spec_logistic <- logistic_reg() |>
+  set_engine("glm") |>
+  set_mode("classification")
+
+fit_1 <- workflow() |>
+  add_recipe(rec_1) |>
+  add_model(spec_logistic) |>
+  fit(data = train_1)
+
+acc_1 <- fit_1 |>
+  predict(test_1) |>
+  bind_cols(test_1 |> select(PHENOTYPE)) |>
+  accuracy(truth = PHENOTYPE, estimate = .pred_class) |>
+  pull(.estimate)
+
+acc_1
+```
+
+```r
+# Split 2: 70/30, seed 42
+# Proportion changes, seed held constant
+set.seed(42)
+split_2 <- initial_split(dogs_model, prop = 0.7, strata = PHENOTYPE)
+train_2 <- training(split_2)
+test_2  <- testing(split_2)
+
+rec_2 <- recipe(PHENOTYPE ~ ., data = train_2) |>
+  step_normalize(all_numeric_predictors())
+
+fit_2 <- workflow() |>
+  add_recipe(rec_2) |>
+  add_model(spec_logistic) |>
+  fit(data = train_2)
+
+acc_2 <- fit_2 |>
+  predict(test_2) |>
+  bind_cols(test_2 |> select(PHENOTYPE)) |>
+  accuracy(truth = PHENOTYPE, estimate = .pred_class) |>
+  pull(.estimate)
+
+acc_2
+```
+
+```r
+# Split 3: 80/20, seed 123
+# Seed changes, proportion held constant
+set.seed(123)
+split_3 <- initial_split(dogs_model, prop = 0.8, strata = PHENOTYPE)
+train_3 <- training(split_3)
+test_3  <- testing(split_3)
+
+rec_3 <- recipe(PHENOTYPE ~ ., data = train_3) |>
+  step_normalize(all_numeric_predictors())
+
+fit_3 <- workflow() |>
+  add_recipe(rec_3) |>
+  add_model(spec_logistic) |>
+  fit(data = train_3)
+
+acc_3 <- fit_3 |>
+  predict(test_3) |>
+  bind_cols(test_3 |> select(PHENOTYPE)) |>
+  accuracy(truth = PHENOTYPE, estimate = .pred_class) |>
+  pull(.estimate)
+
+acc_3
+```
+
+```r
+# Collect results in a readable table
+tibble(
+  split    = c("80/20, seed 42", "70/30, seed 42", "80/20, seed 123"),
+  accuracy = c(acc_1, acc_2, acc_3)
+)
+```
+
+> **Reflection 2**
+>
+> Does accuracy vary across splits when only the seed changes?
+>
+> Accuracy can be misleading when classes are imbalanced. If 80% of dogs are unaffected, a model that predicts "unaffected" for every dog achieves 80% accuracy without learning anything. Does this concern apply to this dataset based on the class counts you confirmed earlier?
+>
+> What additional metrics might give a more honest picture of model performance on a binary outcome?
+
+---
+
+## Part 4 — Building the Logistic Regression Model
+
+```r
+# Recipe: normalise all numeric SNP predictors
+# SNP values are on a 0/1/2 scale but normalisation ensures
+# coefficients are comparable across sites
+dog_recipe <- recipe(PHENOTYPE ~ ., data = dog_train) |>
+  step_normalize(all_numeric_predictors())
+
+# Logistic regression specification
+# set_mode("classification") is required — without this tidymodels
+# will not know this is a classification rather than regression problem
+logistic_spec <- logistic_reg() |>
+  set_engine("glm") |>
+  set_mode("classification")
+
+# Workflow: bind recipe and model
+logistic_workflow <- workflow() |>
+  add_recipe(dog_recipe) |>
+  add_model(logistic_spec)
+
+# Fit on training data only
+logistic_fit <- logistic_workflow |>
+  fit(data = dog_train)
+```
+
+```r
+# Generate predictions on the test set
+# type = "prob" returns predicted probabilities for each class
+# type = "class" returns the predicted class label
+logistic_preds <- logistic_fit |>
+  predict(dog_test, type = "prob") |>
+  bind_cols(
+    logistic_fit |> predict(dog_test, type = "class")
+  ) |>
+  bind_cols(dog_test |> select(PHENOTYPE))
+
+logistic_preds
+```
+
+> **Reflection 3**
+>
+> The output contains columns `.pred_affected`, `.pred_unaffected`, `.pred_class`, and `PHENOTYPE`. What does each represent?
+>
+> For any given dog, `.pred_affected` and `.pred_unaffected` will always sum to 1. Why is this?
+>
+> A dog with `.pred_affected = 0.51` is classified as affected. A dog with `.pred_affected = 0.49` is classified as unaffected. These dogs are almost identical in predicted probability. Does a hard threshold of 0.5 feel like an appropriate boundary in a clinical context?
+
+---
+
+## Part 5 — Evaluation Metrics for Classification
+
+### The Confusion Matrix
+
+The confusion matrix summarises prediction outcomes across all four possible combinations of true and predicted class.
+
+```r
+# Confusion matrix
+conf_mat(logistic_preds, truth = PHENOTYPE, estimate = .pred_class)
+```
+
+```r
+# Visualise as a heatmap
+conf_mat(logistic_preds, truth = PHENOTYPE, estimate = .pred_class) |>
+  autoplot(type = "heatmap")
+```
+
+The four cells are:
+
+- **True positives:** affected dogs correctly predicted as affected
+- **True negatives:** unaffected dogs correctly predicted as unaffected
+- **False positives:** unaffected dogs incorrectly predicted as affected
+- **False negatives:** affected dogs incorrectly predicted as unaffected
+
+> **Reflection 4**
+>
+> Which type of error — false positive or false negative — is more costly in this context?
+>
+> A false positive means predicting a healthy dog as affected. A false negative means missing an affected dog. In a breeding programme trying to eliminate cleft lip from a population, which error is more consequential and why?
+
+### Sensitivity, Specificity, and Accuracy
+
+```r
+# Calculate sensitivity, specificity, and accuracy
+classification_metrics <- metric_set(
+  sensitivity, specificity, accuracy
+)
+
+classification_metrics(
+  logistic_preds,
+  truth    = PHENOTYPE,
+  estimate = .pred_class
+)
+```
+
+Sensitivity is the proportion of truly affected dogs correctly identified. Specificity is the proportion of truly unaffected dogs correctly identified. A model can achieve high accuracy while having poor sensitivity if the classes are imbalanced — which is why all three metrics matter.
+
+> **Reflection 5**
+>
+> Is sensitivity or specificity higher for this model?
+>
+> If you wanted to improve sensitivity at the cost of specificity, what would you change? Currently a predicted probability above 0.5 is classified as affected. What would happen if you lowered this threshold to 0.3?
+>
+> A model with high specificity but low sensitivity identifies most healthy dogs correctly but misses many affected ones. In the context of this study, which failure mode is more serious?
+
+### The ROC Curve
+
+The ROC curve plots sensitivity against 1 minus specificity across all possible classification thresholds. A model with no predictive value produces a diagonal line. A perfect model reaches the top-left corner. The area under the ROC curve — AUC — summarises performance across all thresholds in a single number between 0.5 and 1.
+
+```r
+# ROC curve
+logistic_preds |>
+  roc_curve(truth = PHENOTYPE, .pred_affected) |>
+  autoplot()
+```
+
+```r
+# AUC
+logistic_preds |>
+  roc_auc(truth = PHENOTYPE, .pred_affected)
+```
+
+> **Reflection 6**
+>
+> Where does the ROC curve sit relative to the diagonal? Does the model perform substantially better than chance?
+>
+> AUC of 0.5 means the model is no better than random. AUC of 1.0 means perfect discrimination. Where does your model sit and what does this suggest about the predictive value of these SNPs?
+>
+> The ROC curve does not depend on a specific classification threshold. Why is this more informative than reporting a single accuracy value?
+
+---
+
+## Part 6 — Visualising Predicted Probabilities
+
+```r
+# Distribution of predicted probabilities by true outcome class
+# A model with good discrimination separates the two distributions
+logistic_preds |>
+  ggplot(aes(x = .pred_affected, fill = PHENOTYPE)) +
+  geom_histogram(bins = 20, alpha = 0.7, position = "identity") +
+  scale_fill_manual(values = c("affected"   = "firebrick",
+                               "unaffected" = "steelblue")) +
+  labs(
+    x     = "Predicted probability of being affected",
+    y     = "Count",
+    fill  = "True outcome",
+    title = "Predicted probability distributions by true outcome"
+  ) +
+  theme_minimal()
+```
+
+> **Reflection 7**
+>
+> Are the two distributions well separated, or do they overlap substantially?
+>
+> If both distributions cluster around 0.5, what does this tell you about the model's confidence in its predictions?
+>
+> A dog with a predicted probability of 0.48 and a dog with a predicted probability of 0.52 are classified differently despite being almost identical. Does this plot change how you think about the 0.5 classification threshold?
+
+---
+
+## Part 7 — Which SNPs Are Most Influential?
+
+```r
+# Extract logistic regression coefficients
+# In logistic regression, coefficients are on the log-odds scale
+# A positive coefficient increases the predicted odds of being affected
+logistic_coefficients <- logistic_fit |>
+  extract_fit_parsnip() |>
+  tidy()
+
+logistic_coefficients
+```
+
+```r
+# Visualise the top SNPs by absolute coefficient magnitude
+logistic_coefficients |>
+  filter(term != "(Intercept)") |>
+  slice_max(abs(estimate), n = 20) |>
+  ggplot(aes(x = estimate, y = reorder(term, estimate))) +
+  geom_col(fill = "steelblue") +
+  geom_vline(xintercept = 0, linetype = "dashed", colour = "red") +
+  labs(
+    x        = "Log-odds coefficient",
+    y        = "SNP",
+    title    = "Top 20 SNPs by logistic regression coefficient magnitude",
+    subtitle = "Positive coefficients increase predicted odds of being affected"
+  ) +
+  theme_minimal()
+```
+
+> **Reflection 8**
+>
+> Coefficients in logistic regression are on the log-odds scale. A positive coefficient means the SNP increases the predicted odds of being affected; a negative coefficient means it decreases the odds. Do the signs of the top coefficients make biological sense?
+>
+> The SNP names contain chromosome and position information — for example `chr25.11293074_A` is on chromosome 25 at position 11,293,074. Are the most influential SNPs clustered on particular chromosomes?
+>
+> The original paper identified a region on chromosome 27 as most strongly associated with cleft lip. Do your top coefficients reflect this? If not, what might explain the difference given that you are working with a random 0.5% subset of SNPs?
+
+---
+
+## Workshop Summary
+
+### Key Concepts
+
+**Logistic regression** extends linear regression to binary outcomes by predicting class probabilities rather than continuous values. The outcome must be a factor variable, not a numeric one, and the level listed first is treated as the positive class.
+
+**Confusion matrix** summarises the four possible outcomes of a binary classifier: true positives, true negatives, false positives, and false negatives. Reading it correctly requires knowing which class is positive.
+
+**Sensitivity** measures how well the model identifies truly affected individuals. **Specificity** measures how well it identifies truly unaffected individuals. Which matters more depends on the relative costs of each error type in the specific application.
+
+**ROC-AUC** summarises discrimination performance across all possible classification thresholds. It is more informative than accuracy alone, particularly when classes are imbalanced or when the optimal threshold is not fixed at 0.5.
+
+**Predicted probability distributions** reveal whether a model is confidently separating classes or assigning ambiguous probabilities close to 0.5. A clean separation between the two distributions is the visual signature of a well-discriminating model.
+
+### Skills Checklist
+
+- [ ] Load and prepare a non-standard plain text genomic dataset
+- [ ] Recode a PLINK phenotype variable to a binary factor
+- [ ] Construct a stratified train/test split for a binary outcome
+- [ ] Fit a logistic regression model using `tidymodels`
+- [ ] Interpret each cell of a confusion matrix
+- [ ] Calculate and interpret sensitivity, specificity, and accuracy
+- [ ] Produce and interpret a ROC curve and AUC value
+- [ ] Visualise predicted probability distributions by outcome class
+- [ ] Extract and interpret logistic regression coefficients on the log-odds scale
+
+---
+
+## Timing Guide
+
+| Section | Content | Time |
+|---|---|---|
+| Setup | Clone repo, load packages | 5 min |
+| Part 1 | AI-assisted exploration | 20 min |
+| Part 2 | Data preparation | 10 min |
+| Part 3 | Train/test split | 15 min |
+| Part 4 | Logistic regression | 15 min |
+| Part 5 | Evaluation metrics | 20 min |
+| Part 6 | Predicted probabilities | 10 min |
+| Part 7 | Coefficient plot | 10 min |
+| **Total** | | **105 min** |

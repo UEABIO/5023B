@@ -71,6 +71,9 @@ book:
   - part: "AI-assisted programming"
     chapters:
     - AI-programming.qmd
+  - part: "Machine Learning"
+    chapters:
+    - ml-regression.qmd
 
   appendices:
   - r-basics.qmd
