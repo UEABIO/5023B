@@ -1,9 +1,9 @@
 # Machine Learning Regression {#sec-ml-regression}
 
 ```{r, include = FALSE}
+library(tidymodels)
 library(tidyverse)
 library(here)
-library(tidymodels)
 library(glmnet)
 library(janitor)
 library(skimr)
@@ -51,6 +51,9 @@ Clone the GitHub Classroom repository for this workshop using the link on your c
 
 ```
 bat_workshop/
+|
+├── .github/
+│   └── copilot-instructions.md     # partially complete - review 
 ├── data/
 │   └── bat_methylation.csv          # raw — never modify this file
 ├── scripts/
@@ -68,7 +71,7 @@ library(here)
 library(janitor)
 library(skimr)
 library(GGally)
-library(corrr)
+library(corrplot)
 ```
 
 ::: {.callout-note}
@@ -85,7 +88,7 @@ Before building any model it is essential to understand the data you are working
 
 You have two options for how you complete this section. Read both before deciding.
 
-::: {.callout-note}
+::: {.panel-tabset}
 ## Option A — Write the code yourself
 
 Open `scripts/01_explore.R` and write the exploration code yourself using tidyverse. This is the recommended approach. The questions below will guide what you need to produce, and a full solution is available once you have made a genuine attempt.
@@ -93,29 +96,34 @@ Open `scripts/01_explore.R` and write the exploration code yourself using tidyve
 ## Option B — Use GitHub Copilot Chat in agent mode
 
 If you choose to use AI assistance, you must do so correctly or the output will not be trustworthy. Read the guidance below before generating anything.
-:::
+
 
 ### If you are using GitHub Copilot Chat
 
-Navigate to your repository on github.com. Open Copilot Chat and select **agent mode** — not ask mode. Agent mode reads your repository structure and generates code specific to your project. Ask mode does not.
+Navigate to your repository on github.com. Open Copilot Chat and choose between **agent mode** or **ask mode**. Agent mode reads your repository structure and generates code specific to your project. Ask mode does not.
 
 ::: {.callout-important}
 ## Agent Mode vs Ask Mode
 
-Ask mode answers general questions. Agent mode reads your repository — including your file structure, data folder, and any committed scripts — and generates code specific to your project. Always use agent mode for this workshop.
+- **Ask** mode answers  questions. You could have one window open on your codespace and one on Github chat window
+
+- **Agent** mode will implement file changes directly on your code on Github. You will need to determine what to keep and what to discard with **pull requests**. Changes made on Github will then need to be pulled onto your local workspace in order to move forward. 
 :::
 
-**Before you type anything into Copilot, write your instructions here:**
+**Before you type anything into Copilot, check and improve the copilot-instructions.md file**
+
+This file informs all of your requests in **Agent** or **Ask** mode on Github Copilot
 
 ```
-My instructions to Copilot:
+Copilot Instructions
 
-
-
+[COMPLETE: 
 
 ```
 
 Your instructions must be specific enough that the output is verifiable. They should cover the file path and format of the dataset, what the rows and columns represent biologically — Copilot has no biological knowledge unless you provide it — each specific check you want performed, each plot you want produced and where to save it, and the coding conventions to follow: `|>` not `%>%`, `here()` for file paths, snake_case for naming, and a plain English comment at the start of every block explaining what it does and why.
+
+:::
 
 ::: {.callout-warning}
 ## A script that runs is not a script that is correct
@@ -1041,7 +1049,9 @@ ridge_tuned <- ridge_workflow |>
 ```{r}
 # Plot cross-validation RMSE against lambda
 # Each point is the average RMSE across all five folds at that lambda value
-autoplot(ridge_tuned)
+p <- autoplot(ridge_tuned)
+  
+p + scale_x_log10(labels = scales::label_log()) # force better x axis labels
 ```
 
 `r hide("Hint: reading the tuning curve")`
