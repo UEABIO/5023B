@@ -74,6 +74,7 @@ book:
   - part: "Machine Learning"
     chapters:
     - ml-regression.qmd
+    - ml-logistic-regression.qmd
 
   appendices:
   - r-basics.qmd
