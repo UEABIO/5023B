@@ -75,6 +75,7 @@ book:
     chapters:
     - ml-regression.qmd
     - ml-logistic-regression.qmd
+    - workshop_03_random_forests.qmd
 
   appendices:
   - r-basics.qmd

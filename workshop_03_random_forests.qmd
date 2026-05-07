@@ -1,0 +1,871 @@
+# Machine Learning — Random Forests {#sec-ml-randomforests}
+
+```{r, include = FALSE}
+library(tidymodels)
+library(tidyverse)
+library(here)
+library(janitor)
+library(vip)
+library(ranger)
+library(webexercises)
+source("R/booktem_setup.R")
+source("R/my_setup.R")
+```
+
+```{r, include = FALSE}
+dogs_raw <- read_table(here("files", "dogs_imputed_reduced.tsv"))
+dogs_raw <- clean_names(dogs_raw)
+dogs <- dogs_raw
+```
+
+## Introduction
+
+> In the previous two workshops you fitted models that produce a single equation — a set of coefficients connecting predictors to the outcome. You could read those coefficients and understand exactly what the model was doing. In this workshop the model produces no equation you can read. Instead it produces a prediction that emerges from the combined votes of hundreds of decision trees. Understanding what you gain — and what you give up — by making this move is the central question of the session.
+
+Random forests take a fundamentally different approach. Rather than fitting one equation to the data, a random forest builds many decision trees — each trained on a random subset of the data and a random subset of the predictors — and combines their predictions. No single tree is particularly accurate, but the combination of many imperfect trees is often more robust than any single model.
+
+This is the first model in the course that cannot be reduced to an interpretable equation. Part of this workshop's work is making students comfortable with that — and understanding what we gain and what we lose when we move from a coefficient we can read to a prediction we can evaluate but not fully explain.
+
+We return to the cleft lip dataset from Workshop 2. The biological question is identical: can we predict whether a dog is affected by cleft lip from its SNP genotype profile? The model is different. Comparing the two directly — same dataset, same evaluation framework, different model — is the central exercise of this workshop.
+
+### From one tree to a forest
+
+Before fitting a random forest it is worth understanding what a single decision tree does. A decision tree repeatedly splits the data on whichever predictor and threshold best separates the two classes at each step. The result is a set of rules — "if SNP A is 0 and SNP B is 2, predict affected" — that are easy to read but highly sensitive to the specific training data. Change the training set slightly and the tree changes dramatically. This is the high variance problem from the bias-variance discussion in the lecture.
+
+Random forests address this by building many trees, each on a different bootstrapped sample of the training data and using a random subset of predictors at each split. Averaging over many unstable trees produces a stable prediction. This is called **bagging** — bootstrap aggregating — with the additional twist of random feature selection at each split.
+
+### Learning Objectives
+
+By the end of this workshop, you will:
+
+1. Explain conceptually what a decision tree does and why single trees overfit
+2. Explain how random forests reduce variance through bagging and random feature selection
+3. Fit a random forest classifier using `tidymodels` and the `ranger` engine
+4. Tune the `mtry` hyperparameter using cross-validation
+5. Interpret feature importance plots and connect them to biological interpretation
+6. Evaluate a random forest using the same metrics as Workshop 2
+7. Compare random forest and logistic regression performance on the same dataset
+8. Articulate when a random forest is preferable to logistic regression and when it is not
+
+---
+
+## Setup — Getting Started
+
+Clone the GitHub Classroom repository for this workshop using the link on your course page. The dataset and project structure are the same as Workshop 2. Open `scripts/02_model.R` directly — data exploration was completed in the previous session and does not need repeating.
+
+
+`r hide("Quick setup - run this if you did not complete Workshop 2")`
+
+```{r, eval = FALSE}
+# ── Packages ──────────────────────────────────────────────────────────────────
+library(tidymodels)
+library(tidyverse)
+library(ranger)
+library(vip)
+library(here)
+library(janitor)
+
+# ── Data ──────────────────────────────────────────────────────────────────────
+dogs <- read_table(here("data", "cleft_lip_synthetic.txt")) |>
+  clean_names()
+
+dogs_model <- dogs |>
+  select(-fid, -iid, -pat, -mat, -sex) |>
+  mutate(phenotype = factor(
+    if_else(phenotype == 2, "affected", "unaffected"),
+    levels = c("affected", "unaffected")
+  ))
+
+# ── Split ─────────────────────────────────────────────────────────────────────
+set.seed(42)
+dog_split <- initial_split(dogs_model, prop = 0.8, strata = phenotype)
+dog_train <- training(dog_split)
+dog_test  <- testing(dog_split)
+
+# ── Logistic regression ───────────────────────────────────────────────────────
+logistic_recipe <- recipe(phenotype ~ ., data = dog_train) |>
+  step_naomit(all_predictors(), all_outcomes()) |>
+  step_normalize(all_numeric_predictors())
+
+logistic_fit <- workflow() |>
+  add_recipe(logistic_recipe) |>
+  add_model(
+    logistic_reg() |>
+      set_engine("glm") |>
+      set_mode("classification")
+  ) |>
+  fit(data = dog_train)
+
+# ── Logistic predictions ──────────────────────────────────────────────────────
+# This object is needed for the model comparison section at the end
+logistic_preds <- logistic_fit |>
+  predict(dog_test, type = "prob") |>
+  bind_cols(
+    logistic_fit |> predict(dog_test, type = "class")
+  ) |>
+  bind_cols(dog_test |> select(phenotype))
+
+message("Setup complete — dogs_model, dog_train, dog_test, and logistic_preds are ready")
+
+```
+
+`r unhide()`
+
+```{r, eval = FALSE}
+library(tidymodels)
+library(tidyverse)
+library(ranger)
+library(vip)
+library(here)
+library(janitor)
+```
+
+::: {.callout-note}
+## New packages
+
+Two packages are new in this workshop. `ranger` is a fast implementation of random forests and serves as the computational engine behind `rand_forest()` in tidymodels. `vip` — variable importance plots — provides tools for extracting and visualising which predictors the random forest considered most informative. Install both with `install.packages(c("ranger", "vip"))` if needed.
+:::
+
+---
+
+## A Conceptual Starting Point {.unnumbered}
+
+Before fitting any code, it is worth building an intuition for what a decision tree does and why many trees are better than one.
+
+### A single decision tree
+
+A decision tree classifies observations by asking a series of yes/no questions about the predictors. At each node it finds the predictor and threshold that best separates the two classes, splits the data, and repeats on each branch until reaching a stopping criterion.
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, fig.height = 4, fig.cap = "A schematic decision tree for cleft lip classification. Each blue node asks a yes/no question about one SNP genotype. Genotypes are coded 0, 1, or 2 representing the number of copies of the reference allele — so chr27 ≥ 1 means the dog carries at least one reference allele at that position. The tree follows the Yes or No branch at each node until reaching a leaf node (green = predict unaffected, red = predict affected)."}
+library(tidyverse)
+library(patchwork)
+
+# Schematic decision tree diagram
+tree_nodes <- tibble(
+  x     = c(0.5, 0.25, 0.75, 0.125, 0.375, 0.625, 0.875),
+  y     = c(0.9,  0.65, 0.65, 0.4,   0.4,   0.4,   0.4),
+  label = c(
+    "chr27 ≥ 1?",
+    "chr26 ≥ 1?",
+    "chr28 = 0?",
+    "Unaffected",
+    "Affected",
+    "Affected",
+    "Unaffected"
+  ),
+  fill  = c("decision", "decision", "decision",
+            "unaffected", "affected", "affected", "unaffected")
+)
+
+tree_edges <- tibble(
+  x    = c(0.5,  0.5,  0.25, 0.25, 0.75, 0.75),
+  xend = c(0.25, 0.75, 0.125, 0.375, 0.625, 0.875),
+  y    = c(0.9,  0.9,  0.65,  0.65,  0.65,  0.65),
+  yend = c(0.65, 0.65, 0.4,   0.4,   0.4,   0.4),
+  label = c("No", "Yes", "No", "Yes", "Yes", "No")
+)
+
+ggplot() +
+  geom_segment(data = tree_edges,
+               aes(x = x, xend = xend, y = y, yend = yend),
+               colour = "grey50", linewidth = 0.8) +
+  geom_label(data = tree_nodes,
+             aes(x = x, y = y, label = label, fill = fill),
+             colour = "white", fontface = "bold",
+             size = 3, label.size = 0,
+             label.padding = unit(0.4, "lines")) +
+  geom_text(data = tree_edges,
+            aes(x = (x + xend)/2, y = (y + yend)/2,
+                label = label),
+            size = 3, colour = "grey30") +
+  scale_fill_manual(values = c(
+    "decision"    = "#457B9D",
+    "affected"    = "#E63946",
+    "unaffected"  = "#2a9d8f"
+  )) +
+  scale_y_continuous(limits = c(0.25, 1.05)) +
+  labs(
+    title    = "A single decision tree — schematic",
+    subtitle = "Each internal node asks a yes/no question about one SNP predictor"
+  ) +
+  theme_void(base_size = 12) +
+  theme(
+    legend.position = "none",
+    plot.title      = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle   = element_text(hjust = 0.5, colour = "grey40")
+  )
+```
+
+::: {.callout-note}
+## Reading this diagram
+
+Each **blue node** is a decision point asking whether a dog's genotype at a specific SNP meets a threshold. Genotypes are coded as 0, 1, or 2 — the number of copies of the reference allele. So `chr27 ≥ 1` means the dog carries at least one reference allele at that position — it includes both heterozygotes (genotype 1) and homozygous reference dogs (genotype 2), but not homozygous alternate dogs (genotype 0).
+
+Follow the **Yes** or **No** branch at each node until reaching a leaf. **Green leaves** predict unaffected; **red leaves** predict affected.
+
+The thresholds shown — ≥ 1 and = 0 — were chosen by the algorithm because they best separated affected from unaffected dogs in the training data at that split. A decision tree fitted to a different training sample would likely choose different SNPs and different thresholds.
+:::
+
+
+The problem is that this tree is fitted to one specific training set. If a different set of dogs had been in the training data, the tree would look different. A tree that perfectly classifies the training data will often generalise poorly to new dogs — this is overfitting, the same problem we encountered in Workshops 1 and 2.
+
+### From bagging to random forests
+
+Bagging (bootstrap aggregating) addresses the overfitting problem by fitting many trees, each on a different bootstrapped sample of the training data, and averaging their predictions. The diagram below illustrates the process.
+
+> A bootstrapped sample is created by sampling from your training data with replacement — meaning the same dog can be selected more than once in a single sample, while other dogs may not appear at all. Imagine writing each dog's ID on a piece of paper, putting all the papers in a bag, drawing one out and noting it, then putting it back before drawing the next. After drawing 224 times you have a sample of 224 dogs — but some dogs appear two or three times and others do not appear at all. On average, about one third of the original dogs are left out of each sample. Those left-out dogs are the out-of-bag observations.
+
+```{r, echo = FALSE, warning = FALSE, message = FALSE, fig.height = 3.5}
+tibble(
+  x     = c(0.1, 0.3, 0.5, 0.7, 0.9, 0.5),
+  y     = c(0.6, 0.6, 0.6, 0.6, 0.6, 0.1),
+  label = c("Tree 1", "Tree 2", "Tree 3", "Tree 4", "Tree 5",
+            "Majority vote\n→ final prediction"),
+  fill  = c(rep("tree", 5), "vote")
+) |>
+  ggplot() +
+  geom_rect(data = tibble(
+    xmin = c(0.03, 0.23, 0.43, 0.63, 0.83, 0.35),
+    xmax = c(0.17, 0.37, 0.57, 0.77, 0.97, 0.65),
+    ymin = c(0.5,  0.5,  0.5,  0.5,  0.5, 0.0),
+    ymax = c(0.75, 0.75, 0.75, 0.75, 0.75, 0.25),
+    fill = c(rep("tree", 5), "vote")
+  ), aes(xmin=xmin,xmax=xmax,ymin=ymin,ymax=ymax, fill=fill),
+  alpha=0.85, colour="white") +
+  geom_text(aes(x=x, y=y, label=label),
+            colour="white", fontface="bold", size=3.2,
+            lineheight=1.1) +
+  annotate("segment",
+           x=c(0.1,0.3,0.5,0.7,0.9),
+           xend=c(0.45,0.47,0.5,0.53,0.55),
+           y=0.5, yend=0.25,
+           colour="grey50", linewidth=0.6,
+           arrow=arrow(length=unit(0.15,"cm"), type="open")) +
+  annotate("text", x=0.5, y=0.83,
+           label="Training data → 5 bootstrapped samples → 5 trees",
+           colour="grey30", size=3.5, hjust=0.5) +
+  scale_fill_manual(values=c("tree"="#457B9D","vote"="#E63946")) +
+  scale_y_continuous(limits=c(-0.05, 0.95)) +
+  theme_void() +
+  theme(legend.position="none")
+```
+
+A random forest adds one further twist: at each split within each tree, only a random subset of predictors is considered. This decorrelates the trees — they are not all making the same splits — which makes the ensemble more robust.
+
+```{r, echo = FALSE}
+opts_rf_concept <- c(
+  "It fits one very deep decision tree to all the training data",
+  answer = "It fits many trees, each on a bootstrapped sample using a random subset of predictors, then combines their predictions",
+  "It randomly selects which observations to predict",
+  "It is a special case of logistic regression with random coefficients"
+)
+```
+
+**What does a random forest do?** `r longmcq(opts_rf_concept)`
+
+```{r, echo = FALSE}
+opts_why_rf <- c(
+  "A single deep tree always overfits — random forests prevent this by using shallow trees only",
+  answer = "Single trees are unstable — small changes in training data produce very different trees. Averaging many trees reduces this variance.",
+  "Random forests use fewer predictors so they are less likely to overfit",
+  "Random forests are simply faster to fit than single trees"
+)
+```
+
+**Why do random forests produce more stable predictions than a single decision tree?** `r longmcq(opts_why_rf)`
+
+> Without random feature selection, every tree in a bagged ensemble tends to make the same first split — on whichever SNP is most strongly associated with cleft lip. Trees that start with the same split tend to look similar throughout, even when fitted on different bootstrapped samples. Averaging similar trees does not reduce error much — the same mistakes appear in nearly all of them. By restricting each split to a random subset of predictors, random forests force trees to find different paths through the data. Some trees will miss the most important SNP at a particular split and find a different one instead. The errors are now different across trees, and averaging different errors cancels out far more effectively.
+
+
+
+```{r,  echo = FALSE, warning = FALSE, message = FALSE, fig.height = 3.5}
+
+set.seed(42)
+n_trees <- c(1, 5, 20, 100, 500)
+true_prob <- 0.65
+
+results <- map_dfr(n_trees, function(n) {
+  preds <- rbinom(1000, n, true_prob) / n
+  tibble(
+    n_trees   = n,
+    mean_pred = mean(preds),
+    sd_pred   = sd(preds)
+  )
+})
+
+tibble(
+  n_trees  = rep(c(1, 5, 20, 100, 500), each = 200),
+  pred     = map(c(1, 5, 20, 100, 500), ~rbinom(200, .x, true_prob) / .x) |>
+    unlist()
+) |>
+  mutate(n_trees = factor(n_trees,
+                          labels = paste(c(1, 5, 20, 100, 500), "trees"))) |>
+  ggplot(aes(x = pred, fill = n_trees)) +
+  geom_histogram(bins = 25, show.legend = FALSE) +
+  geom_vline(xintercept = true_prob,
+             linetype = "dashed", colour = "#E63946") +
+  facet_wrap(~n_trees, nrow = 1, scales = "free_y") +
+  labs(
+    x        = "Average predicted probability",
+    y        = "Count",
+    title    = "More trees → more stable predictions",
+    subtitle = "Each panel shows 200 repeated experiments. Red line = true probability."
+  ) +
+  scale_fill_manual(values = rep("#457B9D", 5)) +
+  theme_minimal(base_size = 10) +
+  theme(strip.text = element_text(face = "bold"))
+
+
+```
+---
+
+## Preparing the Data {.unnumbered}
+
+Load the synthetic dataset and prepare it for modelling. The preparation steps are identical to Workshop 2 — the same dataset, the same recoding, the same split.
+
+```{r, eval = FALSE}
+library(tidyverse)
+library(tidymodels)
+library(ranger)
+library(vip)
+library(here)
+library(janitor)
+
+# Load the synthetic dataset
+dogs <- read_table(here("data", "dogs_imputed_reduced.tsv")) |>
+  clean_names()
+```
+
+```{r}
+# Remove pedigree columns and recode phenotype
+dogs_model <- dogs |>
+  select(-fid, -iid, -pat, -mat, -sex) |>
+  mutate(phenotype = factor(
+    if_else(phenotype == 2, "affected", "unaffected"),
+    levels = c("affected", "unaffected")
+  ))
+
+dogs_model |> count(phenotype)
+```
+
+```{r}
+dogs_model <- dogs |>
+  select(-fid, -iid, -pat, -mat, -sex) |>
+  mutate(phenotype = factor(
+    if_else(phenotype == 2, "affected", "unaffected"),
+    levels = c("affected", "unaffected")
+  ))
+```
+
+
+```{r, include = FALSE}
+# 80/20 stratified split — identical to Workshop 2
+set.seed(42)
+dog_split <- initial_split(dogs_model, prop = 0.8, strata = phenotype)
+dog_train <- training(dog_split)
+dog_test  <- testing(dog_split)
+
+dog_train |> count(phenotype)
+dog_test  |> count(phenotype)
+
+
+
+```
+
+```{r, eval = FALSE}
+# 80/20 stratified split — identical to Workshop 2
+set.seed(42)
+dog_split <- initial_split(dogs_model, prop = 0.8, strata = phenotype)
+dog_train <- training(dog_split)
+dog_test  <- testing(dog_split)
+
+dog_train |> count(phenotype)
+dog_test  |> count(phenotype)
+
+
+
+```
+
+::: {.callout-note}
+## Why the same split?
+
+Using `set.seed(42)` and the same `prop = 0.8` with `strata = phenotype` produces the same training and test sets as Workshop 2. This matters for the model comparison at the end — both models should be evaluated on identical test data, otherwise differences in performance might reflect the split rather than the models.
+:::
+
+---
+
+## Fitting a Random Forest {.unnumbered}
+
+The tidymodels interface for random forests follows exactly the same recipe-spec-workflow-fit structure as the previous workshops. The key new element is `rand_forest()`, which replaces `logistic_reg()`.
+
+### Hyperparameters
+
+Random forests have three main hyperparameters:
+
+**`mtry`** — the number of predictors randomly sampled at each split. Lower values mean more randomness between trees and more decorrelation. Higher values mean each tree uses more information but trees become more similar. The default is $\sqrt{p}$ for classification, where $p$ is the number of predictors.
+
+**`trees`** — the number of trees in the forest. More trees produce more stable predictions but take longer to fit. Performance typically plateaus well before 1000 trees.
+
+**`min_n`** — the minimum number of observations required to split a node. Larger values produce shallower trees.
+
+:::{.callout-note collapse="true"}
+## min_n
+
+ the minimum number of observations required to split a node. Larger values produce shallower trees. We fix this at 5, which is a reasonable default for a dataset of this size; in practice min_n has considerably less influence on predictive performance than mtry, and tuning both simultaneously rarely justifies the additional computation.
+
+:::
+
+We tune `mtry` using cross-validation and fix the others at sensible defaults.
+
+```{r}
+# Recipe — random forests do not require normalisation
+# They are scale-invariant: only the rank order of values matters for splits
+# We include step_naomit() as a precaution for any missing genotype values
+rf_recipe <- recipe(phenotype ~ ., data = dog_train) |>
+  step_naomit(all_predictors(), all_outcomes())
+
+# Random forest specification
+# mtry = tune() searches for the best value by cross-validation
+# trees = 500 is a sensible default — enough for stability
+# set_engine("ranger") uses the fast ranger implementation
+# importance = "permutation" enables variable importance extraction later
+rf_spec <- rand_forest(
+  mtry  = tune(),
+  trees = 500,
+  min_n = 5
+) |>
+  set_engine("ranger", importance = "permutation") |>
+  set_mode("classification")
+
+# Workflow
+rf_workflow <- workflow() |>
+  add_recipe(rf_recipe) |>
+  add_model(rf_spec)
+```
+
+
+
+### Tuning mtry
+
+```{r}
+# 5-fold cross-validation for tuning
+set.seed(42)
+dog_folds <- vfold_cv(dog_train, v = 5, strata = phenotype)
+
+# Search grid for mtry
+# We search across a range from a few predictors to most predictors
+rf_grid <- grid_regular(
+  mtry(range = c(2, 40)),
+  levels = 15
+)
+
+# Tune across the grid
+rf_tuned <- rf_workflow |>
+  tune_grid(
+    resamples = dog_folds,
+    grid      = rf_grid,
+    metrics   = metric_set(roc_auc)
+  )
+```
+
+```{r}
+# Plot cross-validation AUC against mtry
+autoplot(rf_tuned)
+```
+
+`r hide("Hint: reading the mtry tuning curve")`
+
+The x-axis shows the number of predictors randomly sampled at each split. At very low mtry, each tree uses very little information — trees are highly variable but decorrelated from each other. At high mtry, trees are more accurate individually but more similar to each other.
+
+The optimal mtry balances these two effects. A clear peak in the curve indicates a well-defined optimum. A flat curve means the model is relatively insensitive to this choice.
+
+`r unhide()`
+
+::: {.callout-note}
+## Reflection — Reading the tuning curve
+
+- Does the AUC curve show a clear peak, or is it relatively flat across mtry values?
+- How does the shape of this tuning curve compare to the lambda tuning curve from Workshop 1? What does the difference tell you about how sensitive random forests are to this hyperparameter?
+- At very low mtry values, each tree uses only a few predictors. What effect would this have on the predictions of individual trees, and why does averaging over many such trees still produce a reasonable result?
+:::
+
+```{r}
+# Select the best mtry value
+best_mtry <- rf_tuned |>
+  select_best(metric = "roc_auc")
+
+best_mtry
+```
+
+---
+
+## Fitting the Final Model {.unnumbered}
+
+```{r}
+# Finalise and fit on the full training set
+rf_final <- rf_workflow |>
+  finalize_workflow(best_mtry) |>
+  fit(data = dog_train)
+```
+
+
+```{r, include = FALSE}
+# Generate predictions on the held-out test set
+rf_preds <- rf_final |>
+  predict(dog_test, type = "prob") |>
+  bind_cols(
+    rf_final |> predict(dog_test, type = "class")
+  ) |>
+  bind_cols(dog_test |> select(phenotype))
+
+```
+
+
+
+
+
+```{r, eval = FALSE}
+# Generate predictions on the held-out test set
+rf_preds <- rf_final |>
+  predict(dog_test, type = "prob") |>
+  bind_cols(
+    rf_final |> predict(dog_test, type = "class")
+  ) |>
+  bind_cols(dog_test |> select(phenotype))
+
+rf_preds
+```
+
+```{r, echo = FALSE}
+opts_oob <- c(
+  "The test set — observations held out before fitting",
+  answer = "Observations not selected in a bootstrapped sample — each tree evaluates itself on the data it did not see during fitting",
+  "A separate validation dataset used during hyperparameter tuning",
+  "The full training set after all trees have been fitted"
+)
+```
+
+**What are out-of-bag (OOB) observations in a random forest?** `r longmcq(opts_oob)`
+
+---
+
+## Evaluation {.unnumbered}
+
+The evaluation framework is identical to Workshop 2. This is deliberate — the same metrics applied to both models makes the comparison meaningful.
+
+### Confusion Matrix
+
+```{r, eval = FALSE}
+# Confusion matrix
+conf_mat(rf_preds, truth = phenotype, estimate = .pred_class)
+```
+
+```{r}
+# Heatmap
+conf_mat(rf_preds, truth = phenotype, estimate = .pred_class) |>
+  autoplot(type = "heatmap")
+```
+
+### Sensitivity, Specificity, and Accuracy
+
+```{r}
+classification_metrics <- metric_set(
+  sensitivity, specificity, accuracy
+)
+
+classification_metrics(
+  rf_preds,
+  truth    = phenotype,
+  estimate = .pred_class
+)
+```
+
+### ROC Curve and AUC
+
+```{r}
+# ROC curve
+rf_preds |>
+  roc_curve(truth = phenotype, .pred_affected) |>
+  autoplot() +
+  labs(
+    title    = "ROC curve — random forest",
+    subtitle = "AUC closer to 1.0 indicates better discrimination"
+  )
+```
+
+::: {.callout-note}
+## The Youden Index
+
+The Youden index (also called the J-index) is defined as sensitivity + specificity − 1. It ranges from 0 (no better than chance) to 1 (perfect discrimination). The threshold that maximises the J-index is the point on the ROC curve geometrically closest to the top-left corner — where sensitivity and specificity are jointly highest. It is a common, if not universal, method for selecting a decision threshold; in some applications you may deliberately weight sensitivity or specificity differently depending on the cost of false negatives versus false positives.
+
+:::
+
+```{r}
+# Get all the threshold values
+roc_points <- rf_preds |>
+  roc_curve(truth = phenotype, .pred_affected)
+
+# Find the point closest to the top-left corner
+# Youden index — maximises sensitivity + specificity jointly
+roc_points |>
+  mutate(j_index = sensitivity + specificity - 1) |>
+  slice_max(j_index, n = 1)
+```
+
+### Tweaking Model sensitivity
+
+```{r}
+
+chosen_threshold <- 0.33   # replace with your actual value
+
+rf_preds <- rf_preds |>
+  mutate(
+    .pred_class_custom = factor(
+      if_else(.pred_affected > chosen_threshold,
+              "affected", "unaffected"),
+      levels = c("affected", "unaffected")
+    )
+  )
+
+conf_mat(rf_preds,
+         truth    = phenotype,
+         estimate = .pred_class_custom)
+
+```
+
+
+### Predicted Probability Distributions
+
+```{r}
+# Predicted probability distributions by true class
+rf_preds |>
+  ggplot(aes(x = .pred_affected, fill = phenotype)) +
+  geom_histogram(bins = 20, alpha = 0.7, position = "identity") +
+  scale_fill_manual(values = c("affected"   = "#E63946",
+                               "unaffected" = "#457B9D")) +
+  geom_vline(xintercept = chosen_threshold,
+             linetype = "dashed", colour = "grey30") +
+  labs(
+    x        = "Predicted probability of being affected",
+    y        = "Count",
+    fill     = "True outcome",
+    title    = "Random forest — predicted probability distributions",
+    subtitle = "Dashed line = 0.5 classification threshold"
+  ) +
+  theme_minimal()
+```
+
+
+
+::: {.callout-note}
+## What we cannot extract from a random forest
+
+Logistic regression gave us a coefficient for every SNP — a number with a sign and a magnitude that told us the direction and strength of each SNP's association with cleft lip. A random forest gives us no such thing. We cannot extract a single equation from 500 trees. We cannot say "each additional copy of the reference allele at chr27 changes the log-odds of cleft lip by -0.57."
+
+What we can do is ask which predictors the forest relied on most heavily — feature importance — and what the forest predicts for any specific combination of genotypes. These are useful but different. A breeder asking "why was this dog flagged?" can be shown which SNPs contributed most to its predicted probability, but not given the kind of clean coefficient interpretation that logistic regression allows. Whether this matters depends on the application.
+
+:::
+
+---
+
+## Feature Importance {.unnumbered}
+
+One of the most useful outputs of a random forest is feature importance — a measure of how much each predictor contributed to accurate predictions across all trees. Unlike logistic regression coefficients, importance scores do not have a sign: they tell you which predictors matter, not in which direction.
+
+**Permutation importance** works by randomly shuffling the values of each predictor in turn and measuring how much prediction accuracy drops. A large drop means the predictor was important — the model was relying on it. A small drop means the predictor can be scrambled without much consequence.
+
+```{r}
+# Extract and plot variable importance
+# vip() from the vip package works directly on tidymodels workflow fits
+rf_final |>
+  extract_fit_parsnip() |>
+  vip(num_features = 20,
+      aesthetics = list(fill = "steelblue")) +
+  labs(
+    title    = "Random forest — top 20 SNPs by permutation importance",
+    subtitle = "Importance measures prediction accuracy drop when each SNP is permuted"
+  ) +
+  theme_minimal()
+```
+
+```{r, echo = FALSE}
+opts_importance <- c(
+  "The coefficient of each predictor — larger means more positive effect",
+  answer = "How much prediction accuracy drops when that predictor's values are randomly shuffled — larger means more important",
+  "The p-value for each predictor's association with the outcome",
+  "The correlation between each predictor and the outcome variable"
+)
+
+opts_no_sign <- c(
+  "Random forests cannot determine whether a predictor has a positive or negative effect",
+  answer = "Importance measures how much a predictor matters regardless of direction — a SNP that strongly predicts either class scores high",
+  "The sign was removed to make the plot easier to read",
+  "Permutation importance is always positive because it measures a reduction in accuracy"
+)
+```
+
+**What does a high permutation importance value mean for a SNP?** `r longmcq(opts_importance)`
+
+**Why do feature importance scores not have a sign, unlike logistic regression coefficients?** `r longmcq(opts_no_sign)`
+
+::: {.callout-note}
+## Reflection — Feature importance
+
+- Are the top SNPs by importance clustered on particular chromosomes? Compare this with the top SNPs from the logistic regression coefficient plot in Workshop 2. Do the two models agree on which SNPs matter most?
+
+- A SNP with high importance in the random forest but a small coefficient in logistic regression might be important in a non-linear way — for instance, heterozygotes (genotype 1) might be most affected while homozygotes (genotype 0 or 2) are similar to controls. Can you identify any candidates from the importance plot?
+
+:::
+
+---
+
+## Comparing Models {.unnumbered}
+
+With both models evaluated on the same test set, a direct comparison is now meaningful. This is the central question of the workshop: does the added complexity of the random forest justify itself?
+
+```{r, eval = FALSE}
+
+# Check logistic_preds exists before comparing
+# If it does not, run the quick setup code above
+if (!exists("logistic_preds")) {
+  stop("logistic_preds not found — run the quick setup code at the top of this script")
+}
+
+# Numeric comparison of AUC
+bind_rows(
+  rf_preds |>
+    roc_auc(truth = phenotype, .pred_affected) |>
+    mutate(model = "Random forest"),
+  logistic_preds |>
+    roc_auc(truth = phenotype, .pred_affected) |>
+    mutate(model = "Logistic regression")
+) |>
+  select(model, .estimate) |>
+  arrange(desc(.estimate))
+
+# Numeric comparison of AUC
+bind_rows(
+  rf_preds |>
+    roc_auc(truth = phenotype, .pred_affected) |>
+    mutate(model = "Random forest"),
+  logistic_preds |>
+    roc_auc(truth = phenotype, .pred_affected) |>
+    mutate(model = "Logistic regression")
+) |>
+  select(model, .estimate) |>
+  arrange(desc(.estimate))
+```
+
+```{r, eval = FALSE}
+# ROC curves for both models on the same axes
+bind_rows(
+  rf_preds |>
+    roc_curve(truth = phenotype, .pred_affected) |>
+    mutate(model = "Random forest"),
+  logistic_preds |>
+    roc_curve(truth = phenotype, .pred_affected) |>
+    mutate(model = "Logistic regression")
+) |>
+  ggplot(aes(x = 1 - specificity,
+             y = sensitivity,
+             colour = model)) +
+  geom_line(linewidth = 1) +
+  geom_abline(linetype = "dashed", colour = "grey50") +
+  scale_colour_manual(values = c(
+    "Random forest"       = "#E63946",
+    "Logistic regression" = "#457B9D"
+  )) +
+  labs(
+    x        = "1 - Specificity",
+    y        = "Sensitivity",
+    colour   = NULL,
+    title    = "ROC curves: random forest vs. logistic regression",
+    subtitle = "Both evaluated on the same held-out test set"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+```{r, echo = FALSE}
+opts_complexity <- c(
+  "The random forest always outperforms logistic regression so should always be used",
+  answer = "Complexity requires justification — if random forest offers little improvement, logistic regression is preferable because its coefficients are interpretable",
+  "Logistic regression should always be used because it is simpler",
+  "The model with higher accuracy should always be chosen regardless of interpretability"
+)
+
+opts_rf_advantage <- c(
+  "When the dataset is very small",
+  answer = "When the relationship between predictors and outcome is non-linear or when predictors interact in complex ways that a single equation cannot capture",
+  "When you need to interpret individual coefficients",
+  "When classes are perfectly balanced"
+)
+```
+
+**If the random forest and logistic regression produce similar AUC, which should you prefer and why?** `r longmcq(opts_complexity)`
+
+**When does a random forest have a genuine advantage over logistic regression?** `r longmcq(opts_rf_advantage)`
+
+::: {.callout-important}
+## Final Reflection — Which model would you use?
+
+Write your answers individually before any discussion.
+
+- Which model has higher AUC on the test set? Is the difference large enough to matter biologically for a breeding programme?
+- Does either model show systematic bias in the confusion matrix — for instance, consistently missing affected dogs?
+- Random forests cannot produce a coefficient table like logistic regression. For the cleft lip breeding application — where you might want to explain to a breeder why a dog was flagged — does this matter?
+- You have now applied three machine learning models to biological data: linear regression, logistic regression, and random forests. Write two to three sentences describing a biological scenario where each model would be the most appropriate choice and why.
+
+Random forests have been applied to predict antibiotic resistance from bacterial genomes, species presence from environmental variables, and cancer diagnosis from gene expression profiles. In each case the model performed well but produced no biological insight. A logistic regression on the same data might perform less well but would identify which genes, which environmental variables, or which expression patterns were most predictive — information a biologist could act on. 
+:::
+
+---
+
+
+## Summary {.unnumbered}
+
+### Key Concepts
+
+**Decision trees** classify by repeatedly splitting data on whichever predictor and threshold best separates the classes. Single trees overfit — they are sensitive to the specific training data.
+
+**Bagging** reduces overfitting by fitting many trees to bootstrapped samples and averaging predictions. Random forests extend this by also randomly sampling predictors at each split, which decorrelates the trees and improves the ensemble.
+
+**mtry** is the key tuning parameter — the number of predictors randomly considered at each split. It is chosen by cross-validation on the training data, not by evaluating on the test set.
+
+**Feature importance** measures how much each predictor contributes to prediction accuracy. Unlike logistic regression coefficients, importance scores have no sign — they tell you which predictors matter, not in which direction.
+
+**Model comparison** is only meaningful when both models are evaluated on the same held-out test set. A model that is more complex but not more accurate does not justify its additional complexity — especially when interpretability is lost in the process.
+
+### Skills Checklist
+
+By the end of this workshop you should be able to:
+
+- [ ] Explain what a decision tree does and why single trees overfit
+- [ ] Explain how random forests reduce variance through bagging and random feature selection
+- [ ] Fit a random forest using `tidymodels` with the `ranger` engine
+- [ ] Tune `mtry` using cross-validation and interpret the tuning curve
+- [ ] Evaluate a random forest using confusion matrix, sensitivity, specificity, and ROC-AUC
+- [ ] Produce and interpret a feature importance plot
+- [ ] Compare random forest and logistic regression performance on the same test set
+- [ ] Articulate when a random forest is preferable to logistic regression and when it is not
+
+---
+
+## Additional Resources {.unnumbered}
+
+**Tidymodels:**
+
+- Random forests in tidymodels: [https://www.tidymodels.org/](https://www.tidymodels.org/)
+- The ranger package: [https://cran.r-project.org/package=ranger](https://cran.r-project.org/package=ranger)
+
+**Concepts:**
+
+
+- Greener et al. (2022) *Nature Reviews Molecular Cell Biology*: [https://doi.org/10.1038/s41580-021-00407-0](https://doi.org/10.1038/s41580-021-00407-0)
+
+
+::: {.callout-note}
+## A note on complexity
+
+Random forests are more powerful than logistic regression in many settings. They are also less interpretable, harder to explain to non-technical audiences, and require more computational resources. In biology, where mechanistic understanding often matters as much as predictive accuracy, the trade-off between power and interpretability is not always resolved in favour of the more complex model. The right choice depends on the question, the audience, and the consequences of being wrong.
+:::

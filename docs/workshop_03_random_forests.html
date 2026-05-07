@@ -1,0 +1,2135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.27">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="Statistical skills for Biologists">
+<title>21&nbsp; Machine Learning — Random Forests – 5023B</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./r-basics.html" rel="next">
+<link href="./ml-logistic-regression.html" rel="prev">
+<link href="./images/logos/logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b754b9fd3853d7e56faef54c29c5d52b.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-de8274a4d1ecc1e6aaeaf6e5564b5074.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-b754b9fd3853d7e56faef54c29c5d52b.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-e0a43ceb7c9e63dd117097429fd00833.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-d7d11905500e7839d0ae783f44cd34c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-e0a43ceb7c9e63dd117097429fd00833.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script><script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script><script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+<link rel="stylesheet" href="include/booktem.css">
+<link rel="stylesheet" href="include/webex.css">
+<link rel="stylesheet" href="include/glossary.css">
+<link rel="stylesheet" href="include/style.css">
+</head>
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+      window.dispatchEvent(new Event('resize'));
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ml-regression.html">Machine Learning</a></li><li class="breadcrumb-item"><a href="./workshop_03_random_forests.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning — Random Forests</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">5023B</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false">
+ <span class="menu-text">Reproducible Research</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Git Basics and First Data Contact</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week-1.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Week 1</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false">
+ <span class="menu-text">Data Cleaning</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./strings.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Strings</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./duplicates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Duplicates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./missing-values.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Missing data</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./dates.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Dates</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./numeric-plausibility.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Check Data Consistency</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week-2.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Week 2</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false">
+ <span class="menu-text">Data Insights</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summarise.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Data insights</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false">
+ <span class="menu-text">GLM</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./poisson.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">Poisson regression (for count data or rate data)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week-3.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">Week 3</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./binomial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">Logistic regression (for binary data)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./week-4.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Week 4</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false">
+ <span class="menu-text">Mixed Models</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./mixed-model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Mixed models (for clustered data)</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./intro-mixed-model.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">Foundations of Mixed Modelling</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false">
+ <span class="menu-text">Causal Inference</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./causal-models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Causal Inference with DAGs</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false">
+ <span class="menu-text">Power analysis</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./power_analysis_chapter.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">Simulation-Based Power Analysis</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false">
+ <span class="menu-text">AI-assisted programming</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-8" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-8" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./AI-programming.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">AI-Assisted R Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true">
+ <span class="menu-text">Machine Learning</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-9" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-9" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ml-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">Machine Learning Regression</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ml-logistic-regression.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning Classification</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./workshop_03_random_forests.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning — Random Forests</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start collapsed" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-10" role="navigation" aria-expanded="false" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-10" class="collapse list-unstyled sidebar-section depth1 ">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./import.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">Basic Import/Export</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./script.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">C</span>&nbsp; <span class="chapter-title">Scripts</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./Naming conventions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">D</span>&nbsp; <span class="chapter-title">Naming files</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./data_reshaping.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">E</span>&nbsp; <span class="chapter-title">Data reshaping</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./quarto.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">F</span>&nbsp; <span class="chapter-title">Quarto</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">G</span>&nbsp; <span class="chapter-title">ggplot</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./advanced_ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">H</span>&nbsp; <span class="chapter-title">ggplot extras</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./summary-table.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">I</span>&nbsp; <span class="chapter-title">Summary tables</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li>
+<a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">21.1</span> Introduction</a>
+  <ul class="collapse">
+<li><a href="#from-one-tree-to-a-forest" id="toc-from-one-tree-to-a-forest" class="nav-link" data-scroll-target="#from-one-tree-to-a-forest"><span class="header-section-number">21.1.1</span> From one tree to a forest</a></li>
+  <li><a href="#learning-objectives" id="toc-learning-objectives" class="nav-link" data-scroll-target="#learning-objectives"><span class="header-section-number">21.1.2</span> Learning Objectives</a></li>
+  </ul>
+</li>
+  <li><a href="#setup-getting-started" id="toc-setup-getting-started" class="nav-link" data-scroll-target="#setup-getting-started"><span class="header-section-number">21.2</span> Setup — Getting Started</a></li>
+  <li>
+<a href="#a-conceptual-starting-point" id="toc-a-conceptual-starting-point" class="nav-link" data-scroll-target="#a-conceptual-starting-point">A Conceptual Starting Point</a>
+  <ul class="collapse">
+<li><a href="#a-single-decision-tree" id="toc-a-single-decision-tree" class="nav-link" data-scroll-target="#a-single-decision-tree"><span class="header-section-number">21.2.1</span> A single decision tree</a></li>
+  <li><a href="#from-bagging-to-random-forests" id="toc-from-bagging-to-random-forests" class="nav-link" data-scroll-target="#from-bagging-to-random-forests"><span class="header-section-number">21.2.2</span> From bagging to random forests</a></li>
+  </ul>
+</li>
+  <li><a href="#preparing-the-data" id="toc-preparing-the-data" class="nav-link" data-scroll-target="#preparing-the-data">Preparing the Data</a></li>
+  <li>
+<a href="#fitting-a-random-forest" id="toc-fitting-a-random-forest" class="nav-link" data-scroll-target="#fitting-a-random-forest">Fitting a Random Forest</a>
+  <ul class="collapse">
+<li><a href="#hyperparameters" id="toc-hyperparameters" class="nav-link" data-scroll-target="#hyperparameters"><span class="header-section-number">21.2.3</span> Hyperparameters</a></li>
+  <li><a href="#tuning-mtry" id="toc-tuning-mtry" class="nav-link" data-scroll-target="#tuning-mtry"><span class="header-section-number">21.2.4</span> Tuning mtry</a></li>
+  </ul>
+</li>
+  <li><a href="#fitting-the-final-model" id="toc-fitting-the-final-model" class="nav-link" data-scroll-target="#fitting-the-final-model">Fitting the Final Model</a></li>
+  <li>
+<a href="#evaluation" id="toc-evaluation" class="nav-link" data-scroll-target="#evaluation">Evaluation</a>
+  <ul class="collapse">
+<li><a href="#confusion-matrix" id="toc-confusion-matrix" class="nav-link" data-scroll-target="#confusion-matrix"><span class="header-section-number">21.2.5</span> Confusion Matrix</a></li>
+  <li><a href="#sensitivity-specificity-and-accuracy" id="toc-sensitivity-specificity-and-accuracy" class="nav-link" data-scroll-target="#sensitivity-specificity-and-accuracy"><span class="header-section-number">21.2.6</span> Sensitivity, Specificity, and Accuracy</a></li>
+  <li><a href="#roc-curve-and-auc" id="toc-roc-curve-and-auc" class="nav-link" data-scroll-target="#roc-curve-and-auc"><span class="header-section-number">21.2.7</span> ROC Curve and AUC</a></li>
+  <li><a href="#tweaking-model-sensitivity" id="toc-tweaking-model-sensitivity" class="nav-link" data-scroll-target="#tweaking-model-sensitivity"><span class="header-section-number">21.2.8</span> Tweaking Model sensitivity</a></li>
+  <li><a href="#predicted-probability-distributions" id="toc-predicted-probability-distributions" class="nav-link" data-scroll-target="#predicted-probability-distributions"><span class="header-section-number">21.2.9</span> Predicted Probability Distributions</a></li>
+  </ul>
+</li>
+  <li><a href="#feature-importance" id="toc-feature-importance" class="nav-link" data-scroll-target="#feature-importance">Feature Importance</a></li>
+  <li><a href="#comparing-models" id="toc-comparing-models" class="nav-link" data-scroll-target="#comparing-models">Comparing Models</a></li>
+  <li>
+<a href="#summary" id="toc-summary" class="nav-link" data-scroll-target="#summary">Summary</a>
+  <ul class="collapse">
+<li><a href="#key-concepts" id="toc-key-concepts" class="nav-link" data-scroll-target="#key-concepts"><span class="header-section-number">21.2.10</span> Key Concepts</a></li>
+  <li><a href="#skills-checklist" id="toc-skills-checklist" class="nav-link" data-scroll-target="#skills-checklist"><span class="header-section-number">21.2.11</span> Skills Checklist</a></li>
+  </ul>
+</li>
+  <li><a href="#additional-resources" id="toc-additional-resources" class="nav-link" data-scroll-target="#additional-resources">Additional Resources</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./ml-regression.html">Machine Learning</a></li><li class="breadcrumb-item"><a href="./workshop_03_random_forests.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning — Random Forests</span></a></li></ol></nav><div class="quarto-title">
+<h1 class="title"><span id="sec-ml-randomforests" class="quarto-section-identifier"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">Machine Learning — Random Forests</span></span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><section id="introduction" class="level2" data-number="21.1"><h2 data-number="21.1" class="anchored" data-anchor-id="introduction">
+<span class="header-section-number">21.1</span> Introduction</h2>
+<blockquote class="blockquote">
+<p>In the previous two workshops you fitted models that produce a single equation — a set of coefficients connecting predictors to the outcome. You could read those coefficients and understand exactly what the model was doing. In this workshop the model produces no equation you can read. Instead it produces a prediction that emerges from the combined votes of hundreds of decision trees. Understanding what you gain — and what you give up — by making this move is the central question of the session.</p>
+</blockquote>
+<p>Random forests take a fundamentally different approach. Rather than fitting one equation to the data, a random forest builds many decision trees — each trained on a random subset of the data and a random subset of the predictors — and combines their predictions. No single tree is particularly accurate, but the combination of many imperfect trees is often more robust than any single model.</p>
+<p>This is the first model in the course that cannot be reduced to an interpretable equation. Part of this workshop’s work is making students comfortable with that — and understanding what we gain and what we lose when we move from a coefficient we can read to a prediction we can evaluate but not fully explain.</p>
+<p>We return to the cleft lip dataset from Workshop 2. The biological question is identical: can we predict whether a dog is affected by cleft lip from its SNP genotype profile? The model is different. Comparing the two directly — same dataset, same evaluation framework, different model — is the central exercise of this workshop.</p>
+<section id="from-one-tree-to-a-forest" class="level3" data-number="21.1.1"><h3 data-number="21.1.1" class="anchored" data-anchor-id="from-one-tree-to-a-forest">
+<span class="header-section-number">21.1.1</span> From one tree to a forest</h3>
+<p>Before fitting a random forest it is worth understanding what a single decision tree does. A decision tree repeatedly splits the data on whichever predictor and threshold best separates the two classes at each step. The result is a set of rules — “if SNP A is 0 and SNP B is 2, predict affected” — that are easy to read but highly sensitive to the specific training data. Change the training set slightly and the tree changes dramatically. This is the high variance problem from the bias-variance discussion in the lecture.</p>
+<p>Random forests address this by building many trees, each on a different bootstrapped sample of the training data and using a random subset of predictors at each split. Averaging over many unstable trees produces a stable prediction. This is called <strong>bagging</strong> — bootstrap aggregating — with the additional twist of random feature selection at each split.</p>
+</section><section id="learning-objectives" class="level3" data-number="21.1.2"><h3 data-number="21.1.2" class="anchored" data-anchor-id="learning-objectives">
+<span class="header-section-number">21.1.2</span> Learning Objectives</h3>
+<p>By the end of this workshop, you will:</p>
+<ol type="1">
+<li>Explain conceptually what a decision tree does and why single trees overfit</li>
+<li>Explain how random forests reduce variance through bagging and random feature selection</li>
+<li>Fit a random forest classifier using <code>tidymodels</code> and the <code>ranger</code> engine</li>
+<li>Tune the <code>mtry</code> hyperparameter using cross-validation</li>
+<li>Interpret feature importance plots and connect them to biological interpretation</li>
+<li>Evaluate a random forest using the same metrics as Workshop 2</li>
+<li>Compare random forest and logistic regression performance on the same dataset</li>
+<li>Articulate when a random forest is preferable to logistic regression and when it is not</li>
+</ol>
+<hr></section></section><section id="setup-getting-started" class="level2" data-number="21.2"><h2 data-number="21.2" class="anchored" data-anchor-id="setup-getting-started">
+<span class="header-section-number">21.2</span> Setup — Getting Started</h2>
+<p>Clone the GitHub Classroom repository for this workshop using the link on your course page. The dataset and project structure are the same as Workshop 2. Open <code>scripts/02_model.R</code> directly — data exploration was completed in the previous session and does not need repeating.</p>
+<div class="webex-solution">
+<button>
+Quick setup - run this if you did not complete Workshop 2
+</button>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># ── Packages ──────────────────────────────────────────────────────────────────</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">library</span>(ranger)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">library</span>(vip)</span>
+<span id="cb1-6"><a href="#cb1-6"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-7"><a href="#cb1-7"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb1-8"><a href="#cb1-8"></a></span>
+<span id="cb1-9"><a href="#cb1-9"></a><span class="co"># ── Data ──────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>dogs <span class="ot">&lt;-</span> <span class="fu">read_table</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"cleft_lip_synthetic.txt"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-11"><a href="#cb1-11"></a>  <span class="fu">clean_names</span>()</span>
+<span id="cb1-12"><a href="#cb1-12"></a></span>
+<span id="cb1-13"><a href="#cb1-13"></a>dogs_model <span class="ot">&lt;-</span> dogs <span class="sc">|&gt;</span></span>
+<span id="cb1-14"><a href="#cb1-14"></a>  <span class="fu">select</span>(<span class="sc">-</span>fid, <span class="sc">-</span>iid, <span class="sc">-</span>pat, <span class="sc">-</span>mat, <span class="sc">-</span>sex) <span class="sc">|&gt;</span></span>
+<span id="cb1-15"><a href="#cb1-15"></a>  <span class="fu">mutate</span>(<span class="at">phenotype =</span> <span class="fu">factor</span>(</span>
+<span id="cb1-16"><a href="#cb1-16"></a>    <span class="fu">if_else</span>(phenotype <span class="sc">==</span> <span class="dv">2</span>, <span class="st">"affected"</span>, <span class="st">"unaffected"</span>),</span>
+<span id="cb1-17"><a href="#cb1-17"></a>    <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"affected"</span>, <span class="st">"unaffected"</span>)</span>
+<span id="cb1-18"><a href="#cb1-18"></a>  ))</span>
+<span id="cb1-19"><a href="#cb1-19"></a></span>
+<span id="cb1-20"><a href="#cb1-20"></a><span class="co"># ── Split ─────────────────────────────────────────────────────────────────────</span></span>
+<span id="cb1-21"><a href="#cb1-21"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-22"><a href="#cb1-22"></a>dog_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(dogs_model, <span class="at">prop =</span> <span class="fl">0.8</span>, <span class="at">strata =</span> phenotype)</span>
+<span id="cb1-23"><a href="#cb1-23"></a>dog_train <span class="ot">&lt;-</span> <span class="fu">training</span>(dog_split)</span>
+<span id="cb1-24"><a href="#cb1-24"></a>dog_test  <span class="ot">&lt;-</span> <span class="fu">testing</span>(dog_split)</span>
+<span id="cb1-25"><a href="#cb1-25"></a></span>
+<span id="cb1-26"><a href="#cb1-26"></a><span class="co"># ── Logistic regression ───────────────────────────────────────────────────────</span></span>
+<span id="cb1-27"><a href="#cb1-27"></a>logistic_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(phenotype <span class="sc">~</span> ., <span class="at">data =</span> dog_train) <span class="sc">|&gt;</span></span>
+<span id="cb1-28"><a href="#cb1-28"></a>  <span class="fu">step_naomit</span>(<span class="fu">all_predictors</span>(), <span class="fu">all_outcomes</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb1-29"><a href="#cb1-29"></a>  <span class="fu">step_normalize</span>(<span class="fu">all_numeric_predictors</span>())</span>
+<span id="cb1-30"><a href="#cb1-30"></a></span>
+<span id="cb1-31"><a href="#cb1-31"></a>logistic_fit <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-32"><a href="#cb1-32"></a>  <span class="fu">add_recipe</span>(logistic_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb1-33"><a href="#cb1-33"></a>  <span class="fu">add_model</span>(</span>
+<span id="cb1-34"><a href="#cb1-34"></a>    <span class="fu">logistic_reg</span>() <span class="sc">|&gt;</span></span>
+<span id="cb1-35"><a href="#cb1-35"></a>      <span class="fu">set_engine</span>(<span class="st">"glm"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-36"><a href="#cb1-36"></a>      <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb1-37"><a href="#cb1-37"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-38"><a href="#cb1-38"></a>  <span class="fu">fit</span>(<span class="at">data =</span> dog_train)</span>
+<span id="cb1-39"><a href="#cb1-39"></a></span>
+<span id="cb1-40"><a href="#cb1-40"></a><span class="co"># ── Logistic predictions ──────────────────────────────────────────────────────</span></span>
+<span id="cb1-41"><a href="#cb1-41"></a><span class="co"># This object is needed for the model comparison section at the end</span></span>
+<span id="cb1-42"><a href="#cb1-42"></a>logistic_preds <span class="ot">&lt;-</span> logistic_fit <span class="sc">|&gt;</span></span>
+<span id="cb1-43"><a href="#cb1-43"></a>  <span class="fu">predict</span>(dog_test, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb1-44"><a href="#cb1-44"></a>  <span class="fu">bind_cols</span>(</span>
+<span id="cb1-45"><a href="#cb1-45"></a>    logistic_fit <span class="sc">|&gt;</span> <span class="fu">predict</span>(dog_test, <span class="at">type =</span> <span class="st">"class"</span>)</span>
+<span id="cb1-46"><a href="#cb1-46"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb1-47"><a href="#cb1-47"></a>  <span class="fu">bind_cols</span>(dog_test <span class="sc">|&gt;</span> <span class="fu">select</span>(phenotype))</span>
+<span id="cb1-48"><a href="#cb1-48"></a></span>
+<span id="cb1-49"><a href="#cb1-49"></a><span class="fu">message</span>(<span class="st">"Setup complete — dogs_model, dog_train, dog_test, and logistic_preds are ready"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb2-2"><a href="#cb2-2"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-3"><a href="#cb2-3"></a><span class="fu">library</span>(ranger)</span>
+<span id="cb2-4"><a href="#cb2-4"></a><span class="fu">library</span>(vip)</span>
+<span id="cb2-5"><a href="#cb2-5"></a><span class="fu">library</span>(here)</span>
+<span id="cb2-6"><a href="#cb2-6"></a><span class="fu">library</span>(janitor)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>New packages
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Two packages are new in this workshop. <code>ranger</code> is a fast implementation of random forests and serves as the computational engine behind <code>rand_forest()</code> in tidymodels. <code>vip</code> — variable importance plots — provides tools for extracting and visualising which predictors the random forest considered most informative. Install both with <code>install.packages(c("ranger", "vip"))</code> if needed.</p>
+</div>
+</div>
+<hr></section><section id="a-conceptual-starting-point" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="a-conceptual-starting-point">A Conceptual Starting Point</h2>
+<p>Before fitting any code, it is worth building an intuition for what a decision tree does and why many trees are better than one.</p>
+<section id="a-single-decision-tree" class="level3" data-number="21.2.1"><h3 data-number="21.2.1" class="anchored" data-anchor-id="a-single-decision-tree">
+<span class="header-section-number">21.2.1</span> A single decision tree</h3>
+<p>A decision tree classifies observations by asking a series of yes/no questions about the predictors. At each node it finds the predictor and threshold that best separates the two classes, splits the data, and repeats on each branch until reaching a stopping criterion.</p>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="workshop_03_random_forests_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid figure-img" style="width:100.0%"></p>
+<figcaption>A schematic decision tree for cleft lip classification. Each blue node asks a yes/no question about one SNP genotype. Genotypes are coded 0, 1, or 2 representing the number of copies of the reference allele — so chr27 ≥ 1 means the dog carries at least one reference allele at that position. The tree follows the Yes or No branch at each node until reaching a leaf node (green = predict unaffected, red = predict affected).</figcaption></figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Reading this diagram
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Each <strong>blue node</strong> is a decision point asking whether a dog’s genotype at a specific SNP meets a threshold. Genotypes are coded as 0, 1, or 2 — the number of copies of the reference allele. So <code>chr27 ≥ 1</code> means the dog carries at least one reference allele at that position — it includes both heterozygotes (genotype 1) and homozygous reference dogs (genotype 2), but not homozygous alternate dogs (genotype 0).</p>
+<p>Follow the <strong>Yes</strong> or <strong>No</strong> branch at each node until reaching a leaf. <strong>Green leaves</strong> predict unaffected; <strong>red leaves</strong> predict affected.</p>
+<p>The thresholds shown — ≥ 1 and = 0 — were chosen by the algorithm because they best separated affected from unaffected dogs in the training data at that split. A decision tree fitted to a different training sample would likely choose different SNPs and different thresholds.</p>
+</div>
+</div>
+<p>The problem is that this tree is fitted to one specific training set. If a different set of dogs had been in the training data, the tree would look different. A tree that perfectly classifies the training data will often generalise poorly to new dogs — this is overfitting, the same problem we encountered in Workshops 1 and 2.</p>
+</section><section id="from-bagging-to-random-forests" class="level3" data-number="21.2.2"><h3 data-number="21.2.2" class="anchored" data-anchor-id="from-bagging-to-random-forests">
+<span class="header-section-number">21.2.2</span> From bagging to random forests</h3>
+<p>Bagging (bootstrap aggregating) addresses the overfitting problem by fitting many trees, each on a different bootstrapped sample of the training data, and averaging their predictions. The diagram below illustrates the process.</p>
+<blockquote class="blockquote">
+<p>A bootstrapped sample is created by sampling from your training data with replacement — meaning the same dog can be selected more than once in a single sample, while other dogs may not appear at all. Imagine writing each dog’s ID on a piece of paper, putting all the papers in a bag, drawing one out and noting it, then putting it back before drawing the next. After drawing 224 times you have a sample of 224 dogs — but some dogs appear two or three times and others do not appear at all. On average, about one third of the original dogs are left out of each sample. Those left-out dogs are the out-of-bag observations.</p>
+</blockquote>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="workshop_03_random_forests_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A random forest adds one further twist: at each split within each tree, only a random subset of predictors is considered. This decorrelates the trees — they are not all making the same splits — which makes the ensemble more robust.</p>
+<strong>What does a random forest do?</strong>
+<div id="radio_QMXHRLRPPX" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_QMXHRLRPPX" value=""><span>It fits one very deep decision tree to all the training data</span></label><label><input type="radio" autocomplete="off" name="radio_QMXHRLRPPX" value="answer"><span>It fits many trees, each on a bootstrapped sample using a random subset of predictors, then combines their predictions</span></label><label><input type="radio" autocomplete="off" name="radio_QMXHRLRPPX" value=""><span>It randomly selects which observations to predict</span></label><label><input type="radio" autocomplete="off" name="radio_QMXHRLRPPX" value=""><span>It is a special case of logistic regression with random coefficients</span></label>
+</div>
+<strong>Why do random forests produce more stable predictions than a single decision tree?</strong>
+<div id="radio_IGYWFQGXAD" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_IGYWFQGXAD" value=""><span>A single deep tree always overfits — random forests prevent this by using shallow trees only</span></label><label><input type="radio" autocomplete="off" name="radio_IGYWFQGXAD" value="answer"><span>Single trees are unstable — small changes in training data produce very different trees. Averaging many trees reduces this variance.</span></label><label><input type="radio" autocomplete="off" name="radio_IGYWFQGXAD" value=""><span>Random forests use fewer predictors so they are less likely to overfit</span></label><label><input type="radio" autocomplete="off" name="radio_IGYWFQGXAD" value=""><span>Random forests are simply faster to fit than single trees</span></label>
+</div>
+<blockquote class="blockquote">
+<p>Without random feature selection, every tree in a bagged ensemble tends to make the same first split — on whichever SNP is most strongly associated with cleft lip. Trees that start with the same split tend to look similar throughout, even when fitted on different bootstrapped samples. Averaging similar trees does not reduce error much — the same mistakes appear in nearly all of them. By restricting each split to a random subset of predictors, random forests force trees to find different paths through the data. Some trees will miss the most important SNP at a particular split and find a different one instead. The errors are now different across trees, and averaging different errors cancels out far more effectively.</p>
+</blockquote>
+<div class="cell" data-layout-align="center">
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="workshop_03_random_forests_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<hr></section></section><section id="preparing-the-data" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="preparing-the-data">Preparing the Data</h2>
+<p>Load the synthetic dataset and prepare it for modelling. The preparation steps are identical to Workshop 2 — the same dataset, the same recoding, the same split.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">library</span>(tidymodels)</span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="fu">library</span>(ranger)</span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="fu">library</span>(vip)</span>
+<span id="cb3-5"><a href="#cb3-5"></a><span class="fu">library</span>(here)</span>
+<span id="cb3-6"><a href="#cb3-6"></a><span class="fu">library</span>(janitor)</span>
+<span id="cb3-7"><a href="#cb3-7"></a></span>
+<span id="cb3-8"><a href="#cb3-8"></a><span class="co"># Load the synthetic dataset</span></span>
+<span id="cb3-9"><a href="#cb3-9"></a>dogs <span class="ot">&lt;-</span> <span class="fu">read_table</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"dogs_imputed_reduced.tsv"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb3-10"><a href="#cb3-10"></a>  <span class="fu">clean_names</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a><span class="co"># Remove pedigree columns and recode phenotype</span></span>
+<span id="cb4-2"><a href="#cb4-2"></a>dogs_model <span class="ot">&lt;-</span> dogs <span class="sc">|&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="fu">select</span>(<span class="sc">-</span>fid, <span class="sc">-</span>iid, <span class="sc">-</span>pat, <span class="sc">-</span>mat, <span class="sc">-</span>sex) <span class="sc">|&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4"></a>  <span class="fu">mutate</span>(<span class="at">phenotype =</span> <span class="fu">factor</span>(</span>
+<span id="cb4-5"><a href="#cb4-5"></a>    <span class="fu">if_else</span>(phenotype <span class="sc">==</span> <span class="dv">2</span>, <span class="st">"affected"</span>, <span class="st">"unaffected"</span>),</span>
+<span id="cb4-6"><a href="#cb4-6"></a>    <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"affected"</span>, <span class="st">"unaffected"</span>)</span>
+<span id="cb4-7"><a href="#cb4-7"></a>  ))</span>
+<span id="cb4-8"><a href="#cb4-8"></a></span>
+<span id="cb4-9"><a href="#cb4-9"></a>dogs_model <span class="sc">|&gt;</span> <span class="fu">count</span>(phenotype)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: left;">phenotype</th>
+<th style="text-align: right;">n</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">affected</td>
+<td style="text-align: right;">80</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">unaffected</td>
+<td style="text-align: right;">200</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>dogs_model <span class="ot">&lt;-</span> dogs <span class="sc">|&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">select</span>(<span class="sc">-</span>fid, <span class="sc">-</span>iid, <span class="sc">-</span>pat, <span class="sc">-</span>mat, <span class="sc">-</span>sex) <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">mutate</span>(<span class="at">phenotype =</span> <span class="fu">factor</span>(</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="fu">if_else</span>(phenotype <span class="sc">==</span> <span class="dv">2</span>, <span class="st">"affected"</span>, <span class="st">"unaffected"</span>),</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"affected"</span>, <span class="st">"unaffected"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6"></a>  ))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="co"># 80/20 stratified split — identical to Workshop 2</span></span>
+<span id="cb6-2"><a href="#cb6-2"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb6-3"><a href="#cb6-3"></a>dog_split <span class="ot">&lt;-</span> <span class="fu">initial_split</span>(dogs_model, <span class="at">prop =</span> <span class="fl">0.8</span>, <span class="at">strata =</span> phenotype)</span>
+<span id="cb6-4"><a href="#cb6-4"></a>dog_train <span class="ot">&lt;-</span> <span class="fu">training</span>(dog_split)</span>
+<span id="cb6-5"><a href="#cb6-5"></a>dog_test  <span class="ot">&lt;-</span> <span class="fu">testing</span>(dog_split)</span>
+<span id="cb6-6"><a href="#cb6-6"></a></span>
+<span id="cb6-7"><a href="#cb6-7"></a>dog_train <span class="sc">|&gt;</span> <span class="fu">count</span>(phenotype)</span>
+<span id="cb6-8"><a href="#cb6-8"></a>dog_test  <span class="sc">|&gt;</span> <span class="fu">count</span>(phenotype)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Why the same split?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Using <code>set.seed(42)</code> and the same <code>prop = 0.8</code> with <code>strata = phenotype</code> produces the same training and test sets as Workshop 2. This matters for the model comparison at the end — both models should be evaluated on identical test data, otherwise differences in performance might reflect the split rather than the models.</p>
+</div>
+</div>
+<hr></section><section id="fitting-a-random-forest" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="fitting-a-random-forest">Fitting a Random Forest</h2>
+<p>The tidymodels interface for random forests follows exactly the same recipe-spec-workflow-fit structure as the previous workshops. The key new element is <code>rand_forest()</code>, which replaces <code>logistic_reg()</code>.</p>
+<section id="hyperparameters" class="level3" data-number="21.2.3"><h3 data-number="21.2.3" class="anchored" data-anchor-id="hyperparameters">
+<span class="header-section-number">21.2.3</span> Hyperparameters</h3>
+<p>Random forests have three main hyperparameters:</p>
+<p><strong><code>mtry</code></strong> — the number of predictors randomly sampled at each split. Lower values mean more randomness between trees and more decorrelation. Higher values mean each tree uses more information but trees become more similar. The default is <span class="math inline">\(\sqrt{p}\)</span> for classification, where <span class="math inline">\(p\)</span> is the number of predictors.</p>
+<p><strong><code>trees</code></strong> — the number of trees in the forest. More trees produce more stable predictions but take longer to fit. Performance typically plateaus well before 1000 trees.</p>
+<p><strong><code>min_n</code></strong> — the minimum number of observations required to split a node. Larger values produce shallower trees.</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center collapsed" data-bs-toggle="collapse" data-bs-target=".callout-4-contents" aria-controls="callout-4" aria-expanded="false" aria-label="Toggle callout">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>min_n
+</div>
+<div class="callout-btn-toggle d-inline-block border-0 py-1 ps-1 pe-0 float-end"><i class="callout-toggle"></i></div>
+</div>
+<div id="callout-4" class="callout-4-contents callout-collapse collapse">
+<div class="callout-body-container callout-body">
+<p>the minimum number of observations required to split a node. Larger values produce shallower trees. We fix this at 5, which is a reasonable default for a dataset of this size; in practice min_n has considerably less influence on predictive performance than mtry, and tuning both simultaneously rarely justifies the additional computation.</p>
+</div>
+</div>
+</div>
+<p>We tune <code>mtry</code> using cross-validation and fix the others at sensible defaults.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="co"># Recipe — random forests do not require normalisation</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="co"># They are scale-invariant: only the rank order of values matters for splits</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a><span class="co"># We include step_naomit() as a precaution for any missing genotype values</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>rf_recipe <span class="ot">&lt;-</span> <span class="fu">recipe</span>(phenotype <span class="sc">~</span> ., <span class="at">data =</span> dog_train) <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>  <span class="fu">step_naomit</span>(<span class="fu">all_predictors</span>(), <span class="fu">all_outcomes</span>())</span>
+<span id="cb7-6"><a href="#cb7-6"></a></span>
+<span id="cb7-7"><a href="#cb7-7"></a><span class="co"># Random forest specification</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a><span class="co"># mtry = tune() searches for the best value by cross-validation</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a><span class="co"># trees = 500 is a sensible default — enough for stability</span></span>
+<span id="cb7-10"><a href="#cb7-10"></a><span class="co"># set_engine("ranger") uses the fast ranger implementation</span></span>
+<span id="cb7-11"><a href="#cb7-11"></a><span class="co"># importance = "permutation" enables variable importance extraction later</span></span>
+<span id="cb7-12"><a href="#cb7-12"></a>rf_spec <span class="ot">&lt;-</span> <span class="fu">rand_forest</span>(</span>
+<span id="cb7-13"><a href="#cb7-13"></a>  <span class="at">mtry  =</span> <span class="fu">tune</span>(),</span>
+<span id="cb7-14"><a href="#cb7-14"></a>  <span class="at">trees =</span> <span class="dv">500</span>,</span>
+<span id="cb7-15"><a href="#cb7-15"></a>  <span class="at">min_n =</span> <span class="dv">5</span></span>
+<span id="cb7-16"><a href="#cb7-16"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb7-17"><a href="#cb7-17"></a>  <span class="fu">set_engine</span>(<span class="st">"ranger"</span>, <span class="at">importance =</span> <span class="st">"permutation"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-18"><a href="#cb7-18"></a>  <span class="fu">set_mode</span>(<span class="st">"classification"</span>)</span>
+<span id="cb7-19"><a href="#cb7-19"></a></span>
+<span id="cb7-20"><a href="#cb7-20"></a><span class="co"># Workflow</span></span>
+<span id="cb7-21"><a href="#cb7-21"></a>rf_workflow <span class="ot">&lt;-</span> <span class="fu">workflow</span>() <span class="sc">|&gt;</span></span>
+<span id="cb7-22"><a href="#cb7-22"></a>  <span class="fu">add_recipe</span>(rf_recipe) <span class="sc">|&gt;</span></span>
+<span id="cb7-23"><a href="#cb7-23"></a>  <span class="fu">add_model</span>(rf_spec)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section><section id="tuning-mtry" class="level3" data-number="21.2.4"><h3 data-number="21.2.4" class="anchored" data-anchor-id="tuning-mtry">
+<span class="header-section-number">21.2.4</span> Tuning mtry</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="co"># 5-fold cross-validation for tuning</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb8-3"><a href="#cb8-3"></a>dog_folds <span class="ot">&lt;-</span> <span class="fu">vfold_cv</span>(dog_train, <span class="at">v =</span> <span class="dv">5</span>, <span class="at">strata =</span> phenotype)</span>
+<span id="cb8-4"><a href="#cb8-4"></a></span>
+<span id="cb8-5"><a href="#cb8-5"></a><span class="co"># Search grid for mtry</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a><span class="co"># We search across a range from a few predictors to most predictors</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a>rf_grid <span class="ot">&lt;-</span> <span class="fu">grid_regular</span>(</span>
+<span id="cb8-8"><a href="#cb8-8"></a>  <span class="fu">mtry</span>(<span class="at">range =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">40</span>)),</span>
+<span id="cb8-9"><a href="#cb8-9"></a>  <span class="at">levels =</span> <span class="dv">15</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a>)</span>
+<span id="cb8-11"><a href="#cb8-11"></a></span>
+<span id="cb8-12"><a href="#cb8-12"></a><span class="co"># Tune across the grid</span></span>
+<span id="cb8-13"><a href="#cb8-13"></a>rf_tuned <span class="ot">&lt;-</span> rf_workflow <span class="sc">|&gt;</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a>  <span class="fu">tune_grid</span>(</span>
+<span id="cb8-15"><a href="#cb8-15"></a>    <span class="at">resamples =</span> dog_folds,</span>
+<span id="cb8-16"><a href="#cb8-16"></a>    <span class="at">grid      =</span> rf_grid,</span>
+<span id="cb8-17"><a href="#cb8-17"></a>    <span class="at">metrics   =</span> <span class="fu">metric_set</span>(roc_auc)</span>
+<span id="cb8-18"><a href="#cb8-18"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># Plot cross-validation AUC against mtry</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="fu">autoplot</span>(rf_tuned)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="workshop_03_random_forests_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="webex-solution">
+<button>
+Hint: reading the mtry tuning curve
+</button>
+<p>The x-axis shows the number of predictors randomly sampled at each split. At very low mtry, each tree uses very little information — trees are highly variable but decorrelated from each other. At high mtry, trees are more accurate individually but more similar to each other.</p>
+<p>The optimal mtry balances these two effects. A clear peak in the curve indicates a well-defined optimum. A flat curve means the model is relatively insensitive to this choice.</p>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Reflection — Reading the tuning curve
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>Does the AUC curve show a clear peak, or is it relatively flat across mtry values?</li>
+<li>How does the shape of this tuning curve compare to the lambda tuning curve from Workshop 1? What does the difference tell you about how sensitive random forests are to this hyperparameter?</li>
+<li>At very low mtry values, each tree uses only a few predictors. What effect would this have on the predictions of individual trees, and why does averaging over many such trees still produce a reasonable result?</li>
+</ul>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># Select the best mtry value</span></span>
+<span id="cb10-2"><a href="#cb10-2"></a>best_mtry <span class="ot">&lt;-</span> rf_tuned <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3"></a>  <span class="fu">select_best</span>(<span class="at">metric =</span> <span class="st">"roc_auc"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4"></a></span>
+<span id="cb10-5"><a href="#cb10-5"></a>best_mtry</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: right;">mtry</th>
+<th style="text-align: left;">.config</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td style="text-align: right;">12</td>
+<td style="text-align: left;">pre0_mod05_post0</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+</div>
+<hr></section></section><section id="fitting-the-final-model" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="fitting-the-final-model">Fitting the Final Model</h2>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="co"># Finalise and fit on the full training set</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>rf_final <span class="ot">&lt;-</span> rf_workflow <span class="sc">|&gt;</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>  <span class="fu">finalize_workflow</span>(best_mtry) <span class="sc">|&gt;</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>  <span class="fu">fit</span>(<span class="at">data =</span> dog_train)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># Generate predictions on the held-out test set</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a>rf_preds <span class="ot">&lt;-</span> rf_final <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3"></a>  <span class="fu">predict</span>(dog_test, <span class="at">type =</span> <span class="st">"prob"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4"></a>  <span class="fu">bind_cols</span>(</span>
+<span id="cb12-5"><a href="#cb12-5"></a>    rf_final <span class="sc">|&gt;</span> <span class="fu">predict</span>(dog_test, <span class="at">type =</span> <span class="st">"class"</span>)</span>
+<span id="cb12-6"><a href="#cb12-6"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb12-7"><a href="#cb12-7"></a>  <span class="fu">bind_cols</span>(dog_test <span class="sc">|&gt;</span> <span class="fu">select</span>(phenotype))</span>
+<span id="cb12-8"><a href="#cb12-8"></a></span>
+<span id="cb12-9"><a href="#cb12-9"></a>rf_preds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<strong>What are out-of-bag (OOB) observations in a random forest?</strong>
+<div id="radio_JUJGSMJWNX" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_JUJGSMJWNX" value=""><span>The test set — observations held out before fitting</span></label><label><input type="radio" autocomplete="off" name="radio_JUJGSMJWNX" value="answer"><span>Observations not selected in a bootstrapped sample — each tree evaluates itself on the data it did not see during fitting</span></label><label><input type="radio" autocomplete="off" name="radio_JUJGSMJWNX" value=""><span>A separate validation dataset used during hyperparameter tuning</span></label><label><input type="radio" autocomplete="off" name="radio_JUJGSMJWNX" value=""><span>The full training set after all trees have been fitted</span></label>
+</div>
+<hr></section><section id="evaluation" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="evaluation">Evaluation</h2>
+<p>The evaluation framework is identical to Workshop 2. This is deliberate — the same metrics applied to both models makes the comparison meaningful.</p>
+<section id="confusion-matrix" class="level3" data-number="21.2.5"><h3 data-number="21.2.5" class="anchored" data-anchor-id="confusion-matrix">
+<span class="header-section-number">21.2.5</span> Confusion Matrix</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="co"># Confusion matrix</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a><span class="fu">conf_mat</span>(rf_preds, <span class="at">truth =</span> phenotype, <span class="at">estimate =</span> .pred_class)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a><span class="co"># Heatmap</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a><span class="fu">conf_mat</span>(rf_preds, <span class="at">truth =</span> phenotype, <span class="at">estimate =</span> .pred_class) <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3"></a>  <span class="fu">autoplot</span>(<span class="at">type =</span> <span class="st">"heatmap"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="workshop_03_random_forests_files/figure-html/unnamed-chunk-24-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+</section><section id="sensitivity-specificity-and-accuracy" class="level3" data-number="21.2.6"><h3 data-number="21.2.6" class="anchored" data-anchor-id="sensitivity-specificity-and-accuracy">
+<span class="header-section-number">21.2.6</span> Sensitivity, Specificity, and Accuracy</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>classification_metrics <span class="ot">&lt;-</span> <span class="fu">metric_set</span>(</span>
+<span id="cb15-2"><a href="#cb15-2"></a>  sensitivity, specificity, accuracy</span>
+<span id="cb15-3"><a href="#cb15-3"></a>)</span>
+<span id="cb15-4"><a href="#cb15-4"></a></span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="fu">classification_metrics</span>(</span>
+<span id="cb15-6"><a href="#cb15-6"></a>  rf_preds,</span>
+<span id="cb15-7"><a href="#cb15-7"></a>  <span class="at">truth    =</span> phenotype,</span>
+<span id="cb15-8"><a href="#cb15-8"></a>  <span class="at">estimate =</span> .pred_class</span>
+<span id="cb15-9"><a href="#cb15-9"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: left;">.metric</th>
+<th style="text-align: left;">.estimator</th>
+<th style="text-align: right;">.estimate</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">sensitivity</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.0000000</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">specificity</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.9500000</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">accuracy</td>
+<td style="text-align: left;">binary</td>
+<td style="text-align: right;">0.6785714</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section><section id="roc-curve-and-auc" class="level3" data-number="21.2.7"><h3 data-number="21.2.7" class="anchored" data-anchor-id="roc-curve-and-auc">
+<span class="header-section-number">21.2.7</span> ROC Curve and AUC</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># ROC curve</span></span>
+<span id="cb16-2"><a href="#cb16-2"></a>rf_preds <span class="sc">|&gt;</span></span>
+<span id="cb16-3"><a href="#cb16-3"></a>  <span class="fu">roc_curve</span>(<span class="at">truth =</span> phenotype, .pred_affected) <span class="sc">|&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4"></a>  <span class="fu">autoplot</span>() <span class="sc">+</span></span>
+<span id="cb16-5"><a href="#cb16-5"></a>  <span class="fu">labs</span>(</span>
+<span id="cb16-6"><a href="#cb16-6"></a>    <span class="at">title    =</span> <span class="st">"ROC curve — random forest"</span>,</span>
+<span id="cb16-7"><a href="#cb16-7"></a>    <span class="at">subtitle =</span> <span class="st">"AUC closer to 1.0 indicates better discrimination"</span></span>
+<span id="cb16-8"><a href="#cb16-8"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="workshop_03_random_forests_files/figure-html/unnamed-chunk-26-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>The Youden Index
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>The Youden index (also called the J-index) is defined as sensitivity + specificity − 1. It ranges from 0 (no better than chance) to 1 (perfect discrimination). The threshold that maximises the J-index is the point on the ROC curve geometrically closest to the top-left corner — where sensitivity and specificity are jointly highest. It is a common, if not universal, method for selecting a decision threshold; in some applications you may deliberately weight sensitivity or specificity differently depending on the cost of false negatives versus false positives.</p>
+</div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="co"># Get all the threshold values</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a>roc_points <span class="ot">&lt;-</span> rf_preds <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3"></a>  <span class="fu">roc_curve</span>(<span class="at">truth =</span> phenotype, .pred_affected)</span>
+<span id="cb17-4"><a href="#cb17-4"></a></span>
+<span id="cb17-5"><a href="#cb17-5"></a><span class="co"># Find the point closest to the top-left corner</span></span>
+<span id="cb17-6"><a href="#cb17-6"></a><span class="co"># Youden index — maximises sensitivity + specificity jointly</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a>roc_points <span class="sc">|&gt;</span></span>
+<span id="cb17-8"><a href="#cb17-8"></a>  <span class="fu">mutate</span>(<span class="at">j_index =</span> sensitivity <span class="sc">+</span> specificity <span class="sc">-</span> <span class="dv">1</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-9"><a href="#cb17-9"></a>  <span class="fu">slice_max</span>(j_index, <span class="at">n =</span> <span class="dv">1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="kable-table">
+<table class="caption-top table table-sm table-striped small">
+<thead><tr class="header">
+<th style="text-align: right;">.threshold</th>
+<th style="text-align: right;">specificity</th>
+<th style="text-align: right;">sensitivity</th>
+<th style="text-align: right;">j_index</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td style="text-align: right;">0.3320333</td>
+<td style="text-align: right;">0.725</td>
+<td style="text-align: right;">0.625</td>
+<td style="text-align: right;">0.35</td>
+</tr></tbody>
+</table>
+</div>
+</div>
+</div>
+</section><section id="tweaking-model-sensitivity" class="level3" data-number="21.2.8"><h3 data-number="21.2.8" class="anchored" data-anchor-id="tweaking-model-sensitivity">
+<span class="header-section-number">21.2.8</span> Tweaking Model sensitivity</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>chosen_threshold <span class="ot">&lt;-</span> <span class="fl">0.33</span>   <span class="co"># replace with your actual value</span></span>
+<span id="cb18-2"><a href="#cb18-2"></a></span>
+<span id="cb18-3"><a href="#cb18-3"></a>rf_preds <span class="ot">&lt;-</span> rf_preds <span class="sc">|&gt;</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb18-5"><a href="#cb18-5"></a>    <span class="at">.pred_class_custom =</span> <span class="fu">factor</span>(</span>
+<span id="cb18-6"><a href="#cb18-6"></a>      <span class="fu">if_else</span>(.pred_affected <span class="sc">&gt;</span> chosen_threshold,</span>
+<span id="cb18-7"><a href="#cb18-7"></a>              <span class="st">"affected"</span>, <span class="st">"unaffected"</span>),</span>
+<span id="cb18-8"><a href="#cb18-8"></a>      <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"affected"</span>, <span class="st">"unaffected"</span>)</span>
+<span id="cb18-9"><a href="#cb18-9"></a>    )</span>
+<span id="cb18-10"><a href="#cb18-10"></a>  )</span>
+<span id="cb18-11"><a href="#cb18-11"></a></span>
+<span id="cb18-12"><a href="#cb18-12"></a><span class="fu">conf_mat</span>(rf_preds,</span>
+<span id="cb18-13"><a href="#cb18-13"></a>         <span class="at">truth    =</span> phenotype,</span>
+<span id="cb18-14"><a href="#cb18-14"></a>         <span class="at">estimate =</span> .pred_class_custom)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            Truth
+Prediction   affected unaffected
+  affected         10         11
+  unaffected        6         29</code></pre>
+</div>
+</div>
+</section><section id="predicted-probability-distributions" class="level3" data-number="21.2.9"><h3 data-number="21.2.9" class="anchored" data-anchor-id="predicted-probability-distributions">
+<span class="header-section-number">21.2.9</span> Predicted Probability Distributions</h3>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a><span class="co"># Predicted probability distributions by true class</span></span>
+<span id="cb20-2"><a href="#cb20-2"></a>rf_preds <span class="sc">|&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> .pred_affected, <span class="at">fill =</span> phenotype)) <span class="sc">+</span></span>
+<span id="cb20-4"><a href="#cb20-4"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">20</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">position =</span> <span class="st">"identity"</span>) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"affected"</span>   <span class="ot">=</span> <span class="st">"#E63946"</span>,</span>
+<span id="cb20-6"><a href="#cb20-6"></a>                               <span class="st">"unaffected"</span> <span class="ot">=</span> <span class="st">"#457B9D"</span>)) <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> chosen_threshold,</span>
+<span id="cb20-8"><a href="#cb20-8"></a>             <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"grey30"</span>) <span class="sc">+</span></span>
+<span id="cb20-9"><a href="#cb20-9"></a>  <span class="fu">labs</span>(</span>
+<span id="cb20-10"><a href="#cb20-10"></a>    <span class="at">x        =</span> <span class="st">"Predicted probability of being affected"</span>,</span>
+<span id="cb20-11"><a href="#cb20-11"></a>    <span class="at">y        =</span> <span class="st">"Count"</span>,</span>
+<span id="cb20-12"><a href="#cb20-12"></a>    <span class="at">fill     =</span> <span class="st">"True outcome"</span>,</span>
+<span id="cb20-13"><a href="#cb20-13"></a>    <span class="at">title    =</span> <span class="st">"Random forest — predicted probability distributions"</span>,</span>
+<span id="cb20-14"><a href="#cb20-14"></a>    <span class="at">subtitle =</span> <span class="st">"Dashed line = 0.5 classification threshold"</span></span>
+<span id="cb20-15"><a href="#cb20-15"></a>  ) <span class="sc">+</span></span>
+<span id="cb20-16"><a href="#cb20-16"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="workshop_03_random_forests_files/figure-html/unnamed-chunk-29-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>What we cannot extract from a random forest
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Logistic regression gave us a coefficient for every SNP — a number with a sign and a magnitude that told us the direction and strength of each SNP’s association with cleft lip. A random forest gives us no such thing. We cannot extract a single equation from 500 trees. We cannot say “each additional copy of the reference allele at chr27 changes the log-odds of cleft lip by -0.57.”</p>
+<p>What we can do is ask which predictors the forest relied on most heavily — feature importance — and what the forest predicts for any specific combination of genotypes. These are useful but different. A breeder asking “why was this dog flagged?” can be shown which SNPs contributed most to its predicted probability, but not given the kind of clean coefficient interpretation that logistic regression allows. Whether this matters depends on the application.</p>
+</div>
+</div>
+<hr></section></section><section id="feature-importance" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="feature-importance">Feature Importance</h2>
+<p>One of the most useful outputs of a random forest is feature importance — a measure of how much each predictor contributed to accurate predictions across all trees. Unlike logistic regression coefficients, importance scores do not have a sign: they tell you which predictors matter, not in which direction.</p>
+<p><strong>Permutation importance</strong> works by randomly shuffling the values of each predictor in turn and measuring how much prediction accuracy drops. A large drop means the predictor was important — the model was relying on it. A small drop means the predictor can be scrambled without much consequence.</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="co"># Extract and plot variable importance</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a><span class="co"># vip() from the vip package works directly on tidymodels workflow fits</span></span>
+<span id="cb21-3"><a href="#cb21-3"></a>rf_final <span class="sc">|&gt;</span></span>
+<span id="cb21-4"><a href="#cb21-4"></a>  <span class="fu">extract_fit_parsnip</span>() <span class="sc">|&gt;</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a>  <span class="fu">vip</span>(<span class="at">num_features =</span> <span class="dv">20</span>,</span>
+<span id="cb21-6"><a href="#cb21-6"></a>      <span class="at">aesthetics =</span> <span class="fu">list</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>)) <span class="sc">+</span></span>
+<span id="cb21-7"><a href="#cb21-7"></a>  <span class="fu">labs</span>(</span>
+<span id="cb21-8"><a href="#cb21-8"></a>    <span class="at">title    =</span> <span class="st">"Random forest — top 20 SNPs by permutation importance"</span>,</span>
+<span id="cb21-9"><a href="#cb21-9"></a>    <span class="at">subtitle =</span> <span class="st">"Importance measures prediction accuracy drop when each SNP is permuted"</span></span>
+<span id="cb21-10"><a href="#cb21-10"></a>  ) <span class="sc">+</span></span>
+<span id="cb21-11"><a href="#cb21-11"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure"><p><img src="workshop_03_random_forests_files/figure-html/unnamed-chunk-30-1.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:100.0%"></p>
+</figure>
+</div>
+</div>
+</div>
+<strong>What does a high permutation importance value mean for a SNP?</strong>
+<div id="radio_XKMCJSBGTU" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_XKMCJSBGTU" value=""><span>The coefficient of each predictor — larger means more positive effect</span></label><label><input type="radio" autocomplete="off" name="radio_XKMCJSBGTU" value="answer"><span>How much prediction accuracy drops when that predictor's values are randomly shuffled — larger means more important</span></label><label><input type="radio" autocomplete="off" name="radio_XKMCJSBGTU" value=""><span>The p-value for each predictor's association with the outcome</span></label><label><input type="radio" autocomplete="off" name="radio_XKMCJSBGTU" value=""><span>The correlation between each predictor and the outcome variable</span></label>
+</div>
+<strong>Why do feature importance scores not have a sign, unlike logistic regression coefficients?</strong>
+<div id="radio_UKZKZAUFZW" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_UKZKZAUFZW" value=""><span>Random forests cannot determine whether a predictor has a positive or negative effect</span></label><label><input type="radio" autocomplete="off" name="radio_UKZKZAUFZW" value="answer"><span>Importance measures how much a predictor matters regardless of direction — a SNP that strongly predicts either class scores high</span></label><label><input type="radio" autocomplete="off" name="radio_UKZKZAUFZW" value=""><span>The sign was removed to make the plot easier to read</span></label><label><input type="radio" autocomplete="off" name="radio_UKZKZAUFZW" value=""><span>Permutation importance is always positive because it measures a reduction in accuracy</span></label>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>Reflection — Feature importance
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><p>Are the top SNPs by importance clustered on particular chromosomes? Compare this with the top SNPs from the logistic regression coefficient plot in Workshop 2. Do the two models agree on which SNPs matter most?</p></li>
+<li><p>A SNP with high importance in the random forest but a small coefficient in logistic regression might be important in a non-linear way — for instance, heterozygotes (genotype 1) might be most affected while homozygotes (genotype 0 or 2) are similar to controls. Can you identify any candidates from the importance plot?</p></li>
+</ul>
+</div>
+</div>
+<hr></section><section id="comparing-models" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="comparing-models">Comparing Models</h2>
+<p>With both models evaluated on the same test set, a direct comparison is now meaningful. This is the central question of the workshop: does the added complexity of the random forest justify itself?</p>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Check logistic_preds exists before comparing</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a><span class="co"># If it does not, run the quick setup code above</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">exists</span>(<span class="st">"logistic_preds"</span>)) {</span>
+<span id="cb22-4"><a href="#cb22-4"></a>  <span class="fu">stop</span>(<span class="st">"logistic_preds not found — run the quick setup code at the top of this script"</span>)</span>
+<span id="cb22-5"><a href="#cb22-5"></a>}</span>
+<span id="cb22-6"><a href="#cb22-6"></a></span>
+<span id="cb22-7"><a href="#cb22-7"></a><span class="co"># Numeric comparison of AUC</span></span>
+<span id="cb22-8"><a href="#cb22-8"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb22-9"><a href="#cb22-9"></a>  rf_preds <span class="sc">|&gt;</span></span>
+<span id="cb22-10"><a href="#cb22-10"></a>    <span class="fu">roc_auc</span>(<span class="at">truth =</span> phenotype, .pred_affected) <span class="sc">|&gt;</span></span>
+<span id="cb22-11"><a href="#cb22-11"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Random forest"</span>),</span>
+<span id="cb22-12"><a href="#cb22-12"></a>  logistic_preds <span class="sc">|&gt;</span></span>
+<span id="cb22-13"><a href="#cb22-13"></a>    <span class="fu">roc_auc</span>(<span class="at">truth =</span> phenotype, .pred_affected) <span class="sc">|&gt;</span></span>
+<span id="cb22-14"><a href="#cb22-14"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic regression"</span>)</span>
+<span id="cb22-15"><a href="#cb22-15"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb22-16"><a href="#cb22-16"></a>  <span class="fu">select</span>(model, .estimate) <span class="sc">|&gt;</span></span>
+<span id="cb22-17"><a href="#cb22-17"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(.estimate))</span>
+<span id="cb22-18"><a href="#cb22-18"></a></span>
+<span id="cb22-19"><a href="#cb22-19"></a><span class="co"># Numeric comparison of AUC</span></span>
+<span id="cb22-20"><a href="#cb22-20"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb22-21"><a href="#cb22-21"></a>  rf_preds <span class="sc">|&gt;</span></span>
+<span id="cb22-22"><a href="#cb22-22"></a>    <span class="fu">roc_auc</span>(<span class="at">truth =</span> phenotype, .pred_affected) <span class="sc">|&gt;</span></span>
+<span id="cb22-23"><a href="#cb22-23"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Random forest"</span>),</span>
+<span id="cb22-24"><a href="#cb22-24"></a>  logistic_preds <span class="sc">|&gt;</span></span>
+<span id="cb22-25"><a href="#cb22-25"></a>    <span class="fu">roc_auc</span>(<span class="at">truth =</span> phenotype, .pred_affected) <span class="sc">|&gt;</span></span>
+<span id="cb22-26"><a href="#cb22-26"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic regression"</span>)</span>
+<span id="cb22-27"><a href="#cb22-27"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb22-28"><a href="#cb22-28"></a>  <span class="fu">select</span>(model, .estimate) <span class="sc">|&gt;</span></span>
+<span id="cb22-29"><a href="#cb22-29"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(.estimate))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="cell" data-layout-align="center">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># ROC curves for both models on the same axes</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a><span class="fu">bind_rows</span>(</span>
+<span id="cb23-3"><a href="#cb23-3"></a>  rf_preds <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4"></a>    <span class="fu">roc_curve</span>(<span class="at">truth =</span> phenotype, .pred_affected) <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Random forest"</span>),</span>
+<span id="cb23-6"><a href="#cb23-6"></a>  logistic_preds <span class="sc">|&gt;</span></span>
+<span id="cb23-7"><a href="#cb23-7"></a>    <span class="fu">roc_curve</span>(<span class="at">truth =</span> phenotype, .pred_affected) <span class="sc">|&gt;</span></span>
+<span id="cb23-8"><a href="#cb23-8"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic regression"</span>)</span>
+<span id="cb23-9"><a href="#cb23-9"></a>) <span class="sc">|&gt;</span></span>
+<span id="cb23-10"><a href="#cb23-10"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="dv">1</span> <span class="sc">-</span> specificity,</span>
+<span id="cb23-11"><a href="#cb23-11"></a>             <span class="at">y =</span> sensitivity,</span>
+<span id="cb23-12"><a href="#cb23-12"></a>             <span class="at">colour =</span> model)) <span class="sc">+</span></span>
+<span id="cb23-13"><a href="#cb23-13"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb23-14"><a href="#cb23-14"></a>  <span class="fu">geom_abline</span>(<span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">colour =</span> <span class="st">"grey50"</span>) <span class="sc">+</span></span>
+<span id="cb23-15"><a href="#cb23-15"></a>  <span class="fu">scale_colour_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(</span>
+<span id="cb23-16"><a href="#cb23-16"></a>    <span class="st">"Random forest"</span>       <span class="ot">=</span> <span class="st">"#E63946"</span>,</span>
+<span id="cb23-17"><a href="#cb23-17"></a>    <span class="st">"Logistic regression"</span> <span class="ot">=</span> <span class="st">"#457B9D"</span></span>
+<span id="cb23-18"><a href="#cb23-18"></a>  )) <span class="sc">+</span></span>
+<span id="cb23-19"><a href="#cb23-19"></a>  <span class="fu">labs</span>(</span>
+<span id="cb23-20"><a href="#cb23-20"></a>    <span class="at">x        =</span> <span class="st">"1 - Specificity"</span>,</span>
+<span id="cb23-21"><a href="#cb23-21"></a>    <span class="at">y        =</span> <span class="st">"Sensitivity"</span>,</span>
+<span id="cb23-22"><a href="#cb23-22"></a>    <span class="at">colour   =</span> <span class="cn">NULL</span>,</span>
+<span id="cb23-23"><a href="#cb23-23"></a>    <span class="at">title    =</span> <span class="st">"ROC curves: random forest vs. logistic regression"</span>,</span>
+<span id="cb23-24"><a href="#cb23-24"></a>    <span class="at">subtitle =</span> <span class="st">"Both evaluated on the same held-out test set"</span></span>
+<span id="cb23-25"><a href="#cb23-25"></a>  ) <span class="sc">+</span></span>
+<span id="cb23-26"><a href="#cb23-26"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb23-27"><a href="#cb23-27"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<strong>If the random forest and logistic regression produce similar AUC, which should you prefer and why?</strong>
+<div id="radio_JILMROUAKH" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_JILMROUAKH" value=""><span>The random forest always outperforms logistic regression so should always be used</span></label><label><input type="radio" autocomplete="off" name="radio_JILMROUAKH" value="answer"><span>Complexity requires justification — if random forest offers little improvement, logistic regression is preferable because its coefficients are interpretable</span></label><label><input type="radio" autocomplete="off" name="radio_JILMROUAKH" value=""><span>Logistic regression should always be used because it is simpler</span></label><label><input type="radio" autocomplete="off" name="radio_JILMROUAKH" value=""><span>The model with higher accuracy should always be chosen regardless of interpretability</span></label>
+</div>
+<strong>When does a random forest have a genuine advantage over logistic regression?</strong>
+<div id="radio_MNBFMCMPSP" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_MNBFMCMPSP" value=""><span>When the dataset is very small</span></label><label><input type="radio" autocomplete="off" name="radio_MNBFMCMPSP" value="answer"><span>When the relationship between predictors and outcome is non-linear or when predictors interact in complex ways that a single equation cannot capture</span></label><label><input type="radio" autocomplete="off" name="radio_MNBFMCMPSP" value=""><span>When you need to interpret individual coefficients</span></label><label><input type="radio" autocomplete="off" name="radio_MNBFMCMPSP" value=""><span>When classes are perfectly balanced</span></label>
+</div>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>Final Reflection — Which model would you use?
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Write your answers individually before any discussion.</p>
+<ul>
+<li>Which model has higher AUC on the test set? Is the difference large enough to matter biologically for a breeding programme?</li>
+<li>Does either model show systematic bias in the confusion matrix — for instance, consistently missing affected dogs?</li>
+<li>Random forests cannot produce a coefficient table like logistic regression. For the cleft lip breeding application — where you might want to explain to a breeder why a dog was flagged — does this matter?</li>
+<li>You have now applied three machine learning models to biological data: linear regression, logistic regression, and random forests. Write two to three sentences describing a biological scenario where each model would be the most appropriate choice and why.</li>
+</ul>
+<p>Random forests have been applied to predict antibiotic resistance from bacterial genomes, species presence from environmental variables, and cancer diagnosis from gene expression profiles. In each case the model performed well but produced no biological insight. A logistic regression on the same data might perform less well but would identify which genes, which environmental variables, or which expression patterns were most predictive — information a biologist could act on.</p>
+</div>
+</div>
+<hr></section><section id="summary" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="summary">Summary</h2>
+<section id="key-concepts" class="level3" data-number="21.2.10"><h3 data-number="21.2.10" class="anchored" data-anchor-id="key-concepts">
+<span class="header-section-number">21.2.10</span> Key Concepts</h3>
+<p><strong>Decision trees</strong> classify by repeatedly splitting data on whichever predictor and threshold best separates the classes. Single trees overfit — they are sensitive to the specific training data.</p>
+<p><strong>Bagging</strong> reduces overfitting by fitting many trees to bootstrapped samples and averaging predictions. Random forests extend this by also randomly sampling predictors at each split, which decorrelates the trees and improves the ensemble.</p>
+<p><strong>mtry</strong> is the key tuning parameter — the number of predictors randomly considered at each split. It is chosen by cross-validation on the training data, not by evaluating on the test set.</p>
+<p><strong>Feature importance</strong> measures how much each predictor contributes to prediction accuracy. Unlike logistic regression coefficients, importance scores have no sign — they tell you which predictors matter, not in which direction.</p>
+<p><strong>Model comparison</strong> is only meaningful when both models are evaluated on the same held-out test set. A model that is more complex but not more accurate does not justify its additional complexity — especially when interpretability is lost in the process.</p>
+</section><section id="skills-checklist" class="level3" data-number="21.2.11"><h3 data-number="21.2.11" class="anchored" data-anchor-id="skills-checklist">
+<span class="header-section-number">21.2.11</span> Skills Checklist</h3>
+<p>By the end of this workshop you should be able to:</p>
+<ul class="task-list">
+<li><label><input type="checkbox">Explain what a decision tree does and why single trees overfit</label></li>
+<li><label><input type="checkbox">Explain how random forests reduce variance through bagging and random feature selection</label></li>
+<li><label><input type="checkbox">Fit a random forest using <code>tidymodels</code> with the <code>ranger</code> engine</label></li>
+<li><label><input type="checkbox">Tune <code>mtry</code> using cross-validation and interpret the tuning curve</label></li>
+<li><label><input type="checkbox">Evaluate a random forest using confusion matrix, sensitivity, specificity, and ROC-AUC</label></li>
+<li><label><input type="checkbox">Produce and interpret a feature importance plot</label></li>
+<li><label><input type="checkbox">Compare random forest and logistic regression performance on the same test set</label></li>
+<li><label><input type="checkbox">Articulate when a random forest is preferable to logistic regression and when it is not</label></li>
+</ul>
+<hr></section></section><section id="additional-resources" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="additional-resources">Additional Resources</h2>
+<p><strong>Tidymodels:</strong></p>
+<ul>
+<li>Random forests in tidymodels: <a href="https://www.tidymodels.org/">https://www.tidymodels.org/</a>
+</li>
+<li>The ranger package: <a href="https://cran.r-project.org/package=ranger">https://cran.r-project.org/package=ranger</a>
+</li>
+</ul>
+<p><strong>Concepts:</strong></p>
+<ul>
+<li>Greener et al.&nbsp;(2022) <em>Nature Reviews Molecular Cell Biology</em>: <a href="https://doi.org/10.1038/s41580-021-00407-0">https://doi.org/10.1038/s41580-021-00407-0</a>
+</li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>A note on complexity
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Random forests are more powerful than logistic regression in many settings. They are also less interpretable, harder to explain to non-technical audiences, and require more computational resources. In biology, where mechanistic understanding often matters as much as predictive accuracy, the trade-off between power and interpretability is not always resolved in favour of the more complex model. The right choice depends on the question, the audience, and the consequences of being wrong.</p>
+</div>
+</div>
+
+
+</section></main><!-- /main --><script>
+
+/* update total correct if #webex-total_correct exists */
+update_total_correct = function() {
+  console.log("webex: update total_correct");
+
+  var t = document.getElementsByClassName("webex-total_correct");
+  for (var i = 0; i < t.length; i++) {
+    p = t[i].parentElement;
+    var correct = p.getElementsByClassName("webex-correct").length;
+    var solvemes = p.getElementsByClassName("webex-solveme").length;
+    var radiogroups = p.getElementsByClassName("webex-radiogroup").length;
+    var selects = p.getElementsByClassName("webex-select").length;
+
+    t[i].innerHTML = correct + " of " + (solvemes + radiogroups + selects) + " correct";
+  }
+}
+
+/* webex-solution button toggling function */
+b_func = function() {
+  console.log("webex: toggle hide");
+
+  var cl = this.parentElement.classList;
+  if (cl.contains('open')) {
+    cl.remove("open");
+  } else {
+    cl.add("open");
+  }
+}
+
+/* check answers */
+check_func = function() {
+  console.log("webex: check answers");
+
+  var cl = this.parentElement.classList;
+  if (cl.contains('unchecked')) {
+    cl.remove("unchecked");
+    this.innerHTML = "Hide Answers";
+  } else {
+    cl.add("unchecked");
+    this.innerHTML = "Show Answers";
+  }
+}
+
+/* function for checking solveme answers */
+solveme_func = function(e) {
+  console.log("webex: check solveme");
+
+  var real_answers = JSON.parse(this.dataset.answer);
+  var my_answer = this.value;
+  var cl = this.classList;
+  if (cl.contains("ignorecase")) {
+    my_answer = my_answer.toLowerCase();
+  }
+  if (cl.contains("nospaces")) {
+    my_answer = my_answer.replace(/ /g, "")
+  }
+
+  if (my_answer == "") {
+    cl.remove("webex-correct");
+    cl.remove("webex-incorrect");
+  } else if (real_answers.includes(my_answer)) {
+    cl.add("webex-correct");
+    cl.remove("webex-incorrect");
+  } else {
+    cl.add("webex-incorrect");
+    cl.remove("webex-correct");
+  }
+
+  // match numeric answers within a specified tolerance
+  if(this.dataset.tol > 0){
+    var tol = JSON.parse(this.dataset.tol);
+    var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+    if (matches.reduce((a, b) => a + b, 0) > 0) {
+      cl.add("webex-correct");
+    } else {
+      cl.remove("webex-correct");
+    }
+  }
+
+  // added regex bit
+  if (cl.contains("regex")){
+    answer_regex = RegExp(real_answers.join("|"))
+    if (answer_regex.test(my_answer)) {
+      cl.add("webex-correct");
+    }
+  }
+
+  update_total_correct();
+}
+
+/* function for checking select answers */
+select_func = function(e) {
+  console.log("webex: check select");
+
+  var cl = this.classList
+
+  /* add style */
+  cl.remove("webex-incorrect");
+  cl.remove("webex-correct");
+  if (this.value == "answer") {
+    cl.add("webex-correct");
+  } else if (this.value != "blank") {
+    cl.add("webex-incorrect");
+  }
+
+  update_total_correct();
+}
+
+/* function for checking radiogroups answers */
+radiogroups_func = function(e) {
+  console.log("webex: check radiogroups");
+
+  var checked_button = document.querySelector('input[name=' + this.id + ']:checked');
+  var cl = checked_button.parentElement.classList;
+  var labels = checked_button.parentElement.parentElement.children;
+
+  /* get rid of styles */
+  for (i = 0; i < labels.length; i++) {
+    labels[i].classList.remove("webex-incorrect");
+    labels[i].classList.remove("webex-correct");
+  }
+
+  /* add style */
+  if (checked_button.value == "answer") {
+    cl.add("webex-correct");
+  } else {
+    cl.add("webex-incorrect");
+  }
+
+  update_total_correct();
+}
+
+window.onload = function() {
+  console.log("webex onload");
+  /* set up solution buttons */
+  var buttons = document.getElementsByTagName("button");
+
+  for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i].parentElement.classList.contains('webex-solution')) {
+      buttons[i].onclick = b_func;
+    }
+  }
+
+  var check_sections = document.getElementsByClassName("webex-check");
+  console.log("check:", check_sections.length);
+  for (var i = 0; i < check_sections.length; i++) {
+    check_sections[i].classList.add("unchecked");
+
+    let btn = document.createElement("button");
+    btn.innerHTML = "Show Answers";
+    btn.classList.add("webex-check-button");
+    btn.onclick = check_func;
+    check_sections[i].appendChild(btn);
+
+    let spn = document.createElement("span");
+    spn.classList.add("webex-total_correct");
+    check_sections[i].appendChild(spn);
+  }
+
+  /* set up webex-solveme inputs */
+  var solveme = document.getElementsByClassName("webex-solveme");
+
+  for (var i = 0; i < solveme.length; i++) {
+    /* make sure input boxes don't auto-anything */
+    solveme[i].setAttribute("autocomplete","off");
+    solveme[i].setAttribute("autocorrect", "off");
+    solveme[i].setAttribute("autocapitalize", "off");
+    solveme[i].setAttribute("spellcheck", "false");
+    solveme[i].value = "";
+
+    /* adjust answer for ignorecase or nospaces */
+    var cl = solveme[i].classList;
+    var real_answer = solveme[i].dataset.answer;
+    if (cl.contains("ignorecase")) {
+      real_answer = real_answer.toLowerCase();
+    }
+    if (cl.contains("nospaces")) {
+      real_answer = real_answer.replace(/ /g, "");
+    }
+    solveme[i].dataset.answer = real_answer;
+
+    /* attach checking function */
+    solveme[i].onkeyup = solveme_func;
+    solveme[i].onchange = solveme_func;
+
+    solveme[i].insertAdjacentHTML("afterend", " <span class='webex-icon'></span>")
+  }
+
+  /* set up radiogroups */
+  var radiogroups = document.getElementsByClassName("webex-radiogroup");
+  for (var i = 0; i < radiogroups.length; i++) {
+    radiogroups[i].onchange = radiogroups_func;
+  }
+
+  /* set up selects */
+  var selects = document.getElementsByClassName("webex-select");
+  for (var i = 0; i < selects.length; i++) {
+    selects[i].onchange = select_func;
+    selects[i].insertAdjacentHTML("afterend", " <span class='webex-icon'></span>")
+  }
+
+  update_total_correct();
+}
+
+</script><script>
+// open rdrr links externally ----
+
+var exlinks = document.querySelectorAll("a[href^='https://rdrr.io']");
+var exlink_func = function(){
+  window.open(this.href);
+  return false;
+};
+for (var i = 0; i < exlinks.length; i++) {
+    exlinks[i].addEventListener('click', exlink_func, false);
+}
+
+// visible second sidebar in mobile ----
+
+function move_sidebar() {
+  var toc = document.getElementById("TOC");
+  var small_sidebar = document.querySelector("#quarto-sidebar .sidebar-menu-container");
+  var right_sidebar = document.getElementById("quarto-margin-sidebar");
+
+  if (window.innerWidth < 768) {
+    small_sidebar.append(toc);
+  } else {
+    right_sidebar.append(toc);
+  }
+}
+move_sidebar();
+window.onresize = move_sidebar;
+</script><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./ml-logistic-regression.html" class="pagination-link" aria-label="Machine Learning Classification">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">Machine Learning Classification</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./r-basics.html" class="pagination-link" aria-label="R Basics">
+        <span class="nav-page-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">R Basics</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>CC-BY (2026) Philip Leftwich</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+</body></html>
