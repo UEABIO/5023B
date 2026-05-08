@@ -66,7 +66,7 @@ library(here)
 library(janitor)
 
 # ── Data ──────────────────────────────────────────────────────────────────────
-dogs <- read_table(here("data", "cleft_lip_synthetic.txt")) |>
+dogs <- read_table(here("data", "dogs_imputed_reduced.tsv")) |>
   clean_names()
 
 dogs_model <- dogs |>
@@ -582,6 +582,11 @@ classification_metrics(
 
 ### ROC Curve and AUC
 
+A receiver operating characteristic (ROC) curve plots sensitivity (the proportion of truly affected dogs correctly identified) against 1 − specificity (the proportion of unaffected dogs incorrectly flagged as affected) across every possible classification threshold. Each point on the curve corresponds to one threshold value. A model that discriminates perfectly would pass through the top-left corner — sensitivity of 1 and specificity of 1 simultaneously. A model with no discriminative ability would follow the diagonal, performing no better than random assignment.
+
+The area under the ROC curve (AUC) summarises this into a single number. An AUC of 1.0 indicates perfect discrimination; an AUC of 0.5 indicates none. 
+:::
+
 ```{r}
 # ROC curve
 rf_preds |>
@@ -723,6 +728,10 @@ opts_no_sign <- c(
 
 With both models evaluated on the same test set, a direct comparison is now meaningful. This is the central question of the workshop: does the added complexity of the random forest justify itself?
 
+The code takes the predictions each model made on the test set and asks the same question of both: how well does this model's predicted probabilities separate affected from unaffected dogs? It does this by computing AUC for each model, attaching a label so we know which result belongs to which model, then stacking the two results into a single table for direct comparison.
+
+This is threshold-independent — you are evaluating the quality of the underlying probability estimates, not a particular classification decision - allowing a clean comparison of the models
+
 ```{r, eval = FALSE}
 
 # Check logistic_preds exists before comparing
@@ -743,17 +752,7 @@ bind_rows(
   select(model, .estimate) |>
   arrange(desc(.estimate))
 
-# Numeric comparison of AUC
-bind_rows(
-  rf_preds |>
-    roc_auc(truth = phenotype, .pred_affected) |>
-    mutate(model = "Random forest"),
-  logistic_preds |>
-    roc_auc(truth = phenotype, .pred_affected) |>
-    mutate(model = "Logistic regression")
-) |>
-  select(model, .estimate) |>
-  arrange(desc(.estimate))
+
 ```
 
 ```{r, eval = FALSE}

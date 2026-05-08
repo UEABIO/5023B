@@ -742,7 +742,7 @@ Quick setup - run this if you did not complete Workshop 2
 <span id="cb1-7"><a href="#cb1-7"></a><span class="fu">library</span>(janitor)</span>
 <span id="cb1-8"><a href="#cb1-8"></a></span>
 <span id="cb1-9"><a href="#cb1-9"></a><span class="co"># ── Data ──────────────────────────────────────────────────────────────────────</span></span>
-<span id="cb1-10"><a href="#cb1-10"></a>dogs <span class="ot">&lt;-</span> <span class="fu">read_table</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"cleft_lip_synthetic.txt"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb1-10"><a href="#cb1-10"></a>dogs <span class="ot">&lt;-</span> <span class="fu">read_table</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"dogs_imputed_reduced.tsv"</span>)) <span class="sc">|&gt;</span></span>
 <span id="cb1-11"><a href="#cb1-11"></a>  <span class="fu">clean_names</span>()</span>
 <span id="cb1-12"><a href="#cb1-12"></a></span>
 <span id="cb1-13"><a href="#cb1-13"></a>dogs_model <span class="ot">&lt;-</span> dogs <span class="sc">|&gt;</span></span>
@@ -850,12 +850,12 @@ Quick setup - run this if you did not complete Workshop 2
 </div>
 <p>A random forest adds one further twist: at each split within each tree, only a random subset of predictors is considered. This decorrelates the trees — they are not all making the same splits — which makes the ensemble more robust.</p>
 <strong>What does a random forest do?</strong>
-<div id="radio_QMXHRLRPPX" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_QMXHRLRPPX" value=""><span>It fits one very deep decision tree to all the training data</span></label><label><input type="radio" autocomplete="off" name="radio_QMXHRLRPPX" value="answer"><span>It fits many trees, each on a bootstrapped sample using a random subset of predictors, then combines their predictions</span></label><label><input type="radio" autocomplete="off" name="radio_QMXHRLRPPX" value=""><span>It randomly selects which observations to predict</span></label><label><input type="radio" autocomplete="off" name="radio_QMXHRLRPPX" value=""><span>It is a special case of logistic regression with random coefficients</span></label>
+<div id="radio_WERKLROGXI" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_WERKLROGXI" value=""><span>It fits one very deep decision tree to all the training data</span></label><label><input type="radio" autocomplete="off" name="radio_WERKLROGXI" value="answer"><span>It fits many trees, each on a bootstrapped sample using a random subset of predictors, then combines their predictions</span></label><label><input type="radio" autocomplete="off" name="radio_WERKLROGXI" value=""><span>It randomly selects which observations to predict</span></label><label><input type="radio" autocomplete="off" name="radio_WERKLROGXI" value=""><span>It is a special case of logistic regression with random coefficients</span></label>
 </div>
 <strong>Why do random forests produce more stable predictions than a single decision tree?</strong>
-<div id="radio_IGYWFQGXAD" class="webex-radiogroup">
-<label><input type="radio" autocomplete="off" name="radio_IGYWFQGXAD" value=""><span>A single deep tree always overfits — random forests prevent this by using shallow trees only</span></label><label><input type="radio" autocomplete="off" name="radio_IGYWFQGXAD" value="answer"><span>Single trees are unstable — small changes in training data produce very different trees. Averaging many trees reduces this variance.</span></label><label><input type="radio" autocomplete="off" name="radio_IGYWFQGXAD" value=""><span>Random forests use fewer predictors so they are less likely to overfit</span></label><label><input type="radio" autocomplete="off" name="radio_IGYWFQGXAD" value=""><span>Random forests are simply faster to fit than single trees</span></label>
+<div id="radio_PJMXNLLWBQ" class="webex-radiogroup">
+<label><input type="radio" autocomplete="off" name="radio_PJMXNLLWBQ" value=""><span>A single deep tree always overfits — random forests prevent this by using shallow trees only</span></label><label><input type="radio" autocomplete="off" name="radio_PJMXNLLWBQ" value="answer"><span>Single trees are unstable — small changes in training data produce very different trees. Averaging many trees reduces this variance.</span></label><label><input type="radio" autocomplete="off" name="radio_PJMXNLLWBQ" value=""><span>Random forests use fewer predictors so they are less likely to overfit</span></label><label><input type="radio" autocomplete="off" name="radio_PJMXNLLWBQ" value=""><span>Random forests are simply faster to fit than single trees</span></label>
 </div>
 <blockquote class="blockquote">
 <p>Without random feature selection, every tree in a bagged ensemble tends to make the same first split — on whichever SNP is most strongly associated with cleft lip. Trees that start with the same split tend to look similar throughout, even when fitted on different bootstrapped samples. Averaging similar trees does not reduce error much — the same mistakes appear in nearly all of them. By restricting each split to a random subset of predictors, random forests force trees to find different paths through the data. Some trees will miss the most important SNP at a particular split and find a different one instead. The errors are now different across trees, and averaging different errors cancels out far more effectively.</p>
@@ -1155,6 +1155,8 @@ Hint: reading the mtry tuning curve
 </div>
 </section><section id="roc-curve-and-auc" class="level3" data-number="21.2.7"><h3 data-number="21.2.7" class="anchored" data-anchor-id="roc-curve-and-auc">
 <span class="header-section-number">21.2.7</span> ROC Curve and AUC</h3>
+<p>A receiver operating characteristic (ROC) curve plots sensitivity (the proportion of truly affected dogs correctly identified) against 1 − specificity (the proportion of unaffected dogs incorrectly flagged as affected) across every possible classification threshold. Each point on the curve corresponds to one threshold value. A model that discriminates perfectly would pass through the top-left corner — sensitivity of 1 and specificity of 1 simultaneously. A model with no discriminative ability would follow the diagonal, performing no better than random assignment.</p>
+<p>The area under the ROC curve (AUC) summarises this into a single number. An AUC of 1.0 indicates perfect discrimination; an AUC of 0.5 indicates none. :::</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a><span class="co"># ROC curve</span></span>
 <span id="cb16-2"><a href="#cb16-2"></a>rf_preds <span class="sc">|&gt;</span></span>
@@ -1325,6 +1327,8 @@ Prediction   affected unaffected
 </div>
 <hr></section><section id="comparing-models" class="level2 unnumbered"><h2 class="unnumbered anchored" data-anchor-id="comparing-models">Comparing Models</h2>
 <p>With both models evaluated on the same test set, a direct comparison is now meaningful. This is the central question of the workshop: does the added complexity of the random forest justify itself?</p>
+<p>The code takes the predictions each model made on the test set and asks the same question of both: how well does this model’s predicted probabilities separate affected from unaffected dogs? It does this by computing AUC for each model, attaching a label so we know which result belongs to which model, then stacking the two results into a single table for direct comparison.</p>
+<p>This is threshold-independent — you are evaluating the quality of the underlying probability estimates, not a particular classification decision - allowing a clean comparison of the models</p>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a><span class="co"># Check logistic_preds exists before comparing</span></span>
 <span id="cb22-2"><a href="#cb22-2"></a><span class="co"># If it does not, run the quick setup code above</span></span>
@@ -1342,19 +1346,7 @@ Prediction   affected unaffected
 <span id="cb22-14"><a href="#cb22-14"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic regression"</span>)</span>
 <span id="cb22-15"><a href="#cb22-15"></a>) <span class="sc">|&gt;</span></span>
 <span id="cb22-16"><a href="#cb22-16"></a>  <span class="fu">select</span>(model, .estimate) <span class="sc">|&gt;</span></span>
-<span id="cb22-17"><a href="#cb22-17"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(.estimate))</span>
-<span id="cb22-18"><a href="#cb22-18"></a></span>
-<span id="cb22-19"><a href="#cb22-19"></a><span class="co"># Numeric comparison of AUC</span></span>
-<span id="cb22-20"><a href="#cb22-20"></a><span class="fu">bind_rows</span>(</span>
-<span id="cb22-21"><a href="#cb22-21"></a>  rf_preds <span class="sc">|&gt;</span></span>
-<span id="cb22-22"><a href="#cb22-22"></a>    <span class="fu">roc_auc</span>(<span class="at">truth =</span> phenotype, .pred_affected) <span class="sc">|&gt;</span></span>
-<span id="cb22-23"><a href="#cb22-23"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Random forest"</span>),</span>
-<span id="cb22-24"><a href="#cb22-24"></a>  logistic_preds <span class="sc">|&gt;</span></span>
-<span id="cb22-25"><a href="#cb22-25"></a>    <span class="fu">roc_auc</span>(<span class="at">truth =</span> phenotype, .pred_affected) <span class="sc">|&gt;</span></span>
-<span id="cb22-26"><a href="#cb22-26"></a>    <span class="fu">mutate</span>(<span class="at">model =</span> <span class="st">"Logistic regression"</span>)</span>
-<span id="cb22-27"><a href="#cb22-27"></a>) <span class="sc">|&gt;</span></span>
-<span id="cb22-28"><a href="#cb22-28"></a>  <span class="fu">select</span>(model, .estimate) <span class="sc">|&gt;</span></span>
-<span id="cb22-29"><a href="#cb22-29"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(.estimate))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb22-17"><a href="#cb22-17"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(.estimate))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="cell" data-layout-align="center">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a><span class="co"># ROC curves for both models on the same axes</span></span>
