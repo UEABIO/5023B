@@ -76,6 +76,7 @@ book:
     - ml-regression.qmd
     - ml-logistic-regression.qmd
     - workshop_03_random_forests.qmd
+    - workshop_04_pca_kmeans.qmd
 
   appendices:
   - r-basics.qmd
