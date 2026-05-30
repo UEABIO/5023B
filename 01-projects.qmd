@@ -1,163 +1,282 @@
+# Day 1 Block 1: Project-based workflows {.unnumbered}
 
-# Project-oriented workflows
 
-
-```{r, include = FALSE}
+```{r}
+#| include: false
 source("R/booktem_setup.R")
 source("R/my_setup.R")
 library(tidyverse)
 library(here)
-penguins_raw <- read_csv(here("files", "penguins_raw.csv"))
 ```
 
 
+The single most common reason a shared script fails on someone else's computer is
+a file path. A line like `read.csv("C:/Users/me/thesis/data/penguins.csv")` is a
+statement about *your* machine, not about the analysis. The fix is to make the
+project, not your home directory, the centre of the universe.
 
-In RStudio, a project is a way to organize your work within the IDE. It's a fundamental concept designed to enhance your workflow by providing a structured and efficient means of managing your R-related tasks and files. Here's why R projects are useful:
+## Why a project
 
-**1. Organized File Structure:** R projects encourage you to maintain a well-organized file structure for your work. Instead of having scattered R scripts, data files, and figures, you create a dedicated folder for each project. This folder typically contains all project-related materials, including data, code, figures, notes, and any other relevant files.
+An RStudio (or Positron) project is a folder with an `.Rproj` marker file. Opening
+it does two useful things automatically: it sets the working directory to the
+project folder, and it points the file browser there. Every path you write can
+then be relative to the project root, which means the project can be zipped,
+shared, or moved to another operating system and still run without editing a
+single path.
 
-**2. Working Directory Management:** When you open an R project in RStudio, it automatically sets the working directory to the project's folder. This ensures that all file paths are relative to the project's location. This working directory intentionality eliminates the need for setting working directories manually or using absolute paths in your code.
+To create one: **File &rarr; New Project &rarr; New Directory &rarr; New Project**,
+name it, and click **Create Project**. RStudio leaves an `.Rproj` file in the
+folder. Double-clicking that file opens a fresh session pointed at the project.
 
-**3. Portability and Collaboration:** R projects make your work more portable and collaborative. Since all paths are relative to the project folder, the project can be easily shared with others. It ensures that the code works consistently across different computers and for other users, promoting collaboration and reproducibility.
-
-**4. RStudio Integration:** RStudio integrates project management seamlessly. You can designate a folder as an R project, and RStudio leaves a `.Rproj` file in that folder to store project-specific settings. When you double-click on this file, it opens a fresh instance of RStudio with the project's working directory and file browser pointed at the project folder.
-
-**5. Efficient Workflow:** RStudio provides various menu options and keyboard shortcuts for managing projects. This includes the ability to open existing projects, switch between projects, and even launch multiple instances of RStudio for different projects.
-
-In essence, R projects help you maintain a clean and organized workspace, improve collaboration, and ensure that your work remains reproducible and transferable across different environments and over time. It's a best practice for data scientists and analysts working with R, as it fosters the disciplined use of relative file paths and working directories, which is crucial for the reliability and scalability of your R projects.
-
-
-## Setting up a new project
-
-You should start a new R project when you begin working on a distinct task, research project, or analysis. This ensures that your work is well-organized, and it's especially beneficial when you need to collaborate, share, or revisit the project later.
-
-To create and open an R project in RStudio:
-
-1. Go to "File" in the RStudio menu.
-
-2. Select "New Project..."
-
-3. Choose a project type or create a new directory for the project.
-
-4. Click "Create Project."
-
-The new project will be created with a .Rproj file. You can open it by double-clicking on this file or by using the "File" menu in RStudio.
-
-This will set up a dedicated workspace for your project, ensuring that the working directory and file paths are appropriately managed.
-
-```{r, eval=TRUE, echo=FALSE, out.width="80%", fig.cap = "An example of a typical R project set-up"}
+```{r}
+#| eval: true
+#| echo: false
+#| out-width: "80%"
+#| fig-cap: "A typical R project layout"
 knitr::include_graphics("images/project.png")
 ```
 
+## Absolute versus relative paths
 
-## Avoiding setwd() and Promoting Safe File Paths:
+An **absolute path** spells out the full location from the root of the disk:
 
-To maintain a clean and efficient workflow in R, it's advisable to avoid using `setwd()` at the beginning of each script. This practice promotes the use of safe file paths and is particularly important for projects with multiple collaborators or when working across different computers.
+```
+/home/your-username/project/data/raw/penguins.csv
+```
 
-:::{.callout-important}
+It breaks the moment anyone else opens your code, because nobody else has your
+directory structure. A **relative path** is relative to the project root, so it
+travels with the project:
 
-[Why we use projects](https://www.tidyverse.org/blog/2017/12/workflow-vs-script/)
+```
+data/raw/penguins.csv
+```
+
+## A sensible layout
+
+Organise each project into its own folder with a predictable structure. The
+convention we follow all day:
+
+```
+my-project.Rproj
+|- data/
+|   |- raw/          # read-only; never edited by code
+|   |- processed/    # outputs of cleaning
+|- R/
+|   |- functions/    # function definitions only
+|   |- scripts/          # or numbered analysis scripts in R/
+|- outputs/
+|   |- figures/
+|   |- tables/
+```
+
+The principle that does the most work here is *raw data is read-only*. Cleaning
+scripts read from `data/raw/` and write to `data/processed/`; they never overwrite
+the original. If a clean goes wrong, the source of truth is untouched.
+
+
+### Setting up folders
+
+This can be done in your IDE
+
+Create the following folders using the + New Folder button in the Files tab
+
+# data/raw
+# data/clean
+# R/scripts
+# outputs
+
+Or it can be done programmatically: 
+
+
+#### BASE R
+
+```{r}
+#| eval: false
+# dir.create makes directories
+# unless specified it is not "recursive"
+
+dir.create("data/raw",
+           recursive = TRUE) 
+
+dir.create("data/clean",
+           recursive = TRUE)
+
+dir.create("R/scripts",
+           recursive = TRUE)
+
+dir.create("outputs") 
+
+```
+
+#### fs package
+
+Run `fs::dir_tree()` to generate a nicely formatted directory tree and is a great sanity check before and after file manipulation
+
+The `fs` Hester et al. (2025) package is a great OS agnostic package and one that works safely (it will not overwrite files or folders unless explicitly asked).
+
+```{r}
+#| eval: false
+
+# Load the package
+library(fs)
+
+# Create standard folders
+dir_create("data", c("raw", "clean"))   # creates dir recursively as standard
+dir_create("R", c("scripts"))       # for your R code
+dir_create("outputs")    # for figures and plots
+
+```
+
+
+
+
+## The `here` package
+
+Even inside a project, paths written with `/` or `\\` can behave differently
+across operating systems, and they break if you run code from a subdirectory.
+`here::here()` builds a path from the project root regardless of where the code is
+called from or which operating system runs it.
+
+```{r}
+#| eval: false
+# Fragile: relative to wherever the session happens to sit
+raw_data <- readr::read_csv("data/raw/penguins.csv")
+
+# Robust: built from the project root every time
+library(here)
+raw_data <- readr::read_csv(here("data", "raw", "penguins.csv"))
+```
+
+`here()` finds the root by looking for the `.Rproj` file (or a `.here` file), so
+it does not depend on the working directory. We recommend using an RStudio project
+*and* `here()` together. Either alone helps; both together is robust.
+
+:::{.callout-note}
+
+Further reading on `here`: the package's own rationale at
+<https://github.com/jennybc/here_here> sets out the argument better than we can
+here. The short version: a path is part of your code, and code should not assume
+it knows where it lives.
 
 :::
 
-### Absolute vs. Relative Paths:
+### Activity: de-path a script
 
-While absolute file paths provide an explicit way to locate resources, they have significant drawbacks, such as incompatibility and reduced reproducibility. Relative file paths, on the other hand, are relative to the current working directory, making them shorter, more portable, and more reproducible.
+:::{.callout-important}
+## Task
 
-An **Absolute file path** is a path that contains the entire path to a file or directory starting from your Home directory and ending at the file or directory you wish to access e.g.
+Below is the opening of a script written without a project. Rewrite it so it would
+run unchanged on a colleague's machine. You should change two things: the working
+directory line, and the path.
 
-```
-/home/your-username/project/data/penguins_raw.csv
-```
+:::
 
-- If you share files, another user won’t have the same directory structure as you, so they will need to recreate the file paths
+```{r}
+#| eval: false
+setwd("/Users/sam/Documents/penguin_thesis/")
 
-- If you alter your directory structure, you’ll need to rewrite the paths
-
-- An absolute file path will likely be longer than a relative path, more of the backslashes will need to be edited, so there is more scope for error.
-
-A **Relative filepath** is the path that is relative to the working directory location on your computer.
-
-When you use RStudio Projects, wherever the `.Rproj` file is located is set to the working directory. This means that if the `.Rproj` file is located in your project folder then the relative path to your data is:
-
-```
-data/penguins_raw.csv
+penguins_raw <- read.csv("/Users/sam/Documents/penguin_thesis/data/raw/penguins.csv")
 ```
 
-This filepath is shorter and it means you could share your project with someone else and the script would run without any editing.
+:::{.callout-tip}
+## Solution
 
-### Organizing Projects:
-
-A key aspect of this workflow is organizing each logical project into a separate folder on your computer. This ensures that files and scripts are well-structured, making it easier to manage your work.
-
-```
-my_project.RProj/
-    |- data/
-    |   |- raw/
-    |       |- penguins_raw.csv
-    |   |- processed/
-    |- scripts/
-    |   |- analysis.R
-    |- results/
-
-
-```
-
-
-### The `here` Package:
-
-To further enhance this organization and ensure that file paths are independent of specific working directories, the here package comes into play. The `here()` function provided by this package builds file paths relative to the top-level directory of your project.
-
-In the above project example you have raw data files in the data/raw directory, scripts in the scripts directory, and you want to save processed data in the data/processed directory.
-
-To access this data using a relative filepath we need:
-
-```{r, eval = F}
-
-raw_data <- read.csv("data/raw/penguins_raw.csv")
-
-
-```
-
-To access this data with `here` we provide the directories and desired file, and `here()` builds the required filepath starting at the top level of our project each time
-
-```{r, eval = F}
-
+```{r, eval = FALSE}
+# No setwd() at all: open the project instead, which sets the directory for you.
 library(here)
+library(tidyverse)
 
-raw_data <- read.csv(here("data", "raw", "penguins.csv"))
-
+penguins_raw <- readr::read_csv(here("data", "raw", "penguins.csv"))
 ```
 
+The `setwd()` line is deleted entirely, not replaced. Working directory is the
+project's job, not the script's. The path is rebuilt from the project root with
+`here()`, so it no longer mentions any user or machine.
+tidyverse contains the `readr` package which has `read_csv()`, so we load it here. We could load `readr` directly if we wanted, but `tidyverse` is a common choice for data analysis and it includes `readr`, so we go with that.
 
-### Reading
-
-(https://github.com/jennybc/here_here)
-
-(https://cran.r-project.org/web/packages/here/index.html)
-
+:::
 
 ## Blank slates
 
-When working on data analysis and coding projects in R, it's crucial to ensure that your analysis remains clean, reproducible, and free from hidden dependencies. 
+A clean analysis should not depend on hidden state left over from a previous
+session: a package you attached by hand, an object you created interactively, an
+option you set and forgot. Many scripts open with `rm(list = ls())` in an attempt
+to start clean, but this is a weak guarantee. It removes user-created objects but
+does **not** detach packages, reset options, or change the working directory. The
+session is still contaminated.
 
-Hidden dependencies are elements in your R session that might not be immediately apparent but can significantly impact the reliability and predictability of your work.
+The reliable habit is to **restart R** (Session &rarr; Restart R, or
+`Ctrl/Cmd+Shift+F10`) and rerun the script from the top. If the analysis only runs
+correctly from a fresh session, it is reproducible; if it needs objects that exist
+only because of something you did by hand earlier, you find out immediately rather
+than six months later. Treat the script, not the workspace, as the record of what
+you did.
 
-For example many data analysis scripts start with the command `rm(list = ls())`. While this command clears user-created objects from the workspace, it leaves hidden dependencies as it does not reset the R session, and can cause issues such as: 
+:::{.callout-tip}
 
-- **Hidden Dependencies:** Users might unintentionally rely on packages or settings applied in the current session.
+Turn off workspace saving so a stale `.RData` never loads silently. In Tools
+&rarr; Global Options &rarr; General, set "Save workspace to .RData on exit" to
+**Never**, and untick "Restore .RData into workspace at startup". Now every
+session starts blank, and the only way to recreate your objects is to run your
+code.
 
-- **Incomplete Reset:** Package attachments made with `library()` persist, and customized options remain set.
+:::
 
-- **Working Directory:** The working directory is not affected, potentially causing path-related problems in future scripts.
+## `renv`: pinning package versions
 
-### Restart R sessions
+A project that runs today can break next year if a package changes its behaviour.
+`renv` records the exact package versions a project uses, in a project-local
+library, so the environment can be reconstructed later or on another machine.
 
-Restarting R sessions and using scripts as your history is a best practice for maintaining a clean, reproducible, and efficient workflow. It addresses the limitations of `rm(list = ls())` by ensuring a complete reset and minimizing hidden dependencies, enhancing code organization, and ensuring your analysis remains robust and predictable across sessions and when shared with others.
+```{r}
+#| eval: false
+# Once per project: create a project-local library and record current versions
+renv::init()
 
-You can set up a "blank-slate" R project by navigating to the Workspace options Tools > Project Options and setting all of these options to "No."
+# Install into the project library (not the global one)
+renv::install("dplyr")
 
-```{r, eval=TRUE, echo=FALSE, out.width="80%",}
-knitr::include_graphics("images/rstudio-workspace.png")
+# After installing or updating anything, record the new state
+renv::snapshot()
+
+# On another machine, or after things break, rebuild the recorded environment
+renv::restore()
 ```
 
+`renv::status()` reports whether the lockfile and the library agree.
+
+`renv.lock` records only packages actually loaded in the project, so it captures
+what you use rather than everything installed.
+
+:::{.callout-note}
+
+`renv` is a large step towards reproducibility, not a complete guarantee. It
+records, but does not by itself reinstall, the R version you used (though the
+version is noted in `renv.lock`). For stronger guarantees, tools such as `rig`
+(switching R versions) or Docker (capturing the whole environment) exist, but they
+are beyond today's scope. For most analysis projects, a project plus `here()` plus
+`renv` is enough.
+
+:::
+
+### Activity: initialise a project environment
+
+:::{.callout-important}
+## Task
+
+In a fresh project, run `renv::init()`, then `renv::install("janitor")`, then
+`renv::snapshot()`. Open `renv.lock` in a text editor and find the entry for
+`janitor`. What information is recorded about it, and why would a collaborator need
+that exact information to reproduce your analysis?
+
+:::
+
+:::{.callout-note}
+
+**Where this leaves us.** We now have a project that runs anywhere, reads its data
+by relative path, starts from a blank slate, and pins its package versions. That
+is the foundation. Everything from here assumes you are working inside such a
+project. The rest of the day fills it with well-organised analytical code.
+
+:::
