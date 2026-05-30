@@ -1,0 +1,1684 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.29">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<meta name="description" content="Statistical skills for Biologists">
+<title>Making tables with gt – 5023B</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./12-basic-ggplot.html" rel="next">
+<link href="./11-AI-programming-integrated.html" rel="prev">
+<link href="./images/logos/logo.png" rel="icon" type="image/png">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-9206d9c030161701b67a41faf3cec2af.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-a85b8e33ea8f0b235709a7eb17d07876.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-9206d9c030161701b67a41faf3cec2af.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-fd94a606acb28349eb1c6d9e349abb9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-e6b0f40ab4c88b0bb051e6f7740d52fa.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-fd94a606acb28349eb1c6d9e349abb9b.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script><link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
+<link rel="stylesheet" href="include/booktem.css">
+<link rel="stylesheet" href="include/webex.css">
+<link rel="stylesheet" href="include/glossary.css">
+<link rel="stylesheet" href="include/style.css">
+</head>
+<body class="nav-sidebar floating quarto-light"><script id="quarto-html-before-body" type="application/javascript">
+    const toggleBodyColorMode = (bsSheetEl) => {
+      const mode = bsSheetEl.getAttribute("data-mode");
+      const bodyEl = window.document.querySelector("body");
+      if (mode === "dark") {
+        bodyEl.classList.add("quarto-dark");
+        bodyEl.classList.remove("quarto-light");
+      } else {
+        bodyEl.classList.add("quarto-light");
+        bodyEl.classList.remove("quarto-dark");
+      }
+    }
+    const toggleBodyColorPrimary = () => {
+      const bsSheetEl = window.document.querySelector("link#quarto-bootstrap:not([rel=disabled-stylesheet])");
+      if (bsSheetEl) {
+        toggleBodyColorMode(bsSheetEl);
+      }
+    }
+    const setColorSchemeToggle = (alternate) => {
+      const toggles = window.document.querySelectorAll('.quarto-color-scheme-toggle');
+      for (let i=0; i < toggles.length; i++) {
+        const toggle = toggles[i];
+        if (toggle) {
+          if (alternate) {
+            toggle.classList.add("alternate");
+          } else {
+            toggle.classList.remove("alternate");
+          }
+        }
+      }
+    };
+    const toggleColorMode = (alternate) => {
+      // Switch the stylesheets
+      const primaryStylesheets = window.document.querySelectorAll('link.quarto-color-scheme:not(.quarto-color-alternate)');
+      const alternateStylesheets = window.document.querySelectorAll('link.quarto-color-scheme.quarto-color-alternate');
+      manageTransitions('#quarto-margin-sidebar .nav-link', false);
+      if (alternate) {
+        // note: dark is layered on light, we don't disable primary!
+        enableStylesheet(alternateStylesheets);
+        for (const sheetNode of alternateStylesheets) {
+          if (sheetNode.id === "quarto-bootstrap") {
+            toggleBodyColorMode(sheetNode);
+          }
+        }
+      } else {
+        disableStylesheet(alternateStylesheets);
+        enableStylesheet(primaryStylesheets)
+        toggleBodyColorPrimary();
+      }
+      manageTransitions('#quarto-margin-sidebar .nav-link', true);
+      // Switch the toggles
+      setColorSchemeToggle(alternate)
+      // Hack to workaround the fact that safari doesn't
+      // properly recolor the scrollbar when toggling (#1455)
+      if (navigator.userAgent.indexOf('Safari') > 0 && navigator.userAgent.indexOf('Chrome') == -1) {
+        manageTransitions("body", false);
+        window.scrollTo(0, 1);
+        setTimeout(() => {
+          window.scrollTo(0, 0);
+          manageTransitions("body", true);
+        }, 40);
+      }
+    }
+    const disableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        stylesheet.rel = 'disabled-stylesheet';
+      }
+    }
+    const enableStylesheet = (stylesheets) => {
+      for (let i=0; i < stylesheets.length; i++) {
+        const stylesheet = stylesheets[i];
+        if(stylesheet.rel !== 'stylesheet') { // for Chrome, which will still FOUC without this check
+          stylesheet.rel = 'stylesheet';
+        }
+      }
+    }
+    const manageTransitions = (selector, allowTransitions) => {
+      const els = window.document.querySelectorAll(selector);
+      for (let i=0; i < els.length; i++) {
+        const el = els[i];
+        if (allowTransitions) {
+          el.classList.remove('notransition');
+        } else {
+          el.classList.add('notransition');
+        }
+      }
+    }
+    const isFileUrl = () => {
+      return window.location.protocol === 'file:';
+    }
+    const hasAlternateSentinel = () => {
+      let styleSentinel = getColorSchemeSentinel();
+      if (styleSentinel !== null) {
+        return styleSentinel === "alternate";
+      } else {
+        return false;
+      }
+    }
+    const setStyleSentinel = (alternate) => {
+      const value = alternate ? "alternate" : "default";
+      if (!isFileUrl()) {
+        window.localStorage.setItem("quarto-color-scheme", value);
+      } else {
+        localAlternateSentinel = value;
+      }
+    }
+    const getColorSchemeSentinel = () => {
+      if (!isFileUrl()) {
+        const storageValue = window.localStorage.getItem("quarto-color-scheme");
+        return storageValue != null ? storageValue : localAlternateSentinel;
+      } else {
+        return localAlternateSentinel;
+      }
+    }
+    const toggleGiscusIfUsed = (isAlternate, darkModeDefault) => {
+      const baseTheme = document.querySelector('#giscus-base-theme')?.value ?? 'light';
+      const alternateTheme = document.querySelector('#giscus-alt-theme')?.value ?? 'dark';
+      let newTheme = '';
+      if(authorPrefersDark) {
+        newTheme = isAlternate ? baseTheme : alternateTheme;
+      } else {
+        newTheme = isAlternate ? alternateTheme : baseTheme;
+      }
+      const changeGiscusTheme = () => {
+        // From: https://github.com/giscus/giscus/issues/336
+        const sendMessage = (message) => {
+          const iframe = document.querySelector('iframe.giscus-frame');
+          if (!iframe) return;
+          iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+        }
+        sendMessage({
+          setConfig: {
+            theme: newTheme
+          }
+        });
+      }
+      const isGiscussLoaded = window.document.querySelector('iframe.giscus-frame') !== null;
+      if (isGiscussLoaded) {
+        changeGiscusTheme();
+      }
+    };
+    const authorPrefersDark = false;
+    const darkModeDefault = authorPrefersDark;
+      document.querySelector('link#quarto-text-highlighting-styles.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+      document.querySelector('link#quarto-bootstrap.quarto-color-scheme-extra').rel = 'disabled-stylesheet';
+    let localAlternateSentinel = darkModeDefault ? 'alternate' : 'default';
+    // Dark / light mode switch
+    window.quartoToggleColorScheme = () => {
+      // Read the current dark / light value
+      let toAlternate = !hasAlternateSentinel();
+      toggleColorMode(toAlternate);
+      setStyleSentinel(toAlternate);
+      toggleGiscusIfUsed(toAlternate, darkModeDefault);
+    };
+    // Switch to dark mode if need be
+    if (hasAlternateSentinel()) {
+      toggleColorMode(true);
+    } else {
+      toggleColorMode(false);
+    }
+  </script>
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top"><nav class="quarto-secondary-nav"><div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./12-appendix.html">Appendices</a></li><li class="breadcrumb-item"><a href="./12-appendix.html">Making tables with gt</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav></header><!-- content --><div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto"><div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">5023B</a> 
+        <div class="sidebar-tools-main">
+  <a href="" class="quarto-color-scheme-toggle quarto-navigation-tool  px-1" onclick="window.quartoToggleColorScheme(); return false;" title="Toggle dark mode"><i class="bi"></i></a>
+</div>
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Overview</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">Day 1</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./01-projects.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day 1 Block 1: Project-based workflows</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./02-tidyverse.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day 1 Block 2: Getting more out of tidyverse</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./03-functions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day 1 Block 3: Writing functions</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./04-iteration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day 1 Block 4: Iterations with <code>map</code></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./05-tidy-evaluation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day 1 Block 5: Tidy evaluation and data masking</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">Day 2</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./06-reproducibility.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day 2 Block 1: Reproducibility</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./07-code-review.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day 2 Block 2: Code Review</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">Day 3: Data Visualisation</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./08-ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day 3 Block 1: Foundations and graph crimes</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">Day 3: Quarto</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-quarto-workshop-revised.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Quarto: 90-120 Minute Introduction</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./09-reproducible-reports.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day 3 Block 8: Quarto</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">Day 3: Github</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10-github.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day 3 Block 9: Github</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./10a-github-automation-tutorial.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Day 3 Block 10: Github Automations</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">Day 4</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./11-AI-programming-integrated.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Part 1: AI-Assisted R Programming</span></span></a>
+  </div>
+</li>
+      </ul>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true">
+ <span class="menu-text">Appendices</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-7" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-7" class="collapse list-unstyled sidebar-section depth1 show">
+<li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-appendix.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">Making tables with gt</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12-basic-ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Basic ggplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12a-basic-ggplot.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Basic ggplot</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12b-ggplot-principles.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">A</span>&nbsp; <span class="chapter-title">Customisation with ggplot2</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./12c-big_data_workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">B</span>&nbsp; <span class="chapter-title">SQL and Data.Table</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./13-intro-to-r.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">R and RStudio Refresher</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">References</span></a>
+  </div>
+</li>
+      </ul>
+</li>
+    </ul>
+</div>
+</nav><div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active"><h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+<li><a href="#avoid-vertical-lines" id="toc-avoid-vertical-lines" class="nav-link active" data-scroll-target="#avoid-vertical-lines">Avoid vertical lines</a></li>
+  <li><a href="#use-better-column-names-and-make-them-stand-out" id="toc-use-better-column-names-and-make-them-stand-out" class="nav-link" data-scroll-target="#use-better-column-names-and-make-them-stand-out">Use better column names and make them stand out</a></li>
+  <li><a href="#alignment" id="toc-alignment" class="nav-link" data-scroll-target="#alignment">Alignment</a></li>
+  <li><a href="#move-columns-around" id="toc-move-columns-around" class="nav-link" data-scroll-target="#move-columns-around">Move columns around</a></li>
+  <li><a href="#avoid-repetitive-information" id="toc-avoid-repetitive-information" class="nav-link" data-scroll-target="#avoid-repetitive-information">Avoid repetitive information</a></li>
+  <li><a href="#remove-missing-numbers" id="toc-remove-missing-numbers" class="nav-link" data-scroll-target="#remove-missing-numbers">Remove missing numbers</a></li>
+  <li><a href="#add-summaries" id="toc-add-summaries" class="nav-link" data-scroll-target="#add-summaries">Add summaries</a></li>
+  <li><a href="#stylise" id="toc-stylise" class="nav-link" data-scroll-target="#stylise">Stylise</a></li>
+  <li><a href="#use-appropriate-colour" id="toc-use-appropriate-colour" class="nav-link" data-scroll-target="#use-appropriate-colour">Use appropriate colour</a></li>
+  <li><a href="#heatmap" id="toc-heatmap" class="nav-link" data-scroll-target="#heatmap">Heatmap</a></li>
+  <li><a href="#data-visualisations" id="toc-data-visualisations" class="nav-link" data-scroll-target="#data-visualisations">Data visualisations</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#reading" id="toc-reading" class="nav-link" data-scroll-target="#reading">Reading</a></li>
+  </ul></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./12-appendix.html">Appendices</a></li><li class="breadcrumb-item"><a href="./12-appendix.html">Making tables with gt</a></li></ol></nav><div class="quarto-title">
+<h1 class="title">Making tables with gt</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header><p>In this chapter, we will accomplish two main objectives:</p>
+<ol type="1">
+<li><p>Acquire fundamental principles for creating improved tables.</p></li>
+<li><p>Apply these principles using the <code>gt</code> package. Naturally, to put these ideas into practice, we’ll utilize the fantastic penguins dataset from <code>palmerpenguins</code> since I have a preference for penguins.</p></li>
+</ol>
+<p>PROS: Why <code>gt</code>? Has a grammar of tables, like <code>ggplot2</code>, supports HTML, Latex and RTF, followstidyverse conventions.</p>
+<p>CONS: Still quite new, syntax is changing and developing.</p>
+<p>For these tutorials we will use the <code>gt</code> package and helpers provided by <code>gtExtras</code>.</p>
+<p>To follow along when you run a section of code, look for the output in the <strong>Viewer Pane</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(gt)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(gtExtras)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s use this dataset to tally the penguins. These counts will provide us with a straightforward dataset to use for practicing table construction. You will need your cleaned penguins dataframe from Day One.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>penguin_counts <span class="ot">&lt;-</span> penguins <span class="sc">|&gt;</span> </span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="fu">drop_na</span>(sex) <span class="sc">|&gt;</span> </span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="fu">mutate</span>(<span class="at">year =</span> <span class="fu">as.character</span>(year)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="fu">mutate</span>(<span class="at">sex =</span> <span class="fu">str_to_lower</span>(sex)) <span class="sc">|&gt;</span> </span>
+<span id="cb2-5"><a href="#cb2-5"></a>  <span class="fu">group_by</span>(species, island, sex, year) <span class="sc">|&gt;</span> </span>
+<span id="cb2-6"><a href="#cb2-6"></a>  <span class="fu">summarise</span>(<span class="at">n =</span> <span class="fu">n</span>(), <span class="at">.groups =</span> <span class="st">"drop"</span>)</span>
+<span id="cb2-7"><a href="#cb2-7"></a></span>
+<span id="cb2-8"><a href="#cb2-8"></a>penguin_counts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In a real table, the data might be restructured for better readability. While there’s nothing inherently wrong with the long (i.e., containing many rows) data format, this format is excellent for data analysis. However, in a table intended for human readers, rather than machines, you’d likely opt for a wider format.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>penguin_counts_wider <span class="ot">&lt;-</span> penguin_counts <span class="sc">|&gt;</span> </span>
+<span id="cb3-2"><a href="#cb3-2"></a>  <span class="fu">pivot_wider</span>(</span>
+<span id="cb3-3"><a href="#cb3-3"></a>    <span class="at">names_from =</span> <span class="fu">c</span>(species, sex),</span>
+<span id="cb3-4"><a href="#cb3-4"></a>    <span class="at">values_from =</span> n</span>
+<span id="cb3-5"><a href="#cb3-5"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="co"># Make missing numbers (NAs) into zero</span></span>
+<span id="cb3-7"><a href="#cb3-7"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="sc">-</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">2</span>), <span class="sc">~</span><span class="fu">replace_na</span>(., <span class="at">replace =</span> <span class="dv">0</span>))) <span class="sc">|&gt;</span> </span>
+<span id="cb3-8"><a href="#cb3-8"></a>  <span class="fu">arrange</span>(island, year) </span>
+<span id="cb3-9"><a href="#cb3-9"></a></span>
+<span id="cb3-10"><a href="#cb3-10"></a>penguin_counts_wider</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here are six guidelines that will guide us as we make tables:</p>
+<ol type="1">
+<li><p>Avoid gridlines</p></li>
+<li><p>Use better column names</p></li>
+<li><p>Align columns</p></li>
+<li><p>Use groups instead of repetitive columns</p></li>
+<li><p>Remove missing numbers</p></li>
+<li><p>Add summaries</p></li>
+</ol>
+<section id="avoid-vertical-lines" class="level3"><h3 class="anchored" data-anchor-id="avoid-vertical-lines">Avoid vertical lines</h3>
+<p>Vertical lines can make our data look cramped. Fortunately, it appears that <code>gt</code> adheres to this principle by default. Hence, all we need to do is supply our dataset, <code>penguin_counts_wider</code>, to the <code>gt()</code> function.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb4-2"><a href="#cb4-2"></a>  <span class="fu">gt</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="use-better-column-names-and-make-them-stand-out" class="level3"><h3 class="anchored" data-anchor-id="use-better-column-names-and-make-them-stand-out">Use better column names and make them stand out</h3>
+<p>The <a href="https://gt.rstudio.com/reference/index.html#section-modify-columns"><code>cols_*()</code> functions</a> allow for modifications of entire columns.</p>
+<p>We can control the column labels, cell alignment, column width and placement plus can combine multiple columns with <code>cols_*()</code> functions.</p>
+<p>To modify the column names, you can employ the “layer” named <code>cols_layer()</code>. Similar to how {ggplot2} operates with layers, {gt} follows a similar approach. To make any adjustments to the table, you simply transfer it from one layer to the next, which can be done conveniently through piping. With this understanding, we can label the columns just as we did previously.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb5-4"><a href="#cb5-4"></a>    <span class="at">island =</span> <span class="st">'Island'</span>,</span>
+<span id="cb5-5"><a href="#cb5-5"></a>    <span class="at">year =</span> <span class="st">'Year'</span>,</span>
+<span id="cb5-6"><a href="#cb5-6"></a>    <span class="at">Adelie_female =</span> <span class="st">'Adelie (female)'</span>,</span>
+<span id="cb5-7"><a href="#cb5-7"></a>    <span class="at">Adelie_male =</span> <span class="st">'Adelie (male)'</span>,</span>
+<span id="cb5-8"><a href="#cb5-8"></a>    <span class="at">Chinstrap_female =</span> <span class="st">'Chinstrap (female)'</span>,</span>
+<span id="cb5-9"><a href="#cb5-9"></a>    <span class="at">Chinstrap_male =</span> <span class="st">'Chinstrap (male)'</span>,</span>
+<span id="cb5-10"><a href="#cb5-10"></a>    <span class="at">Gentoo_female =</span> <span class="st">'Gentoo (female)'</span>,</span>
+<span id="cb5-11"><a href="#cb5-11"></a>    <span class="at">Gentoo_male =</span> <span class="st">'Gentoo (male)'</span>,</span>
+<span id="cb5-12"><a href="#cb5-12"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>However, labeling the columns in this manner may not be the most effective approach. Let’s explore an alternative method. First, we can create what are known as “spanners,” which are merged columns.</p>
+<p>We can modify the look of table parts more generally with [tab_*()] functions</p>
+<p>Here we can generate column spanners with <code>tab_spanner()</code> layers, with one layer dedicated to each spanner. You can also control text formatting of labels with Markdown or HTML syntax. This can be used on any text in a <strong>gt</strong> table. Here I have applied some <code>md</code> to put my spanners in <strong>bold</strong>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb6-2"><a href="#cb6-2"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb6-3"><a href="#cb6-3"></a>  <span class="fu">cols_label</span>(</span>
+<span id="cb6-4"><a href="#cb6-4"></a>    <span class="at">island =</span> <span class="st">'Island'</span>,</span>
+<span id="cb6-5"><a href="#cb6-5"></a>    <span class="at">year =</span> <span class="st">'Year'</span>,</span>
+<span id="cb6-6"><a href="#cb6-6"></a>    <span class="at">Adelie_female =</span> <span class="st">'Adelie (female)'</span>,</span>
+<span id="cb6-7"><a href="#cb6-7"></a>    <span class="at">Adelie_male =</span> <span class="st">'Adelie (male)'</span>,</span>
+<span id="cb6-8"><a href="#cb6-8"></a>    <span class="at">Chinstrap_female =</span> <span class="st">'Chinstrap (female)'</span>,</span>
+<span id="cb6-9"><a href="#cb6-9"></a>    <span class="at">Chinstrap_male =</span> <span class="st">'Chinstrap (male)'</span>,</span>
+<span id="cb6-10"><a href="#cb6-10"></a>    <span class="at">Gentoo_female =</span> <span class="st">'Gentoo (female)'</span>,</span>
+<span id="cb6-11"><a href="#cb6-11"></a>    <span class="at">Gentoo_male =</span> <span class="st">'Gentoo (male)'</span>,</span>
+<span id="cb6-12"><a href="#cb6-12"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb6-13"><a href="#cb6-13"></a>  <span class="co"># md() function applies markdown styling - we can make text bold</span></span>
+<span id="cb6-14"><a href="#cb6-14"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb6-15"><a href="#cb6-15"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Adelie**'</span>),</span>
+<span id="cb6-16"><a href="#cb6-16"></a>    <span class="at">columns =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span></span>
+<span id="cb6-17"><a href="#cb6-17"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb6-18"><a href="#cb6-18"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb6-19"><a href="#cb6-19"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Chinstrap**'</span>),</span>
+<span id="cb6-20"><a href="#cb6-20"></a>    <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">'Chinstrap_female'</span>, <span class="st">'Chinstrap_male'</span>)</span>
+<span id="cb6-21"><a href="#cb6-21"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb6-22"><a href="#cb6-22"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb6-23"><a href="#cb6-23"></a>    <span class="at">label =</span>  <span class="fu">md</span>(<span class="st">'**Gentoo**'</span>),</span>
+<span id="cb6-24"><a href="#cb6-24"></a>    <span class="at">columns =</span> <span class="fu">contains</span>(<span class="st">'Gentoo'</span>)</span>
+<span id="cb6-25"><a href="#cb6-25"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As you can see, tab_spanner() always requires two arguments label and columns. For the columns argument I have shown you three ways to get the job done:</p>
+<ol type="1">
+<li><p>Vector of column numbers</p></li>
+<li><p>Vector of column names</p></li>
+<li><p>tidyselect helpers</p></li>
+</ol>
+<p>First, we no longer need the species labels in the actual column names, as the spanners already provide that information. To update the column names, we can employ a handy trick that will save us from tedious typing.</p>
+<p>Begin by creating a named vector that establishes a connection between the original column names, which include species labels, and the desired column names that exclude those labels. For example:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a>desired_colnames <span class="ot">&lt;-</span> <span class="fu">colnames</span>(penguin_counts_wider) <span class="sc">|&gt;</span> </span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">str_remove</span>(<span class="st">"(Adelie|Gentoo|Chinstrap)_"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">str_to_title</span>()</span>
+<span id="cb7-4"><a href="#cb7-4"></a></span>
+<span id="cb7-5"><a href="#cb7-5"></a><span class="fu">names</span>(desired_colnames) <span class="ot">&lt;-</span> <span class="fu">names</span>(penguin_counts_wider)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With this named vector in place, proceed to rename the columns using it in the .list argument in <code>cols_label()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb8-2"><a href="#cb8-2"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames) <span class="sc">|&gt;</span> </span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="co"># md() function applies markdown styling - we can make text bold</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb8-6"><a href="#cb8-6"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Adelie**'</span>),</span>
+<span id="cb8-7"><a href="#cb8-7"></a>    <span class="at">columns =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span></span>
+<span id="cb8-8"><a href="#cb8-8"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb8-9"><a href="#cb8-9"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb8-10"><a href="#cb8-10"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Chinstrap**'</span>),</span>
+<span id="cb8-11"><a href="#cb8-11"></a>    <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">'Chinstrap_female'</span>, <span class="st">'Chinstrap_male'</span>)</span>
+<span id="cb8-12"><a href="#cb8-12"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb8-13"><a href="#cb8-13"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb8-14"><a href="#cb8-14"></a>    <span class="at">label =</span>  <span class="fu">md</span>(<span class="st">'**Gentoo**'</span>),</span>
+<span id="cb8-15"><a href="#cb8-15"></a>    <span class="at">columns =</span> <span class="fu">contains</span>(<span class="st">'Gentoo'</span>)</span>
+<span id="cb8-16"><a href="#cb8-16"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally we should add a title to our table. We can do this with <code>tab_header()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb9-2"><a href="#cb9-2"></a>    <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames) <span class="sc">|&gt;</span> </span>
+<span id="cb9-4"><a href="#cb9-4"></a>  <span class="co"># md() function applies markdown styling - we can make text bold</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb9-6"><a href="#cb9-6"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Adelie**'</span>),</span>
+<span id="cb9-7"><a href="#cb9-7"></a>    <span class="at">columns =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span></span>
+<span id="cb9-8"><a href="#cb9-8"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb9-9"><a href="#cb9-9"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb9-10"><a href="#cb9-10"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Chinstrap**'</span>),</span>
+<span id="cb9-11"><a href="#cb9-11"></a>    <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">'Chinstrap_female'</span>, <span class="st">'Chinstrap_male'</span>)</span>
+<span id="cb9-12"><a href="#cb9-12"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb9-13"><a href="#cb9-13"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb9-14"><a href="#cb9-14"></a>    <span class="at">label =</span>  <span class="fu">md</span>(<span class="st">'**Gentoo**'</span>),</span>
+<span id="cb9-15"><a href="#cb9-15"></a>    <span class="at">columns =</span> <span class="fu">contains</span>(<span class="st">'Gentoo'</span>)</span>
+<span id="cb9-16"><a href="#cb9-16"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb9-17"><a href="#cb9-17"></a>   <span class="fu">tab_header</span>(</span>
+<span id="cb9-18"><a href="#cb9-18"></a>    <span class="at">title =</span> <span class="st">'Penguins of the Palmer Archipelago'</span>,</span>
+<span id="cb9-19"><a href="#cb9-19"></a>    <span class="at">subtitle =</span> <span class="st">'Data is courtesy of the palmerpenguins R package by Allison Horst'</span></span>
+<span id="cb9-20"><a href="#cb9-20"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We could if we wanted wrap this into a simple function - as the headers and titles will not change across this tutorial:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>labels_and_title <span class="ot">&lt;-</span> <span class="cf">function</span>(gt_tbl){</span>
+<span id="cb10-2"><a href="#cb10-2"></a> gt_tbl <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb10-4"><a href="#cb10-4"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Adelie**'</span>),</span>
+<span id="cb10-5"><a href="#cb10-5"></a>    <span class="at">columns =</span> <span class="dv">3</span><span class="sc">:</span><span class="dv">4</span></span>
+<span id="cb10-6"><a href="#cb10-6"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb10-7"><a href="#cb10-7"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb10-8"><a href="#cb10-8"></a>    <span class="at">label =</span> <span class="fu">md</span>(<span class="st">'**Chinstrap**'</span>),</span>
+<span id="cb10-9"><a href="#cb10-9"></a>    <span class="at">columns =</span> <span class="fu">c</span>(<span class="st">'Chinstrap_female'</span>, <span class="st">'Chinstrap_male'</span>)</span>
+<span id="cb10-10"><a href="#cb10-10"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb10-11"><a href="#cb10-11"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb10-12"><a href="#cb10-12"></a>    <span class="at">label =</span>  <span class="fu">md</span>(<span class="st">'**Gentoo**'</span>),</span>
+<span id="cb10-13"><a href="#cb10-13"></a>    <span class="at">columns =</span> <span class="fu">contains</span>(<span class="st">'Gentoo'</span>)</span>
+<span id="cb10-14"><a href="#cb10-14"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb10-15"><a href="#cb10-15"></a>   <span class="fu">tab_header</span>(</span>
+<span id="cb10-16"><a href="#cb10-16"></a>    <span class="at">title =</span> <span class="st">'Penguins of the Palmer Archipelago'</span>,</span>
+<span id="cb10-17"><a href="#cb10-17"></a>    <span class="at">subtitle =</span> <span class="st">'Data is courtesy of the palmerpenguins R package by Allison Horst'</span></span>
+<span id="cb10-18"><a href="#cb10-18"></a>  )</span>
+<span id="cb10-19"><a href="#cb10-19"></a>}</span>
+<span id="cb10-20"><a href="#cb10-20"></a></span>
+<span id="cb10-21"><a href="#cb10-21"></a><span class="co"># This produces the same output</span></span>
+<span id="cb10-22"><a href="#cb10-22"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb10-23"><a href="#cb10-23"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb10-24"><a href="#cb10-24"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames)  <span class="sc">|&gt;</span> </span>
+<span id="cb10-25"><a href="#cb10-25"></a>  <span class="fu">labels_and_title</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="alignment" class="level3"><h3 class="anchored" data-anchor-id="alignment">Alignment</h3>
+<p>Align all text within a column using <code>cols_align()</code>. Most commonly we left-align text with varying length and right-align numbers.</p>
+<p>Here’s why these default alignments make sense:</p>
+<ul>
+<li><p>Numbers to the Right: Numeric values, such as counts, are usually aligned to the right because this aligns the decimal points and makes it easier to compare and perform calculations with numbers. It also allows for neat alignment of digits, which is particularly important when working with large datasets.</p></li>
+<li><p>Text to the Left: Text data, like character vectors, is aligned to the left by default. This is because text doesn’t have decimal points or numeric values to compare, and left-aligning text provides a clean and uniform appearance. It makes the start of the text easily scannable and helps maintain readability, even for lengthy text entries.</p></li>
+<li><p>Center Alignment for Factors: Factors (categorical data) are aligned to the center by default. This is a compromise between left and right alignment. While the factor’s entries are characters, they represent categories and are often used for grouping or sorting. Center alignment ensures that the category labels are visually centered in the available space, making it easier to identify the category while maintaining a visually appealing table.</p></li>
+</ul>
+<p>These default alignments are well-established conventions in table formatting and help readers quickly interpret and work with tabular data. They follow a balance between readability, aesthetics, and the nature of the data being presented.</p>
+<p>Island is currently coded as a factor, we could recode this in our data, or we can use the <code>cols_align()</code> layer:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb11-2"><a href="#cb11-2"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames) <span class="sc">|&gt;</span> </span>
+<span id="cb11-4"><a href="#cb11-4"></a>  <span class="fu">labels_and_title</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb11-5"><a href="#cb11-5"></a>  <span class="fu">cols_align</span>(<span class="at">align =</span> <span class="st">'right'</span>, <span class="at">columns =</span> <span class="st">'year'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb11-6"><a href="#cb11-6"></a>  <span class="fu">cols_align</span>(</span>
+<span id="cb11-7"><a href="#cb11-7"></a>    <span class="at">align =</span> <span class="st">'left'</span>, </span>
+<span id="cb11-8"><a href="#cb11-8"></a>    <span class="at">columns =</span> <span class="fu">where</span>(is.factor)</span>
+<span id="cb11-9"><a href="#cb11-9"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="move-columns-around" class="level3"><h3 class="anchored" data-anchor-id="move-columns-around">Move columns around</h3>
+<p>Move columns to the start or end or wherever you like with <code>cols_move_*()</code> functions</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb12-2"><a href="#cb12-2"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href="#cb12-3"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames) <span class="sc">|&gt;</span> </span>
+<span id="cb12-4"><a href="#cb12-4"></a>  <span class="fu">labels_and_title</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb12-5"><a href="#cb12-5"></a>  <span class="fu">cols_align</span>(<span class="at">align =</span> <span class="st">'right'</span>, <span class="at">columns =</span> <span class="st">'year'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb12-6"><a href="#cb12-6"></a>  <span class="fu">cols_align</span>(</span>
+<span id="cb12-7"><a href="#cb12-7"></a>    <span class="at">align =</span> <span class="st">'left'</span>, </span>
+<span id="cb12-8"><a href="#cb12-8"></a>    <span class="at">columns =</span> <span class="fu">where</span>(is.factor)</span>
+<span id="cb12-9"><a href="#cb12-9"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb12-10"><a href="#cb12-10"></a>  <span class="fu">cols_move_to_start</span>(<span class="at">columns =</span> <span class="fu">vars</span>(year))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="avoid-repetitive-information" class="level3"><h3 class="anchored" data-anchor-id="avoid-repetitive-information">Avoid repetitive information</h3>
+<p>Removing repetitive columns and using additional rows to group data can indeed enhance the readability of a table. In the context of the <code>gt</code> package, achieving this is straightforward. Here’s how you can do it with <code>group_name_col()</code> Specifying which group to use and which columns to apply this grouping to:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb13-2"><a href="#cb13-2"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb13-3"><a href="#cb13-3"></a>    <span class="at">island =</span> <span class="fu">as.character</span>(island), </span>
+<span id="cb13-4"><a href="#cb13-4"></a>    <span class="at">year =</span> <span class="fu">as.numeric</span>(year)</span>
+<span id="cb13-5"><a href="#cb13-5"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb13-6"><a href="#cb13-6"></a>  <span class="fu">gt</span>(<span class="at">groupname_col =</span> <span class="st">'island'</span>, <span class="at">rowname_col =</span> <span class="st">'year'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb13-7"><a href="#cb13-7"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames) <span class="sc">|&gt;</span> </span>
+<span id="cb13-8"><a href="#cb13-8"></a>  <span class="fu">labels_and_title</span>()  </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>But an island label could be nice. The easiest way to add that to the group names is via string manipulation before <code>gt()</code> is called.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb14-2"><a href="#cb14-2"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb14-3"><a href="#cb14-3"></a>    <span class="at">island =</span> <span class="fu">as.character</span>(island), </span>
+<span id="cb14-4"><a href="#cb14-4"></a>    <span class="at">year =</span> <span class="fu">as.numeric</span>(year),</span>
+<span id="cb14-5"><a href="#cb14-5"></a>    <span class="at">island =</span> <span class="fu">paste0</span>(<span class="st">'Island: '</span>, island)</span>
+<span id="cb14-6"><a href="#cb14-6"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb14-7"><a href="#cb14-7"></a>  <span class="fu">gt</span>(<span class="at">groupname_col =</span> <span class="st">'island'</span>, <span class="at">rowname_col =</span> <span class="st">'year'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb14-8"><a href="#cb14-8"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames) <span class="sc">|&gt;</span> </span>
+<span id="cb14-9"><a href="#cb14-9"></a>  <span class="fu">labels_and_title</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="remove-missing-numbers" class="level3"><h3 class="anchored" data-anchor-id="remove-missing-numbers">Remove missing numbers</h3>
+<p>If we want to remove zeroes from our table, we could use <code>dplyr</code> functions</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb15-2"><a href="#cb15-2"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb15-3"><a href="#cb15-3"></a>        <span class="at">island =</span> <span class="fu">as.character</span>(island), </span>
+<span id="cb15-4"><a href="#cb15-4"></a>        <span class="at">year =</span> <span class="fu">as.numeric</span>(year),</span>
+<span id="cb15-5"><a href="#cb15-5"></a>        <span class="at">island =</span> <span class="fu">paste0</span>(<span class="st">'Island: '</span>, island)</span>
+<span id="cb15-6"><a href="#cb15-6"></a>    ) <span class="sc">|&gt;</span> </span>
+<span id="cb15-7"><a href="#cb15-7"></a>    <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="at">.cols =</span> <span class="fu">where</span>(is.integer), <span class="at">.fns =</span> <span class="sc">~</span><span class="fu">ifelse</span>(.x <span class="sc">&lt;=</span> <span class="dv">0</span>, <span class="st">"-"</span>, <span class="fu">as.character</span>(.) ))) <span class="sc">|&gt;</span> </span>
+<span id="cb15-8"><a href="#cb15-8"></a>  <span class="fu">gt</span>(<span class="at">groupname_col =</span> <span class="st">'island'</span>, <span class="at">rowname_col =</span> <span class="st">'year'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb15-9"><a href="#cb15-9"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames) <span class="sc">|&gt;</span> </span>
+<span id="cb15-10"><a href="#cb15-10"></a>  <span class="fu">labels_and_title</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Or we can accomplish the same thing by adding a <code>sub_zero()</code> layer</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb16-2"><a href="#cb16-2"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb16-3"><a href="#cb16-3"></a>    <span class="at">island =</span> <span class="fu">as.character</span>(island), </span>
+<span id="cb16-4"><a href="#cb16-4"></a>    <span class="at">year =</span> <span class="fu">as.numeric</span>(year),</span>
+<span id="cb16-5"><a href="#cb16-5"></a>    <span class="at">island =</span> <span class="fu">paste0</span>(<span class="st">'Island: '</span>, island)</span>
+<span id="cb16-6"><a href="#cb16-6"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb16-7"><a href="#cb16-7"></a>  <span class="fu">gt</span>(<span class="at">groupname_col =</span> <span class="st">'island'</span>, <span class="at">rowname_col =</span> <span class="st">'year'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb16-8"><a href="#cb16-8"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames) <span class="sc">|&gt;</span> </span>
+<span id="cb16-9"><a href="#cb16-9"></a>  <span class="fu">labels_and_title</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb16-10"><a href="#cb16-10"></a>  <span class="fu">sub_zero</span>(<span class="at">zero_text =</span> <span class="st">'-'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="add-summaries" class="level3"><h3 class="anchored" data-anchor-id="add-summaries">Add summaries</h3>
+<p>If we think it is necessary we could even add some summaries to the tables with <code>summary_rows()</code>. Sub-zero doesn’t seem to work in the summaries, so we have to include a workaround:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb17-2"><a href="#cb17-2"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-3"><a href="#cb17-3"></a>    <span class="at">island =</span> <span class="fu">as.character</span>(island), </span>
+<span id="cb17-4"><a href="#cb17-4"></a>    <span class="at">year =</span> <span class="fu">as.numeric</span>(year),</span>
+<span id="cb17-5"><a href="#cb17-5"></a>    <span class="at">island =</span> <span class="fu">paste0</span>(<span class="st">'Island: '</span>, island)</span>
+<span id="cb17-6"><a href="#cb17-6"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb17-7"><a href="#cb17-7"></a>  <span class="fu">gt</span>(<span class="at">groupname_col =</span> <span class="st">'island'</span>, <span class="at">rowname_col =</span> <span class="st">'year'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb17-8"><a href="#cb17-8"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames) <span class="sc">|&gt;</span> </span>
+<span id="cb17-9"><a href="#cb17-9"></a>  <span class="fu">labels_and_title</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb17-10"><a href="#cb17-10"></a>  <span class="fu">sub_zero</span>(<span class="at">zero_text =</span> <span class="st">'-'</span>)<span class="sc">|&gt;</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a>   <span class="fu">summary_rows</span>(</span>
+<span id="cb17-12"><a href="#cb17-12"></a>    <span class="at">groups =</span> <span class="fu">everything</span>(),</span>
+<span id="cb17-13"><a href="#cb17-13"></a>   <span class="at">fns =</span> <span class="fu">list</span>(</span>
+<span id="cb17-14"><a href="#cb17-14"></a>      <span class="st">"Mean"</span> <span class="ot">=</span> <span class="er">~</span><span class="fu">na_if</span>(<span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>),</span>
+<span id="cb17-15"><a href="#cb17-15"></a>      <span class="st">"Total"</span> <span class="ot">=</span> <span class="er">~</span><span class="fu">na_if</span>(<span class="fu">sum</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>)</span>
+<span id="cb17-16"><a href="#cb17-16"></a>    ),</span>
+<span id="cb17-17"><a href="#cb17-17"></a>    <span class="at">fmt =</span> <span class="fu">list</span>(<span class="sc">~</span><span class="fu">fmt_number</span>(., <span class="at">decimals =</span> <span class="dv">0</span>)),</span>
+<span id="cb17-18"><a href="#cb17-18"></a>    <span class="at">missing_text =</span> <span class="st">"-"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="stylise" class="level3"><h3 class="anchored" data-anchor-id="stylise">Stylise</h3>
+<p>With the additional information incorporated into the table, it has grown in length, which may not be ideal. To address this, we can make the table more concise by decreasing the row heights.</p>
+<p>To achieve this, we can adjust the so-called <code>data_row.padding</code> to 2 pixels. You can accomplish this using the <code>tab_options()</code> function, which is a central layer for styling the table. Similarly, there are padding options available for <code>summary_row</code> and <code>row_group</code>. While we’re at it, it’s a good idea to enhance the table’s appearance by applying a predefined theme using <code>opt_stylize()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb18-2"><a href="#cb18-2"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb18-3"><a href="#cb18-3"></a>    <span class="at">island =</span> <span class="fu">as.character</span>(island), </span>
+<span id="cb18-4"><a href="#cb18-4"></a>    <span class="at">year =</span> <span class="fu">as.numeric</span>(year),</span>
+<span id="cb18-5"><a href="#cb18-5"></a>    <span class="at">island =</span> <span class="fu">paste0</span>(<span class="st">'Island: '</span>, island)</span>
+<span id="cb18-6"><a href="#cb18-6"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb18-7"><a href="#cb18-7"></a>  <span class="fu">gt</span>(<span class="at">groupname_col =</span> <span class="st">'island'</span>, <span class="at">rowname_col =</span> <span class="st">'year'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-8"><a href="#cb18-8"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames) <span class="sc">|&gt;</span> </span>
+<span id="cb18-9"><a href="#cb18-9"></a>  <span class="fu">labels_and_title</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb18-10"><a href="#cb18-10"></a>  <span class="fu">sub_zero</span>(<span class="at">zero_text =</span> <span class="st">'-'</span>)<span class="sc">|&gt;</span></span>
+<span id="cb18-11"><a href="#cb18-11"></a>   <span class="fu">summary_rows</span>(</span>
+<span id="cb18-12"><a href="#cb18-12"></a>    <span class="at">groups =</span> <span class="fu">everything</span>(),</span>
+<span id="cb18-13"><a href="#cb18-13"></a>   <span class="at">fns =</span> <span class="fu">list</span>(</span>
+<span id="cb18-14"><a href="#cb18-14"></a>      <span class="st">"Mean"</span> <span class="ot">=</span> <span class="er">~</span><span class="fu">na_if</span>(<span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>),</span>
+<span id="cb18-15"><a href="#cb18-15"></a>      <span class="st">"Total"</span> <span class="ot">=</span> <span class="er">~</span><span class="fu">na_if</span>(<span class="fu">sum</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>)</span>
+<span id="cb18-16"><a href="#cb18-16"></a>    ),</span>
+<span id="cb18-17"><a href="#cb18-17"></a>    <span class="at">fmt =</span> <span class="fu">list</span>(<span class="sc">~</span><span class="fu">fmt_number</span>(., <span class="at">decimals =</span> <span class="dv">0</span>)),</span>
+<span id="cb18-18"><a href="#cb18-18"></a>    <span class="at">missing_text =</span> <span class="st">"-"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb18-19"><a href="#cb18-19"></a>    <span class="fu">tab_options</span>(</span>
+<span id="cb18-20"><a href="#cb18-20"></a>    <span class="at">data_row.padding =</span> <span class="fu">px</span>(<span class="dv">2</span>),</span>
+<span id="cb18-21"><a href="#cb18-21"></a>    <span class="at">summary_row.padding =</span> <span class="fu">px</span>(<span class="dv">3</span>), <span class="co"># A bit more padding for summaries</span></span>
+<span id="cb18-22"><a href="#cb18-22"></a>    <span class="at">row_group.padding =</span> <span class="fu">px</span>(<span class="dv">4</span>)    <span class="co"># And even more for our groups</span></span>
+<span id="cb18-23"><a href="#cb18-23"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb18-24"><a href="#cb18-24"></a>  <span class="fu">opt_stylize</span>(<span class="at">style =</span> <span class="dv">6</span>, <span class="at">color =</span> <span class="st">'gray'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="use-appropriate-colour" class="level3"><h3 class="anchored" data-anchor-id="use-appropriate-colour">Use appropriate colour</h3>
+<p>So far, our table hasn’t used any color. We’ll add some now to highlight outlier values.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb19-2"><a href="#cb19-2"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb19-3"><a href="#cb19-3"></a>    <span class="at">island =</span> <span class="fu">as.character</span>(island), </span>
+<span id="cb19-4"><a href="#cb19-4"></a>    <span class="at">year =</span> <span class="fu">as.numeric</span>(year),</span>
+<span id="cb19-5"><a href="#cb19-5"></a>    <span class="at">island =</span> <span class="fu">paste0</span>(<span class="st">'Island: '</span>, island)</span>
+<span id="cb19-6"><a href="#cb19-6"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb19-7"><a href="#cb19-7"></a>  <span class="fu">gt</span>(<span class="at">groupname_col =</span> <span class="st">'island'</span>, <span class="at">rowname_col =</span> <span class="st">'year'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-8"><a href="#cb19-8"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames) <span class="sc">|&gt;</span> </span>
+<span id="cb19-9"><a href="#cb19-9"></a>  <span class="fu">labels_and_title</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb19-10"><a href="#cb19-10"></a>  <span class="fu">sub_zero</span>(<span class="at">zero_text =</span> <span class="st">'-'</span>)<span class="sc">|&gt;</span></span>
+<span id="cb19-11"><a href="#cb19-11"></a>   <span class="fu">summary_rows</span>(</span>
+<span id="cb19-12"><a href="#cb19-12"></a>    <span class="at">groups =</span> <span class="fu">everything</span>(),</span>
+<span id="cb19-13"><a href="#cb19-13"></a>   <span class="at">fns =</span> <span class="fu">list</span>(</span>
+<span id="cb19-14"><a href="#cb19-14"></a>      <span class="st">"Mean"</span> <span class="ot">=</span> <span class="er">~</span><span class="fu">na_if</span>(<span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>),</span>
+<span id="cb19-15"><a href="#cb19-15"></a>      <span class="st">"Total"</span> <span class="ot">=</span> <span class="er">~</span><span class="fu">na_if</span>(<span class="fu">sum</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>)</span>
+<span id="cb19-16"><a href="#cb19-16"></a>    ),</span>
+<span id="cb19-17"><a href="#cb19-17"></a>    <span class="at">fmt =</span> <span class="fu">list</span>(<span class="sc">~</span><span class="fu">fmt_number</span>(., <span class="at">decimals =</span> <span class="dv">0</span>)),</span>
+<span id="cb19-18"><a href="#cb19-18"></a>    <span class="at">missing_text =</span> <span class="st">"-"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb19-19"><a href="#cb19-19"></a>    <span class="fu">tab_options</span>(</span>
+<span id="cb19-20"><a href="#cb19-20"></a>    <span class="at">data_row.padding =</span> <span class="fu">px</span>(<span class="dv">2</span>),</span>
+<span id="cb19-21"><a href="#cb19-21"></a>    <span class="at">summary_row.padding =</span> <span class="fu">px</span>(<span class="dv">3</span>), <span class="co"># A bit more padding for summaries</span></span>
+<span id="cb19-22"><a href="#cb19-22"></a>    <span class="at">row_group.padding =</span> <span class="fu">px</span>(<span class="dv">4</span>)    <span class="co"># And even more for our groups</span></span>
+<span id="cb19-23"><a href="#cb19-23"></a>   )<span class="sc">|&gt;</span> </span>
+<span id="cb19-24"><a href="#cb19-24"></a>    <span class="fu">tab_style</span>(<span class="at">style =</span> <span class="fu">cell_text</span>(<span class="at">color =</span> <span class="st">"orange"</span>,</span>
+<span id="cb19-25"><a href="#cb19-25"></a>                              <span class="at">weight =</span> <span class="st">"bold"</span>),</span>
+<span id="cb19-26"><a href="#cb19-26"></a>            <span class="at">locations =</span> <span class="fu">cells_body</span>(</span>
+<span id="cb19-27"><a href="#cb19-27"></a>              <span class="at">columns =</span> <span class="dv">3</span>,</span>
+<span id="cb19-28"><a href="#cb19-28"></a>             <span class="at">rows =</span> <span class="fu">which</span>(penguin_counts_wider[,<span class="dv">3</span>] <span class="sc">==</span> <span class="fu">max</span>(penguin_counts_wider[,<span class="dv">3</span>])))</span>
+<span id="cb19-29"><a href="#cb19-29"></a>            ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we repeat this code for each column, we generate the result shown below</p>
+</section><section id="heatmap" class="level3"><h3 class="anchored" data-anchor-id="heatmap">Heatmap</h3>
+<p>We can add a heatmap to our cells to more clearly show the differences. This will require us to set a colour palette and apply a conditional colouring using <code>data_color()</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1"></a>penguin_counts_wider <span class="sc">|&gt;</span> </span>
+<span id="cb20-2"><a href="#cb20-2"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb20-3"><a href="#cb20-3"></a>    <span class="at">island =</span> <span class="fu">as.character</span>(island), </span>
+<span id="cb20-4"><a href="#cb20-4"></a>    <span class="at">year =</span> <span class="fu">as.numeric</span>(year),</span>
+<span id="cb20-5"><a href="#cb20-5"></a>    <span class="at">island =</span> <span class="fu">paste0</span>(<span class="st">'Island: '</span>, island)</span>
+<span id="cb20-6"><a href="#cb20-6"></a>  ) <span class="sc">|&gt;</span> </span>
+<span id="cb20-7"><a href="#cb20-7"></a>  <span class="fu">gt</span>(<span class="at">groupname_col =</span> <span class="st">'island'</span>, <span class="at">rowname_col =</span> <span class="st">'year'</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb20-8"><a href="#cb20-8"></a>  <span class="fu">cols_label</span>(<span class="at">.list =</span> desired_colnames) <span class="sc">|&gt;</span> </span>
+<span id="cb20-9"><a href="#cb20-9"></a>  <span class="fu">labels_and_title</span>()  <span class="sc">|&gt;</span> </span>
+<span id="cb20-10"><a href="#cb20-10"></a>  <span class="fu">sub_zero</span>(<span class="at">zero_text =</span> <span class="st">'-'</span>)<span class="sc">|&gt;</span></span>
+<span id="cb20-11"><a href="#cb20-11"></a>   <span class="fu">summary_rows</span>(</span>
+<span id="cb20-12"><a href="#cb20-12"></a>    <span class="at">groups =</span> <span class="fu">everything</span>(),</span>
+<span id="cb20-13"><a href="#cb20-13"></a>   <span class="at">fns =</span> <span class="fu">list</span>(</span>
+<span id="cb20-14"><a href="#cb20-14"></a>      <span class="st">"Mean"</span> <span class="ot">=</span> <span class="er">~</span><span class="fu">na_if</span>(<span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>),</span>
+<span id="cb20-15"><a href="#cb20-15"></a>      <span class="st">"Total"</span> <span class="ot">=</span> <span class="er">~</span><span class="fu">na_if</span>(<span class="fu">sum</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="dv">0</span>)</span>
+<span id="cb20-16"><a href="#cb20-16"></a>    ),</span>
+<span id="cb20-17"><a href="#cb20-17"></a>    <span class="at">fmt =</span> <span class="fu">list</span>(<span class="sc">~</span><span class="fu">fmt_number</span>(., <span class="at">decimals =</span> <span class="dv">0</span>)),</span>
+<span id="cb20-18"><a href="#cb20-18"></a>    <span class="at">missing_text =</span> <span class="st">"-"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb20-19"><a href="#cb20-19"></a>    <span class="fu">tab_options</span>(</span>
+<span id="cb20-20"><a href="#cb20-20"></a>    <span class="at">data_row.padding =</span> <span class="fu">px</span>(<span class="dv">2</span>),</span>
+<span id="cb20-21"><a href="#cb20-21"></a>    <span class="at">summary_row.padding =</span> <span class="fu">px</span>(<span class="dv">3</span>), <span class="co"># A bit more padding for summaries</span></span>
+<span id="cb20-22"><a href="#cb20-22"></a>    <span class="at">row_group.padding =</span> <span class="fu">px</span>(<span class="dv">4</span>)    <span class="co"># And even more for our groups</span></span>
+<span id="cb20-23"><a href="#cb20-23"></a>   )<span class="sc">|&gt;</span>  </span>
+<span id="cb20-24"><a href="#cb20-24"></a><span class="fu">data_color</span>(<span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"#FEF0D9"</span>, <span class="st">"#990000"</span>), <span class="at">domain =</span> <span class="fu">c</span>(<span class="dv">0</span>,<span class="dv">30</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="data-visualisations" class="level3"><h3 class="anchored" data-anchor-id="data-visualisations">Data visualisations</h3>
+<p>In this chapter, we’re going to learn how to add fancy elements like plots, icon and images to <code>gt</code> tables.</p>
+<p>You can actually add any ggplot you want to your table. For example, we could look at our penguins from the last chapter again. Here’s a table about their weight and its distribution (visualized with a violin plot.)</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a>filtered_penguins <span class="ot">&lt;-</span> palmerpenguins<span class="sc">::</span>penguins <span class="sc">|&gt;</span></span>
+<span id="cb21-2"><a href="#cb21-2"></a>    <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(sex))</span>
+<span id="cb21-3"><a href="#cb21-3"></a></span>
+<span id="cb21-4"><a href="#cb21-4"></a>penguin_weights <span class="ot">&lt;-</span> filtered_penguins <span class="sc">|&gt;</span></span>
+<span id="cb21-5"><a href="#cb21-5"></a>  <span class="fu">group_by</span>(species) <span class="sc">|&gt;</span></span>
+<span id="cb21-6"><a href="#cb21-6"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb21-7"><a href="#cb21-7"></a>    <span class="at">Min =</span> <span class="fu">min</span>(body_mass_g),</span>
+<span id="cb21-8"><a href="#cb21-8"></a>    <span class="at">Mean =</span> <span class="fu">mean</span>(body_mass_g) <span class="sc">|&gt;</span> <span class="fu">round</span>(<span class="at">digits =</span> <span class="dv">2</span>),</span>
+<span id="cb21-9"><a href="#cb21-9"></a>    <span class="at">Max =</span> <span class="fu">max</span>(body_mass_g)</span>
+<span id="cb21-10"><a href="#cb21-10"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb21-11"><a href="#cb21-11"></a>  <span class="fu">mutate</span>(<span class="at">species =</span> <span class="fu">as.character</span>(species)) <span class="sc">|&gt;</span></span>
+<span id="cb21-12"><a href="#cb21-12"></a>  <span class="fu">rename</span>(<span class="at">Species =</span> species)</span>
+<span id="cb21-13"><a href="#cb21-13"></a></span>
+<span id="cb21-14"><a href="#cb21-14"></a>penguin_weights <span class="sc">|&gt;</span></span>
+<span id="cb21-15"><a href="#cb21-15"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb21-16"><a href="#cb21-16"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb21-17"><a href="#cb21-17"></a>    <span class="at">label =</span> <span class="st">'Penguin</span><span class="sc">\'</span><span class="st">s Weight'</span>,</span>
+<span id="cb21-18"><a href="#cb21-18"></a>    <span class="at">columns =</span> <span class="sc">-</span>Species</span>
+<span id="cb21-19"><a href="#cb21-19"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To create this table, let us begin with the basics. Let’s compute the numeric values first.</p>
+<p>Next write a function <code>plot_violin_species(my_species)</code> that depends on a penguin species and creates one violin plot.</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Solution
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1"></a>plot_density_species <span class="ot">&lt;-</span> <span class="cf">function</span>(my_species) {</span>
+<span id="cb22-2"><a href="#cb22-2"></a>  full_range <span class="ot">&lt;-</span> filtered_penguins <span class="sc">|&gt;</span></span>
+<span id="cb22-3"><a href="#cb22-3"></a>    <span class="fu">pull</span>(body_mass_g) <span class="sc">|&gt;</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a>    <span class="fu">range</span>()</span>
+<span id="cb22-5"><a href="#cb22-5"></a></span>
+<span id="cb22-6"><a href="#cb22-6"></a>  filtered_penguins <span class="sc">|&gt;</span></span>
+<span id="cb22-7"><a href="#cb22-7"></a>    <span class="fu">filter</span>(species <span class="sc">==</span> my_species) <span class="sc">|&gt;</span></span>
+<span id="cb22-8"><a href="#cb22-8"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> body_mass_g, <span class="at">y =</span> species)) <span class="sc">+</span></span>
+<span id="cb22-9"><a href="#cb22-9"></a>    <span class="fu">geom_violin</span>(<span class="at">fill =</span> <span class="st">'dodgerblue4'</span>) <span class="sc">+</span></span>
+<span id="cb22-10"><a href="#cb22-10"></a>    <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb22-11"><a href="#cb22-11"></a>    <span class="fu">scale_y_discrete</span>(<span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb22-12"><a href="#cb22-12"></a>    <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb22-13"><a href="#cb22-13"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="fu">element_blank</span>(), <span class="at">y =</span> <span class="fu">element_blank</span>()) <span class="sc">+</span></span>
+<span id="cb22-14"><a href="#cb22-14"></a>    <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> full_range)</span>
+<span id="cb22-15"><a href="#cb22-15"></a>}</span>
+<span id="cb22-16"><a href="#cb22-16"></a><span class="fu">plot_density_species</span>(<span class="st">"Adelie"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<p>Notice that I have set the coordinate system of the plot to the full range of the data (regardless of the species). This part is important. Without this trick, the three plots would not share a common x-axis.</p>
+<p>Ok, so now we have a function that creates the desired plots. Time to apply it to our table. For this to work, we need an additional column that we can target. So we use <code>mutate()</code> to add a new column, then <code>text_transform()</code> to turn this column into images, and finally <code>.fn</code> argument can be supplied with our function iterated over each species with <code>map()</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1"></a>penguin_weights <span class="sc">|&gt;</span></span>
+<span id="cb23-2"><a href="#cb23-2"></a>  <span class="fu">mutate</span>(<span class="at">Distribution =</span> Species) <span class="sc">|&gt;</span> </span>
+<span id="cb23-3"><a href="#cb23-3"></a>  <span class="fu">gt</span>() <span class="sc">|&gt;</span></span>
+<span id="cb23-4"><a href="#cb23-4"></a>  <span class="fu">tab_spanner</span>(</span>
+<span id="cb23-5"><a href="#cb23-5"></a>    <span class="at">label =</span> <span class="st">'Penguin</span><span class="sc">\'</span><span class="st">s Weight'</span>,</span>
+<span id="cb23-6"><a href="#cb23-6"></a>    <span class="at">columns =</span> <span class="sc">-</span>Species</span>
+<span id="cb23-7"><a href="#cb23-7"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb23-8"><a href="#cb23-8"></a>  <span class="fu">text_transform</span>(</span>
+<span id="cb23-9"><a href="#cb23-9"></a>    <span class="at">locations =</span> <span class="fu">cells_body</span>(<span class="at">columns =</span> <span class="st">'Distribution'</span>),</span>
+<span id="cb23-10"><a href="#cb23-10"></a>    <span class="at">fn =</span> <span class="cf">function</span>(column) {</span>
+<span id="cb23-11"><a href="#cb23-11"></a>      <span class="fu">map</span>(column, plot_density_species) <span class="sc">|&gt;</span></span>
+<span id="cb23-12"><a href="#cb23-12"></a>        <span class="fu">ggplot_image</span>(<span class="at">height =</span> <span class="fu">px</span>(<span class="dv">50</span>), <span class="at">aspect_ratio =</span> <span class="dv">3</span>)</span>
+<span id="cb23-13"><a href="#cb23-13"></a>    }</span>
+<span id="cb23-14"><a href="#cb23-14"></a>  ) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section><section id="conclusion" class="level2"><h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>Many of the tweaks we made to our table are quite subtle. Changes like removing excess gridlines, bolding header text, right-aligning numeric values, and adjusting the level of precision can often go unnoticed, but if you skip them, your table will be far less effective. Our final product isn’t flashy, but it does communicate clearly.</p>
+<p>We used the gt package to make our high-quality table, and as we’ve repeatedly seen, this package has good defaults built in. Often, you don’t need to change much in your code to make effective tables. But no matter which package you use, it’s essential to treat tables as worthy of just as much thought as other kinds of data visualization.</p>
+<p>Later you’ll learn how to create reports using R Markdown, which can integrate your tables directly into the final document.</p>
+</section><section id="reading" class="level2"><h2 class="anchored" data-anchor-id="reading">Reading</h2>
+<p>Consult the following resources to learn about table design principles and how to make high-quality tables with the gt package:</p>
+<p><a href="https://gt.rstudio.com/articles/gt.html">“gt package intro”</a></p>
+<p>“Ten Guidelines for Better Tables” by Jon Schwabish (Journal of Benefit-Cost Analysis, 2020), https://doi.org/10.1017/bca.2020.11</p>
+<p>“10+ Guidelines for Better Tables in R” by Tom Mock (2020), https://themockup.blog/posts/2020-09-04-10-table-rules-in-r/</p>
+
+
+</section></main><!-- /main --><script>
+
+/* update total correct if #webex-total_correct exists */
+update_total_correct = function() {
+  console.log("webex: update total_correct");
+
+  var t = document.getElementsByClassName("webex-total_correct");
+  for (var i = 0; i < t.length; i++) {
+    p = t[i].parentElement;
+    var correct = p.getElementsByClassName("webex-correct").length;
+    var solvemes = p.getElementsByClassName("webex-solveme").length;
+    var radiogroups = p.getElementsByClassName("webex-radiogroup").length;
+    var selects = p.getElementsByClassName("webex-select").length;
+
+    t[i].innerHTML = correct + " of " + (solvemes + radiogroups + selects) + " correct";
+  }
+}
+
+/* webex-solution button toggling function */
+b_func = function() {
+  console.log("webex: toggle hide");
+
+  var cl = this.parentElement.classList;
+  if (cl.contains('open')) {
+    cl.remove("open");
+  } else {
+    cl.add("open");
+  }
+}
+
+/* check answers */
+check_func = function() {
+  console.log("webex: check answers");
+
+  var cl = this.parentElement.classList;
+  if (cl.contains('unchecked')) {
+    cl.remove("unchecked");
+    this.innerHTML = "Hide Answers";
+  } else {
+    cl.add("unchecked");
+    this.innerHTML = "Show Answers";
+  }
+}
+
+/* function for checking solveme answers */
+solveme_func = function(e) {
+  console.log("webex: check solveme");
+
+  var real_answers = JSON.parse(this.dataset.answer);
+  var my_answer = this.value;
+  var cl = this.classList;
+  if (cl.contains("ignorecase")) {
+    my_answer = my_answer.toLowerCase();
+  }
+  if (cl.contains("nospaces")) {
+    my_answer = my_answer.replace(/ /g, "")
+  }
+
+  if (my_answer == "") {
+    cl.remove("webex-correct");
+    cl.remove("webex-incorrect");
+  } else if (real_answers.includes(my_answer)) {
+    cl.add("webex-correct");
+    cl.remove("webex-incorrect");
+  } else {
+    cl.add("webex-incorrect");
+    cl.remove("webex-correct");
+  }
+
+  // match numeric answers within a specified tolerance
+  if(this.dataset.tol > 0){
+    var tol = JSON.parse(this.dataset.tol);
+    var matches = real_answers.map(x => Math.abs(x - my_answer) < tol)
+    if (matches.reduce((a, b) => a + b, 0) > 0) {
+      cl.add("webex-correct");
+    } else {
+      cl.remove("webex-correct");
+    }
+  }
+
+  // added regex bit
+  if (cl.contains("regex")){
+    answer_regex = RegExp(real_answers.join("|"))
+    if (answer_regex.test(my_answer)) {
+      cl.add("webex-correct");
+    }
+  }
+
+  update_total_correct();
+}
+
+/* function for checking select answers */
+select_func = function(e) {
+  console.log("webex: check select");
+
+  var cl = this.classList
+
+  /* add style */
+  cl.remove("webex-incorrect");
+  cl.remove("webex-correct");
+  if (this.value == "answer") {
+    cl.add("webex-correct");
+  } else if (this.value != "blank") {
+    cl.add("webex-incorrect");
+  }
+
+  update_total_correct();
+}
+
+/* function for checking radiogroups answers */
+radiogroups_func = function(e) {
+  console.log("webex: check radiogroups");
+
+  var checked_button = document.querySelector('input[name=' + this.id + ']:checked');
+  var cl = checked_button.parentElement.classList;
+  var labels = checked_button.parentElement.parentElement.children;
+
+  /* get rid of styles */
+  for (i = 0; i < labels.length; i++) {
+    labels[i].classList.remove("webex-incorrect");
+    labels[i].classList.remove("webex-correct");
+  }
+
+  /* add style */
+  if (checked_button.value == "answer") {
+    cl.add("webex-correct");
+  } else {
+    cl.add("webex-incorrect");
+  }
+
+  update_total_correct();
+}
+
+window.onload = function() {
+  console.log("webex onload");
+  /* set up solution buttons */
+  var buttons = document.getElementsByTagName("button");
+
+  for (var i = 0; i < buttons.length; i++) {
+    if (buttons[i].parentElement.classList.contains('webex-solution')) {
+      buttons[i].onclick = b_func;
+    }
+  }
+
+  var check_sections = document.getElementsByClassName("webex-check");
+  console.log("check:", check_sections.length);
+  for (var i = 0; i < check_sections.length; i++) {
+    check_sections[i].classList.add("unchecked");
+
+    let btn = document.createElement("button");
+    btn.innerHTML = "Show Answers";
+    btn.classList.add("webex-check-button");
+    btn.onclick = check_func;
+    check_sections[i].appendChild(btn);
+
+    let spn = document.createElement("span");
+    spn.classList.add("webex-total_correct");
+    check_sections[i].appendChild(spn);
+  }
+
+  /* set up webex-solveme inputs */
+  var solveme = document.getElementsByClassName("webex-solveme");
+
+  for (var i = 0; i < solveme.length; i++) {
+    /* make sure input boxes don't auto-anything */
+    solveme[i].setAttribute("autocomplete","off");
+    solveme[i].setAttribute("autocorrect", "off");
+    solveme[i].setAttribute("autocapitalize", "off");
+    solveme[i].setAttribute("spellcheck", "false");
+    solveme[i].value = "";
+
+    /* adjust answer for ignorecase or nospaces */
+    var cl = solveme[i].classList;
+    var real_answer = solveme[i].dataset.answer;
+    if (cl.contains("ignorecase")) {
+      real_answer = real_answer.toLowerCase();
+    }
+    if (cl.contains("nospaces")) {
+      real_answer = real_answer.replace(/ /g, "");
+    }
+    solveme[i].dataset.answer = real_answer;
+
+    /* attach checking function */
+    solveme[i].onkeyup = solveme_func;
+    solveme[i].onchange = solveme_func;
+
+    solveme[i].insertAdjacentHTML("afterend", " <span class='webex-icon'></span>")
+  }
+
+  /* set up radiogroups */
+  var radiogroups = document.getElementsByClassName("webex-radiogroup");
+  for (var i = 0; i < radiogroups.length; i++) {
+    radiogroups[i].onchange = radiogroups_func;
+  }
+
+  /* set up selects */
+  var selects = document.getElementsByClassName("webex-select");
+  for (var i = 0; i < selects.length; i++) {
+    selects[i].onchange = select_func;
+    selects[i].insertAdjacentHTML("afterend", " <span class='webex-icon'></span>")
+  }
+
+  update_total_correct();
+}
+
+</script><script>
+// open rdrr links externally ----
+
+var exlinks = document.querySelectorAll("a[href^='https://rdrr.io']");
+var exlink_func = function(){
+  window.open(this.href);
+  return false;
+};
+for (var i = 0; i < exlinks.length; i++) {
+    exlinks[i].addEventListener('click', exlink_func, false);
+}
+
+// visible second sidebar in mobile ----
+
+function move_sidebar() {
+  var toc = document.getElementById("TOC");
+  var small_sidebar = document.querySelector("#quarto-sidebar .sidebar-menu-container");
+  var right_sidebar = document.getElementById("quarto-margin-sidebar");
+
+  if (window.innerWidth < 768) {
+    small_sidebar.append(toc);
+  } else {
+    right_sidebar.append(toc);
+  }
+}
+move_sidebar();
+window.onresize = move_sidebar;
+</script><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    // Ensure there is a toggle, if there isn't float one in the top right
+    if (window.document.querySelector('.quarto-color-scheme-toggle') === null) {
+      const a = window.document.createElement('a');
+      a.classList.add('top-right');
+      a.classList.add('quarto-color-scheme-toggle');
+      a.href = "";
+      a.onclick = function() { try { window.quartoToggleColorScheme(); } catch {} return false; };
+      const i = window.document.createElement("i");
+      i.classList.add('bi');
+      a.appendChild(i);
+      window.document.body.appendChild(a);
+    }
+    setColorSchemeToggle(hasAlternateSentinel())
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script><nav class="page-navigation"><div class="nav-page nav-page-previous">
+      <a href="./11-AI-programming-integrated.html" class="pagination-link" aria-label="Part 1: AI-Assisted R Programming">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Part 1: AI-Assisted R Programming</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./12-basic-ggplot.html" class="pagination-link" aria-label="Basic ggplot">
+        <span class="nav-page-text">Basic ggplot</span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<footer class="footer"><div class="nav-footer">
+    <div class="nav-footer-left">
+      &nbsp;
+    </div>   
+    <div class="nav-footer-center">
+<p>CC-BY (2024) Philip Leftwich</p>
+</div>
+    <div class="nav-footer-right">
+      &nbsp;
+    </div>
+  </div>
+</footer>
+
+
+</body></html>

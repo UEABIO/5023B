@@ -37,52 +37,39 @@ book:
   page-footer: CC-BY (2024) Philip Leftwich
   chapters:
   - index.qmd
-  - part: "Reproducible Environments"
+  - part: "Day 1"
     chapters:
     - 01-projects.qmd
-    - 02-renv.qmd
-    - 03-github.qmd
-    - task1.qmd
-    - 05-coding-AI.qmd
-    - task2.qmd
-  - part: "Exploratory Analysis"
+    - 02-tidyverse.qmd
+    - 03-functions.qmd
+    - 04-iteration.qmd
+    - 05-tidy-evaluation.qmd
+  - part: "Day 2"
     chapters:
-    - 04-managing-data.qmd
-    - task3.qmd
-  - part: "Linear Models"
+    - 06-reproducibility.qmd
+    - 07-code-review.qmd
+  - part: "Day 3: Data Visualisation"
     chapters:
-    - 06-complex-models.qmd
-    - task4.qmd
-  - part: "Generalised Linear Models"
+    - 08-ggplot.qmd
+  - part: "Day 3: Quarto"
     chapters:
-    - 07-generalised-linear.qmd
-    - 08-poisson.qmd
-    - task5.qmd
-    - 09-binomial.qmd
-    - task6.qmd
-  - part: "Data Visualisation"
+    - 09-quarto-workshop-revised.qmd
+    - 09-reproducible-reports.qmd
+  - part: "Day 3: Github"
     chapters:
-    - 10-data-visualisation.qmd
-    - task7.qmd
-  - part: "Functional Programming"
+    - 10-github.qmd
+    - 10a-github-automation-tutorial.qmd
+  - part: "Day 4"
     chapters:
-    - 11-writing-functions.qmd
-  - part: "Machine Learning"
-    chapters:
-    - supervised-learning-regression.qmd
-    - task8.qmd
-    - supervised-classifier.qmd
+    - 11-AI-programming-integrated.qmd
 
   appendices:
-  - r-basics.qmd
-  - import.qmd
-  - script.qmd
-  - Naming conventions.qmd
-  - data_reshaping.qmd
-  - quarto.qmd
-  - ggplot.qmd
-  - advanced_ggplot.qmd
-  - summary-table.qmd
+  - 12-appendix.qmd
+  - 12-basic-ggplot.qmd
+  - 12a-basic-ggplot.qmd
+  - 12b-ggplot-principles.qmd
+  - 12c-big_data_workshop.qmd
+  - 13-intro-to-r.qmd
   - references.qmd
 bibliography:
   - include/packages.bib
