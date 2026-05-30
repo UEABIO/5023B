@@ -58,6 +58,20 @@ book:
     - 07-generalised-linear.qmd
     - 08-poisson.qmd
     - task5.qmd
+    - 09-binomial.qmd
+    - task6.qmd
+  - part: "Data Visualisation"
+    chapters:
+    - 10-data-visualisation.qmd
+    - task7.qmd
+  - part: "Functional Programming"
+    chapters:
+    - 11-writing-functions.qmd
+  - part: "Machine Learning"
+    chapters:
+    - supervised-learning-regression.qmd
+    - task8.qmd
+    - supervised-classifier.qmd
 
   appendices:
   - r-basics.qmd

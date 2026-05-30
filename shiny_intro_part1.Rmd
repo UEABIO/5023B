@@ -1,0 +1,179 @@
+
+---
+title: "What is Shiny? An Interactive Introduction"
+author: "Your Name"
+output: html_document
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(shiny)
+library(ggplot2)
+```
+
+# 1. What is Shiny?
+
+At its core, **Shiny is an R package that lets you build interactive web applications — using only R**. Instead of learning HTML, CSS, or JavaScript, you can create dashboards, data explorers, and even teaching tools right from your RStudio script.
+
+Shiny is especially powerful when you're working with:
+- 📊 **Interactive data visualizations**
+- 🤝 **Sharing analysis with collaborators**
+- 📣 **Communicating science in an accessible way**
+- 🌉 **Bridging R users and non-R users through web UIs**
+
+Below is a complete Shiny app that we will dissect and recreate during this workshop.
+
+---
+
+# 2. Try the App: Your First Shiny Demo
+
+Run the full app below to preview where we’re headed:
+
+```{r, echo=TRUE}
+library(shiny)
+
+ui <- fluidPage(
+  titlePanel("Old Faithful Histogram"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("bins",
+                  "Number of bins:",
+                  min = 1,
+                  max = 50,
+                  value = 30)
+    ),
+    mainPanel(
+      plotOutput("distPlot")
+    )
+  )
+)
+
+server <- function(input, output) {
+  output$distPlot <- renderPlot({
+    x <- faithful$waiting
+    bins <- seq(min(x), max(x), length.out = input$bins + 1)
+    hist(x, breaks = bins, col = 'skyblue', border = 'white')
+  })
+}
+
+shinyApp(ui = ui, server = server)
+```
+
+### 💡 Did you know?
+You don’t need to manually reload the app every time you make a change — just click “Run App” again and RStudio will update the view automatically.
+
+---
+
+# 3. Make It Your Own: Guided Modifications
+
+## ✅ Challenge 1: Change the App Title
+Change the `titlePanel()` to display your own custom app title. For example:
+
+```r
+titlePanel("My First Interactive App")
+```
+
+Re-run the app and confirm your new title appears.
+
+---
+
+## ✅ Challenge 2: Customize the Slider
+Locate the `sliderInput()` function and update the label and default values:
+
+```r
+sliderInput("bins",
+            "Choose the number of bins:",
+            min = 5,
+            max = 100,
+            value = 20)
+```
+
+### 💡 What do these arguments control?
+- `min`: Minimum slider value
+- `max`: Maximum slider value
+- `value`: Default setting
+
+---
+
+## ✅ Challenge 3: Add Description Text
+Use the `p()` function to add an explanatory paragraph under the title:
+
+```r
+fluidPage(
+  titlePanel("My First App"),
+  p("This app shows a histogram of the waiting time between eruptions at Old Faithful geyser."),
+  sidebarLayout(...)
+)
+```
+
+---
+
+## ✅ Challenge 4: Update the Plot Color
+Inside `renderPlot()`, customize the histogram color:
+
+```r
+hist(x, breaks = bins, col = 'lightblue', border = 'grey30')
+```
+
+---
+
+## ✅ Challenge 5: Use ggplot2 Instead
+Replace `hist()` with `ggplot()` for better visuals:
+
+```r
+library(ggplot2)
+
+output$distPlot <- renderPlot({
+  ggplot(faithful, aes(waiting)) +
+    geom_histogram(bins = input$bins,
+                   fill = "steelblue3",
+                   colour = "grey30") +
+    xlab("Waiting time to next eruption") +
+    theme_minimal()
+})
+```
+
+---
+
+## ✅ Challenge 6: Add a Radio Button to Select Variable
+Let users choose between two variables:
+
+```r
+radioButtons(inputId = "display_var",
+             label = "Which variable to display:",
+             choices = c("Waiting time" = "waiting",
+                         "Eruption time" = "eruptions"),
+             selected = "waiting")
+```
+
+Add this to your `sidebarPanel()`.
+
+### Then update your plot to respond:
+
+```r
+output$distPlot <- renderPlot({
+  if (input$display_var == "eruptions") {
+    xlabel <- "Eruption Time (min)"
+  } else {
+    xlabel <- "Waiting Time to Next Eruption (min)"
+  }
+
+  ggplot(faithful, aes(.data[[input$display_var]])) +
+    geom_histogram(bins = input$bins,
+                   fill = "steelblue3",
+                   colour = "grey30") +
+    xlab(xlabel) +
+    theme_minimal()
+})
+```
+
+---
+
+## 🚀 Recap Challenge: Make It Yours
+
+Customize your first Shiny app by doing the following:
+- Use `ggplot2` to render the histogram
+- Let the user choose the variable to plot
+- Add a title and description
+- Style the plot with your own colors and layout
