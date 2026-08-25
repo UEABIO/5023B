@@ -53,7 +53,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | 0 | index.qmd | 0 | todo | | | | preface: standing warnings, written last |
 | 1 | 03-github.qmd | 1 | todo | | | | mostly usethis/gitcreds auth tooling, skip-log |
 | 2 | week-1.qmd | 0 | todo | | | | worksheet, no code |
-| 3 | strings.qmd | 16 (exact) | translated | 2 | (pending) | 2026-08-25 | **pilot chapter** — awaiting pilot-gate review and human `reviewed` sign-off |
+| 3 | strings.qmd | 16 (exact) | translated | 2 | 88146f4 | 2026-08-25 | **pilot chapter** — awaiting pilot-gate review and human `reviewed` sign-off |
 | 4 | duplicates.qmd | 6 (exact) | todo | | | | R-only tabset: add one Python tab per group, see TRANSLATION.md |
 | 5 | missing-values.qmd | 8 (exact) | todo | | | | R-only tabset: add one Python tab per group, see TRANSLATION.md |
 | 6 | dates.qmd | 15 (exact) | todo | | | | lubridate entirely uncovered by glossary |
