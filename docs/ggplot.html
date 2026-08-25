@@ -2,11 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.27">
+<meta name="generator" content="quarto-1.9.38">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 <meta name="description" content="Statistical skills for Biologists">
 <title>Appendix G — ggplot – 5023B</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -86,19 +89,18 @@ div.csl-indent {
 <link href="./images/logos/logo.png" rel="icon" type="image/png">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-b754b9fd3853d7e56faef54c29c5d52b.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-de8274a4d1ecc1e6aaeaf6e5564b5074.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-b754b9fd3853d7e56faef54c29c5d52b.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-dark-5a2acb6f4ed5aeb23a104ba421924b87.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-33269adcf1721b81efc5ea7fcfe7f0ee.css" rel="stylesheet" class="quarto-color-scheme-extra" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-e0a43ceb7c9e63dd117097429fd00833.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
-<link href="site_libs/bootstrap/bootstrap-dark-d7d11905500e7839d0ae783f44cd34c1.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
-<link href="site_libs/bootstrap/bootstrap-e0a43ceb7c9e63dd117097429fd00833.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
+<link href="site_libs/bootstrap/bootstrap-907e2612f73bf321301ed99ac5a3e008.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-dark-ec624fd271699fd99ed06233d2577880.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<link href="site_libs/bootstrap/bootstrap-907e2612f73bf321301ed99ac5a3e008.min.css" rel="stylesheet" append-hash="true" class="quarto-color-scheme-extra" id="quarto-bootstrap" data-mode="light"><script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
   "collapse-after": 3,
@@ -774,7 +776,7 @@ Important
 <span class="header-section-number">G.1</span> Intro to grammar</h2>
 <p>The <code>ggplot2</code> package is widely used and valued for its simple, consistent approach to making data visuals.</p>
 <p>The ‘grammar of graphics’ relates to the different components of a plot that function like different parts of linguistic grammar. For example, all plots require axes, so the x and y axes form one part of the ‘language’ of a plot. Similarly, all plots have data represented between the axes, often as points, lines or bars. The visual way that the data is represented forms another component of the grammar of graphics. Furthermore, the colour, shape or size of points and lines can be used to encode additional information in the plot. This information is usually clarified in a key, or legend, which can also be considered part of this ‘grammar’.</p>
-<p>The philosophy of ggplot is much better explained by the package author, Hadley Wickham (<span class="citation" data-cites="R-ggplot2">Wickham et al. (<a href="references.html#ref-R-ggplot2" role="doc-biblioref">2025</a>)</span>). For now, we just need to be aware that ggplots are constructed by specifying the different components that we want to display, based on underlying information in a data frame.</p>
+<p>The philosophy of ggplot is much better explained by the package author, Hadley Wickham (<span class="citation" data-cites="R-ggplot2"><span class="nocase">Wickham et al.</span> (<a href="references.html#ref-R-ggplot2" role="doc-biblioref">2025</a>)</span>). For now, we just need to be aware that ggplots are constructed by specifying the different components that we want to display, based on underlying information in a data frame.</p>
 <div class="cell" data-layout-align="center">
 <div class="cell-output-display">
 <div class="quarto-figure quarto-figure-center">
@@ -2378,7 +2380,7 @@ Warning
 </div>
 </section><section id="further-reading-guides-and-tips-on-data-visualisation" class="level2" data-number="L.4"><h2 data-number="L.4" class="anchored" data-anchor-id="further-reading-guides-and-tips-on-data-visualisation">
 <span class="header-section-number">L.4</span> Further Reading, Guides and tips on data visualisation</h2>
-<p>Check out <a href="advanced_ggplot.html" class="quarto-xref"><span>Appendix H</span></a> for extra data visualisation resources</p>
+<p>Check out <span class="quarto-unresolved-ref">?sec-advanced-ggplot</span> for extra data visualisation resources</p>
 <ul>
 <li><p><a href="https://www.rstudio.com/resources/cheatsheets/">R Cheat Sheets</a></p></li>
 <li><p><a href="https://clauswilke.com/dataviz/">Fundamentals of Data Visualization</a>: this book tells you everything you need to know about presenting your figures for accessbility and clarity</p></li>
@@ -2393,7 +2395,7 @@ Warning
 
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" data-line-spacing="2" role="list" style="display: none">
 <div id="ref-R-ggplot2" class="csl-entry" role="listitem">
-Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., Dunnington, D., &amp; van den Brand, T. (2025). <em>ggplot2: Create elegant data visualisations using the grammar of graphics</em>. <a href="https://ggplot2.tidyverse.org">https://ggplot2.tidyverse.org</a>
+<span class="nocase">Wickham, H., Chang, W., Henry, L., Pedersen, T. L., Takahashi, K., Wilke, C., Woo, K., Yutani, H., Dunnington, D., &amp; van den Brand, T.</span> (2025). <em>ggplot2: Create elegant data visualisations using the grammar of graphics</em>. <a href="https://ggplot2.tidyverse.org">https://ggplot2.tidyverse.org</a>
 </div>
 </div>
 </section></section></main><!-- /main --><script>
