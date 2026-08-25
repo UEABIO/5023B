@@ -226,3 +226,123 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-007
+
+- **File / chunk:** `missing-values.qmd`, `## Find Missing values`,
+  pre-existing R-only tabset (`summary()`, `skim()`, `vis_miss()`,
+  `upset_plot()` tabs, lines 102–134 pre-edit)
+- **Status:** open
+- **R original:** four tabs, each showing a different R package's approach
+  to surfacing missing data (`summary()` base R; `skimr::skim()`;
+  `naniar::vis_miss()`; `naniar::gg_miss_upset()`).
+- **Issue:** per `TRANSLATION.md`'s pre-existing-R-only-tabset rule, only one
+  representative Python tab is added for the whole group. None of `skimr`
+  or `naniar` has an accepted Python equivalent in the Stack table, so the
+  representative approach has to be a plain pandas idiom rather than a port
+  of any one of the four R tabs.
+- **Candidates:**
+  1. `penguins_clean_names.isna().sum()` — per-column missing-value counts.
+  2. `penguins_clean_names.info()` — already mapped to `glimpse()` elsewhere;
+     shows non-null counts but is a less direct match to "find missing
+     values" as a task.
+- **Provisional choice in the book:** 1, marked `# TRANSLATION-NOTE: OQ-007`,
+  because it most directly answers "how much is missing, and where" without
+  requiring an unlisted package.
+- **Recommendation:** 1. If a Python missing-data visualisation package
+  (e.g. `missingno`) is ever added to the Stack table, this is the natural
+  chunk to revisit for a closer visual match to `vis_miss()`/`upset_plot()`.
+- **Resolution:**
+
+---
+
+## OQ-008
+
+- **File / chunk:** `missing-values.qmd`, `## Find Missing values`,
+  unlabelled chunk, lines 148–174 (post-edit)
+- **Status:** open
+- **R original:**
+
+  ```r
+  penguins_clean_names |> 
+    filter(if_any(everything(), is.na)) |>
+    select(culmen_length_mm, culmen_depth_mm, flipper_length_mm, 
+           sex, delta_15n, delta_13c,comments,
+           everything()) # reorder columns
+  ```
+
+- **Issue:** neither `if_any(everything(), is.na)` nor `select(..., everything())`
+  as a column-reorder idiom has a glossary entry.
+- **Candidates:**
+  1. Filter: `.loc[lambda d: d.isna().any(axis=1)]`. Reorder: build a
+     `first_cols` list and concatenate it with the remaining columns in
+     original order, mirroring the intermediate-variable pattern already
+     used for `separate()` in `strings.qmd`.
+  2. `.reindex(columns=[...])` with an explicit full column list — rejected,
+     since it requires spelling out every column name rather than just the
+     ones being promoted, losing the parallel with `everything()`.
+- **Provisional choice in the book:** 1, marked `# TRANSLATION-NOTE: OQ-008`.
+- **Recommendation:** 1, and consider adding `if_any(everything(), is.na)` →
+  `.isna().any(axis=1)` to the glossary, since it is likely to recur.
+- **Resolution:**
+
+---
+
+## OQ-009
+
+- **File / chunk:** `missing-values.qmd`, `## Find Missing values`,
+  unlabelled chunk, lines 177–194 (post-edit)
+- **Status:** open
+- **R original:**
+
+  ```r
+  penguins_clean_names |> 
+    filter(if_any(culmen_length_mm, is.na))  # reorder columns
+  ```
+
+- **Issue:** two problems. First, `if_any(col, is.na)` on a single column has
+  no glossary entry (though it follows directly from the existing
+  `filter(x > 3)` → `.loc[lambda d: d["x"] > 3]` pattern once `is.na` is
+  treated as the condition). Second, the trailing comment `# reorder columns`
+  does not describe this chunk — it only filters, and does not reorder
+  anything — and looks like a copy-paste leftover from the chunk immediately
+  above it (OQ-008), which does reorder. Per the comment-carrying rule in
+  `TRANSLATION.md` (added after the `strings.qmd` review), the comment was
+  dropped from the Python tab rather than carried across or reworded, since
+  it describes neither the R code above it nor the Python code below it. The
+  R chunk itself is unchanged, per hard rule 1.
+- **Candidates:** `.loc[lambda d: d["culmen_length_mm"].isna()]`.
+- **Provisional choice in the book:** as above, marked
+  `# TRANSLATION-NOTE: OQ-009`, comment dropped.
+- **Recommendation:** a human may want to fix or remove the stale R comment
+  directly (outside this translation workflow).
+- **Resolution:**
+
+---
+
+## OQ-010
+
+- **File / chunk:** `missing-values.qmd`, unlabelled chunk inside
+  `.callout-important` (`## Penguin clean names dataset`), lines 21–24
+- **Status:** open
+- **R original:**
+
+  ```r
+  penguins_clean_names <- readRDS(url("https://github.com/UEABIO/5023B/raw/refs/heads/2026/files/penguins.RDS"))"))
+  ```
+
+- **Issue:** identical shape to OQ-001/OQ-003 — `.RDS` load with no Python
+  equivalent, skip-and-logged rather than translated. Separately, the R
+  chunk itself has a stray trailing `"))` after the closing paren that looks
+  like a typo (an extra, unmatched `"))`) — flagged per hard rule 1, left
+  untouched.
+- **Candidates:** none — no Python idiom applies.
+- **Provisional choice in the book:** no Python tab added for this chunk.
+- **Recommendation:** same as OQ-001/OQ-003 — leave untranslated. A human may
+  separately want to check whether the trailing `"))` is a real syntax error
+  in the source R chunk.
+- **Resolution:**
+
+---
+
+---

@@ -33,6 +33,10 @@ Your turn
 
 * [ ] Run this command in your console:
 
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 library(tidyverse)
 penguins_clean_names |> 
@@ -40,6 +44,20 @@ penguins_clean_names |>
   summarise(mean = mean(body_mass_g))
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+import statsmodels.formula.api as smf
+
+penguins_clean_names.groupby("species", as_index=False).agg(mean=("body_mass_g", "mean"))
+```
+
+:::::
 
 - Question: Why is this happening?
 
@@ -77,7 +95,7 @@ Different mechanisms require different analytical approaches.
 
 There are numerous ways to identify missing values in your data. Here we illustrate a few ways with very different output types.
 
-:::{.panel-tabset}
+:::{.panel-tabset group="language"}
 
 ## `summary()`
 
@@ -115,9 +133,21 @@ naniar::gg_miss_upset(penguins_clean_names)
 
 ```
 
+## Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-007
+penguins_clean_names.isna().sum()
+```
+
 :::
 
 We can return all rows with a missing variable.
+
+::: {.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 penguins_clean_names |> 
@@ -127,12 +157,41 @@ penguins_clean_names |>
          everything()) # reorder columns
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-008
+first_cols = ["culmen_length_mm", "culmen_depth_mm", "flipper_length_mm", "sex", "delta_15n", "delta_13c", "comments"]
+(
+    penguins_clean_names
+    .loc[lambda d: d.isna().any(axis=1)]
+    [first_cols + [c for c in penguins_clean_names.columns if c not in first_cols]]
+)
+```
+
+:::
 Or we can specify we just want to look at a specific columns NA:
+
+::: {.panel-tabset group="language"}
+
+### R
 
 ```{r}
 penguins_clean_names |> 
   filter(if_any(culmen_length_mm, is.na))  # reorder columns
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-009
+penguins_clean_names.loc[lambda d: d["culmen_length_mm"].isna()]
+```
+
+:::
 
 ## Remove missing values
 
@@ -152,11 +211,24 @@ Using `drop_na()` to remove rows that contain any missing values across all vari
 
 - Cons: This method may remove entire rows of data, even if the missing value is only in a single, unimportant column. This can lead to significant data loss if many rows have missing values in non-critical variables.
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = F}
 penguins_clean_names |> 
   drop_na()
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+penguins_clean_names.dropna()
+```
+
+:::
 
 
 ### `drop_na()` on a particular variable. 
@@ -171,6 +243,10 @@ Another approach is to remove rows with missing data in a specific variable, suc
 
 A more cautious approach is to handle missing data within summary or calculation functions, using the `na.rm = TRUE` argument. Many summary functions (like `mean()`, `median()`, or `sum()`) include this argument, which, when set to `TRUE`, excludes `NA` values from the calculation. This allows you to keep missing values in the dataset but ignore them only when performing calculations.
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = F}
 penguins_clean_names |> 
   group_by(species) |> 
@@ -179,6 +255,15 @@ penguins_clean_names |>
   )
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+penguins_clean_names.groupby("species", as_index=False).agg(mean_body_mass=("body_mass_g", "mean"))
+```
+
+:::
 
 - Pros: This is the least destructive option because it allows you to handle missing data without removing any rows from the dataset. You only exclude `NA` values during specific calculations.
 
