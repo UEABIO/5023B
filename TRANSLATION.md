@@ -123,6 +123,33 @@ not listed goes through the ambiguity protocol in `CLAUDE.md`.
 | `seq(1, 10)` | `np.arange(1, 11)` |
 | `rep(0, 5)` | `np.zeros(5)` |
 
+### String manipulation (stringr) and conditional recoding
+
+`str_detect()`, `str_remove()` and `str_remove_all()` need `import re` in
+addition to the base import block. R's stringr/ICU regex and Python's `re`
+are not identical, but the simple patterns used in this book (literal text,
+basic groups, lookahead for `separate()`) translate directly.
+
+| R | Python |
+|---|---|
+| `str_trim(x)` | `x.strip()` |
+| `str_trim(x, side = "left")` | `x.lstrip()` |
+| `str_trim(x, side = "right")` | `x.rstrip()` |
+| `str_squish(x)` | `" ".join(x.split())` |
+| `str_trunc(x, width = w, side = "right")` | `x[:w] + "…" if len(x) > w else x` |
+| `str_split(x, pattern)` | `x.split(pattern)` for a single string; `.str.split(pattern)` over a column |
+| `str_c(a, b, sep = s)` | `s.join([a, b])` |
+| `str_detect(x, pattern)` | `re.search(pattern, x) is not None`; `.str.contains(pattern)` over a column |
+| `str_remove(x, pattern)` | `re.sub(pattern, "", x, count=1)` |
+| `str_remove_all(x, pattern)` | `re.sub(pattern, "", x)`; `.str.replace(pattern, "", regex=True)` over a column |
+| `word(x, n)` | `x.split()[n - 1]` for a single string; `.str.split().str[n - 1]` over a column |
+| `str_to_title(x)` | `x.title()`; `.str.title()` over a column |
+| `str_to_upper(x)` | `x.upper()`; `.str.upper()` over a column |
+| `str_to_lower(x)` | `x.lower()`; `.str.lower()` over a column |
+| `case_when(cond1 ~ a, cond2 ~ b, .default = d)` | `np.select([cond1, cond2], [a, b], default=d)` |
+| `if_else(cond, a, b)` | `np.where(cond, a, b)` |
+| `separate(col, into = c("a", "b"), sep = pattern)` | `col.str.split(pattern, n=1, regex=True)`, assigned to two columns from an intermediate split variable — `.assign()` cannot reference a value produced earlier in the same call |
+
 ### Machine learning (tidymodels to scikit-learn)
 
 tidymodels' recipe/workflow separation does not map onto a single scikit-learn
@@ -178,3 +205,7 @@ These belong in the preface, stated once, not repeated per chunk:
 - Locale-dependent string sorting differs.
 - plotnine and ggplot2 differ in default palette, typeface, point size and legend
   placement. Figures will look similar, not identical.
+- `.RDS` is R's native serialisation format and has no Python equivalent.
+  Any `readRDS()`/`saveRDS()` chunk a student is meant to run is skip-and-
+  logged as R-specific rather than translated; do not invent a pandas
+  substitute for it.
