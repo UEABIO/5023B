@@ -54,7 +54,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | 1 | 03-github.qmd | 1 | todo | | | | mostly usethis/gitcreds auth tooling, skip-log |
 | 2 | week-1.qmd | 0 | todo | | | | worksheet, no code |
 | 3 | strings.qmd | 16 (exact) | reviewed | 2 | 2b1be5d | 2026-08-25 | **pilot chapter** — pilot gate passed, all 5 checks; OQ-002 resolved same pass |
-| 4 | duplicates.qmd | 6 (exact) | translated | 4 | | 2026-08-25 | R-only tabsets handled per TRANSLATION.md; RDS chunk skip-logged (OQ-003); dplyr tab's broken `sum()` flagged, left untouched (OQ-004) |
+| 4 | duplicates.qmd | 6 (exact) | translated | 4 | 1cd238c | 2026-08-25 | R-only tabsets handled per TRANSLATION.md; RDS chunk skip-logged (OQ-003); dplyr tab's broken `sum()` flagged, left untouched (OQ-004) |
 | 5 | missing-values.qmd | 8 (exact) | todo | | | | R-only tabset: add one Python tab per group, see TRANSLATION.md |
 | 6 | dates.qmd | 15 (exact) | todo | | | | lubridate entirely uncovered by glossary |
 | 7 | numeric-plausibility.qmd | ~12 | todo | | | | |
