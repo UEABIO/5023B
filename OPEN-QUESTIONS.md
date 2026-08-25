@@ -55,3 +55,35 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-002
+
+- **File / chunk:** `strings.qmd`, unlabelled chunk under `## Rename text
+  values with stringr` (originally line 206)
+- **Status:** open
+- **R original:**
+
+  ```r
+  # use mutate and case_when
+  # for a statement that conditionally changes
+  # the names of the values in a variable
+  penguins_clean_names |>
+    mutate(species = stringr::word(species, 1)
+    ) |>
+    mutate(sex = stringr::str_to_title(sex))
+  ```
+
+- **Issue:** the comment says "use mutate and case_when" but the code uses
+  `word()`/`str_to_title()`, not `case_when()`. Looks like a copy-paste
+  leftover from the chunk above it. Per hard rule 1 the R chunk is left
+  untouched; the comment was carried across verbatim into the Python tab as
+  written, per TRANSLATION.md's "carry comments across where they still
+  apply" convention, even though it no longer quite applies here.
+- **Candidates:** n/a — not a translation ambiguity.
+- **Provisional choice in the book:** comment carried across unchanged.
+- **Recommendation:** a human may want to fix the R comment directly (outside
+  this translation workflow); not something Claude should alter under the
+  hard rules.
+- **Resolution:**
+
+---

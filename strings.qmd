@@ -60,60 +60,148 @@ You can think of string manipulation as tidying text variables — useful when s
 
 Trim whitespace on either side of a string.
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 library(tidyverse)
 str_trim(" Adelie Penguin (Pygoscelis adeliae) ")
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+import statsmodels.formula.api as smf
+
+" Adelie Penguin (Pygoscelis adeliae) ".strip()
+```
+
+:::
+
 Or just from one side:
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 str_trim("  Adelie Penguin (Pygoscelis adeliae)  ", side = "left")
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+"  Adelie Penguin (Pygoscelis adeliae)  ".lstrip()
+```
+
+:::
+
 ### Squish
 
 Sometimes extra spaces sneak into your data.
 `str_squish()` removes leading, trailing, and extra internal whitespace, leaving only single spaces between words.
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 str_squish("  Adelie    Penguin   (Pygoscelis   adeliae)  ")
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+" ".join("  Adelie    Penguin   (Pygoscelis   adeliae)  ".split())
+```
+
+:::
+
 ### Truncate
 
 You can shorten long strings to a specific width — handy when making plots or reports.
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 str_trunc("Adelie Penguin (Pygoscelis adeliae)", width = 18, side = "right")
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+s = "Adelie Penguin (Pygoscelis adeliae)"
+s[:18] + "…" if len(s) > 18 else s
+```
+
+:::
+
 ### Split
 
 Split a string into smaller pieces based on a separator.
 For example, separating the scientific name in parentheses:
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 str_split("Adelie Penguin (Pygoscelis adeliae)", " ")
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+"Adelie Penguin (Pygoscelis adeliae)".split(" ")
+```
+
+:::
+
 ### Concatenate
 
 Join pieces of text into one string.
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 str_c("Adelie", "Penguin", sep = "_")
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+"_".join(["Adelie", "Penguin"])
+```
+
+:::
+
 ## Cleaning strings with dplyr
 
 We can look for typos by asking R to produce all of the distinct values in a variable. This is very useful for categorical data, where we expect there to be only a few distinct categories
 
+
+::: {.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = T}
 # Print only unique character strings in this variable
@@ -121,6 +209,16 @@ penguins_clean_names |>
   distinct(sex)
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# Print only unique character strings in this variable
+penguins_clean_names[["sex"]].drop_duplicates()
+```
+
+:::
 
 Here if someone had mistyped e.g. 'FMALE' it would be obvious. We could do the same thing (and probably should have before we changed the names) for species. 
 
@@ -134,6 +232,10 @@ The functions `case_when()` and `if_else()` from **dplyr** are designed for this
 
 Use `case_when()` when you have **multiple conditions** to check and different outcomes for each one.  
 It works a bit like an “if / else if / else” ladder.
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = F, warning = F, message = F}
 # use mutate and case_when 
@@ -150,6 +252,29 @@ penguins_clean_names |>
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# use mutate and case_when
+# for a statement that conditionally changes
+# the names of the values in a variable
+(
+    penguins_clean_names
+    .assign(species=lambda d: np.select(
+        [
+            d["species"] == "Adelie Penguin (Pygoscelis adeliae)",
+            d["species"] == "Gentoo penguin (Pygoscelis papua)",
+            d["species"] == "Chinstrap penguin (Pygoscelis antarctica)",
+        ],
+        ["Adelie", "Gentoo", "Chinstrap"],
+        default=d["species"],
+    ))
+)
+```
+
+:::
+
 ::: {.callout-tip}
 Think of `case_when()` as a tidy way to handle many possible categories.
 :::
@@ -157,6 +282,10 @@ Think of `case_when()` as a tidy way to handle many possible categories.
 ### `if_else()`
 
 `if_else()` is simpler — it’s for two-way decisions (something is either true or false).
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = F, warning = F, message = F}
 
@@ -170,6 +299,21 @@ penguins_clean_names |>
   )
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# use mutate and if_else
+# for a statement that conditionally changes
+# the names of the values in a variable
+(
+    penguins_clean_names
+    .assign(sex=lambda d: np.where(d["sex"] == "MALE", "Male", "Female"))
+)
+```
+
+:::
 
 
 ::: {.callout-note}
@@ -202,6 +346,9 @@ Often these aren't quite how we want them to be, but we can manipulate these as 
 
 Below we repeat the outcomes above, but with string matching: 
 
+::: {.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = F, warning = F, message = F}
 # use mutate and case_when 
@@ -213,6 +360,22 @@ penguins_clean_names |>
   mutate(sex = stringr::str_to_title(sex))
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# use mutate and case_when
+# for a statement that conditionally changes
+# the names of the values in a variable
+(
+    penguins_clean_names
+    .assign(species=lambda d: d["species"].str.split().str[0])
+    .assign(sex=lambda d: d["sex"].str.title())
+)
+```
+
+:::
 
 ```{r, echo = F}
 # use mutate and case_when 
@@ -244,6 +407,10 @@ Alternatively we could decide we want simpler species names but that we would li
 
 They are **however** also complex and unintuitive. ChatGPT (or any LLM) is  great for building more complex regex snippets.
 
+::: {.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = F}
 penguins_clean_names |> 
     separate(
@@ -252,6 +419,22 @@ penguins_clean_names |>
         sep = "(?=\\()"
     ) 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+_species_split = penguins_clean_names["species"].str.split("(?=\\()", n=1, regex=True)
+(
+    penguins_clean_names
+    .assign(
+        species=_species_split.str[0],
+        full_latin_name=_species_split.str[1],
+    )
+)
+```
+
+:::
 
 ```{r, eval = T, echo = F}
 penguins_clean_names |> 
@@ -269,16 +452,45 @@ penguins_clean_names |>
 ### Detect a pattern
 
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 str_detect("Genus specificus", "Genus")
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+import re
+
+re.search("Genus", "Genus specificus") is not None
+```
+
+:::
+
 Use `str_detect()` to filter your data. Here, we filter the species names to only those containing the pattern "papua".
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = F}
 # 3 possible names in species column
 penguins_clean_names |> distinct(species)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# 3 possible names in species column
+penguins_clean_names[["species"]].drop_duplicates()
+```
+
+:::
 
 ```{r, echo = F}
 # 3 possible names in species column
@@ -286,12 +498,29 @@ penguins_clean_names |> distinct(species) |> head()
 ```
 
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = F}
 penguins_clean_names |>
   filter(str_detect(species, "papua")) |>
   select(species)
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+(
+    penguins_clean_names
+    .loc[lambda d: d["species"].str.contains("papua")]
+    [["species"]]
+)
+```
+
+:::
 
 
 ```{r, echo = F}
@@ -304,12 +533,30 @@ penguins_clean_names |>
 
 ### Remove a pattern
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # remove match for Genus (followed by a whitespace)
 str_remove("Genus specificus", pattern = "Genus ")
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# remove match for Genus (followed by a whitespace)
+re.sub("Genus ", "", "Genus specificus", count=1)
+```
+
+:::
+
 In the example above we split the species column into a common and latin name column - but it left some ugly brackets - we can use `str_remove` to strip away those brackets: 
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = F}
 penguins_clean_names |> 
@@ -321,6 +568,25 @@ penguins_clean_names |>
   mutate(full_latin_name = str_remove_all(full_latin_name, "[\\(\\)]"))
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+_species_split = penguins_clean_names["species"].str.split(
+    "(?=\\()", n=1, regex=True  # regex pattern: split before the '('
+)
+(
+    penguins_clean_names
+    .assign(
+        species=_species_split.str[0],
+        full_latin_name=_species_split.str[1],
+    )
+    .assign(full_latin_name=lambda d: d["full_latin_name"].str.replace(r"[\(\)]", "", regex=True))
+)
+```
+
+:::
 
 ```{r, echo = F}
 penguins_clean_names |> 
