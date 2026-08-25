@@ -42,12 +42,105 @@ the book.
 
 ## Chapters
 
+Inventory pass completed 2026-08-25 on branch `2027`. Counts for the seven
+files marked exact are a full read; the rest are chunk-header/first-line
+surveys and are marked `~` — they get re-verified per-chunk at step 4 of the
+`translate-chapter` skill before any edits happen regardless. No pilot
+chapter is chosen yet — see "Needs a decision before bulk work" below.
+
 | # | File | Chunks eligible | Status | Open Qs | Commit | Date | Notes |
 |---|---|---|---|---|---|---|---|
-| 0 | index.qmd | | todo | | | | preface: standing warnings, written last |
-| 1 | | | todo | | | | |
-| 2 | | | todo | | | | pilot chapter |
-| 3 | | | todo | | | | |
+| 0 | index.qmd | 0 | todo | | | | preface: standing warnings, written last |
+| 1 | 03-github.qmd | 1 | todo | | | | mostly usethis/gitcreds auth tooling, skip-log |
+| 2 | week-1.qmd | 0 | todo | | | | worksheet, no code |
+| 3 | strings.qmd | ~19 (exact) | todo | | | | stringr entirely uncovered by glossary |
+| 4 | duplicates.qmd | 6 (exact) | todo | | | | pre-existing R-only tabset, does not fit canonical pattern |
+| 5 | missing-values.qmd | 8 (exact) | todo | | | | pre-existing 4-way R-only tabset, does not fit canonical pattern |
+| 6 | dates.qmd | 15 (exact) | todo | | | | lubridate entirely uncovered by glossary |
+| 7 | numeric-plausibility.qmd | ~12 | todo | | | | |
+| 8 | week-2.qmd | 0 | todo | | | | fill-in-the-blank template, no real code |
+| 9 | summarise.qmd | ~18 | todo | | | | tabyl/adorn_*, ggpairs uncovered |
+| 10 | poisson.qmd | ~20 | todo | | | | performance/emmeans/glm.nb/MASS uncovered |
+| 11 | week-3.qmd | 0 | todo | | | | figure only |
+| 12 | binomial.qmd | ~12 | todo | | | | broom/emmeans/performance/DescTools uncovered |
+| 13 | week-4.qmd | ~7 | todo | | | | |
+| 14 | mixed-model.qmd | 0 | todo | | | | library-load only, feeds intro-mixed-model |
+| 15 | intro-mixed-model.qmd | ~10 | todo | | | | lme4/emmeans/ggeffects/MuMIn/sjPlot stack undocumented |
+| 16 | causal-models.qmd | ~10 | todo | | | | ggdag/dagitty stack undocumented |
+| 17 | power_analysis_chapter.qmd | ~8 | todo | | | | manual Monte-Carlo sim, no glossary pattern yet |
+| 18 | AI-programming.qmd | ~24 | todo | | | | mostly deliberately-broken debugging exercises |
+| 19 | ml-regression.qmd | ~5 | todo | | | | tidymodels stack undocumented, see below |
+| 20 | ml-logistic-regression.qmd | ~4 | todo | | | | tidymodels stack undocumented, see below |
+| 21 | workshop_03_random_forests.qmd | ~3 | todo | | | | tidymodels + vip undocumented |
+| 22 | workshop_04_pca_kmeans.qmd | ~3 | todo | | | | tidymodels PCA/k-means undocumented |
+
+### Appendices
+
+| # | File | Chunks eligible | Status | Open Qs | Commit | Date | Notes |
+|---|---|---|---|---|---|---|---|
+| A1 | r-basics.qmd | ~55 | todo | | | | results='asis' fake-output pairing, see below |
+| A2 | import.qmd | 2 | todo | | | | |
+| A3 | script.qmd | 2 | todo | | | | |
+| A4 | Naming conventions.qmd | 0 | todo | | | | all figures via include_graphics() |
+| A5 | data_reshaping.qmd | 9 | todo | | | | mostly covered by existing glossary |
+| A6 | quarto.qmd | ~5 | todo | | | | raw chunk count over-counts literal `` `r ''` `` fences, not real code |
+| A7 | ggplot.qmd | ~35 | todo | | | | extension packages appear late in file |
+| A8 | advanced_ggplot.qmd | ~3 | todo | | | | almost entirely undocumented geom-extension packages |
+| A9 | summary-table.qmd | 0 | todo | | | | sjPlot/gtsummary, no equivalent |
+| A10 | references.qmd | 0 | todo | | | | no code |
+
+### Needs a decision before bulk work
+
+Per CLAUDE.md's "Stop and report rather than continue": several chapters would
+generate well over eight open questions each, and two have a structural
+mismatch with the canonical pattern. Flagging here rather than logging dozens
+of individual `OPEN-QUESTIONS.md` entries or picking a pilot chapter
+unilaterally.
+
+- **scikit-learn / tidymodels is not in `TRANSLATION.md`'s Stack table at
+  all.** `ml-regression.qmd`, `ml-logistic-regression.qmd`,
+  `workshop_03_random_forests.qmd` and `workshop_04_pca_kmeans.qmd` are built
+  almost entirely on tidymodels (`recipe()`, `workflow()`, `tune()`,
+  `rand_forest()`, `step_pca()`, `vip()`, `conf_mat()`, …). Without a Stack
+  decision these four chapters are ~90% skip-and-log, which technically
+  follows the rules but produces almost no Python content. Needs a decision:
+  add scikit-learn to the Stack table (and seed the glossary with its core
+  idioms) before these chapters are attempted, or explicitly defer them.
+- **`duplicates.qmd` and `missing-values.qmd` already contain R-only
+  `.panel-tabset` blocks** comparing R approaches (`dplyr` vs `janitor`;
+  `summary()`/`skim()`/`vis_miss()`/`upset_plot()`). The canonical
+  one-R/one-Python pattern in CLAUDE.md assumes no pre-existing tabset at that
+  chunk. Needs a decision on how to nest a `group="language"` tabset inside or
+  alongside an existing R-only one before either chapter is translated.
+- **`intro-mixed-model.qmd`, `causal-models.qmd`, `advanced_ggplot.qmd`,
+  `summary-table.qmd`** are each built on one or more R packages with no
+  Python equivalent named in `TRANSLATION.md` (lme4/ggeffects/MuMIn/sjPlot;
+  ggdag/dagitty; a different extension package per section — ggdist,
+  ggridges, ggbump, patchwork, sf, etc.; sjPlot/gtsummary). Same shape as the
+  ML gap above, just smaller — worth deciding per-chapter whether to seed a
+  minimal glossary entry or defer.
+- **Recurring pattern, not yet a rule:** nearly every chapter's opening chunk
+  hides library loads/data import with `echo = F, warning = F, message = F`
+  rather than literally `#| include: false`. CLAUDE.md's skip-silent rule
+  names `include: false` specifically. Needs confirmation this is meant to be
+  treated the same way, since it recurs in ~20 files.
+- **Recurring pattern, not yet a rule:** `readRDS(url(...))` appears in a
+  `.callout-important` box at the top of most Data Cleaning/Insights
+  chapters. `.RDS` has no Python analogue. Candidate for one standing warning
+  in `TRANSLATION.md` rather than a fresh open question per chapter.
+- **`r-basics.qmd`** pairs an `eval: false` "real" chunk with a following
+  `results: asis` chunk that hardcodes the printed value (e.g. `cat("TRUE")`)
+  as a display trick, not a webexercises widget. CLAUDE.md's `results: asis`
+  skip rule is scoped to widgets. Needs confirmation the real chunk is
+  eligible and the `asis` twin is skip-silent.
+- **`quarto.qmd`** contains ```` ```{r}`r ''` ```` fences that are literal
+  text illustrating chunk syntax, not executable code — exclude these from
+  the eligible count entirely rather than logging them.
+
+Full glossary-gap list (every R idiom used in an eligible chunk that is not
+yet in `TRANSLATION.md`'s table, grouped by category) is available on request
+before the Stack/glossary decisions above are made — not written into
+`TRANSLATION.md` yet since filling it in requires those decisions first.
 
 ## Deferred goals
 
