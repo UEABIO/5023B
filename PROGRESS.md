@@ -34,11 +34,11 @@ the book.
 
 | # | Check | Result |
 |---|---|---|
-| 1 | `{python}` chunks with `eval: false` render with no Python installed and no reticulate configured | |
-| 2 | A `.panel-tabset` inside `hide()`/`unhide()` initialises correctly, including the tab that is not active when the container is revealed | |
-| 3 | A five-colon tabset inside `::::{.task-container}` renders with the task styling intact | |
-| 4 | `group="language"` syncs across chapters, not merely within a page | |
-| 5 | `scripts/verify_python.R` runs the pilot chapter's extracted Python without error | |
+| 1 | `{python}` chunks with `eval: false` render with no Python installed and no reticulate configured | Pass (2026-08-25, human render) |
+| 2 | A `.panel-tabset` inside `hide()`/`unhide()` initialises correctly, including the tab that is not active when the container is revealed | Pass (2026-08-25, human render) |
+| 3 | A five-colon tabset inside `::::{.task-container}` renders with the task styling intact | Pass (2026-08-25, human render) |
+| 4 | `group="language"` syncs across chapters, not merely within a page | Pass (2026-08-25, human render) |
+| 5 | `scripts/verify_python.R` runs the pilot chapter's extracted Python without error | Pass (2026-08-25, human render) |
 
 ## Chapters
 
@@ -53,7 +53,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | 0 | index.qmd | 0 | todo | | | | preface: standing warnings, written last |
 | 1 | 03-github.qmd | 1 | todo | | | | mostly usethis/gitcreds auth tooling, skip-log |
 | 2 | week-1.qmd | 0 | todo | | | | worksheet, no code |
-| 3 | strings.qmd | 16 (exact) | translated | 2 | 88146f4 | 2026-08-25 | **pilot chapter** — awaiting pilot-gate review and human `reviewed` sign-off |
+| 3 | strings.qmd | 16 (exact) | reviewed | 2 | 2b1be5d | 2026-08-25 | **pilot chapter** — pilot gate passed, all 5 checks; OQ-002 resolved same pass |
 | 4 | duplicates.qmd | 6 (exact) | todo | | | | R-only tabset: add one Python tab per group, see TRANSLATION.md |
 | 5 | missing-values.qmd | 8 (exact) | todo | | | | R-only tabset: add one Python tab per group, see TRANSLATION.md |
 | 6 | dates.qmd | 15 (exact) | todo | | | | lubridate entirely uncovered by glossary |
@@ -113,11 +113,10 @@ unilaterally.
   ggridges, ggbump, patchwork, sf, etc.; sjPlot/gtsummary). Same shape as the
   ML gap above, just smaller — worth deciding per-chapter whether to seed a
   minimal glossary entry or defer.
-- **Recurring pattern, not yet a rule:** nearly every chapter's opening chunk
-  hides library loads/data import with `echo = F, warning = F, message = F`
-  rather than literally `#| include: false`. CLAUDE.md's skip-silent rule
-  names `include: false` specifically. Needs confirmation this is meant to be
-  treated the same way, since it recurs in ~20 files.
+- ~~`echo = F, warning = F, message = F` setup chunks~~ **Resolved
+  2026-08-25:** treated as equivalent to `#| include: false` and skipped
+  silently, no Python tab and no `OPEN-QUESTIONS.md` entry. Documented in
+  `TRANSLATION.md`.
 - **Recurring pattern, not yet a rule:** `readRDS(url(...))` appears in a
   `.callout-important` box at the top of most Data Cleaning/Insights
   chapters. `.RDS` has no Python analogue. Candidate for one standing warning

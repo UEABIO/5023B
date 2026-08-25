@@ -85,7 +85,14 @@ four ML chapters, not a block to repeat verbatim in each one.
 - Four-space indentation, double-quoted strings.
 - In a `ggplot` translation, place the leading `+` at the start of each
   continuation line so the layers stack visibly, as they do in the R tab.
-- Comments in the R chunk are carried across verbatim where they still apply.
+- Comments in the R chunk are carried across where they still describe the
+  code they sit above. If a comment names an R function (`mutate()`,
+  `case_when()`, etc.), reword it to name the Python equivalent actually used
+  rather than carrying the R name across verbatim. If a comment describes
+  neither the R code above it nor the Python code below it (a stale
+  copy-paste leftover), drop it from the Python tab rather than editing
+  around it — do not touch the R comment itself (hard rule 1). Log the
+  general shape of the discrepancy in `OPEN-QUESTIONS.md` if it recurs.
 
 ## Idiom glossary
 
@@ -181,6 +188,15 @@ still sees the whole modelling process in one place.
 | `vip::vip(fit)` | `pd.Series(model.feature_importances_, index=X.columns).sort_values().plot.barh()` |
 | `kmeans(data, centers = 3)` | `KMeans(n_clusters=3).fit(data)` |
 | `augment(fit, new_data = data)` | `model.predict(X)` assigned back onto a copy of the frame with `.assign()` |
+
+## Setup chunks
+
+An R chunk marked `{r, echo = F, warning = F, message = F}` (or any subset of
+those options, old- or new-style) that contains only library loads,
+`source()` calls and/or a data import, with no other student-facing content,
+is treated as equivalent to `#| include: false` per CLAUDE.md's skip-silent
+rule: no Python tab, no `OPEN-QUESTIONS.md` entry. Confirmed against the
+`strings.qmd` pilot, where this is the shape of the file's opening chunk.
 
 ## Pre-existing R-only tabsets
 
