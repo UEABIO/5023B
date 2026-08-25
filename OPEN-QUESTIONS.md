@@ -60,7 +60,7 @@ chapter.
 
 - **File / chunk:** `strings.qmd`, unlabelled chunk under `## Rename text
   values with stringr` (originally line 206)
-- **Status:** open
+- **Status:** resolved
 - **R original:**
 
   ```r
@@ -84,6 +84,14 @@ chapter.
 - **Recommendation:** a human may want to fix the R comment directly (outside
   this translation workflow); not something Claude should alter under the
   hard rules.
-- **Resolution:**
+- **Resolution:** On human review (2026-08-25), the stale comment was removed
+  from the Python chunk rather than edited, since it described neither the R
+  code above it nor the Python code below it (`str.split().str[0]` /
+  `str.title()`, no conditional recoding). The R chunk is unchanged, per hard
+  rule 1. Two similar comments elsewhere in the chapter (the `case_when()` and
+  `if_else()` sections) named R functions (`mutate`, `case_when`, `if_else`)
+  in the Python tab; those did describe the code below them, so they were
+  edited to name the Python equivalents (`assign`/`np.select`,
+  `assign`/`np.where`) instead of being removed.
 
 ---

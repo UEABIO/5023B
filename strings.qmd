@@ -256,7 +256,7 @@ penguins_clean_names |>
 
 ```{python}
 #| eval: false
-# use mutate and case_when
+# use assign and np.select
 # for a statement that conditionally changes
 # the names of the values in a variable
 (
@@ -304,7 +304,7 @@ penguins_clean_names |>
 
 ```{python}
 #| eval: false
-# use mutate and if_else
+# use assign and np.where
 # for a statement that conditionally changes
 # the names of the values in a variable
 (
@@ -365,9 +365,6 @@ penguins_clean_names |>
 
 ```{python}
 #| eval: false
-# use mutate and case_when
-# for a statement that conditionally changes
-# the names of the values in a variable
 (
     penguins_clean_names
     .assign(species=lambda d: d["species"].str.split().str[0])
