@@ -53,9 +53,9 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | 0 | index.qmd | 0 | todo | | | | preface: standing warnings, written last |
 | 1 | 03-github.qmd | 1 | todo | | | | mostly usethis/gitcreds auth tooling, skip-log |
 | 2 | week-1.qmd | 0 | todo | | | | worksheet, no code |
-| 3 | strings.qmd | ~19 (exact) | todo | | | | stringr entirely uncovered by glossary |
-| 4 | duplicates.qmd | 6 (exact) | todo | | | | pre-existing R-only tabset, does not fit canonical pattern |
-| 5 | missing-values.qmd | 8 (exact) | todo | | | | pre-existing 4-way R-only tabset, does not fit canonical pattern |
+| 3 | strings.qmd | ~19 (exact) | in-progress | | | | **pilot chapter** |
+| 4 | duplicates.qmd | 6 (exact) | todo | | | | R-only tabset: add one Python tab per group, see TRANSLATION.md |
+| 5 | missing-values.qmd | 8 (exact) | todo | | | | R-only tabset: add one Python tab per group, see TRANSLATION.md |
 | 6 | dates.qmd | 15 (exact) | todo | | | | lubridate entirely uncovered by glossary |
 | 7 | numeric-plausibility.qmd | ~12 | todo | | | | |
 | 8 | week-2.qmd | 0 | todo | | | | fill-in-the-blank template, no real code |
@@ -97,21 +97,15 @@ mismatch with the canonical pattern. Flagging here rather than logging dozens
 of individual `OPEN-QUESTIONS.md` entries or picking a pilot chapter
 unilaterally.
 
-- **scikit-learn / tidymodels is not in `TRANSLATION.md`'s Stack table at
-  all.** `ml-regression.qmd`, `ml-logistic-regression.qmd`,
-  `workshop_03_random_forests.qmd` and `workshop_04_pca_kmeans.qmd` are built
-  almost entirely on tidymodels (`recipe()`, `workflow()`, `tune()`,
-  `rand_forest()`, `step_pca()`, `vip()`, `conf_mat()`, …). Without a Stack
-  decision these four chapters are ~90% skip-and-log, which technically
-  follows the rules but produces almost no Python content. Needs a decision:
-  add scikit-learn to the Stack table (and seed the glossary with its core
-  idioms) before these chapters are attempted, or explicitly defer them.
-- **`duplicates.qmd` and `missing-values.qmd` already contain R-only
-  `.panel-tabset` blocks** comparing R approaches (`dplyr` vs `janitor`;
-  `summary()`/`skim()`/`vis_miss()`/`upset_plot()`). The canonical
-  one-R/one-Python pattern in CLAUDE.md assumes no pre-existing tabset at that
-  chunk. Needs a decision on how to nest a `group="language"` tabset inside or
-  alongside an existing R-only one before either chapter is translated.
+- ~~scikit-learn / tidymodels not in the Stack table~~ **Resolved 2026-08-25:**
+  scikit-learn added to `TRANSLATION.md`'s Stack table and a tidymodels-to-
+  scikit-learn idiom glossary section seeded. `ml-regression.qmd`,
+  `ml-logistic-regression.qmd`, `workshop_03_random_forests.qmd` and
+  `workshop_04_pca_kmeans.qmd` are back in normal scope.
+- ~~R-only tabsets in `duplicates.qmd`/`missing-values.qmd`~~ **Resolved
+  2026-08-25:** add one extra `Python` tab per existing R-only tabset group,
+  showing one representative approach rather than mirroring every R tab.
+  Documented in `TRANSLATION.md` under "Pre-existing R-only tabsets".
 - **`intro-mixed-model.qmd`, `causal-models.qmd`, `advanced_ggplot.qmd`,
   `summary-table.qmd`** are each built on one or more R packages with no
   Python equivalent named in `TRANSLATION.md` (lme4/ggeffects/MuMIn/sjPlot;
