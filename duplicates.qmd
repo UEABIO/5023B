@@ -26,7 +26,7 @@ penguins_clean_names <- readRDS(url("https://github.com/UEABIO/5023B/raw/refs/he
 ## Duplicated rows
 
 
-::: {.panel-tabset}
+::: {.panel-tabset group="language"}
 
 ## dplyr
 
@@ -55,6 +55,20 @@ penguins_clean_names |>
 
 ```
 
+## Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+import statsmodels.formula.api as smf
+
+# TRANSLATION-NOTE: OQ-004
+# check for whole duplicate rows in the data
+penguins_clean_names.duplicated().sum()
+```
+
 :::
 
 Great! In our dataset we have no examples of duplicated rows of data
@@ -63,12 +77,29 @@ Great! In our dataset we have no examples of duplicated rows of data
 
 As our dataset is duplication free, lets quickly add a few dupes to our data: 
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 penguins_demo <- penguins_clean_names |> 
   slice(1:50) |> 
   bind_rows(slice(penguins_clean_names, c(1,5,10,15,30)))
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-005
+penguins_demo = pd.concat([
+    penguins_clean_names.iloc[0:50],
+    penguins_clean_names.iloc[[0, 4, 9, 14, 29]],
+])
+```
+
+:::
 
 :::{.task}
 ::::{.task-header}
@@ -85,7 +116,7 @@ Your turn
 
 If I did have duplications I could remove these with a few commands: 
 
-:::{.panel-tabset}
+:::{.panel-tabset group="language"}
 
 ## duplicated
 
@@ -107,6 +138,13 @@ penguins_demo |>
 
 ```
 
+## Python
+
+```{python}
+#| eval: false
+penguins_demo.drop_duplicates()
+```
+
 :::
 
 
@@ -116,6 +154,10 @@ penguins_demo |>
 Using the `n_distinct()` function from dplyr, you can count the number of distinct values in an R data frame using one of the following methods.
 
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 penguins_clean_names |> 
   summarise(
@@ -124,6 +166,16 @@ penguins_clean_names |>
   )
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-006
+penguins_clean_names.agg(n=("individual_id", "size"), n_distinct=("individual_id", "nunique"))
+```
+
+:::
 
 
 
