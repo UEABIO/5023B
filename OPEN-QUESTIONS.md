@@ -437,4 +437,172 @@ chapter.
 
 ---
 
+## OQ-014
+
+- **File / chunk:** `numeric-plausibility.qmd`, unlabelled chunk inside
+  `.callout-important` (`## Penguin clean names dataset`), lines 17–20
+- **Status:** open
+- **R original:**
+
+  ```r
+  penguins_clean_names <- readRDS(url("https://github.com/UEABIO/5023B/raw/refs/heads/2026/files/penguins.RDS"))
+  ```
+
+- **Issue:** identical shape to OQ-001/003/010/011 — `.RDS` load with no
+  Python equivalent, skip-and-logged rather than translated.
+- **Candidates:** none — no Python idiom applies.
+- **Provisional choice in the book:** no Python tab added for this chunk.
+- **Recommendation:** same as prior RDS entries — leave untranslated.
+- **Resolution:**
+
+---
+
+## OQ-015
+
+- **File / chunk:** `numeric-plausibility.qmd`, `### Basic range checks`,
+  unlabelled chunk, lines 47–69 (post-edit)
+- **Status:** open
+- **R original:**
+
+  ```r
+  # Check ranges of all numeric variables at once
+  penguins_clean_names |> 
+    summarise(across(where(is.numeric), 
+                     list(min = ~min(., na.rm = TRUE),
+                          max = ~max(., na.rm = TRUE))))
+  ```
+
+- **Issue:** `across(where(is.numeric), list(...))` — applying an aggregation
+  to every numeric column at once — has no glossary entry.
+- **Candidates:**
+  1. `penguins_clean_names.select_dtypes("number").agg(["min", "max"])`
+  2. Manually list every numeric column's min/max via `.agg()` named tuples —
+     rejected, since it loses the point of `across(where(is.numeric), ...)`,
+     which is that it doesn't require naming the columns.
+- **Provisional choice in the book:** 1, marked `# TRANSLATION-NOTE: OQ-015`.
+  Output shape differs from the R original (pandas returns min/max as rows
+  with one column per variable, rather than one row with a min/max column
+  pair per variable), but the values and intent match.
+- **Recommendation:** 1, and consider adding `across(where(is.numeric), ...)`
+  → `.select_dtypes("number")` to the glossary, since "apply to every numeric
+  column" is a recurring data-cleaning task.
+- **Resolution:**
+
+---
+
+## OQ-016
+
+- **File / chunk:** `numeric-plausibility.qmd`,
+  `### Detecting Impossible values`, unlabelled chunk, lines 101–124
+  (post-edit)
+- **Status:** open
+- **R original:**
+
+  ```r
+  # Check for negative values (impossible for mass, length measurements)
+  penguins_clean_names |> 
+    filter(if_any(c(body_mass_g, flipper_length_mm, 
+                    culmen_length_mm, culmen_depth_mm), 
+                  ~ . < 0))
+  ```
+
+- **Issue:** `if_any()` with an explicit column list and a custom formula
+  predicate (`~ . < 0`) is a different shape from OQ-008's
+  `if_any(everything(), is.na)` — no glossary entry covers either the
+  explicit-column-list form or a non-`is.na` predicate.
+- **Candidates:**
+  1. Build a `cols` list, then
+     `penguins_clean_names.loc[lambda d: (d[cols] < 0).any(axis=1)]`.
+  2. Chain `|` across four separate column comparisons — rejected, since it
+     doesn't generalise the way `if_any(c(...))` does and reads worse for
+     four columns.
+- **Provisional choice in the book:** 1, marked `# TRANSLATION-NOTE: OQ-016`.
+- **Recommendation:** 1, and consider adding this shape (`if_any(c(cols), ~
+  predicate)` → `(d[cols] OP value).any(axis=1)`) to the glossary alongside
+  OQ-008's resolution once both are settled, since together they cover most
+  `if_any()` usage in the book.
+- **Resolution:**
+
+---
+
+## OQ-017
+
+- **File / chunk:** `numeric-plausibility.qmd`,
+  `### Cross-variable checks: Spatial consistency`, unlabelled chunk,
+  lines 371–395 (post-edit)
+- **Status:** open
+- **R original:**
+
+  ```r
+  # Check which species appear on which islands
+  penguins_clean_names |> 
+    count(species, island) |> 
+    pivot_wider(names_from = island, values_from = n, values_fill = 0)
+  ```
+
+- **Issue:** the glossary's `pivot_wider(names_from, values_from)` entry
+  doesn't cover `values_fill =`, which fills the empty species/island
+  combinations with `0` instead of leaving them as missing.
+- **Candidates:**
+  1. Chain the existing `count()` and `pivot_wider()` glossary translations,
+     then append `.fillna(0)`.
+- **Provisional choice in the book:** 1, marked `# TRANSLATION-NOTE: OQ-017`.
+- **Recommendation:** 1, and consider adding `values_fill = v` →
+  `.fillna(v)` as a general note on the `pivot_wider` glossary entry.
+- **Resolution:**
+
+---
+
+## OQ-018
+
+- **File / chunk:** `numeric-plausibility.qmd`,
+  `### Flagging suspicious values`, unlabelled chunk, lines 444–525
+  (post-edit)
+- **Status:** open
+- **R original:** see the full chunk — three `case_when()` blocks each ending
+  `TRUE ~ NA_character_`, combined into a `!is.na(a) | !is.na(b) | !is.na(c)`
+  flag, then summarised with `sum(!is.na(x))` counts.
+- **Issue:** two points not settled by the existing glossary. First, R's
+  `TRUE ~ NA_character_` "otherwise" branch (rather than `.default =`) maps
+  to `np.select`'s `default=`, but the value itself (`None` vs `np.nan` vs
+  `pd.NA`) isn't specified anywhere — chose `None` since the array holds
+  strings. Second, `sum(!is.na(x))` inside `summarise()` (count of
+  non-missing values) has no glossary entry, translated as a named
+  aggregation with a lambda: `("col", lambda x: x.notna().sum())`.
+- **Candidates:** as implemented — `default=None` in each `np.select()`
+  call; `.assign()` split into two chained calls since `any_flag` depends on
+  columns created in the first (same reasoning as the `separate()` pattern
+  in `strings.qmd`); count-non-missing via a lambda in `.agg()`.
+- **Provisional choice in the book:** as above, marked
+  `# TRANSLATION-NOTE: OQ-018`.
+- **Recommendation:** as implemented. Consider adding `sum(!is.na(x))` →
+  `("x", lambda s: s.notna().sum())` to the glossary, since counting
+  non-missing flags is likely to recur in later data-cleaning chapters.
+- **Resolution:**
+
+---
+
+## OQ-019
+
+- **File / chunk:** `numeric-plausibility.qmd`,
+  `### Cross-variable checks: Expected correlations`, unlabelled chunk
+  (`fig-mass-flipper`), lines 268–304 (post-edit)
+- **Status:** open
+- **R original:** the chunk opens with a blank line, then the `#| label:`
+  and `#| fig-cap:` option comments, then another blank line, then the code —
+  see lines 272–277.
+- **Issue:** not a translation ambiguity — flagging per hard rule 1 that the
+  R chunk looks wrong. Quarto/knitr require `#|` chunk-option comments to be
+  the very first lines immediately after the opening fence; here they're
+  preceded by a blank line, which likely means they're read as plain R
+  comments rather than real chunk options, so the figure may render without
+  the intended label/caption. Left untouched per hard rule 1. The Python
+  sibling still carries `#| label: fig-mass-flipper-py` (mirroring the R
+  chunk's stated label) even though the same placement question doesn't
+  apply there, since the Python option comments were placed correctly.
+- **Candidates:** n/a — not a translation ambiguity, a chunk-formatting bug.
+- **Resolution:**
+
+---
+
 ---

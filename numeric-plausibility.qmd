@@ -44,6 +44,10 @@ Just because a value is an outlier doesn't mean it's wrong. Similarly, a value w
 
 The first step is to examine the range of your numeric variables and ask: *"Are these values biologically possible?"*
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Check ranges of all numeric variables at once
 penguins_clean_names |> 
@@ -53,7 +57,22 @@ penguins_clean_names |>
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-015
+# Check ranges of all numeric variables at once
+penguins_clean_names.select_dtypes("number").agg(["min", "max"])
+```
+
+:::
+
 Let's focus on body mass:
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # Check body mass range
@@ -65,9 +84,23 @@ penguins_clean_names |>
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# Check body mass range
+penguins_clean_names.agg(min_mass=("body_mass_g", "min"), max_mass=("body_mass_g", "max"))
+```
+
+:::
+
 ### Detecting Impossible values
 
 Check for biologically impossible values - things that cannot exist in nature:
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # Check for negative values (impossible for mass, length measurements)
@@ -78,12 +111,38 @@ penguins_clean_names |>
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-016
+# Check for negative values (impossible for mass, length measurements)
+cols = ["body_mass_g", "flipper_length_mm", "culmen_length_mm", "culmen_depth_mm"]
+penguins_clean_names.loc[lambda d: (d[cols] < 0).any(axis=1)]
+```
+
+:::
+
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Check for zero or negative values where zero doesn't make biological sense
 penguins_clean_names |> 
   filter(body_mass_g <= 0)
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Check for zero or negative values where zero doesn't make biological sense
+penguins_clean_names.loc[lambda d: d["body_mass_g"] <= 0]
+```
+
+:::
 
 :::{.callout-note}
 A body mass of exactly 0g is impossible - this likely represents a missing measurement that was coded as 0 instead of NA. This is a common data entry practice but is problematic for analysis because 0 is treated as a real value, not as missing data.
@@ -92,6 +151,10 @@ A body mass of exactly 0g is impossible - this likely represents a missing measu
 ### Species-specific checks
 
 What's plausible for one species may be implausible for another:
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # Body mass ranges by species
@@ -104,17 +167,45 @@ penguins_clean_names |>
   )
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# Body mass ranges by species
+penguins_clean_names.groupby("species", as_index=False).agg(
+    min_mass=("body_mass_g", "min"),
+    max_mass=("body_mass_g", "max"),
+    mean_mass=("body_mass_g", "mean"),
+)
+```
+
+:::
+
 From the scientific literature, we know:
 
 - Gentoo penguins are the largest (typically 4500-6500g)
 
 - Adelie and Chinstrap are similar in size (typically 3000-4500g)
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Find Adelie penguins with Gentoo-sized body mass
 penguins_clean_names |> 
   filter(species == "Adelie Penguin (Pygoscelis adeliae)", body_mass_g > 4750)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Find Adelie penguins with Gentoo-sized body mass
+penguins_clean_names.loc[lambda d: (d["species"] == "Adelie Penguin (Pygoscelis adeliae)") & (d["body_mass_g"] > 4750)]
+```
+
+:::
 
 :::{.callout-tip}
 When you find a species-implausible value, consider:
@@ -128,6 +219,10 @@ Is this a juvenile or unusual individual (still correct)?
 
 ### Visual inspection
 
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 #| label: fig-mass-boxplot
@@ -146,9 +241,33 @@ penguins_clean_names |>
 
 ```
 
+#### Python
+
+```{python}
+#| label: fig-mass-boxplot-py
+#| eval: false
+(
+    ggplot(penguins_clean_names, aes(x="species", y="body_mass_g"))
+    + geom_boxplot(outlier_shape=None)
+    + geom_jitter(width=0.2, alpha=0.3)
+    + labs(
+        x="",
+        y="Body mass (g)",
+    )
+    + theme_minimal()
+    + coord_flip()
+)
+```
+
+:::
+
 ### Cross-variable checks: Expected correlations
 
 Individual variables might look fine, but relationships between variables can reveal errors. Body size measurements should correlate positively:
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 
@@ -165,6 +284,29 @@ penguins_clean_names |>
   theme_minimal()
 
 ```
+
+#### Python
+
+```{python}
+#| label: fig-mass-flipper-py
+#| eval: false
+(
+    ggplot(penguins_clean_names, aes(x="flipper_length_mm", y="body_mass_g", color="species"))
+    + geom_point(alpha=0.6)
+    + labs(
+        x="Flipper length (mm)",
+        y="Body mass (g)",
+    )
+    + theme_minimal()
+)
+```
+
+:::
+
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Find penguins with large flippers but low body mass
 penguins_clean_names |> 
@@ -174,6 +316,24 @@ penguins_clean_names |>
 ```
 
 
+#### Python
+
+```{python}
+#| eval: false
+# Find penguins with large flippers but low body mass
+(
+    penguins_clean_names
+    .loc[lambda d: (d["flipper_length_mm"] > 210) & (d["body_mass_g"] < 3500)]
+    [["species", "sex", "flipper_length_mm", "body_mass_g", "island"]]
+)
+```
+
+:::
+
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Find penguins with small flippers but high body mass
 penguins_clean_names |> 
@@ -181,6 +341,20 @@ penguins_clean_names |>
   select(species, sex, flipper_length_mm, body_mass_g, island)
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Find penguins with small flippers but high body mass
+(
+    penguins_clean_names
+    .loc[lambda d: (d["flipper_length_mm"] < 185) & (d["body_mass_g"] > 4500)]
+    [["species", "sex", "flipper_length_mm", "body_mass_g", "island"]]
+)
+```
+
+:::
 :::{.callout-note}
 Deviations from expected correlations might indicate:
 
@@ -194,6 +368,10 @@ Legitimate individual variation (not always an error!)
 
 Some variable combinations are biologically impossible:
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Males cannot lay eggs
 penguins_clean_names |> 
@@ -202,9 +380,27 @@ penguins_clean_names |>
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# Males cannot lay eggs
+(
+    penguins_clean_names
+    .loc[lambda d: (d["sex"] == "MALE") & (d["date_egg"].notna())]
+    [["species", "sex", "date_egg", "body_mass_g", "island"]]
+)
+```
+
+:::
+
 ### Cross-variable checks: Spatial consistency
 
 Location variables should match known species distributions:
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # Check which species appear on which islands
@@ -213,6 +409,24 @@ penguins_clean_names |>
   pivot_wider(names_from = island, values_from = n, values_fill = 0)
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-017
+# Check which species appear on which islands
+(
+    penguins_clean_names
+    .groupby(["species", "island"], as_index=False)
+    .size()
+    .rename(columns={"size": "n"})
+    .pivot(index="species", columns="island", values="n")
+    .fillna(0)
+)
+```
+
+:::
 
 #### Known biology:
 
@@ -226,6 +440,10 @@ penguins_clean_names |>
 ### Flagging suspicious values
 
 Rather than immediately removing suspicious values, best practice is to flag them for review:
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # Create flags for different types of potential issues
@@ -264,3 +482,46 @@ penguins_flagged |>
   )
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-018
+# Create flags for different types of potential issues
+penguins_flagged = penguins_clean_names.assign(
+    # Single-variable flags
+    flag_impossible=lambda d: np.select(
+        [d["body_mass_g"] <= 0, d["flipper_length_mm"] <= 0],
+        ["negative_or_zero_mass", "negative_or_zero_flipper"],
+        default=None,
+    ),
+    flag_implausible=lambda d: np.select(
+        [d["body_mass_g"] < 2000, d["body_mass_g"] > 7000],
+        ["suspiciously_light", "suspiciously_heavy"],
+        default=None,
+    ),
+    # Cross-variable flags
+    flag_species_size=lambda d: np.select(
+        [
+            (d["species"] == "Adelie") & (d["body_mass_g"] > 5000),
+            (d["species"] == "Gentoo") & (d["body_mass_g"] < 4000),
+        ],
+        ["Adelie_too_heavy", "Gentoo_too_light"],
+        default=None,
+    ),
+).assign(
+    # Any flag present?
+    any_flag=lambda d: d["flag_impossible"].notna() | d["flag_implausible"].notna() | d["flag_species_size"].notna()
+)
+
+# Summarize flagged observations
+penguins_flagged.agg(
+    n_impossible=("flag_impossible", lambda x: x.notna().sum()),
+    n_implausible=("flag_implausible", lambda x: x.notna().sum()),
+    n_species_size=("flag_species_size", lambda x: x.notna().sum()),
+    total_flagged=("any_flag", "sum"),
+)
+```
+
+:::
