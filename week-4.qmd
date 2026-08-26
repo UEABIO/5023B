@@ -115,6 +115,10 @@ Complete an independent analysis following binomial GLM principles. You will pro
    
 `r hide ("Proportion")`
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 
 mayfly_raw |>
@@ -128,9 +132,29 @@ mayfly_raw |>
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+mayfly_raw.agg(
+    total_mayfly=("samples_with_mayfly", "sum"),
+    total_samples=("samples_collected", "sum"),
+).assign(prop_mayfly=lambda d: d["total_mayfly"] / d["total_samples"])
+```
+
+:::
+
 `r unhide()`
 
 `r hide("Range of Samples")`
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 
@@ -146,9 +170,29 @@ mayfly_raw |>
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-039
+mayfly_raw.agg(
+    max=("samples_collected", "max"),
+    min=("samples_collected", "min"),
+    mean=("samples_collected", "mean"),
+    n_sites=("samples_collected", "size"),
+    n_samples=("samples_collected", "sum"),
+)
+```
+
+:::
+
 `r unhide()`
 
 `r hide("Find sites without mayfly")`
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 
@@ -156,6 +200,15 @@ mayfly_raw |>
 mayfly_raw |> 
   filter(`samples_with_mayfly` < 1)
 
+
+### Python
+
+```{python}
+#| eval: false
+mayfly_raw.loc[lambda d: d["samples_with_mayfly"] < 1]
+```
+
+:::
 
 ```   
 
@@ -167,6 +220,10 @@ mayfly_raw |>
 
 `r hide("Solution")`
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 mayfly <- mayfly_raw |>
   mutate(
@@ -175,6 +232,18 @@ mayfly <- mayfly_raw |>
   )
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+mayfly = mayfly_raw.assign(
+    samples_without_mayfly=lambda d: d["samples_collected"] - d["samples_with_mayfly"],
+    prop_mayfly=lambda d: d["samples_with_mayfly"] / d["samples_collected"],
+)
+```
+
+:::
 
 `r unhide()`
    
@@ -185,6 +254,10 @@ mayfly <- mayfly_raw |>
    - Check for missing values
    
 `r hide("Possible solutions")`
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r,eval = FALSE}
 
@@ -211,6 +284,25 @@ skimr::skim(mayfly)
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-040
+# Check for impossible values
+mayfly.loc[lambda d: (d["samples_collected"] < 0) | (d["samples_with_mayfly"] < 0) | (d["do_mgl"] < 0) | (d["copper_ugl"] < 0)]
+
+mayfly.loc[lambda d: d["samples_with_mayfly"] > d["samples_collected"]]
+
+mayfly.select_dtypes("number").agg(["max", "min"])
+
+mayfly.loc[lambda d: (d["do_mgl"] < 3.2) | (d["do_mgl"] > 156.8)]
+
+mayfly.info()
+```
+
+:::
+
 `r unhide()`
 
 6. **Exploratory visualisation:**
@@ -220,6 +312,10 @@ skimr::skim(mayfly)
    
 `r hide("Possible solution")`
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 
 mayfly |> 
@@ -228,6 +324,19 @@ mayfly |>
   geom_point(aes(size = samples_collected))
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-041
+(
+    ggplot(mayfly, aes("log_copper_ugl", "prop_mayfly"))
+    + geom_point(aes(size="samples_collected"))
+)
+```
+
+:::
 
 `r unhide()`
    

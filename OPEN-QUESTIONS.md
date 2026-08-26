@@ -1128,3 +1128,130 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-039
+
+- **File / chunk:** `week-4.qmd`, `## Script: \`01_data_preparation.R\``,
+  hidden solution under "Range of Samples"
+- **Status:** open
+- **R original:**
+
+  ```r
+  mayfly_raw |> 
+    summarise(max = max(`samples_collected`),
+              min = min(`samples_collected`),
+              mean = mean(`samples_collected`),
+              n_sites = n(),
+              n_samples = sum(`samples_collected))
+  ```
+
+- **Issue:** the final line has a stray unmatched backtick before
+  `samples_collected` and appears to be missing the `summarise()` call's
+  closing parenthesis — as written this would not parse in R. Flagged per
+  hard rule 1 and left untouched; translated to the evident intent (closing
+  the backtick-quoted name and the call correctly) rather than mirroring
+  the syntax error, since a syntactically invalid line has no faithful
+  Python mirror.
+- **Candidates:** n/a — not a translation ambiguity, an R source bug.
+- **Provisional choice in the book:** translated as if the line read
+  `n_samples = sum(\`samples_collected\`))`, marked
+  `# TRANSLATION-NOTE: OQ-039`.
+- **Recommendation:** a human may want to fix the stray backtick/paren
+  directly in the R chunk (outside this translation workflow).
+- **Resolution:**
+
+---
+
+## OQ-040
+
+- **File / chunk:** `week-4.qmd`, `## Script: \`01_data_preparation.R\``,
+  hidden solution under "Possible solutions" (data quality checks)
+- **Status:** open
+- **R original:**
+
+  ```r
+  mayfly |> 
+     filter(samples_with mayfly > samples_collected)
+  
+  mayfly |> 
+    mayfly |> 
+    summarise(across(where(is.numeric), 
+                     list(max = ~max(.x, na.rm = TRUE), 
+                          min = ~min(.x, na.rm = TRUE))))
+  
+  skimr::skim(mayfly)
+  ```
+
+- **Issue:** three separate problems in one chunk, all flagged per hard rule
+  1 and left untouched in the R chunk. First, `samples_with mayfly` is
+  missing its underscore (invalid R syntax as written — a bare space
+  between two names). Second, `mayfly |> mayfly |> summarise(...)` pipes the
+  same object into itself twice, a copy-paste duplicate. Third,
+  `skimr::skim()` has no Python equivalent, same shape as OQ-007/OQ-021.
+- **Candidates:** filter translated using the evident intended column name
+  `samples_with_mayfly`; the duplicate pipe line collapsed to a single
+  `.select_dtypes("number").agg(["max", "min"])` call (the
+  `across(where(is.numeric), ...)` idiom from OQ-015); `skim()` substituted
+  with `.info()`, consistent with the OQ-007/OQ-021 precedent.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-040` once for the whole chunk.
+- **Recommendation:** a human may want to fix the typo and remove the
+  duplicate pipe directly in the R chunk (outside this translation
+  workflow).
+- **Resolution:**
+
+---
+
+## OQ-041
+
+- **File / chunk:** `week-4.qmd`, `## Script: \`01_data_preparation.R\``,
+  hidden solution under "6. Exploratory visualisation"
+- **Status:** open
+- **R original:**
+
+  ```r
+  mayfly |> 
+    ggplot(aes(x = log_copper_ugl,
+               y = prop_mayfly))+
+    geom_point(aes(size = samples_collected))
+  ```
+
+- **Issue:** `log_copper_ugl` is never created anywhere in this chapter's
+  visible chunks (only `copper_ugl`, `samples_without_mayfly` and
+  `prop_mayfly` are). Looks like a planned-but-missing `mutate(log_copper_ugl
+  = log(copper_ugl))` step. Per hard rule 1, left untouched and mirrored for
+  parallelism rather than fixed, same treatment as OQ-013 before its
+  human-authorised exception.
+- **Candidates:** n/a — not a translation ambiguity, a missing-variable bug.
+- **Provisional choice in the book:** the undefined column name carried
+  across unchanged into the Python tab, marked
+  `# TRANSLATION-NOTE: OQ-041`.
+- **Recommendation:** a human may want to add the missing `mutate()` step
+  (or fix the reference to `copper_ugl`) directly in the R chunk.
+- **Resolution:**
+
+---
+
+## OQ-042
+
+- **File / chunk:** `week-4.qmd`, `## Script: \`01_data_preparation.R\``,
+  "7. Correlation check"
+- **Status:** open
+- **R original:**
+
+  ```r
+  mayfly |> 
+  GGally::ggpairs(columns = c(6,7,9))
+  ```
+
+- **Issue:** identical shape to OQ-026 in `summarise.qmd` — `GGally::ggpairs()`
+  has no accepted Python equivalent in `TRANSLATION.md`, and seaborn is
+  explicitly ruled out by the Stack table. Skip-and-logged rather than
+  translated.
+- **Candidates:** none within the current Stack.
+- **Provisional choice in the book:** no Python tab added for this chunk.
+- **Recommendation:** same as OQ-026 — revisit only if the Stack is
+  extended with a pairs-plot-capable package.
+- **Resolution:**
+
+---
