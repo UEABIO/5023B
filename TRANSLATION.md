@@ -189,6 +189,41 @@ still sees the whole modelling process in one place.
 | `kmeans(data, centers = 3)` | `KMeans(n_clusters=3).fit(data)` |
 | `augment(fit, new_data = data)` | `model.predict(X)` assigned back onto a copy of the frame with `.assign()` |
 
+### Dates and times (lubridate)
+
+Python has no direct equivalent of the `lubridate` package: date and time
+handling lives in pandas itself (`pd.to_datetime()` and the `.dt` accessor)
+plus the base `datetime` module. An R chunk whose only content is
+`library(lubridate)` therefore has no Python import of its own — the
+chapter's standard import block (`pandas`/`numpy`/`plotnine`/`statsmodels`)
+already covers it. Treat such a chunk as the first Python tab of the chapter
+carrying that block, same as any other opening chunk, rather than logging it
+as an open question.
+
+R's parsing functions (`ymd()`, `dmy()`, `mdy()`, `ydm()`) infer the day/month
+order from the function name; `pd.to_datetime()` infers the format
+automatically in the common case, or takes `dayfirst=`/`yearfirst=` for the
+ambiguous ones. `as_date(x, format = ...)` format codes are strptime-style
+`%Y`/`%m`/`%d` codes, identical in R and Python, so a `format=` argument
+carries across unchanged.
+
+| R (lubridate) | Python (pandas) |
+|---|---|
+| `ymd(x)` | `pd.to_datetime(x)` |
+| `ydm(x)` | `pd.to_datetime(x, yearfirst=True)` |
+| `dmy(x)` | `pd.to_datetime(x, dayfirst=True)` |
+| `mdy(x)` | `pd.to_datetime(x)` |
+| `date(x)` | `pd.to_datetime(x).normalize()` |
+| `as_date(x)` | `pd.to_datetime(x)` |
+| `as_date(x, format = fmt)` | `pd.to_datetime(x, format=fmt)` |
+| `year(x)` | `pd.to_datetime(x).year`; `.dt.year` over a column |
+| `month(x)` | `pd.to_datetime(x).month`; `.dt.month` over a column |
+| `week(x)` | `pd.to_datetime(x).isocalendar().week`; `.dt.isocalendar().week` over a column |
+| `day(x)` | `pd.to_datetime(x).day`; `.dt.day` over a column |
+| `janitor::excel_numeric_to_date(x)` | `pd.to_datetime(x, unit="D", origin="1899-12-30")` — Windows origin, matching the book's stated default; note as a comment if a chapter's data uses the Mac 1904 origin instead |
+| `min(x)` / `max(x)` on a date column, inside `summarise()` | `.min()` / `.max()`, named the same way as any other `.agg()` aggregation |
+| `tibble(col = c(v1, v2, ...))` | `pd.DataFrame({"col": [v1, v2, ...]})` |
+
 ## Setup chunks
 
 An R chunk marked `{r, echo = F, warning = F, message = F}` (or any subset of
@@ -225,3 +260,7 @@ These belong in the preface, stated once, not repeated per chunk:
   Any `readRDS()`/`saveRDS()` chunk a student is meant to run is skip-and-
   logged as R-specific rather than translated; do not invent a pandas
   substitute for it.
+- R's `Date` class has no time component. pandas has no bare-date type — a
+  `pd.to_datetime()` result is always a `Timestamp` carrying a time component
+  (`00:00:00` when unused). Printed values will show that difference even
+  when both sides represent the same date.
