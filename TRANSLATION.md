@@ -103,6 +103,8 @@ not listed goes through the ambiguity protocol in `CLAUDE.md`.
 |---|---|
 | `read_csv("f.csv")` | `pd.read_csv("f.csv")` |
 | `filter(x > 3)` | `.loc[lambda d: d["x"] > 3]` |
+| `filter(cond1, cond2)` | `.loc[lambda d: (cond1) & (cond2)]` - comma-separated conditions are an implicit AND |
+| `!is.na(x)` | `x.notna()` |
 | `select(a, b)` | `[["a", "b"]]` |
 | `mutate(z = x + y)` | `.assign(z=lambda d: d["x"] + d["y"])` |
 | `rename(new = old)` | `.rename(columns={"old": "new"})` |
@@ -221,7 +223,7 @@ carries across unchanged.
 | `week(x)` | `pd.to_datetime(x).isocalendar().week`; `.dt.isocalendar().week` over a column |
 | `day(x)` | `pd.to_datetime(x).day`; `.dt.day` over a column |
 | `janitor::excel_numeric_to_date(x)` | `pd.to_datetime(x, unit="D", origin="1899-12-30")` — Windows origin, matching the book's stated default; note as a comment if a chapter's data uses the Mac 1904 origin instead |
-| `min(x)` / `max(x)` on a date column, inside `summarise()` | `.min()` / `.max()`, named the same way as any other `.agg()` aggregation |
+| `min(x)` / `max(x)`, inside `summarise()` (any column type) | `.min()` / `.max()`, named the same way as any other `.agg()` aggregation |
 | `tibble(col = c(v1, v2, ...))` | `pd.DataFrame({"col": [v1, v2, ...]})` |
 
 ## Setup chunks
