@@ -56,7 +56,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | 3 | strings.qmd | 16 (exact) | reviewed | 2 | 2b1be5d | 2026-08-25 | **pilot chapter** — pilot gate passed, all 5 checks; OQ-002 resolved same pass |
 | 4 | duplicates.qmd | 6 (exact) | translated | 4 | 1cd238c | 2026-08-25 | R-only tabsets handled per TRANSLATION.md; RDS chunk skip-logged (OQ-003); dplyr tab's broken `sum()` flagged, left untouched (OQ-004) |
 | 5 | missing-values.qmd | 9 (exact) | translated | 4 | 7b7fb28 | 2026-08-25 | R-only tabset handled per TRANSLATION.md; RDS chunk skip-logged (OQ-010, also has a stray typo); stale "reorder columns" comment dropped, not carried (OQ-009) |
-| 6 | dates.qmd | 15 (exact) | todo | | | | lubridate entirely uncovered by glossary |
+| 6 | dates.qmd | 15 (exact) | translated | 3 | | 2026-08-26 | lubridate glossary seeded in TRANSLATION.md first (separate commit) since >8 open questions would otherwise result; `plants` bug in Filter dates fixed to `penguins_clean_names` in both R and Python, human-authorised exception to hard rule 1 (OQ-013) |
 | 7 | numeric-plausibility.qmd | ~12 | todo | | | | |
 | 8 | week-2.qmd | 0 | todo | | | | fill-in-the-blank template, no real code |
 | 9 | summarise.qmd | ~18 | todo | | | | tabyl/adorn_*, ggpairs uncovered |

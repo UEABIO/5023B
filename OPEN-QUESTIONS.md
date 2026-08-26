@@ -345,4 +345,96 @@ chapter.
 
 ---
 
+## OQ-011
+
+- **File / chunk:** `dates.qmd`, unlabelled chunk inside `.callout-important`
+  (`## Penguin clean names dataset`), lines 16–19
+- **Status:** open
+- **R original:**
+
+  ```r
+  penguins_clean_names <- readRDS(url("https://github.com/UEABIO/5023B/raw/refs/heads/2026/files/penguins.RDS"))
+  ```
+
+- **Issue:** identical shape to OQ-001/OQ-003/OQ-010 — `.RDS` load with no
+  Python equivalent, skip-and-logged rather than translated.
+- **Candidates:** none — no Python idiom applies.
+- **Provisional choice in the book:** no Python tab added for this chunk.
+- **Recommendation:** same as OQ-001/OQ-003/OQ-010 — leave untranslated.
+- **Resolution:**
+
+---
+
+## OQ-012
+
+- **File / chunk:** `dates.qmd`, `## Reformat`, unlabelled chunk (the
+  failed-parse illustration), lines 126–157 (post-edit)
+- **Status:** open
+- **R original:**
+
+  ```r
+  df <- tibble(
+    date = c("X2020.01.22",
+             "X2020.01.22",
+             "X2020.01.22",
+             "X2020.01.22")
+  )
+
+  df |> 
+    mutate(
+      date = as_date(date)
+    )
+  ```
+
+- **Issue:** this chunk exists specifically to demonstrate that `as_date()`
+  on an unparsable format returns `NA` with a warning rather than an error
+  (shown in the literal output block immediately below the R chunk).
+  `pd.to_datetime()` without `errors=` raises an exception on the same input
+  instead of warning, which would break the demonstration's point.
+  `TRANSLATION.md`'s new `as_date(x)` → `pd.to_datetime(x)` glossary entry
+  doesn't specify error-handling behaviour.
+- **Candidates:**
+  1. `pd.to_datetime(d["date"], errors="coerce")` — silently returns `NaT`
+     for unparsable values, closer in spirit to "the conversion fails
+     quietly" than to R's specific warn-and-NA behaviour.
+  2. Leave `errors=` unset and let it raise — a truer default, but would
+     make the Python tab error where the R tab merely warns, which reads as
+     broken code in a book context.
+- **Provisional choice in the book:** 1, marked `# TRANSLATION-NOTE: OQ-012`.
+- **Recommendation:** 1, and consider adding `errors="coerce"` to the
+  `as_date()` glossary entry generally, since R's date-parsing functions
+  warn-and-NA on failure much more often than Python's raise.
+- **Resolution:**
+
+---
+
+## OQ-013
+
+- **File / chunk:** `dates.qmd`, `### Filter dates`, unlabelled chunk,
+  lines 386–408 (post-edit)
+- **Status:** resolved
+- **R original (before human-authorised fix):**
+
+  ```r
+  # return records after 2008
+  plants |>
+    filter(date_egg >= ymd("2008-01-01"))
+  ```
+
+- **Issue:** `plants` is never defined anywhere in this chapter — every
+  other chunk operates on `penguins_clean_names`. Looks like a copy-paste
+  leftover from another chapter/dataset. Per hard rule 1 this would normally
+  be left untouched and only logged, with the Python sibling mirroring
+  `plants` for parallelism with the (broken) R tab.
+- **Candidates:** n/a — not a translation ambiguity, a data-reference bug.
+- **Resolution:** the human maintainer explicitly authorised an exception to
+  hard rule 1 for this one case (chat, 2026-08-26): `plants` replaced with
+  `penguins_clean_names` in **both** the R chunk and its new Python sibling.
+  This is a deliberate, human-directed deviation from "never modify an
+  existing R chunk", not an unauthorised edit — noted here so the `git diff`
+  showing one R-line change on this chapter is explained rather than
+  mistaken for an error.
+
+---
+
 ---

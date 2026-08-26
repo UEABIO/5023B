@@ -37,10 +37,26 @@ Additionally there's a lot of different ways to write the same date:
 
 This variability makes it difficult to tell our software how to read the information, luckily we can use the functions in the `lubridate` package. 
 
+::: {.panel-tabset group="language"}
+
+## R
+
 ```{r}
 library(lubridate)
 # library(tidyverse)
 ```
+
+## Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+import statsmodels.formula.api as smf
+```
+
+:::
 
 :::{.callout-warning}
 If you get a warning that some dates could not be parsed, then you might find the date has been inconsistently entered into the dataset.
@@ -54,19 +70,62 @@ Depending on how we interpret the date ordering in a file, we can use `ymd()`, `
 
 We can use functions in the `lubridate` package @R-lubridate to reformat dates written in different ways to *YYYY-MM-DD* format.
 
+::: {.panel-tabset group="language"}
+
+### R
+
 ```{r}
 date("2017-10-11T14:02:00")
 ```
+
+### Python
+
+```{python}
+#| eval: false
+pd.to_datetime("2017-10-11T14:02:00").normalize()
+```
+
+:::
+
+::: {.panel-tabset group="language"}
+
+### R
 
 ```{r}
 dmy("11 October 2020")
 ```
 
+### Python
+
+```{python}
+#| eval: false
+pd.to_datetime("11 October 2020", dayfirst=True)
+```
+
+:::
+
+::: {.panel-tabset group="language"}
+
+### R
+
 ```{r}
 mdy("10/11/2020")
 ```
 
+### Python
+
+```{python}
+#| eval: false
+pd.to_datetime("10/11/2020")
+```
+
+:::
+
 Sometimes dates are presented in formats that do not translate cleanly into R. For example, the following date format isn’t converted correctly when we try to convert it to a date.
+
+::: {.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = F}
 df <- tibble(
@@ -82,6 +141,20 @@ df |>
   )
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+df = pd.DataFrame({
+    "date": ["X2020.01.22", "X2020.01.22", "X2020.01.22", "X2020.01.22"]
+})
+
+# TRANSLATION-NOTE: OQ-012
+df.assign(date=lambda d: pd.to_datetime(d["date"], errors="coerce"))
+```
+
+:::
 
 ```
 Warning: There was 1 warning in `mutate()`.
@@ -101,6 +174,10 @@ Caused by warning:
 
 We can use `%` to be more explicit about what information is in each part of our date column, specifying where the 4-digit year (`%Y`), 2-digit month (`%m`) and 2 digit day (`%d`) are within each string.
 
+::: {.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = F}
 df |> 
   mutate(
@@ -109,25 +186,86 @@ df |>
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+df.assign(date=lambda d: pd.to_datetime(d["date"], format="X%Y.%m.%d"))
+```
+
+:::
+
 ## Extract
 
 Sometimes we might need to extract certain elements of a longer date-time value for summarising, filtering, or plotting data.
+
+::: {.panel-tabset group="language"}
+
+### R
 
 ```{r}
 year("2017-11-28T14:02:00")
 ```
 
+### Python
+
+```{python}
+#| eval: false
+pd.to_datetime("2017-11-28T14:02:00").year
+```
+
+:::
+
+::: {.panel-tabset group="language"}
+
+### R
+
 ```{r}
 month("2017-11-28T14:02:00")
 ```
+
+### Python
+
+```{python}
+#| eval: false
+pd.to_datetime("2017-11-28T14:02:00").month
+```
+
+:::
+
+::: {.panel-tabset group="language"}
+
+### R
 
 ```{r}
 week("2017-11-28T14:02:00")
 ```
 
+### Python
+
+```{python}
+#| eval: false
+pd.to_datetime("2017-11-28T14:02:00").isocalendar().week
+```
+
+:::
+
+::: {.panel-tabset group="language"}
+
+### R
+
 ```{r}
 day("2017-11-28T14:02:00")
 ```
+
+### Python
+
+```{python}
+#| eval: false
+pd.to_datetime("2017-11-28T14:02:00").day
+```
+
+:::
 
 ## Excel date formats
 
@@ -139,11 +277,24 @@ This means that sometimes the date is imported into R as the numeric (number of 
 
 The janitor package has a handy function `janitor::excel_numeric_to_date()` to deal with this. 
 
+::: {.panel-tabset group="language"}
+
+### R
+
 ```{r}
 library(janitor)
 
 excel_numeric_to_date(42370)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+pd.to_datetime(42370, unit="D", origin="1899-12-30")
+```
+
+:::
 
 :::{.task}
 ::::{.task-header}
@@ -160,12 +311,25 @@ Your turn
 `r hide("Solution")`
 
 
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = T, warning = F, message = F}
 
 penguins_clean_names <- penguins_clean_names |>
   mutate(date_egg = lubridate::dmy(date_egg))
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+penguins_clean_names = penguins_clean_names.assign(date_egg=lambda d: pd.to_datetime(d["date_egg"], dayfirst=True))
+```
+
+:::::
 
 `r unhide()`
 
@@ -179,13 +343,30 @@ Once we have established our date data, we are able to perform calculations or e
 
 ### Calculations with dates
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = F}
 penguins_clean_names |> 
   summarise(min_date=min(date_egg),
             max_date=max(date_egg))
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+penguins_clean_names.agg(min_date=("date_egg", "min"), max_date=("date_egg", "max"))
+```
+
+:::
+
 We can also extract and make new columns from our date column - such as a simple column of the year when each observation was made:
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = F}
 penguins_clean_names <- penguins_clean_names |> 
@@ -193,13 +374,36 @@ penguins_clean_names <- penguins_clean_names |>
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+penguins_clean_names = penguins_clean_names.assign(year=lambda d: d["date_egg"].dt.year)
+```
+
+:::
+
 ### Filter dates
 
 We can filter datasets to include or exclude data from certain dates or date ranges.
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 # return records after 2008
-plants |>
+penguins_clean_names |>
   filter(date_egg >= ymd("2008-01-01"))
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# return records after 2008
+penguins_clean_names.loc[lambda d: d["date_egg"] >= pd.to_datetime("2008-01-01")]
+```
+
+:::
 
