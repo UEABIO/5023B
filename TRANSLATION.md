@@ -262,7 +262,11 @@ choice of statsmodels mechanism, decided under OQ-027.
 | `glm(y ~ x, data = d, family = poisson(link = "log"))` | `smf.glm("y ~ x", data=d, family=sm.families.Poisson()).fit()` |
 | `glm(y ~ x, data = d, family = quasipoisson(link = "log"))` | `smf.glm("y ~ x", data=d, family=sm.families.Poisson()).fit(scale="X2")` — `scale="X2"` rescales standard errors by the Pearson-based dispersion estimate, giving the same point estimates and inflated SEs as R's quasi-Poisson, without a distinct statsmodels family object |
 | `MASS::glm.nb(y ~ x, data = d)` | `smf.negativebinomial("y ~ x", data=d).fit()` — statsmodels estimates a dispersion parameter `alpha`; R's `theta` is its reciprocal (`alpha ≈ 1/theta`), not printed the same way |
+| `glm(y ~ x, data = d, family = binomial(link = logit))` | `smf.glm("y ~ x", data=d, family=sm.families.Binomial()).fit()` |
+| `glm(cbind(successes, failures) ~ x, data = d, family = binomial)` | `smf.glm("successes + failures ~ x", data=d, family=sm.families.Binomial()).fit()` — statsmodels' formula API treats a `successes + failures` left-hand side as the two-column binomial response, the same information as R's `cbind()` |
+| `glm(cbind(successes, failures) ~ x, data = d, family = quasibinomial)` | `smf.glm("successes + failures ~ x", data=d, family=sm.families.Binomial()).fit(scale="X2")` — same `scale="X2"` mechanism as quasi-Poisson |
 | `AIC(model1, model2)` | `model1.aic`, `model2.aic` — read directly off each fitted result, no combining call needed |
+| `DescTools::PseudoR2(model)` (default McFadden) | `1 - model.llf / model.llnull` — statsmodels GLM results carry both log-likelihoods directly; other `PseudoR2()` types (Cox-Snell, Nagelkerke, …) have no settled equivalent and are not attempted |
 
 ### Prediction grids with confidence intervals (emmeans)
 

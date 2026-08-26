@@ -961,3 +961,170 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-033
+
+- **File / chunk:** `binomial.qmd`, `binomial_model <- glm(cbind(number_killed,number_survived) ~ dose, family = binomial, data = beetles)` (`## Fitting a binomial model`) and the quasi-likelihood task's `glm(cbind(...), family = quasibinomial, ...)` (`## Assumptions`)
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s "GLM families" table for the
+  representative forms.
+- **Issue:** neither plain `family = binomial(link = logit)` nor the
+  `cbind(successes, failures) ~ x` two-column response form, nor
+  `quasibinomial`, had a glossary entry.
+- **Candidates:** `sm.families.Binomial()` for the family; statsmodels'
+  formula API accepts a `successes + failures ~ x` left-hand side as the
+  equivalent of R's `cbind()` two-column binomial response; `quasibinomial`
+  via the same `scale="X2"` mechanism already settled for quasi-Poisson
+  under OQ-027.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-033` at each chunk's first occurrence.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entries added to `TRANSLATION.md`'s "GLM
+  families" table before translating the rest of the chapter.
+
+---
+
+## OQ-034
+
+- **File / chunk:** `binomial.qmd`, `## Binomial vs Linear Model`,
+  `DescTools::PseudoR2(binomial_model)`
+- **Status:** resolved
+- **R original:**
+
+  ```r
+  DescTools::PseudoR2(binomial_model)
+  ```
+
+- **Issue:** `DescTools` has no Stack/glossary coverage, and `PseudoR2()`'s
+  default (McFadden's pseudo R²) has no statsmodels one-liner.
+- **Candidates:** `1 - model.llf / model.llnull`, using the two
+  log-likelihoods statsmodels' GLM results already carry — arithmetically
+  identical to McFadden's R². `DescTools::PseudoR2()` can return other
+  variants (Cox-Snell, Nagelkerke, …) via an argument the R chunk doesn't
+  use, so only the default is covered.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-034`.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entry added to `TRANSLATION.md`'s "GLM families"
+  table before translating the rest of the chapter.
+
+---
+
+## OQ-035
+
+- **File / chunk:** `binomial.qmd`, `## Fitting a binomial model`,
+  pre-existing R-only tabset (`summary`/`broom`, `##` tabs)
+- **Status:** open
+- **R original:** `summary` tab calls `summary(binomial_model)`; `broom` tab
+  calls `binomial_model |> broom::tidy(conf.int = T)`.
+- **Issue:** per `TRANSLATION.md`'s pre-existing-R-only-tabset rule, one
+  representative Python tab covers the group. Unlike the earlier
+  `duplicates.qmd`/`missing-values.qmd`/`summarise.qmd` cases, both existing
+  R tabs here already have full glossary coverage (`model.summary()`; the
+  `tidy()` helper from OQ-029), so either could serve as the representative.
+- **Candidates:** 1. `binomial_model.summary()` — the more direct, single-call
+  mirror of R's own `summary()`. 2. The `tidy()` helper from OQ-029 — richer
+  output, but requires carrying that helper's definition into a chapter that
+  wouldn't otherwise need it.
+- **Provisional choice in the book:** 1, marked
+  `# TRANSLATION-NOTE: OQ-035`, since it needs no supporting helper function
+  and mirrors the plainer of the two R tabs directly.
+- **Recommendation:** as implemented.
+- **Resolution:**
+
+---
+
+## OQ-036
+
+- **File / chunk:** `binomial.qmd`, two pre-existing R-only tabsets —
+  `### Making predictions` (`Augment`/`Emmeans`, `##` tabs) and the hidden
+  solution inside the `Make a ggplot of the change in probability` task
+  (`Broom`/`Emmeans`, `##` tabs, nested inside `r hide()`/`r unhide()` inside
+  a task-container)
+- **Status:** open
+- **R original:** each pairs a `broom::augment(binomial_model, data =
+  beetles, type.predict = "response")`-based approach against an
+  `emmeans::emmeans(binomial_model, ...) |> as_tibble()`-based approach to
+  the same prediction task.
+- **Issue:** per the pre-existing-R-only-tabset rule, one representative
+  Python tab per group. Both tabsets are resolved the same way, so logged
+  together rather than twice. `broom::augment()` itself never gets its own
+  glossary entry in this chapter as a result — it isn't used anywhere
+  outside these two R-only tabsets.
+- **Candidates:** the Emmeans tab, reusing the prediction-grid idiom already
+  settled under OQ-028 (`grid.assign(**model.get_prediction(grid).summary_frame())`),
+  chosen over the Augment tab for consistency with every other prediction
+  block already translated in this book.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-036` at the first occurrence only. Separately: the
+  second tabset (inside the hidden solution) is a pre-existing `:::` (3
+  colons) nested directly inside a `::::{.task-container}` (4 colons) — one
+  colon short of the fence-arithmetic rule's minimum. Left as-is per hard
+  rule 1 (not an R chunk or prose line, but not mine to silently "fix"
+  either); the new Python tab is added at the same 3 colons as the existing
+  R tabs, matching what's already there rather than what the rule would
+  otherwise require.
+- **Recommendation:** the colon-count anomaly is worth a human check against
+  the rendered book — if the task styling collapses there, the fix is to
+  bump this specific tabset to 5 colons, unrelated to translation.
+- **Resolution:**
+
+---
+
+## OQ-037
+
+- **File / chunk:** `binomial.qmd`, three `echo=F` demonstration-plot
+  chunks: the `bernplot`-labelled `dbinom()` barplot (`## Logistic
+  regression...` intro), the identity-line `logit(p)` plot, and the
+  inverse-logit curve plot (both unlabelled, same section)
+- **Status:** open
+- **R original:** base-R `barplot()`/`plot()` calls, each `echo=F` so no
+  source is shown to the reader in the R book — same shape as OQ-032 in
+  `poisson.qmd`.
+- **Issue:** as OQ-032: `echo=F` means the R tab would render with no
+  visible source, so pairing it with a visibly-sourced Python tab would be
+  the only asymmetric tabset of its kind. All three occurrences in this
+  chapter share the identical shape, logged together rather than three
+  times.
+- **Candidates:** all three are trivially portable (`scipy.stats.bernoulli`/
+  `binom.pmf()` and matplotlib line plots), so, as with OQ-032, this is a
+  presentation question, not a translation gap.
+- **Provisional choice in the book:** no Python tab added for any of the
+  three chunks.
+- **Recommendation:** same as OQ-032 — if a human settles how `echo=F`
+  demonstration chunks should be handled generally, apply that decision to
+  both this entry and OQ-032 at once.
+- **Resolution:**
+
+---
+
+## OQ-038
+
+- **File / chunk:** `binomial.qmd`, `## Data tidying`, hidden solution
+  inside the "Your turn" task
+- **Status:** open
+- **R original:**
+
+  ```r
+  beetles <- beetles |>
+    janitor::clean_names() |> # clean names
+    mutate(number_survived = number_tested-number_killed) # mutate
+  ```
+
+- **Issue:** `janitor::clean_names()` has no glossary entry. In general it
+  lowercases, snake_cases and de-duplicates column names; here the source
+  columns are already single words with underscores (`Dose`,
+  `Number_tested`, `Number_killed`, `Mortality_rate`), so the only actual
+  transformation needed is lowercasing.
+- **Candidates:** 1. `beetles.columns = beetles.columns.str.lower()` —
+  covers exactly what this dataset's columns need. 2. A more general
+  regex-based port of `clean_names()`'s full behaviour (punctuation
+  stripping, de-duplication) — rejected as over-engineering for a column
+  set that doesn't exercise any of that.
+- **Provisional choice in the book:** 1, marked
+  `# TRANSLATION-NOTE: OQ-038`.
+- **Recommendation:** 1. Revisit with the fuller port if a later chapter's
+  `clean_names()` call meets messier column names that need it.
+- **Resolution:**
+
+---

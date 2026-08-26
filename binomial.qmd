@@ -128,9 +128,29 @@ downloadthis::download_link(
 )
 ```
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 head(beetles)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+
+beetles.head(6)
+```
+
+:::
 
 The data columns are:
 
@@ -161,6 +181,10 @@ Your turn
 
 `r hide("Solution")`
 
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 
 beetles <- beetles |> 
@@ -168,6 +192,17 @@ beetles <- beetles |>
   mutate(number_survived = number_tested-number_killed) # mutate
  
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-038
+beetles.columns = beetles.columns.str.lower()
+beetles = beetles.assign(number_survived=lambda d: d["number_tested"] - d["number_killed"])
+```
+
+:::::
 
 `r unhide()`
 
@@ -190,11 +225,25 @@ model <- lm(mortality_rate ~ dose, data = beetles)
 
 This shows issues with normality and linearity
 
+::::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 performance::check_model(model, 
                          detrend = FALSE)
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+sm.qqplot(model.resid, line="45")
+plt.scatter(model.fittedvalues, model.resid)
+```
+
+::::
 
 
 Predictions made from this model are also inadequate
@@ -233,6 +282,10 @@ ggplot(beetles, aes(x=dose, y=mortality_rate)) +
 
 ## Fitting a binomial model
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 binomial_model <- glm(cbind(number_killed,number_survived) ~ dose, 
                       family = binomial, 
@@ -241,7 +294,19 @@ binomial_model <- glm(cbind(number_killed,number_survived) ~ dose,
 
 ```
 
-:::{.panel-tabset}
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-033
+binomial_model = smf.glm(
+    "number_killed + number_survived ~ dose", data=beetles, family=sm.families.Binomial()
+).fit()
+```
+
+:::
+
+:::{.panel-tabset group="language"}
 
 ## summary
 
@@ -256,6 +321,14 @@ summary(binomial_model)
 ```{r}
 binomial_model |> 
   broom::tidy(conf.int=T)
+```
+
+## Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-035
+binomial_model.summary()
 ```
 
 :::
@@ -320,7 +393,7 @@ If you want to find out more about [Odds and log-odds head here](https://www.you
 
 ### Making predictions
 
-:::{.panel-tabset}
+:::{.panel-tabset group="language"}
 
 ## Augment
 
@@ -341,6 +414,16 @@ emmeans::emmeans(binomial_model,
                  type='response') 
 
 ```
+
+## Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-036
+grid = pd.DataFrame({"dose": np.arange(49, 78)})
+grid.assign(**binomial_model.get_prediction(grid).summary_frame())
+```
+
 :::
 
 
@@ -360,7 +443,7 @@ Make a ggplot of the change in probability
 
 `r hide("Solution")`
 
-:::{.panel-tabset}
+:::{.panel-tabset group="language"}
 
 ## Broom
 
@@ -393,6 +476,21 @@ emmeans::emmeans(binomial_model,
 
 ```
 
+## Python
+
+```{python}
+#| eval: false
+grid = pd.DataFrame({"dose": np.arange(40, 81)})
+predictions = grid.assign(**binomial_model.get_prediction(grid).summary_frame())
+
+(
+    ggplot(predictions, aes("dose", "mean"))
+    + geom_point(data=beetles, mapping=aes(y="mortality_rate"))
+    + geom_line(aes(y="mean"))
+    + geom_ribbon(aes(ymin="mean_ci_lower", ymax="mean_ci_upper"), alpha=0.2)
+)
+```
+
 :::
 
 `r unhide()`
@@ -411,12 +509,26 @@ Can you edit your code to produce a prediction of the mortality rate at a pestic
 
 `r hide("Solution")`
 
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 emmeans::emmeans(binomial_model, 
                  specs = ~ dose, 
                  at=list(dose=0), 
                  type='response') 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+grid = pd.DataFrame({"dose": [0]})
+grid.assign(**binomial_model.get_prediction(grid).summary_frame())
+```
+
+:::::
 
 `r unhide()`
 
@@ -428,6 +540,10 @@ emmeans::emmeans(binomial_model,
 The `performance` package detects and alters the checks. Pay particular attention to the binned residuals plot - this is your best estimate of possible overdispersion (requiring a quasi-likelihood fit). In this case there is likely not enough data for robust checks - we could consider a quasi-likelihood model in order to have more conservative confidence intervals. 
 
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 
 performance::check_model(binomial_model,
@@ -435,9 +551,32 @@ performance::check_model(binomial_model,
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+sm.qqplot(binomial_model.resid_deviance, line="45")
+plt.scatter(binomial_model.fittedvalues, binomial_model.resid_deviance)
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 performance::check_overdispersion(binomial_model)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+binomial_model.pearson_chi2 / binomial_model.df_resid
+```
+
+:::
 
 
 :::{.task}
@@ -448,11 +587,27 @@ Try fitting a quasi-likelihood model
 
 - Fit a quasibinomial model
 
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = F}
 quasibinomial_model <- glm(cbind(number_killed,number_survived) ~ dose, 
                       family = quasibinomial, 
                       data = beetles)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-033
+quasibinomial_model = smf.glm(
+    "number_killed + number_survived ~ dose", data=beetles, family=sm.families.Binomial()
+).fit(scale="X2")
+```
+
+:::::
 
 - How does this change the means, standard errors and significance tests
 
@@ -491,8 +646,22 @@ Mortality rate increased with pesticide dose in the red flour beetle (*Tribolium
 
 Binomial model shows better explanatory power (R-squared) for our correctly fitted model:
 
+::::{.panel-tabset group="language"}
+
+### R
+
 ```{r, warning = FALSE, message = FALSE}
 DescTools::PseudoR2(binomial_model)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-034
+1 - binomial_model.llf / binomial_model.llnull
+```
+
+::::
 
 :::
