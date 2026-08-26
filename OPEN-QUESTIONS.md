@@ -1255,3 +1255,194 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-043
+
+- **File / chunk:** `intro-mixed-model.qmd`, every `lmer()` call (first
+  occurrence: `### Approach 3: Mixed-Effects Model`,
+  `mixed_model <- lmer(detox_exp ~ benzo_um + (1 | group), data = benzo_data)`)
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s "Mixed models" section.
+- **Issue:** `lme4`/`lmerTest` (linear mixed models) have no Stack coverage.
+  statsmodels' own `MixedLM` was considered but rejected: no clean nested
+  random-effects formula syntax, no built-in prediction confidence
+  intervals, different variance-component API. Discussed with the human
+  maintainer (chat, 2026-08-26), who asked to evaluate `pymer4` instead.
+- **Candidates:** `pymer4.models.Lmer`, which wraps R's lme4 via `rpy2` —
+  formula strings (including nested `(1 | g1/g2)` forms) forward to lme4
+  essentially unchanged, so nearly every `lmer()` call in this chapter ports
+  with only cosmetic syntax changes. Rejected alternative: `MixedLM`, for
+  the reasons above.
+- **Provisional choice in the book:** `pymer4.models.Lmer` adopted as the
+  Stack tool for mixed models, added to `TRANSLATION.md`.
+- **Recommendation:** as implemented. The cost is a real one worth
+  restating: `pymer4` needs a working R installation with lme4/lmerTest to
+  run, unlike every other Python idiom in this book — worth a mention in
+  the eventual Python setup chapter (out of scope here).
+- **Resolution:** glossary entries added to `TRANSLATION.md`'s "Mixed
+  models" section before translating the rest of the chapter.
+
+---
+
+## OQ-044
+
+- **File / chunk:** `intro-mixed-model.qmd`, `## Worked Example 3 -
+  Overdispersion in Binomial Models`, `glmer(cbind(number_of_larvae,
+  unhatched_eggs) ~ cross + (1 | replicate), family = binomial, ...)` and
+  its nested sibling
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s "Mixed models" section.
+- **Issue:** binomial GLMMs specifically — statsmodels' only mixed binomial
+  model is `BinomialBayesMixedGLM`, a Bayesian variational fit, a
+  genuinely different estimation method from lme4's Laplace/adaptive
+  quadrature approach, not just a syntax difference.
+- **Candidates:** since `pymer4` (settled under OQ-043) calls real R lme4
+  under the hood, `Lmer(..., family="binomial")` uses the *same* estimation
+  engine as the R chunk, not an approximation — this resolves the
+  estimation-method concern that motivated the original question entirely,
+  at the cost of the R-dependency already noted in OQ-043.
+- **Provisional choice in the book:** as implemented.
+- **Recommendation:** as implemented.
+- **Resolution:** covered by the same `TRANSLATION.md` glossary entries as
+  OQ-043.
+
+---
+
+## OQ-045
+
+- **File / chunk:** `intro-mixed-model.qmd`, every `r.squaredGLMM()` call
+  (`## Model Fit`, `### Model fit statistics`)
+- **Status:** resolved
+- **R original:** `library(MuMIn); r.squaredGLMM(mixed_model)`
+- **Issue:** `MuMIn` has no Stack coverage, and neither `pymer4` nor
+  statsmodels computes marginal/conditional R² for a mixed model directly.
+- **Candidates:** a direct implementation of Nakagawa & Schielzeth's
+  formula from the model's own variance components, as written into
+  `TRANSLATION.md`'s "Marginal and conditional R²" section.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-045` at the first occurrence only.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entry added to `TRANSLATION.md` before
+  translating the rest of the chapter.
+
+---
+
+## OQ-046
+
+- **File / chunk:** `intro-mixed-model.qmd`, `### Creating tables`,
+  `sjPlot::tab_model(mixed_model, show.re.var = TRUE, show.icc = TRUE,
+  show.r2 = TRUE)`
+- **Status:** open
+- **R original:** as above.
+- **Issue:** `sjPlot` has no Stack coverage and no Python package in the
+  current Stack produces a comparable publication-ready regression table.
+  Skip-and-logged per CLAUDE.md's rule for chunks relying on an
+  R-package with no accepted Python equivalent.
+- **Candidates:** none within the current Stack.
+- **Provisional choice in the book:** no Python tab added for this chunk.
+- **Recommendation:** revisit only if the Stack is extended with a
+  regression-table package (e.g. `stargazer`-style output).
+- **Resolution:**
+
+---
+
+## OQ-047
+
+- **File / chunk:** `intro-mixed-model.qmd`, `## Summary`, `### When
+  Should I Use Mixed Models?`, the `DiagrammeR::grViz()` decision-tree
+  diagram
+- **Status:** open
+- **R original:** `library(DiagrammeR); grViz("digraph decision_tree { ... }")`
+  — chunk is `echo = FALSE`.
+- **Issue:** two separate points. First, `DiagrammeR` has no Stack
+  coverage, but the diagram content itself is a Graphviz DOT-language
+  string, which is not R-specific — a `graphviz.Source()` idiom was
+  written into `TRANSLATION.md`'s "Diagrams" section for future chapters
+  that port a *visible* DOT-language chunk. Second, and decisive for this
+  occurrence: the chunk is `echo = FALSE`, so — same reasoning as
+  OQ-032/OQ-037 — the R tab would render with no visible source, making a
+  visibly-sourced Python tab the only asymmetric one of its kind. Caught
+  late (after the glossary entry was already drafted); the idiom is kept
+  for future use, but not applied here.
+- **Candidates:** `graphviz.Source()` with the identical DOT string
+  (documented, not applied to this chunk).
+- **Provisional choice in the book:** no Python tab added for this chunk,
+  consistent with the `echo=F` skip-silent treatment elsewhere.
+- **Recommendation:** apply the `graphviz.Source()` idiom the first time a
+  *visible* `DiagrammeR::grViz()` chunk appears in a later chapter.
+- **Resolution:**
+
+---
+
+## OQ-048
+
+- **File / chunk:** `intro-mixed-model.qmd`, `## Worked Example 2`, task
+  "Understanding the nested structure",
+  `rats |> aggregate(Glycogen ~ Rat + Treatment + Liver, data = _, mean)`
+- **Status:** resolved
+- **R original:** as above.
+- **Issue:** base R's `aggregate()` with a formula and the native-pipe
+  placeholder `_` has no glossary entry.
+- **Candidates:** `.groupby([...], as_index=False)[...].mean()`, as written
+  into `TRANSLATION.md`'s "Grouped aggregation" section.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-048`.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entry added to `TRANSLATION.md` before
+  translating the rest of the chapter.
+
+---
+
+## OQ-049
+
+- **File / chunk:** `intro-mixed-model.qmd`, every chunk whose entire
+  deliverable is an `emmeans`/`ggpredict` confidence ribbon or band —
+  the population-average ribbon plot under "Making Predictions", both
+  `ggpredict(...) |> plot(...)` calls under "Group-specific predictions",
+  the dolphins body-mass ribbon plot and its `ggpredict` comparison plot,
+  and the two `ggpredict(...) |> plot()` calls in Worked Example 2
+- **Status:** open (standing rule — applies chapter-wide, not resolved
+  chunk by chunk)
+- **R original:** each pairs an `emmeans()`/`ggpredict()` call with a
+  `ggplot()`/`plot()` call that draws a `geom_ribbon()` or an implicit
+  ggeffects confidence band.
+- **Issue:** neither `pymer4` nor statsmodels computes confidence intervals
+  for mixed-model predictions (see OQ-043). Rather than invent an
+  approximation (e.g. a bootstrap or delta-method CI not used anywhere else
+  in the book), the human maintainer decided (chat, 2026-08-26) to
+  skip-and-log any chunk whose entire point is showing that uncertainty
+  band, while still translating point-prediction-only chunks (a plain
+  `emmeans()` table, `model.predict()`) and chunks that do other useful
+  work alongside a prediction (diagnostics, model fitting).
+- **Candidates:** n/a — a scope decision, not a translation ambiguity.
+- **Provisional choice in the book:** no Python tab added for any of the
+  listed chunks.
+- **Recommendation:** if a Python CI-for-mixed-models method is ever
+  settled (e.g. a bootstrap helper added to the Stack), revisit this
+  standing rule rather than each chunk individually.
+- **Resolution:**
+
+---
+
+## OQ-050
+
+- **File / chunk:** `intro-mixed-model.qmd`, `## Worked Example 2`, two
+  `rats.rds` loads (`{r, echo = FALSE}` and its `{r, eval = FALSE}`
+  alternative-path sibling)
+- **Status:** open
+- **R original:**
+
+  ```r
+  rats <- readRDS("files/rats.rds")
+  ```
+
+- **Issue:** identical shape to OQ-001 and its siblings — `.RDS` load with
+  no Python equivalent, skip-and-logged rather than translated. Both the
+  `echo = FALSE` version and its `eval = FALSE` alternative-path sibling
+  share the same reasoning, logged together.
+- **Candidates:** none — no Python idiom applies.
+- **Provisional choice in the book:** no Python tab added for either chunk.
+- **Recommendation:** same as OQ-001 — leave untranslated.
+- **Resolution:**
+
+---

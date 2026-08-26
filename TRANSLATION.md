@@ -18,6 +18,7 @@ the wider Python ecosystem.
 | Data frames | dplyr / tidyr | pandas | Not polars. Not both. |
 | Plotting | ggplot2 | plotnine | Not matplotlib or seaborn. |
 | Models | stats / broom | statsmodels (formula API) | Preserves the `y ~ x` narrative. |
+| Mixed models | lme4 / lmerTest | pymer4 | Wraps R's lme4 via `rpy2` — needs a working R installation with lme4/lmerTest to actually run, the one Python idiom in this book with a non-Python runtime dependency. In exchange, formula strings (including nested and `cbind()` forms) pass through to lme4 essentially unchanged. |
 | Machine learning | tidymodels | scikit-learn | Not statsmodels. Pipeline mirrors recipe/workflow structure. |
 | Arrays and numerics | base R | numpy | |
 | Distributions and tests | stats | scipy.stats | |
@@ -58,6 +59,19 @@ uses matplotlib directly rather than plotnine. Import it alongside `sm`:
 
 ```python
 import matplotlib.pyplot as plt
+```
+
+Chapters fitting mixed models (`intro-mixed-model.qmd` and beyond) add:
+
+```python
+from pymer4.models import Lmer
+```
+
+Import `graphviz` only in the specific chapter(s) that port a `DiagrammeR::grViz()`
+decision-tree diagram (see "Diagrams" below):
+
+```python
+import graphviz
 ```
 
 Machine-learning chapters (`ml-regression.qmd`, `ml-logistic-regression.qmd`,
@@ -356,6 +370,89 @@ rather than plotnine (see the import block note above).
 | `check_model(model, check = "qq")` | `sm.qqplot(model.resid_deviance, line="45")` (`model.resid` for an `lm()` object) |
 | `check_model(model, check = "homogeneity")` | `plt.scatter(model.fittedvalues, model.resid_deviance)` |
 | `check_model(model, check = "overdispersion")` / `check_overdispersion(model)` | `model.pearson_chi2 / model.df_resid` — the Pearson-based dispersion ratio, statsmodels' closest built-in equivalent to performance's dispersion statistic; performance's dispersion *plot* itself has no direct equivalent and is not attempted |
+
+### Mixed models (lme4/lmerTest to pymer4)
+
+pymer4's `Lmer` forwards its formula string to R's lme4 via `rpy2`, so nested
+and `cbind()` forms carry across with only cosmetic changes (spacing around
+`|`, no backtick-quoted names). Settled under OQ-043/044.
+
+| R | Python |
+|---|---|
+| `lmer(y ~ x + (1\|g), data = d)` | `Lmer("y ~ x + (1 \| g)", data=d).fit()` |
+| `glmer(cbind(s, f) ~ x + (1\|g), family = binomial, data = d)` | `Lmer("cbind(s, f) ~ x + (1 \| g)", data=d, family="binomial").fit()` |
+| `lmer(y ~ x + (1\|g1/g2), data = d)` (nested) | `Lmer("y ~ x + (1 \| g1/g2)", data=d).fit()` — the nested formula passes straight through to lme4, no workaround needed |
+| `summary(model)` | `model.summary()` |
+| `broom.mixed::tidy(model)` | `model.coefs` — pymer4's fitted `Lmer` already stores a fixed-effects table shaped like broom's output |
+| Random-effects variance table | `model.ranef_var` |
+| `predict(model, newdata, re.form = NA)` (population-average prediction) | `model.predict(data=grid, use_rfx=False)` |
+| `predict(model, newdata)` (group-conditional prediction, random effects included) | `model.predict(data=grid, use_rfx=True)` |
+| `AIC(model)` | `model.AIC` |
+
+`emmeans`/`ggeffects`'s confidence intervals and ribbon plots have no
+settled Python source — neither pymer4 nor statsmodels' `MixedLM` computes
+marginal-mean confidence intervals for a mixed model. Per human decision
+(chat, 2026-08-26), any chunk whose entire deliverable is a confidence
+ribbon or CI band is skip-and-logged rather than approximated; a chunk that
+also does other useful work (a plain prediction table, a diagnostic, a
+model fit) is still translated for that part. See OQ-049 for the standing
+rule and the list of chunks it applies to.
+
+Model diagnostics on a fitted `Lmer` reuse the OQ-031 statsmodels/matplotlib
+approach, substituting pymer4's attribute names: `model.residuals` for
+`resid`/`resid_deviance`, `model.fits` for `fittedvalues`.
+
+### Marginal and conditional R² (MuMIn::r.squaredGLMM())
+
+No package computes this for a `Lmer` object; settled under OQ-045 as a
+direct implementation of Nakagawa & Schielzeth's formula from the model's
+own variance components:
+
+```r
+r.squaredGLMM(mixed_model)
+```
+
+```python
+var_fixed = model.predict(data=d, use_rfx=False).var()
+var_random = model.ranef_var.loc[model.ranef_var["Name"] != "Residual", "Var"].sum()
+var_resid = model.ranef_var.loc[model.ranef_var["Name"] == "Residual", "Var"].sum()
+
+r2m = var_fixed / (var_fixed + var_random + var_resid)  # marginal: fixed effects only
+r2c = (var_fixed + var_random) / (var_fixed + var_random + var_resid)  # conditional: fixed + random
+```
+
+### Publication tables (sjPlot)
+
+`sjPlot::tab_model()` has no Python equivalent — nothing in the Stack
+produces a comparable publication-ready HTML/text regression table.
+Skip-and-logged per CLAUDE.md's "chunk relying on an R package with no
+accepted Python equivalent" rule (OQ-046).
+
+### Diagrams (DiagrammeR)
+
+`DiagrammeR::grViz()` renders a Graphviz DOT-language string — the DOT
+language itself is not R-specific, so the diagram source carries across
+almost unchanged; only the calling wrapper differs. Settled under OQ-047.
+
+```r
+library(DiagrammeR)
+grViz("digraph { a -> b }")
+```
+
+```python
+import graphviz
+graphviz.Source("digraph { a -> b }")
+```
+
+### Grouped aggregation with `aggregate()`
+
+Base R's `aggregate(y ~ a + b, data = d, mean)` — and the native-pipe
+placeholder `_` used with it — has no glossary entry. Settled under
+OQ-048.
+
+| R | Python |
+|---|---|
+| `d \|> aggregate(y ~ a + b, data = _, mean)` | `d.groupby(["a", "b"], as_index=False)["y"].mean()` |
 
 ## Setup chunks
 

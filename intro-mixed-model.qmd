@@ -119,6 +119,10 @@ benzo_data <- read_csv(here::here("files", "benzo.csv")) |>
   mutate(group = as.character(group))
 ```
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, fig.cap = "All data pooled together, ignoring experimental batch"}
 
 ggplot(benzo_data, aes(x = benzo_um, y = detox_exp)) +
@@ -130,7 +134,34 @@ ggplot(benzo_data, aes(x = benzo_um, y = detox_exp)) +
   geom_smooth(method = "lm", se = TRUE)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+from pymer4.models import Lmer
+import graphviz
+
+(
+    ggplot(benzo_data, aes("benzo_um", "detox_exp"))
+    + geom_point(alpha=0.6)
+    + labs(x="Toxin concentration (µM)", y="Detoxification capacity")
+    + geom_smooth(method="lm", se=True)
+)
+```
+
+:::
+
 However, when we colour points by experimental batch, a more complex picture emerges:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, fig.cap = "Data coloured by experimental batch reveals group-level variation"}
 ggplot(benzo_data, aes(x = benzo_um, y = detox_exp, colour = group)) +
   geom_point(alpha = 0.6) +
@@ -140,6 +171,20 @@ ggplot(benzo_data, aes(x = benzo_um, y = detox_exp, colour = group)) +
   ) +
   theme(legend.position = "right")
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+(
+    ggplot(benzo_data, aes("benzo_um", "detox_exp", colour="group"))
+    + geom_point(alpha=0.6)
+    + labs(x="Toxin concentration (µM)", y="Detoxification capacity")
+    + theme(legend_position="right")
+)
+```
+
+:::
 
 The groups differ substantially in their baseline detoxification capacity. Some batches show higher average responses than others, even at the same toxin concentration.
 
@@ -152,6 +197,10 @@ Explore group differences
 Create a boxplot showing how detoxification capacity varies between experimental batches.
 
 `r hide("Solution")`
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, fig.cap = "Baseline detoxification varies substantially between batches"}
 ggplot(benzo_data, aes(x = group, y = detox_exp, fill = group)) +
   geom_boxplot() +
@@ -161,6 +210,20 @@ ggplot(benzo_data, aes(x = group, y = detox_exp, fill = group)) +
   ) +
   theme(legend.position = "none")
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+(
+    ggplot(benzo_data, aes("group", "detox_exp", fill="group"))
+    + geom_boxplot()
+    + labs(x="Experimental batch", y="Detoxification capacity")
+    + theme(legend_position="none")
+)
+```
+
+:::::
 
 Group 2 has consistently higher detoxification capacity, whilst Group 4 is substantially lower. This batch-to-batch variation must be accounted for.
 
@@ -174,20 +237,50 @@ Group 2 has consistently higher detoxification capacity, whilst Group 4 is subst
 ### Approach 1: Pooled Model (Ignoring Groups)
 
 This treats all observations as independent:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 pooled_model <- lm(detox_exp ~ benzo_um, data = benzo_data)
 summary(pooled_model)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+pooled_model = smf.ols("detox_exp ~ benzo_um", data=benzo_data).fit()
+
+pooled_model.summary()
+```
+
+:::
 
 **Problem**: The standard errors are artificially small because we are treating 430 observations as independent when they are not. This inflates our confidence in the estimate.
 
 ### Approach 2: Fixed-Effect Model
 
 Include group explicitly as a predictor:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 fixed_model <- lm(detox_exp ~ benzo_um + group, data = benzo_data)
 summary(fixed_model)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+fixed_model = smf.ols("detox_exp ~ benzo_um + group", data=benzo_data).fit()
+
+fixed_model.summary()
+```
+
+:::
 
 **When this works well:**
 
@@ -204,12 +297,29 @@ summary(fixed_model)
 ### Approach 3: Mixed-Effects Model
 
 Model group-to-group variation as random:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 library(lmerTest)
 
 mixed_model <- lmer(detox_exp ~ benzo_um + (1 | group), data = benzo_data)
 summary(mixed_model)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-043
+mixed_model = Lmer("detox_exp ~ benzo_um + (1 | group)", data=benzo_data)
+mixed_model.fit()
+
+mixed_model.summary()
+```
+
+:::
 
 The notation `(1|group)` specifies a **random intercept** - each group has its own baseline value, but the slope (effect of toxin) is assumed constant.
 
@@ -237,6 +347,10 @@ benzo_um      2.0261     0.1701 424.0888  11.909  < 2e-16 ***
 The effect of toxin concentration is 2.03 units increase in detoxification per µM increase in toxin (95% CI: 1.69–2.36).
 
 ### Comparing Standard Errors
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, echo = FALSE}
 pooled <- broom::tidy(pooled_model) |>
   mutate(Approach = "Pooled") |>
@@ -254,6 +368,37 @@ bind_rows(pooled, fixed, mixed) |>
   filter(term %in% c("(Intercept)", "benzo_um")) |>
   knitr::kable(digits = 3)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+def tidy(model):
+    return pd.DataFrame({
+        "term": model.params.index,
+        "estimate": model.params.values,
+        "std_error": model.bse.values,
+    })
+
+pooled = tidy(pooled_model).assign(Approach="Pooled")[["Approach", "term", "estimate", "std_error"]]
+fixed = tidy(fixed_model).assign(Approach="Fixed Effect")[["Approach", "term", "estimate", "std_error"]]
+
+mixed = (
+    mixed_model.coefs
+    .rename_axis("term")
+    .reset_index()
+    .rename(columns={"Estimate": "estimate", "SE": "std_error"})
+    .assign(Approach="Mixed Model")
+    [["Approach", "term", "estimate", "std_error"]]
+)
+
+(
+    pd.concat([pooled, fixed, mixed])
+    .loc[lambda d: d["term"].isin(["Intercept", "benzo_um"])]
+)
+```
+
+:::
 
 Notice:
 
@@ -301,6 +446,10 @@ Mixed models are not always better than simpler alternatives. Use them when the 
 ## Making Predictions
 
 We can make predictions from mixed models using tools you're already familiar with. The `emmeans` package works for mixed models just as it does for standard linear models, producing estimated marginal means averaged across random effects:
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 library(emmeans)
 
@@ -308,6 +457,16 @@ emmeans(mixed_model,
         specs = "benzo_um", 
         at = list(benzo_um = c(0, 2.5, 5, 7.5, 10)))
 ```
+
+### Python
+
+```{python}
+#| eval: false
+grid = pd.DataFrame({"benzo_um": [0, 2.5, 5, 7.5, 10]})
+mixed_model.predict(data=grid, use_rfx=False)
+```
+
+:::
 
 These predictions represent the **population-average** response—what we'd expect for a "typical" experimental batch. The values are averaged across all groups, with uncertainty reflecting both within-group variation and between-group differences.
 
@@ -376,10 +535,31 @@ Each panel shows predictions for a specific batch, illustrating how baseline det
 ## Model Fit
 
 We can assess overall model performance using R² values:
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 library(MuMIn)
 r.squaredGLMM(mixed_model)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-045
+var_fixed = mixed_model.predict(data=benzo_data, use_rfx=False).var()
+var_random = mixed_model.ranef_var.loc[mixed_model.ranef_var["Name"] != "Residual", "Var"].sum()
+var_resid = mixed_model.ranef_var.loc[mixed_model.ranef_var["Name"] == "Residual", "Var"].sum()
+
+r2m = var_fixed / (var_fixed + var_random + var_resid)
+r2c = (var_fixed + var_random) / (var_fixed + var_random + var_resid)
+
+r2m, r2c
+```
+
+:::
 
 - **R²m (marginal)**: Variance explained by fixed effects alone (toxin concentration) = 10%
 - **R²c (conditional)**: Variance explained by full model (fixed + random effects) = 70%
@@ -391,10 +571,24 @@ The large difference shows that experimental batch explains substantial variatio
 Mixed models make the same assumptions as linear models (linearity, homoscedasticity, normality of residuals), plus an additional assumption: that random effects are normally distributed. 
 
 The `performance` package provides diagnostic plots for mixed models:
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, message = FALSE, warning = FALSE}
 library(performance)
 check_model(mixed_model, detrend = FALSE)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+sm.qqplot(mixed_model.residuals, line="45")
+plt.scatter(mixed_model.fits, mixed_model.residuals)
+```
+
+:::
 
 **Key diagnostics to examine:**
 
@@ -417,9 +611,22 @@ The `performance` package uses simulated residuals from the `DHARMa` package for
 ### Interpreting `summary()` output
 
 The `summary()` function provides essential information for understanding and reporting your model:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 summary(mixed_model)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+mixed_model.summary()
+```
+
+:::
 
 **Random effects section** shows:
 - Between-group variance (how much groups differ)
@@ -435,10 +642,30 @@ summary(mixed_model)
 ### Model fit statistics
 
 The `MuMIn` package calculates R² values for mixed models:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 library(MuMIn)
 r.squaredGLMM(mixed_model)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+var_fixed = mixed_model.predict(data=benzo_data, use_rfx=False).var()
+var_random = mixed_model.ranef_var.loc[mixed_model.ranef_var["Name"] != "Residual", "Var"].sum()
+var_resid = mixed_model.ranef_var.loc[mixed_model.ranef_var["Name"] == "Residual", "Var"].sum()
+
+r2m = var_fixed / (var_fixed + var_random + var_resid)
+r2c = (var_fixed + var_random) / (var_fixed + var_random + var_resid)
+
+r2m, r2c
+```
+
+:::
 
 - **R²m (marginal)**: Proportion of variance explained by fixed effects alone
 - **R²c (conditional)**: Proportion of variance explained by the complete model (fixed + random effects)
@@ -550,10 +777,27 @@ downloadthis::download_link(
 )
 ```
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 dolphins <- read_csv("files/dolphins.csv") |>
   mutate(direction = factor(direction)) |>
   drop_na()
+
+#### Python
+
+```{python}
+#| eval: false
+dolphins = (
+    pd.read_csv("files/dolphins.csv")
+    .assign(direction=lambda d: d["direction"].astype("category"))
+    .dropna()
+)
+```
+
+:::
 ```
 
 **Research question**: How does body mass affect tidal volume, and does this differ between inhalation and exhalation?
@@ -594,16 +838,43 @@ For each variable, decide whether it should be a fixed or random effect:
 ### Fitting the Model
 
 Using the formula structure `y ~ fixed_effects + (1|random_effect)`:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 library(lmerTest)
 
 dolphmod <- lmer(vt ~ bodymass + direction + (1|animal), data = dolphins)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+dolphmod = Lmer("vt ~ bodymass + direction + (1 | animal)", data=dolphins)
+dolphmod.fit()
+```
+
+:::
+
 Check the model summary:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 summary(dolphmod)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+dolphmod.summary()
+```
+
+:::
 
 **Random effects:**
 ```
@@ -628,12 +899,29 @@ direction2    1.114655   0.204816 31.00000   5.443 6.24e-06 ***
 ### Visualising Predictions
 
 Population-level predictions using `emmeans`:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 library(emmeans)
 
 # Predictions at mean body mass for each breath direction
 emmeans(dolphmod, specs = "direction")
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+grid = pd.DataFrame({
+    "direction": dolphins["direction"].cat.categories,
+    "bodymass": dolphins["bodymass"].mean(),
+})
+dolphmod.predict(data=grid, use_rfx=False)
+```
+
+:::
 ```{r, fig.cap = "Population-average relationship between body mass and tidal volume"}
 # Visualise the body mass effect
 emmeans(dolphmod, 
@@ -732,11 +1020,25 @@ Understanding the nested structure
 :::: {.task-container}
 
 Examine the data structure:
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 rats |>
   aggregate(Glycogen ~ Rat + Treatment + Liver, data = _, mean) |>
   head(12)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-048
+rats.groupby(["Rat", "Treatment", "Liver"], as_index=False)["Glycogen"].mean().head(12)
+```
+
+:::::
 
 **Questions**:
 
@@ -758,18 +1060,50 @@ Therefore, liver samples are **nested within** individual rats. The coding (1, 2
 ### Fitting the Model
 
 **Incorrect approach** (treating effects as crossed):
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # WRONG - treats this as 2 rats and 3 liver types studied across all rats
 rats_wrong <- lmer(Glycogen ~ Treatment + (1|Rat) + (1|Liver), data = rats)
+
+#### Python
+
+```{python}
+#| eval: false
+# WRONG - treats this as 2 rats and 3 liver types studied across all rats
+rats_wrong = Lmer("Glycogen ~ Treatment + (1 | Rat) + (1 | Liver)", data=rats)
+rats_wrong.fit()
+```
+
+:::
 ```
 
 This incorrectly assumes liver sample "1" is comparable across all rats.
 
 **Correct approach** (nested design):
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 rats_correct <- lmer(Glycogen ~ Treatment + (1|Rat/Liver), data = rats)
 summary(rats_correct)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-043
+rats_correct = Lmer("Glycogen ~ Treatment + (1 | Rat/Liver)", data=rats)
+rats_correct.fit()
+
+rats_correct.summary()
+```
+
+:::
 
 The formula `(1|Rat/Liver)` is equivalent to `(1|Rat) + (1|Rat:Liver)`, creating:
 - Random intercepts for each rat (accounting for individual variation)
@@ -850,6 +1184,10 @@ Fit a standard Binomial GLM
 :::: {.task-container}
 
 Create the success/failure response variable and fit a binomial model:
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 egg_hatch_data <- egg_hatch_data |>
   mutate(unhatched_eggs = number_of_eggs - number_of_larvae)
@@ -863,10 +1201,40 @@ binomial_model <- glm(
 summary(binomial_model)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+egg_hatch_data = egg_hatch_data.assign(
+    unhatched_eggs=lambda d: d["number_of_eggs"] - d["number_of_larvae"]
+)
+
+binomial_model = smf.glm(
+    "number_of_larvae + unhatched_eggs ~ cross", data=egg_hatch_data, family=sm.families.Binomial()
+).fit()
+
+binomial_model.summary()
+```
+
+:::::
+
 Check for overdispersion:
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 performance::check_overdispersion(binomial_model)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+binomial_model.pearson_chi2 / binomial_model.df_resid
+```
+
+:::::
 
 `r hide("Expected output")`
 ```
@@ -881,9 +1249,23 @@ Dispersion ratio >> 1 indicates severe overdispersion.
 `r unhide()`
 
 Examine model diagnostics:
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 performance::check_model(binomial_model)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+sm.qqplot(binomial_model.resid_deviance, line="45")
+plt.scatter(binomial_model.fittedvalues, binomial_model.resid_deviance)
+```
+
+:::::
 
 **Problems**: Outliers, poor quantile distribution, systematic under-prediction.
 
@@ -909,6 +1291,10 @@ Fit Binomial GLMMs
 `r unhide()`
 
 Fit models with different random effect structures:
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 library(lme4)
 
@@ -927,17 +1313,63 @@ binomial_mixed_rep_fem <- glmer(
 )
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-044
+# Random intercept for replicate only
+binomial_mixed_rep = Lmer(
+    "number_of_larvae + unhatched_eggs ~ cross + (1 | replicate)", data=egg_hatch_data, family="binomial"
+)
+binomial_mixed_rep.fit()
+
+# Random intercepts for replicate AND female (nested)
+binomial_mixed_rep_fem = Lmer(
+    "number_of_larvae + unhatched_eggs ~ cross + (1 | replicate/female_num)", data=egg_hatch_data, family="binomial"
+)
+binomial_mixed_rep_fem.fit()
+```
+
+:::::
+
 Compare models:
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 AIC(binomial_model, binomial_mixed_rep, binomial_mixed_rep_fem)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+binomial_model.aic, binomial_mixed_rep.AIC, binomial_mixed_rep_fem.AIC
+```
+
+:::::
+
 
 Check overdispersion in the best model:
+
+:::::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 performance::check_overdispersion(binomial_mixed_rep_fem)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+(binomial_mixed_rep_fem.residuals ** 2).sum() / (len(egg_hatch_data) - len(binomial_mixed_rep_fem.coefs))
+```
+
+:::::
 
 `r hide("Expected output")`
 
@@ -946,9 +1378,22 @@ Overdispersion resolved ✓
 `r unhide()`
 
 Examine the random effects:
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 summary(binomial_mixed_rep_fem)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+binomial_mixed_rep_fem.summary()
+```
+
+:::::
 
 
 **Interpretation**: 
@@ -1046,6 +1491,10 @@ Your model fitted, but one or more random effects have estimated variance near z
 **Solutions** (try in this order):
 
 1. **Rescale continuous predictors**: Large differences in variable scales can cause convergence problems.
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 data <- data |>
   mutate(predictor_scaled = scale(predictor))
@@ -1054,12 +1503,42 @@ data <- data |>
 model <- lmer(response ~ predictor_scaled + (1|group), data = data)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+data = data.assign(predictor_scaled=lambda d: (d["predictor"] - d["predictor"].mean()) / d["predictor"].std())
+
+# Refit with scaled predictor
+model = Lmer("response ~ predictor_scaled + (1 | group)", data=data)
+model.fit()
+```
+
+:::
+
 2. **Try a different optimiser**:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 model <- lmer(response ~ predictor + (1|group), 
               data = data,
               control = lmerControl(optimizer = "bobyqa"))
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-043 - pymer4 forwards fitting options to lme4's
+# lmerControl via keyword arguments on .fit(); the exact argument name
+# is unconfirmed here, shown as the closest documented equivalent.
+model = Lmer("response ~ predictor + (1 | group)", data=data)
+model.fit(control="optimizer='bobyqa'")
+```
+
+:::
 
 3. **Simplify the model**: Remove random slopes or interactions if present, keeping only random intercepts.
 
