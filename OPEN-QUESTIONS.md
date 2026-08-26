@@ -792,4 +792,172 @@ chapter.
 
 ---
 
+## OQ-027
+
+- **File / chunk:** `poisson.qmd`, first `quasipoisson()` chunk (`### Fit
+  quasi-Poisson and negative binomial models`) and the `glm.nb()` chunk
+  immediately below it
+- **Status:** resolved
+- **R original:**
+
+  ```r
+  cuckoo_quasi <- glm(Beg ~ Mass * Species, data = cuckoo, family = quasipoisson(link = "log"))
+  cuckoo_negbin <- glm.nb(Beg ~ Mass * Species, data = cuckoo)
+  ```
+
+- **Issue:** neither `quasipoisson()` nor `MASS::glm.nb()` has a settled
+  statsmodels mechanism in `TRANSLATION.md`; this recurs in `binomial.qmd`
+  and the mixed-model chapters, so it's decided once here rather than
+  per-chunk (human, chat, 2026-08-26: seed glossary entries now).
+- **Candidates:** as written into `TRANSLATION.md`'s new "GLM families"
+  section — `quasipoisson()` via `smf.glm(...).fit(scale="X2")`; `glm.nb()`
+  via `smf.negativebinomial(...).fit()`, noting `alpha ≈ 1/theta`.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-027` at each chunk's first occurrence.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entries added to `TRANSLATION.md` under "GLM
+  families (base R to statsmodels)" before translating the rest of the
+  chapter.
+
+---
+
+## OQ-028
+
+- **File / chunk:** `poisson.qmd`, every `emmeans(...) |> as_tibble()`
+  prediction block (first occurrence: `### Generate predictions on the
+  response scale`, chunk after `cuckoo_glm_add`)
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s "Prediction grids with confidence
+  intervals" section for the representative form.
+- **Issue:** `emmeans()` has no glossary entry and recurs roughly six times
+  in this chapter alone as the mechanism for generating predictions with
+  confidence intervals for plotting.
+- **Candidates:** as written into `TRANSLATION.md` — an explicit prediction
+  grid `DataFrame` passed to `model.get_prediction(grid).summary_frame()`.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-028` at the first occurrence only; later
+  occurrences reuse the same idiom silently, consistent with the
+  `dmy()`/OQ-024 reuse precedent.
+- **Recommendation:** as implemented. Column names differ from emmeans'
+  output (`mean`/`mean_ci_lower`/`mean_ci_upper` vs `rate`/`asymp.LCL`/
+  `asymp.UCL`); downstream plotting code uses the Python names.
+- **Resolution:** glossary entry added to `TRANSLATION.md` before
+  translating the rest of the chapter.
+
+---
+
+## OQ-029
+
+- **File / chunk:** `poisson.qmd`, `## How do modelling decisions affect
+  inference?`, the `tidy(cuckoo_glm_int, conf.int = TRUE)` chunk and its two
+  siblings
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s "Coefficient tables" section.
+- **Issue:** `broom::tidy()` has no glossary entry and recurs four times in
+  this chapter, extracting coefficient tables (plain and exponentiated) from
+  fitted models.
+- **Candidates:** as written into `TRANSLATION.md` — a `DataFrame` built
+  directly from `model.params`/`.bse`/`.conf_int()`/`.pvalues`.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-029` at the first occurrence only, reused silently
+  afterward.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entry added to `TRANSLATION.md` before
+  translating the rest of the chapter.
+
+---
+
+## OQ-030
+
+- **File / chunk:** `poisson.qmd`, `anova(cuckoo_glm_add, cuckoo_glm_int)`
+  (`### Comparing model predictions`) and `drop1(cuckoo_quasi, test = "F")`
+  (`### Extracting key values for reporting`, `eval: false` chunk)
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s "Nested-model comparison" section.
+- **Issue:** neither `anova()` on two GLMs nor `drop1(model, test = "F")` has
+  a one-line statsmodels equivalent.
+- **Candidates:** `anova()` → a manual likelihood-ratio test via `.llf` and
+  `scipy.stats.chi2.sf()`, as written into `TRANSLATION.md`. `drop1()` has no
+  equivalent at all — no per-term F-test utility exists in statsmodels for
+  GLMs — so the Python tab notes the gap rather than approximating a
+  per-term loop.
+- **Provisional choice in the book:** `anova()` translated per the glossary
+  entry, marked `# TRANSLATION-NOTE: OQ-030`; `drop1()` left as a comment
+  noting no equivalent, same marker.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entry added to `TRANSLATION.md` before
+  translating the rest of the chapter.
+
+---
+
+## OQ-031
+
+- **File / chunk:** `poisson.qmd`, every `performance::check_model()` and
+  `check_overdispersion()` call (first occurrence: `## When Linear models
+  fail`, task chunk `check_model(cuckoo_lm, detrend = FALSE)`)
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s "Model diagnostics" section.
+- **Issue:** the `performance` package has no Python equivalent, and its
+  diagnostic calls recur roughly nine times through this chapter as the
+  mechanism for teaching residual/dispersion diagnostics — central to the
+  chapter's point, not a side detail, so skip-and-log for every occurrence
+  was rejected in favour of a settled per-check mapping (human, chat,
+  2026-08-26: "use statsmodels diagnostics including the appropriate checks
+  for each cell").
+- **Candidates:** as written into `TRANSLATION.md` — Q-Q plot via
+  `sm.qqplot()`, residuals-vs-fitted via a plain matplotlib scatter, and the
+  dispersion ratio via `model.pearson_chi2 / model.df_resid`, each matched to
+  the specific `check =` argument (or absence of one) in the R chunk being
+  translated. This is a deliberate, logged exception to the Stack's
+  plotnine-only plotting rule, since neither plotnine nor any listed package
+  produces these diagnostic plots.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-031` at the first occurrence only, reused silently
+  for the rest.
+- **Recommendation:** as implemented. `performance`'s dispersion *plot*
+  (grey variance-mean curve vs observed points) has no attempted equivalent,
+  only its underlying ratio statistic — noted inline where that chunk is
+  translated.
+- **Resolution:** glossary entry added to `TRANSLATION.md` before
+  translating the rest of the chapter.
+
+---
+
+## OQ-032
+
+- **File / chunk:** `poisson.qmd`, `### The Poisson distribution and
+  log-link`, unlabelled chunk (`{r, eval = T, echo=F}`), the `dpois()`
+  barplot demonstration
+- **Status:** open
+- **R original:**
+
+  ```r
+  cols <- c("#377eb8", "#4daf4a", "#984ea3") # colorbrewer
+  par(mfrow = c(3, 1))
+  x <- 0:20
+  rates <- c(1, 5, 10)
+  barplot(dpois(x, rates[1]), col = cols[1], ylab = "Probability", xlab = "X", main = paste0("lambda = ", rates[1]), names.arg = x)
+  for(i in 2:length(rates)) barplot(dpois(x, rates[i]), col = cols[i], ylab = "Probability", xlab = "X", main = paste0("lambda = ", rates[i]), names.arg = x)
+  par(mfrow = c(1, 1))
+  ```
+
+- **Issue:** `echo=F` hides this chunk's source in the rendered R book — a
+  reader only ever sees the resulting barplots, never this code. None of
+  CLAUDE.md's named skip-silent categories cover it exactly (it's not a
+  library-load/source/import setup chunk, and it's not
+  `knitr::include_graphics()`), but adding a Python tab here would pair
+  visible Python source against an R tab that renders with no visible
+  source at all — an asymmetry none of the book's existing tabsets have.
+  Treated as a judgement call and skip-logged rather than guessed at,
+  consistent with hard rule 1 ("if an R chunk looks wrong... log it").
+- **Candidates:** the content itself is trivially portable
+  (`scipy.stats.poisson.pmf()` plus matplotlib bar plots), so this is a
+  presentation question, not a translation gap.
+- **Provisional choice in the book:** no Python tab added for this chunk.
+- **Recommendation:** if a human decides `echo=F` demonstration chunks like
+  this one should get a Python tab regardless (accepting the visible-code
+  asymmetry), extend the "Setup chunks" section of `TRANSLATION.md` to say
+  so explicitly, so later chapters don't re-raise the same question.
+- **Resolution:**
+
 ---

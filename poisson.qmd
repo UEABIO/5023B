@@ -73,15 +73,40 @@ downloadthis::download_link(
 )
 ```
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 head(cuckoo)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+from scipy import stats
+
+cuckoo.head(6)
+```
+
+:::
 
 The data columns are:
 
 * **Mass**: nestling mass of chick in grams
 * **Beg**: begging calls per 6 secs
 * **Species**: Warbler or Cuckoo
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = T, fig.height=6, fig.width=7, warning = FALSE}
 ggplot(cuckoo, aes(x = Mass, y = Beg, colour = Species)) + 
@@ -91,6 +116,21 @@ ggplot(cuckoo, aes(x = Mass, y = Beg, colour = Species)) +
        y = "Begging calls per 6 seconds") +
   theme_minimal()
 ```
+
+### Python
+
+```{python}
+#| eval: false
+(
+    ggplot(cuckoo, aes("Mass", "Beg", colour="Species"))
+    + geom_point(size=3, alpha=0.6)
+    + scale_colour_manual(values=["darkorange", "steelblue"])
+    + labs(x="Nestling mass (g)", y="Begging calls per 6 seconds")
+    + theme_minimal()
+)
+```
+
+:::
 
 There seem to be a relationship between mass and begging calls and it could be different between species. It is tempting to fit a linear model to this data. 
 
@@ -112,16 +152,48 @@ Fit a linear model
 ::::{.task-container}
 
 Fit a linear model with interaction:
+
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 cuckoo_lm <- lm(Beg ~ Mass * Species, data = cuckoo)
 
 summary(cuckoo_lm)
 ```
 
+### Python
+
+```{python}
+#| eval: false
+cuckoo_lm = smf.ols("Beg ~ Mass * Species", data=cuckoo).fit()
+
+cuckoo_lm.summary()
+```
+
+:::::
+
 Examine diagnostics:
+
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 check_model(cuckoo_lm, detrend = FALSE)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-031
+sm.qqplot(cuckoo_lm.resid, line="45")
+plt.scatter(cuckoo_lm.fittedvalues, cuckoo_lm.resid)
+```
+
+:::::
 
 **Discussion questions:**
 - What does the residuals vs fitted plot show?
@@ -135,6 +207,10 @@ check_model(cuckoo_lm, detrend = FALSE)
 
 The residuals vs fitted plot shows clear heteroscedasticity—variance increases with fitted values. The Q-Q plot shows deviation from normality. Most critically, the model predicts **negative begging calls** for small nestlings:
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 # Generate predictions
 predictions_lm <- emmeans(cuckoo_lm, 
@@ -147,6 +223,24 @@ predictions_lm |>
   filter(emmean < 0)
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-028
+# Generate predictions
+grid = pd.DataFrame(
+    [(mass, species) for mass in np.arange(0, 41, 5) for species in cuckoo["Species"].unique()],
+    columns=["Mass", "Species"],
+)
+predictions_lm = grid.assign(**cuckoo_lm.get_prediction(grid).summary_frame())
+
+# Check for negative predictions
+predictions_lm.loc[lambda d: d["mean"] < 0]
+```
+
+:::
+
 Linear models are inappropriate when:
 1. Response is bounded (cannot be negative)
 2. Variance changes systematically with mean
@@ -154,10 +248,24 @@ Linear models are inappropriate when:
 
 `r unhide()`
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = T}
 performance::check_model(cuckoo_lm, 
                          detrend = FALSE)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+sm.qqplot(cuckoo_lm.resid, line="45")
+plt.scatter(cuckoo_lm.fittedvalues, cuckoo_lm.resid)
+```
+
+:::
 
 
 ## Poisson GLM—modelling counts explicitly
@@ -219,6 +327,10 @@ knitr::include_graphics("images/poisson.png")
 ## Fitting a Poisson GLM 
 
 We start with an **additive model** (parallel slopes):
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 cuckoo_glm_add <- glm(Beg ~ Mass + Species, 
                       data = cuckoo, 
@@ -227,7 +339,24 @@ cuckoo_glm_add <- glm(Beg ~ Mass + Species,
 summary(cuckoo_glm_add)
 ```
 
+### Python
+
+```{python}
+#| eval: false
+cuckoo_glm_add = smf.glm(
+    "Beg ~ Mass + Species", data=cuckoo, family=sm.families.Poisson()
+).fit()
+
+cuckoo_glm_add.summary()
+```
+
+:::
+
 Generate predictions on the response scale:
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 predictions_poisson <- emmeans(cuckoo_glm_add,
                                specs = ~ Mass + Species,
@@ -245,6 +374,32 @@ ggplot(predictions_poisson, aes(x = Mass, y = rate, colour = Species)) +
   theme_minimal()
 ```
 
+### Python
+
+```{python}
+#| eval: false
+grid = pd.DataFrame(
+    [(mass, species) for mass in np.arange(0, 41, 5) for species in cuckoo["Species"].unique()],
+    columns=["Mass", "Species"],
+)
+predictions_poisson = grid.assign(**cuckoo_glm_add.get_prediction(grid).summary_frame())
+
+(
+    ggplot(predictions_poisson, aes("Mass", "mean", colour="Species"))
+    + geom_line(size=1)
+    + geom_point(data=cuckoo, mapping=aes(y="Beg"), alpha=0.5)
+    + scale_colour_manual(values=["darkorange", "steelblue"])
+    + labs(
+        x="Nestling mass (g)",
+        y="Begging calls per 6 seconds",
+        title="Poisson GLM: Additive model",
+    )
+    + theme_minimal()
+)
+```
+
+:::
+
 **Key observations:**
 - No negative predictions
 - Variance increases with mean (heteroscedasticity is expected and appropriate)
@@ -255,14 +410,32 @@ ggplot(predictions_poisson, aes(x = Mass, y = rate, colour = Species)) +
 Examine model diagnostics
 ::::
 ::::{.task-container}
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 check_model(cuckoo_glm_add, 
             residual_type = "normal",
             detrend = FALSE)
 ```
 
+### Python
+
+```{python}
+#| eval: false
+sm.qqplot(cuckoo_glm_add.resid_deviance, line="45")
+plt.scatter(cuckoo_glm_add.fittedvalues, cuckoo_glm_add.resid_deviance)
+```
+
+:::::
+
 **Focus on:**
 1. Q-Q plot: Are deviance residuals approximately normal?
+
+:::::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 
@@ -273,8 +446,21 @@ check_model(cuckoo_glm_add,
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+sm.qqplot(cuckoo_glm_add.resid_deviance, line="45")
+```
+
+:::::
+
 2. Residuals vs fitted: Is there remaining pattern?
 
+
+:::::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 
@@ -285,7 +471,20 @@ check_model(cuckoo_glm_add,
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+plt.scatter(cuckoo_glm_add.fittedvalues, cuckoo_glm_add.resid_deviance)
+```
+
+:::::
+
 3. **Dispersion check**: What does this plot show?
+
+:::::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 
@@ -296,7 +495,20 @@ check_model(cuckoo_glm_add,
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+cuckoo_glm_add.pearson_chi2 / cuckoo_glm_add.df_resid
+```
+
+:::::
+
 Calculate dispersion manually:
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 dispersion_add <- cuckoo_glm_add$deviance / cuckoo_glm_add$df.residual
 dispersion_add
@@ -304,6 +516,19 @@ dispersion_add
 # performance model check
 check_overdispersion(cuckoo_glm_add)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+dispersion_add = cuckoo_glm_add.deviance / cuckoo_glm_add.df_resid
+dispersion_add
+
+# Pearson-based dispersion (performance::check_overdispersion() equivalent)
+cuckoo_glm_add.pearson_chi2 / cuckoo_glm_add.df_resid
+```
+
+:::::
 
 **Discussion:** The dispersion ratio is [~7-9]. What might cause variance to exceed the Poisson assumption?
 
@@ -328,6 +553,10 @@ Before applying "fixes" for overdispersion, ask: **have we correctly specified t
 ### Hypothesis: The interaction is missing
 
 Look at the data :
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 ggplot(cuckoo, aes(x = Mass, y = Beg, colour = Species)) + 
   geom_point(size = 3, alpha = 0.6) +
@@ -336,6 +565,21 @@ ggplot(cuckoo, aes(x = Mass, y = Beg, colour = Species)) +
        y = "Begging calls per 6 seconds") +
   theme_minimal()
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+(
+    ggplot(cuckoo, aes("Mass", "Beg", colour="Species"))
+    + geom_point(size=3, alpha=0.6)
+    + scale_colour_manual(values=["darkorange", "steelblue"])
+    + labs(x="Nestling mass (g)", y="Begging calls per 6 seconds")
+    + theme_minimal()
+)
+```
+
+:::
 
 Warbler calling rate increases more slowly with mass than cuckoo rate.
 
@@ -358,6 +602,10 @@ Add the interaction term
 ::::{.task-container}
 
 Fit the model with Mass × Species interaction:
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 cuckoo_glm_int <- glm(Beg ~ Mass * Species, 
                       data = cuckoo, 
@@ -366,10 +614,27 @@ cuckoo_glm_int <- glm(Beg ~ Mass * Species,
 summary(cuckoo_glm_int)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+cuckoo_glm_int = smf.glm(
+    "Beg ~ Mass * Species", data=cuckoo, family=sm.families.Poisson()
+).fit()
+
+cuckoo_glm_int.summary()
+```
+
+:::::
+
 
 
 
 Compare dispersion between models:
+
+:::::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 dispersion_comparison <- tibble(
@@ -384,10 +649,40 @@ dispersion_comparison <- tibble(
 dispersion_comparison
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+dispersion_comparison = pd.DataFrame({
+    "Model": ["Additive (no interaction)", "Interaction included"],
+    "Dispersion": [
+        cuckoo_glm_add.deviance / cuckoo_glm_add.df_resid,
+        cuckoo_glm_int.deviance / cuckoo_glm_int.df_resid,
+    ],
+})
+
+dispersion_comparison
+```
+
+:::::
+
 **Critical question:** Has dispersion reduced?
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 check_overdispersion(cuckoo_glm_int)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+cuckoo_glm_int.pearson_chi2 / cuckoo_glm_int.df_resid
+```
+
+:::::
 
 ::::
 :::
@@ -409,11 +704,31 @@ However, residual overdispersion remains (φ̂ ≈ [1.5-2]), suggesting variance
 
 Compare the fits between these models:
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 anova(cuckoo_glm_add, cuckoo_glm_int)
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-030
+lr_stat = 2 * (cuckoo_glm_int.llf - cuckoo_glm_add.llf)
+df_diff = cuckoo_glm_add.df_resid - cuckoo_glm_int.df_resid
+p_value = stats.chi2.sf(lr_stat, df_diff)
+```
+
+:::
+
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # Generate predictions for both models
@@ -445,6 +760,39 @@ ggplot(predictions_combined, aes(x = Mass, y = rate, colour = Species)) +
   facet_wrap(~Model)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+grid = pd.DataFrame(
+    [(mass, species) for mass in np.arange(0, 41, 1) for species in cuckoo["Species"].unique()],
+    columns=["Mass", "Species"],
+)
+
+# Generate predictions for both models
+pred_additive = grid.assign(**cuckoo_glm_add.get_prediction(grid).summary_frame()).assign(Model="Additive")
+pred_interaction = grid.assign(**cuckoo_glm_int.get_prediction(grid).summary_frame()).assign(Model="Interaction")
+
+predictions_combined = pd.concat([pred_additive, pred_interaction])
+
+(
+    ggplot(predictions_combined, aes("Mass", "mean", colour="Species"))
+    + geom_point(data=cuckoo, mapping=aes(y="Beg"), alpha=0.4)
+    + geom_line(aes(linetype="Model"), size=1)
+    + scale_colour_manual(values=["darkorange", "steelblue"])
+    + labs(
+        x="Nestling mass (g)",
+        y="Begging calls per 6 seconds",
+        title="Model comparison: Additive vs Interaction",
+    )
+    + theme_minimal()
+    + theme(legend_position="right")
+    + facet_wrap("Model")
+)
+```
+
+:::
+
 
 
 The interaction model captures the different slopes between species—warblers' calling rate increases more slowly with mass.
@@ -455,11 +803,25 @@ The interaction model captures the different slopes between species—warblers' 
 
 Overdispersion may not have been addressed - but are any of the other model checks improved?
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 check_model(cuckoo_glm_int, 
             residual_type = "normal",
             detrend = FALSE)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+sm.qqplot(cuckoo_glm_int.resid_deviance, line="45")
+plt.scatter(cuckoo_glm_int.fittedvalues, cuckoo_glm_int.resid_deviance)
+```
+
+:::
 
 
 ## Remaining overdispersion: Two approaches
@@ -524,6 +886,10 @@ Fit quasi-Poisson and negative binomial models
 ::::{.task-container}
 
 **Quasi-Poisson:**
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 cuckoo_quasi <- glm(Beg ~ Mass * Species, 
                     data = cuckoo, 
@@ -531,6 +897,20 @@ cuckoo_quasi <- glm(Beg ~ Mass * Species,
 
 summary(cuckoo_quasi)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-027
+cuckoo_quasi = smf.glm(
+    "Beg ~ Mass * Species", data=cuckoo, family=sm.families.Poisson()
+).fit(scale="X2")
+
+cuckoo_quasi.summary()
+```
+
+:::::
 
 Note the dispersion parameter estimate.
 
@@ -541,6 +921,10 @@ Note the dispersion parameter estimate.
 :::
 
 **Negative binomial:**
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 library(MASS)
 cuckoo_negbin <- glm.nb(Beg ~ Mass * Species, 
@@ -548,6 +932,18 @@ cuckoo_negbin <- glm.nb(Beg ~ Mass * Species,
 
 summary(cuckoo_negbin)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-027
+cuckoo_negbin = smf.negativebinomial("Beg ~ Mass * Species", data=cuckoo).fit()
+
+cuckoo_negbin.summary()
+```
+
+:::::
 
 Note the theta parameter (θ)—this controls how much variance exceeds the mean.
 
@@ -557,17 +953,44 @@ Note the theta parameter (θ)—this controls how much variance exceeds the mean
 ### Model diagnostics
 
 Let's compare models using AIC:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 AIC(cuckoo_glm_int, cuckoo_negbin)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+cuckoo_glm_int.aic, cuckoo_negbin.aic
+```
+
+:::
 
 
 The negative binomial has lower AIC—typically interpreted as "better fit." But AIC measures *predictive performance*, not whether *model assumptions are met*.
 
 **Critical check: Does the model capture the variance structure?**
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 check_model(cuckoo_negbin, detrend = FALSE)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+sm.qqplot(cuckoo_negbin.resid, line="45")
+plt.scatter(cuckoo_negbin.fittedvalues, cuckoo_negbin.resid)
+```
+
+:::
 
 
 **Focus on two key diagnostics:**
@@ -636,6 +1059,10 @@ Is the dispersion now adequately modelled?
 
 A critical question: does the interaction between Mass and Species matter? Let's see how this answer changes depending on our modelling decisions.
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 # Extract coefficients with confidence intervals
 coef_poisson <- tidy(cuckoo_glm_int, conf.int = TRUE) |>
@@ -654,7 +1081,41 @@ coef_comparison <- bind_rows(coef_poisson, coef_quasi, coef_negbin) |>
 coef_comparison
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-029
+def tidy(model):
+    return pd.DataFrame({
+        "term": model.params.index,
+        "estimate": model.params.values,
+        "std_error": model.bse.values,
+        "conf_low": model.conf_int()[0].values,
+        "conf_high": model.conf_int()[1].values,
+        "p_value": model.pvalues.values,
+    })
+
+coef_poisson = tidy(cuckoo_glm_int).assign(Model="Poisson")
+coef_quasi = tidy(cuckoo_quasi).assign(Model="Quasi-Poisson")
+coef_negbin = tidy(cuckoo_negbin).assign(Model="Negative Binomial")
+
+coef_comparison = (
+    pd.concat([coef_poisson, coef_quasi, coef_negbin])
+    .loc[lambda d: d["term"] == "Mass:SpeciesWarbler"]
+    [["Model", "estimate", "std_error", "conf_low", "conf_high", "p_value"]]
+)
+
+coef_comparison
+```
+
+:::
+
 **Visualise the uncertainty:**
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 ggplot(coef_comparison, aes(x = Model, y = estimate)) +
   geom_point(size = 4) +
@@ -670,9 +1131,35 @@ ggplot(coef_comparison, aes(x = Model, y = estimate)) +
   coord_flip()
 ```
 
+### Python
+
+```{python}
+#| eval: false
+(
+    ggplot(coef_comparison, aes("Model", "estimate"))
+    + geom_point(size=4)
+    + geom_errorbar(aes(ymin="conf_low", ymax="conf_high"), width=0.2, size=1.2)
+    + geom_hline(yintercept=0, linetype="dashed", colour="red", size=1)
+    + labs(
+        y="Interaction coefficient (Mass:SpeciesWarbler)",
+        x="",
+        title="Same data, different inferences",
+    )
+    + theme_minimal(base_size=14)
+    + theme(panel_grid_major_x=element_blank())
+    + coord_flip()
+)
+```
+
+:::
+
 ### The problem: significance depends on model choice
 
 Look at the p-values:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 coef_comparison |>
   mutate(
@@ -681,6 +1168,22 @@ coef_comparison |>
   ) |>
   dplyr::select(Model, estimate, p.value, Significant, `CI crosses zero`)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+(
+    coef_comparison
+    .assign(
+        Significant=lambda d: np.where(d["p_value"] < 0.05, "Yes", "No"),
+        CI_crosses_zero=lambda d: np.where((d["conf_low"] < 0) & (d["conf_high"] > 0), "Yes", "No"),
+    )
+    [["Model", "estimate", "p_value", "Significant", "CI_crosses_zero"]]
+)
+```
+
+:::
 
 **What we observe:**
 - Point estimates are identical for Poisson and Quasipoisson ( around -0.02)
@@ -776,6 +1279,10 @@ When you encounter borderline results:
 5. Avoid chart junk—every element should serve a purpose
 
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 
 ## Final model predictions
@@ -822,6 +1329,49 @@ fig_main
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+grid = pd.DataFrame(
+    [(mass, species) for mass in np.arange(0, 40.5, 0.5) for species in cuckoo["Species"].unique()],
+    columns=["Mass", "Species"],
+)
+
+# Final model predictions
+predictions_final = grid.assign(**cuckoo_quasi.get_prediction(grid).summary_frame())
+
+fig_main = (
+    ggplot(predictions_final, aes("Mass", "mean", colour="Species", fill="Species"))
+    + geom_ribbon(aes(ymin="mean_ci_lower", ymax="mean_ci_upper"), alpha=0.15, colour=None)
+    # Mean estimate
+    + geom_line(size=1.2)
+    # Raw data
+    + geom_point(data=cuckoo, mapping=aes(y="Beg"), size=2.5, alpha=0.6)
+    + scale_colour_manual(
+        values={"Cuckoo": "darkorange", "Warbler": "steelblue"},
+        labels=["Cuckoo", "Reed warbler"],
+    )
+    + scale_fill_manual(
+        values={"Cuckoo": "darkorange", "Warbler": "steelblue"},
+        labels=["Cuckoo", "Reed warbler"],
+    )
+    + scale_x_continuous(breaks=np.arange(0, 41, 10))
+    + scale_y_continuous(breaks=np.arange(0, 101, 10))
+    + labs(
+        x="Nestling mass (g)",
+        y="Begging calls per 6 seconds",
+        colour=None,
+        fill=None,
+    )
+    + theme_minimal(base_size=12)
+)
+
+fig_main
+```
+
+:::
+
 
 ### Writing the Results section
 
@@ -867,6 +1417,10 @@ Across the observed mass range, each gram increase in mass was associated with a
 ### Extracting key values for reporting
 
 Here's how to get the numbers you need:
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 # Exponentiated coefficients (rate ratios)
 tidy(cuckoo_quasi, exponentiate = TRUE, conf.int = TRUE)
@@ -893,6 +1447,50 @@ pred_key_masses
 # Formal test of interaction
 drop1(cuckoo_quasi, test = "F")
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Exponentiated coefficients (rate ratios)
+def tidy_exp(model):
+    t = tidy(model)
+    return t.assign(
+        estimate=np.exp(t["estimate"]),
+        conf_low=np.exp(t["conf_low"]),
+        conf_high=np.exp(t["conf_high"]),
+    )
+
+tidy_exp(cuckoo_quasi)
+
+# Additive model
+cuckoo_quasi_add = smf.glm(
+    "Beg ~ Mass + Species", data=cuckoo, family=sm.families.Poisson()
+).fit()
+
+tidy_exp(cuckoo_quasi_add)
+
+# Predictions at specific mass values
+grid_key = pd.DataFrame(
+    [(species, mass) for species in cuckoo["Species"].unique() for mass in [10, 40]],
+    columns=["Species", "Mass"],
+)
+pred_key_masses = grid_key.assign(**cuckoo_quasi.get_prediction(grid_key).summary_frame())
+
+pred_key_masses
+
+# Rate ratios: how much does calling increase per gram?
+# For cuckoos: exp(β_Mass)
+# For warblers: exp(β_Mass + β_Mass:SpeciesWarbler)
+
+# Formal test of interaction
+# TRANSLATION-NOTE: OQ-030
+# No statsmodels equivalent for drop1()'s per-term F-tests; the closest
+# available approach is the manual likelihood-ratio test shown earlier
+# (see "Comparing model predictions"), refit per term of interest.
+```
+
+:::
 
 
 ### Common mistakes to avoid
@@ -980,6 +1578,10 @@ This requires substantially more data and careful biological thinking about what
 - You acknowledge the limitation transparently
 
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 cuckoo |>
     group_by(Species) |>
@@ -991,6 +1593,23 @@ cuckoo |>
     )
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+(
+    cuckoo
+    .groupby("Species", as_index=False)
+    .agg(n=("Beg", "size"), n_zeros=("Beg", lambda x: (x == 0).sum()))
+    .assign(
+        prop_zeros=lambda d: d["n_zeros"] / d["n"],
+        pct_zeros=lambda d: d["prop_zeros"] * 100,
+    )
+)
+```
+
+:::
 
 
 Whilst addressing zero-inflation would refine predictions, it doesn't change our core conclusions about how calling scales with mass or differs between species.

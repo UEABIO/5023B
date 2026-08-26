@@ -41,6 +41,25 @@ import statsmodels.formula.api as smf
 `ggplot(...) + geom_point()` visually parallel to the R tab. Do not use a wildcard
 import for any other library.
 
+Chapters fitting GLMs with an explicit family (`poisson.qmd`, `binomial.qmd`,
+and others further into the modelling half of the book) add to the block
+above rather than replacing it:
+
+```python
+import statsmodels.api as sm
+```
+
+`sm` supplies `sm.families.Poisson()` etc. for the `family=` argument to
+`smf.glm(...)`, and its `sm.graphics`/matplotlib plotting is the deliberate
+exception used for model-diagnostic plots (see "Model diagnostics" below) —
+plotnine and the `performance` package have no equivalent for Q-Q or
+residuals-vs-fitted plots, so this is the one place in the book a Python tab
+uses matplotlib directly rather than plotnine. Import it alongside `sm`:
+
+```python
+import matplotlib.pyplot as plt
+```
+
 Machine-learning chapters (`ml-regression.qmd`, `ml-logistic-regression.qmd`,
 `workshop_03_random_forests.qmd`, `workshop_04_pca_kmeans.qmd`) add to the block
 above rather than replacing it:
@@ -231,6 +250,108 @@ carries across unchanged.
 | `janitor::excel_numeric_to_date(x)` | `pd.to_datetime(x, unit="D", origin="1899-12-30")` — Windows origin, matching the book's stated default; note as a comment if a chapter's data uses the Mac 1904 origin instead |
 | `min(x)` / `max(x)`, inside `summarise()` (any column type) | `.min()` / `.max()`, named the same way as any other `.agg()` aggregation |
 | `tibble(col = c(v1, v2, ...))` | `pd.DataFrame({"col": [v1, v2, ...]})` |
+
+### GLM families (base R to statsmodels)
+
+`glm()`'s `family = poisson(link = "log")` is unambiguous and settled directly
+here rather than logged. `quasipoisson()` and `MASS::glm.nb()` involve a real
+choice of statsmodels mechanism, decided under OQ-027.
+
+| R | Python |
+|---|---|
+| `glm(y ~ x, data = d, family = poisson(link = "log"))` | `smf.glm("y ~ x", data=d, family=sm.families.Poisson()).fit()` |
+| `glm(y ~ x, data = d, family = quasipoisson(link = "log"))` | `smf.glm("y ~ x", data=d, family=sm.families.Poisson()).fit(scale="X2")` — `scale="X2"` rescales standard errors by the Pearson-based dispersion estimate, giving the same point estimates and inflated SEs as R's quasi-Poisson, without a distinct statsmodels family object |
+| `MASS::glm.nb(y ~ x, data = d)` | `smf.negativebinomial("y ~ x", data=d).fit()` — statsmodels estimates a dispersion parameter `alpha`; R's `theta` is its reciprocal (`alpha ≈ 1/theta`), not printed the same way |
+| `AIC(model1, model2)` | `model1.aic`, `model2.aic` — read directly off each fitted result, no combining call needed |
+
+### Prediction grids with confidence intervals (emmeans)
+
+`emmeans()` builds a grid of predictor combinations and returns predicted
+means with confidence intervals, on the response scale when `type =
+"response"`. statsmodels has no single call that does this; the equivalent is
+building the grid explicitly and calling `.get_prediction(...).summary_frame()`.
+Settled under OQ-028.
+
+```r
+emmeans(model, specs = ~ Mass + Species,
+        at = list(Mass = seq(0, 40, by = 5)),
+        type = "response") |>
+  as_tibble()
+```
+
+```python
+grid = pd.DataFrame(
+    [(mass, species) for mass in np.arange(0, 41, 5) for species in cuckoo["Species"].unique()],
+    columns=["Mass", "Species"],
+)
+predictions = model.get_prediction(grid).summary_frame()
+```
+
+`summary_frame()` gives `mean`, `mean_ci_lower` and `mean_ci_upper` on the
+response scale, in place of emmeans' `rate`/`response` and
+`asymp.LCL`/`asymp.UCL` columns — the values are the analogous quantities, the
+column names differ, and downstream code (ggplot/plotnine aesthetics
+referencing the R column names) is translated using the Python names instead.
+
+### Coefficient tables (broom::tidy())
+
+statsmodels result objects carry the same information `broom::tidy()`
+assembles, just as separate attributes rather than one data frame. Settled
+under OQ-029.
+
+```r
+tidy(model, conf.int = TRUE)
+```
+
+```python
+tidy = pd.DataFrame({
+    "term": model.params.index,
+    "estimate": model.params.values,
+    "std_error": model.bse.values,
+    "conf_low": model.conf_int()[0].values,
+    "conf_high": model.conf_int()[1].values,
+    "p_value": model.pvalues.values,
+})
+```
+
+`tidy(model, exponentiate = TRUE, conf.int = TRUE)` is the same construction
+with `np.exp()` applied to `estimate`, `conf_low` and `conf_high`.
+
+### Nested-model comparison (anova(), drop1())
+
+Base R's `anova(model1, model2)` on two nested GLMs, and `drop1(model, test =
+"F")`, both run a likelihood-ratio-style test statsmodels has no single
+wrapper for. Settled under OQ-030.
+
+```python
+from scipy import stats
+
+lr_stat = 2 * (model2.llf - model1.llf)
+df_diff = model1.df_resid - model2.df_resid
+p_value = stats.chi2.sf(lr_stat, df_diff)
+```
+
+`drop1()`'s per-term F-tests have no equivalent one-liner at all; where a
+chunk uses it, the Python tab notes the gap rather than approximating a
+per-term loop.
+
+### Model diagnostics (performance package)
+
+`performance::check_model()` and `check_overdispersion()` have no Python
+package equivalent — nothing in the current Stack produces the same combined
+diagnostic panel. Rather than skip these silently (they are central to this
+chapter's teaching point), each is translated to the closest statsmodels/
+matplotlib diagnostic for the specific check being illustrated. Settled under
+OQ-031; this is the one place in the book plotting uses matplotlib directly
+rather than plotnine (see the import block note above).
+
+| R (performance) | Python (statsmodels + matplotlib) |
+|---|---|
+| `check_model(model)` (full suite, `lm()` object) | `sm.qqplot(model.resid, line="45")` for the Q-Q plot, plus `plt.scatter(model.fittedvalues, model.resid)` for residuals vs fitted — shown as two chunks' worth of code, since there is no combined panel |
+| `check_model(model)` (full suite, `glm()` object) | as above, using `model.resid_deviance` in place of `model.resid` |
+| `check_model(model, check = "qq")` | `sm.qqplot(model.resid_deviance, line="45")` (`model.resid` for an `lm()` object) |
+| `check_model(model, check = "homogeneity")` | `plt.scatter(model.fittedvalues, model.resid_deviance)` |
+| `check_model(model, check = "overdispersion")` / `check_overdispersion(model)` | `model.pearson_chi2 / model.df_resid` — the Pearson-based dispersion ratio, statsmodels' closest built-in equivalent to performance's dispersion statistic; performance's dispersion *plot* itself has no direct equivalent and is not attempted |
 
 ## Setup chunks
 

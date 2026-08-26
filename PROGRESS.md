@@ -60,7 +60,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | 7 | numeric-plausibility.qmd | 13 (exact) | translated | 6 | 609d270 | 2026-08-26 | 2 base-glossary additions first (multi-condition filter, !is.na); ggplot chunks translated mechanically per Stack/style conventions; one likely-inert `#\|` option placement flagged, not fixed (OQ-019) |
 | 8 | week-2.qmd | 0 | translated | 0 | | 2026-08-26 | confirmed on read: sole chunk is a fill-in-the-blank scaffold (`# YOUR CODE HERE` placeholders), no real operation to mirror — no `.qmd` edits made |
 | 9 | summarise.qmd | 20 (exact) | translated | 7 | 4ec1d32 | 2026-08-26 | 6 base-glossary additions first (ungrouped count, sd/median/IQR, summarise_at/if); ggpairs skip-logged (OQ-026, no Python equivalent, seaborn ruled out by Stack table); colorspace scale_*_discrete_qualitative() omitted (OQ-024); malformed RDS URL flagged (OQ-020) |
-| 10 | poisson.qmd | ~20 | todo | | | | performance/emmeans/glm.nb/MASS uncovered |
+| 10 | poisson.qmd | 30 (exact) | translated | 6 | | 2026-08-26 | performance/emmeans/glm.nb/quasipoisson/broom/anova idioms seeded in TRANSLATION.md first (OQ-027–031, each resolved-once-reused); `downloadthis::download_link()` treated as skip-silent book furniture (no OQ, analogous to `include_graphics()`); one `echo=F` demo chunk skip-logged (OQ-032) since it has no visible R source to pair a Python tab against |
 | 11 | week-3.qmd | 0 | todo | | | | figure only |
 | 12 | binomial.qmd | ~12 | todo | | | | broom/emmeans/performance/DescTools uncovered |
 | 13 | week-4.qmd | ~7 | todo | | | | |
