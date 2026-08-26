@@ -58,7 +58,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | 5 | missing-values.qmd | 9 (exact) | translated | 4 | 7b7fb28 | 2026-08-25 | R-only tabset handled per TRANSLATION.md; RDS chunk skip-logged (OQ-010, also has a stray typo); stale "reorder columns" comment dropped, not carried (OQ-009) |
 | 6 | dates.qmd | 15 (exact) | translated | 3 | 2633522 | 2026-08-26 | lubridate glossary seeded in TRANSLATION.md first (separate commit) since >8 open questions would otherwise result; `plants` bug in Filter dates fixed to `penguins_clean_names` in both R and Python, human-authorised exception to hard rule 1 (OQ-013) |
 | 7 | numeric-plausibility.qmd | 13 (exact) | translated | 6 | 609d270 | 2026-08-26 | 2 base-glossary additions first (multi-condition filter, !is.na); ggplot chunks translated mechanically per Stack/style conventions; one likely-inert `#\|` option placement flagged, not fixed (OQ-019) |
-| 8 | week-2.qmd | 0 | todo | | | | fill-in-the-blank template, no real code |
+| 8 | week-2.qmd | 0 | translated | 0 | | 2026-08-26 | confirmed on read: sole chunk is a fill-in-the-blank scaffold (`# YOUR CODE HERE` placeholders), no real operation to mirror — no `.qmd` edits made |
 | 9 | summarise.qmd | ~18 | todo | | | | tabyl/adorn_*, ggpairs uncovered |
 | 10 | poisson.qmd | ~20 | todo | | | | performance/emmeans/glm.nb/MASS uncovered |
 | 11 | week-3.qmd | 0 | todo | | | | figure only |
