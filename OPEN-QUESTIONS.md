@@ -605,4 +605,191 @@ chapter.
 
 ---
 
+## OQ-020
+
+- **File / chunk:** `summarise.qmd`, `## The data`, unlabelled chunk,
+  lines 44–47
+- **Status:** open
+- **R original:**
+
+  ```r
+  penguins <- readRDS(url("https://UEABIO/5023B/raw/refs/heads/2026/files/penguins.RDS"))
+  ```
+
+- **Issue:** identical shape to OQ-001/003/010/011/014 — `.RDS` load with no
+  Python equivalent, skip-and-logged rather than translated. Separately, the
+  URL itself looks broken: every other chapter's equivalent chunk reads
+  `https://github.com/UEABIO/5023B/raw/...` — this one is missing
+  `github.com/`. Flagged per hard rule 1, left untouched.
+- **Candidates:** none — no Python idiom applies.
+- **Provisional choice in the book:** no Python tab added for this chunk.
+- **Recommendation:** same as prior RDS entries — leave untranslated. A human
+  may separately want to fix the malformed URL.
+- **Resolution:**
+
+---
+
+## OQ-021
+
+- **File / chunk:** `summarise.qmd`, `## A first glimpse`, pre-existing
+  R-only tabset (`glimpse`/`str()`/`skim`, `##` tabs), lines 49–89
+  (post-edit)
+- **Status:** open
+- **R original:** three tabs — `glimpse(penguins)`, `str(penguins)`,
+  `skimr::skim(penguins)` — each giving a different structural overview of
+  the dataset.
+- **Issue:** per `TRANSLATION.md`'s pre-existing-R-only-tabset rule, one
+  representative Python tab covers the group. `skim()` (skimr) has no
+  accepted Python equivalent — same shape as OQ-007 in `missing-values.qmd`.
+  `glimpse()` is already glossary-mapped to `.info()`, which also covers
+  most of what `str()` shows.
+- **Candidates:** `penguins.info()`.
+- **Provisional choice in the book:** as above, marked
+  `# TRANSLATION-NOTE: OQ-021`. This chunk is also the chapter's first
+  eligible Python tab, so it carries the standard import block.
+- **Recommendation:** as implemented, consistent with the OQ-007 precedent.
+- **Resolution:**
+
+---
+
+## OQ-022
+
+- **File / chunk:** `summarise.qmd`, `## Frequency counts by subgroups`,
+  pre-existing R-only tabset (`Dplyr`/`Janitor`, `##` tabs), lines 197–236
+  (post-edit)
+- **Status:** open
+- **R original:** `Dplyr` tab does
+  `group_by(species, sex) |> count() |> arrange(desc(n))`; `Janitor` tab does
+  `tabyl(sex, species) |> adorn_percentages("all") |> adorn_totals(c("row",
+  "col")) |> adorn_pct_formatting(digits = 1)`.
+- **Issue:** per the pre-existing-R-only-tabset rule, one representative
+  Python tab covers the group. `tabyl()`/`adorn_*()` (janitor) have no
+  accepted Python equivalent, so the representative approach mirrors the
+  `Dplyr` tab instead, which is already fully glossary-covered
+  (multi-column `count()`, `arrange(desc())`).
+- **Candidates:** as implemented — groupby/size/rename/sort_values chain
+  mirroring the `Dplyr` tab.
+- **Provisional choice in the book:** as above, marked
+  `# TRANSLATION-NOTE: OQ-022`.
+- **Recommendation:** as implemented, consistent with the OQ-004/OQ-023-style
+  precedent for R-only tabsets built on an uncovered package.
+- **Resolution:**
+
+---
+
+## OQ-023
+
+- **File / chunk:** `summarise.qmd`, `## Visualising Frequencies`,
+  pre-existing R-only tabset (`Geom_col`/`Geom_bar`, `##` tabs, `Geom_col`
+  containing a nested `hide()`/`unhide()` "Label the bars" variant),
+  lines 244–321 (post-edit)
+- **Status:** open
+- **R original:** `Geom_col` pre-aggregates counts then plots with
+  `geom_col(position = position_dodge2(preserve = "single"))`; its hidden
+  variant adds `geom_label()` bar labels; `Geom_bar` lets ggplot aggregate
+  directly with the same `position_dodge2()` call.
+- **Issue:** one representative Python tab for the whole group, per the
+  pre-existing-R-only-tabset rule (the nested hidden "Label the bars"
+  variant stays R-only, same as any other tab in the group). `geom_bar`
+  chosen as the representative since it doesn't depend on precomputed
+  counts. Separately, plotnine's `position_dodge2` support/argument names
+  don't reliably match ggplot2's `preserve = "single"` option, so this was
+  simplified to a plain `position="dodge"` rather than attempting to match
+  the exact dodge behaviour.
+- **Candidates:** as implemented.
+- **Provisional choice in the book:** as above, marked
+  `# TRANSLATION-NOTE: OQ-023`.
+- **Recommendation:** as implemented. If `position_dodge2`-equivalent
+  behaviour turns out to matter visually, revisit with a closer look at
+  plotnine's position adjustments.
+- **Resolution:**
+
+---
+
+## OQ-024
+
+- **File / chunk:** `summarise.qmd`, two chunks —
+  `### Scatterplots` task-container chunk (`scale_colour_discrete_qualitative()`,
+  lines 384–410 post-edit) and the `### Boxplots for group comparisons`
+  task-container chunk (`scale_fill_discrete_qualitative()`, lines 718–744
+  post-edit)
+- **Status:** open
+- **R original:** both call a `scale_*_discrete_qualitative()` function from
+  the `colorspace` package (loaded in the chapter's setup chunk).
+- **Issue:** `colorspace`'s discrete qualitative palette functions aren't in
+  the Stack or glossary, and plotnine has no direct equivalent worth
+  inventing on the spot. Rather than approximate with an unrelated plotnine
+  scale, the call was omitted from both Python tabs — the preceding
+  `colour=`/`fill=` aesthetic mapping alone still produces a qualitative
+  (if differently-coloured) plot, consistent with the standing warning that
+  plotnine and ggplot2 palettes differ.
+- **Candidates:**
+  1. Omit the scale call (implemented).
+  2. Approximate with `scale_color_hue()`/`scale_fill_hue()` — rejected, an
+     invented substitute for a specific named function the glossary doesn't
+     cover, going beyond what the ambiguity protocol allows.
+- **Provisional choice in the book:** 1, marked
+  `# TRANSLATION-NOTE: OQ-024` at the first occurrence only (the second
+  reuses the same resolved idiom, matching the `dmy()`-reuse precedent in
+  `dates.qmd`).
+- **Recommendation:** 1. Worth a glossary decision if `colorspace` scales
+  recur further into the book.
+- **Resolution:**
+
+---
+
+## OQ-025
+
+- **File / chunk:** `summarise.qmd`, two chunks — `## Correlation`
+  (lines 424–449 post-edit) and its grouped task-container variant
+  (lines 463–493 post-edit)
+- **Status:** open
+- **R original:** `summarise(r = cor(culmen_length_mm, culmen_depth_mm, use
+  = "complete.obs"))`, ungrouped and then grouped by species.
+- **Issue:** `cor(x, y, use = "complete.obs")` has no glossary entry.
+- **Candidates:**
+  1. Ungrouped: `pd.DataFrame({"r": [x.corr(y)]})`, matching pandas'
+     `Series.corr()`'s default pairwise-complete NaN handling to R's
+     `use = "complete.obs"`. Grouped:
+     `.groupby("species").apply(lambda d: pd.Series({"r": ...})).reset_index()`.
+  2. `penguins[["culmen_length_mm", "culmen_depth_mm"]].corr()` (a full
+     correlation matrix) — rejected, since it returns a 2×2 matrix rather
+     than the single value the R tab's `r =` column produces, breaking the
+     visual parallel.
+- **Provisional choice in the book:** 1, marked `# TRANSLATION-NOTE: OQ-025`
+  at the first (ungrouped) occurrence only.
+- **Recommendation:** 1, and consider adding `cor(x, y, use =
+  "complete.obs")` → `x.corr(y)` to the glossary, since correlation is
+  likely to recur in modelling chapters.
+- **Resolution:**
+
+---
+
+## OQ-026
+
+- **File / chunk:** `summarise.qmd`, `## GGally`, unlabelled chunk,
+  lines 787–792
+- **Status:** open
+- **R original:**
+
+  ```r
+  library(GGally)
+  penguins |> 
+    ggpairs(columns = 10:12, ggplot2::aes(colour = species))
+  ```
+
+- **Issue:** `GGally::ggpairs()` has no accepted Python equivalent in
+  `TRANSLATION.md`. The closest Python analogue, seaborn's `pairplot()`,
+  can't be used as a substitute since the Stack table explicitly rules out
+  seaborn (`Not matplotlib or seaborn`). Per CLAUDE.md's "skip and log"
+  category for chunks relying on an R package with no accepted Python
+  equivalent, this chunk is skip-and-logged rather than translated.
+- **Candidates:** none within the current Stack.
+- **Provisional choice in the book:** no Python tab added for this chunk.
+- **Recommendation:** revisit only if the Stack table is ever extended with
+  a pairs-plot-capable package.
+- **Resolution:**
+
+---
+
 ---

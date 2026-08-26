@@ -73,6 +73,19 @@ skim(penguins)
 
 ```
 
+## Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+import statsmodels.formula.api as smf
+
+# TRANSLATION-NOTE: OQ-021
+penguins.info()
+```
+
 :::
 
 At this early stage, it’s helpful to assess whether your dataset meets your expectations. Consider if the data appear as anticipated. Are the values in each column reasonable? Are there any noticeable gaps or errors that might need to be corrected, or that could potentially render the data unusable?
@@ -130,21 +143,47 @@ With our data we can count the total number of occurrences for different groups 
 
 ### Filtering
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 penguins |> 
   filter(species == "Adelie") |> 
   count()
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+len(penguins.loc[lambda d: d["species"] == "Adelie"])
+```
+
+:::
 ### Grouping
 
 Or by grouping :
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 penguins |> 
   group_by(species) |> 
   count()
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+penguins.groupby("species", as_index=False).size().rename(columns={"size": "n"})
+```
+
+:::
 
 At this stage, these counts tell us *what is in our dataset*, not *how variables relate to one another*. To understand relationships, we will later need visualisations and models.
 
@@ -178,6 +217,20 @@ penguins |>
   adorn_totals(c("row", "col")) |>
   adorn_pct_formatting(digits = 1)
 
+```
+
+## Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-022
+(
+    penguins
+    .groupby(["species", "sex"], as_index=False)
+    .size()
+    .rename(columns={"size": "n"})
+    .sort_values("n", ascending=False)
+)
 ```
 
 :::
@@ -251,6 +304,20 @@ penguins |>
 
 ```
 
+## Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-023
+(
+    ggplot(penguins, aes(x="species", fill="sex"))
+    + geom_bar(position="dodge")
+    + coord_flip()
+    + labs(x="")
+    + theme(legend_position="bottom")
+)
+```
+
 :::
 
 ## Exploring relationships between two variables
@@ -265,6 +332,10 @@ Plots are particularly important here, as numerical summaries alone can obscure 
 
 When both variables of interest are numeric, a scatterplot is the most informative first tool. Scatterplots allow us to see how values of one variable change in relation to another and whether any patterns are present.
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 
 penguins|>
@@ -274,6 +345,18 @@ geom_point(alpha = 0.7)
 
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+(
+    ggplot(penguins, aes(x="culmen_length_mm", y="culmen_depth_mm"))
+    + geom_point(alpha=0.7)
+)
+```
+
+:::
 
 This plot shows the relationship between culmen length and culmen depth, with points coloured by penguin species.
 
@@ -298,6 +381,10 @@ How does this change your observation?
 
 `r hide("Solution")`
 
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 
 penguins|>
@@ -308,6 +395,19 @@ geom_point(alpha = 0.7)+
 scale_colour_discrete_qualitative()
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-024
+(
+    ggplot(penguins, aes(x="culmen_length_mm", y="culmen_depth_mm", colour="species"))
+    + geom_point(alpha=0.7)
+)
+```
+
+:::::
 
 We now see a striking reversal of the apparent association between culmen length and depth, demonstrating the importance of considering groups in our analysis.
 
@@ -321,6 +421,10 @@ In some situations, it can be useful to summarise the relationship between two n
 
 Below, we calculate the overall correlation between culmen length and culmen depth across all observations.
 
+::: {.panel-tabset group="language"}
+
+### R
+
 ```{r}
 
 penguins |>
@@ -333,6 +437,17 @@ use = "complete.obs") # Important to include if there are any missing values
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-025
+# Important to include if there are any missing values
+pd.DataFrame({"r": [penguins["culmen_length_mm"].corr(penguins["culmen_depth_mm"])]})
+```
+
+:::
+
 :::{.task}
 ::::{.task-header}
 Your turn
@@ -344,6 +459,10 @@ How can we generate summary statistics that reflect our important subgrouping (s
 How does this change your observation?
 
 `r hide("Solution")`
+
+:::::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 
@@ -358,6 +477,21 @@ use = "complete.obs") # Important to include if there are any missing values
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Important to include if there are any missing values
+(
+    penguins
+    .groupby("species")
+    .apply(lambda d: pd.Series({"r": d["culmen_length_mm"].corr(d["culmen_depth_mm"])}))
+    .reset_index()
+)
+```
+
+:::::
+
 
 `r unhide()`
 ::::
@@ -368,6 +502,10 @@ use = "complete.obs") # Important to include if there are any missing values
 We can extend our summaries to show not just counts, but also measures of central tendency (mean) and spread (standard deviation).
 
 These are powerful ways to understand variation within groups. These summaries describe *average differences*, but they do not tell us whether one variable predicts another, nor whether relationships differ across groups.
+
+::: {.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = T, message = F, warning = F}
 
@@ -383,6 +521,22 @@ iqr = IQR(body_mass_g, na.rm = TRUE)
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Calculate withing groups
+penguins.groupby("species", as_index=False).agg(
+    mean_mass=("body_mass_g", "mean"),
+    sd_mass=("body_mass_g", "std"),
+    n=("body_mass_g", "size"),
+    median=("body_mass_g", "median"),
+    iqr=("body_mass_g", lambda x: x.quantile(0.75) - x.quantile(0.25)),
+)
+```
+
+:::
+
 :::{.task}
 ::::{.task-header}
 Your turn
@@ -393,6 +547,10 @@ Your turn
 
 `r hide("Solution")`
 
+
+:::::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = T, message = F, warning = F}
 
@@ -406,6 +564,24 @@ n = n()
 )
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+(
+    penguins
+    .dropna(subset=["sex"])  # Optional remove rows where Sex is unknown
+    .groupby(["species", "sex"], as_index=False)
+    .agg(
+        mean_mass_g=("body_mass_g", "mean"),
+        sd_mass_g=("body_mass_g", "std"),
+        n=("body_mass_g", "size"),
+    )
+)
+```
+
+:::::
 
 
 `r unhide()`
@@ -422,6 +598,10 @@ These functions allow us to generate
 
 Summarise specific selected variables:
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 penguins |> 
   group_by(species) |> 
@@ -432,7 +612,21 @@ penguins |>
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# mean function
+penguins.groupby("species")[["flipper_length_mm", "culmen_length_mm", "culmen_depth_mm"]].mean()
+```
+
+:::
+
 - `summarise_if()`
+
+::: {.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 penguins |> 
@@ -441,6 +635,16 @@ penguins |>
                mean, na.rm =T)
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# selects only numeric columns
+penguins.groupby("species").mean(numeric_only=True)
+```
+
+:::
 
 
 ## Visualising distributions
@@ -457,6 +661,10 @@ A boxplot provides a compact summary of the distribution of a numeric variable. 
 
 Below, we visualise the distribution of body mass across penguin species.
 
+::: {.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 penguins |>
 ggplot(aes(x = species,
@@ -465,6 +673,19 @@ geom_boxplot() +
 coord_flip()
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+(
+    ggplot(penguins, aes(x="species", y="body_mass_g"))
+    + geom_boxplot()
+    + coord_flip()
+)
+```
+
+:::
 
 This plot allows us to compare:
 
@@ -494,6 +715,10 @@ If you wanted to explore the shape of the body-mass distribution for each single
 A histogram could be used by changing the geom to `geom_histogram()` and focusing on one species, as this allows closer inspection of the distribution shape within that group.
 
 
+:::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 penguins |> 
   ggplot(aes(body_mass_g,
@@ -504,6 +729,19 @@ penguins |>
              ncol = 1) # stack the plots for easier comparison
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+(
+    ggplot(penguins, aes("body_mass_g", fill="species"))
+    + geom_histogram()
+    + facet_wrap("species", ncol=1)  # stack the plots for easier comparison
+)
+```
+
+:::::
 
 `r unhide()`
 
