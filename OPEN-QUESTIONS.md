@@ -1446,3 +1446,126 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-051
+
+- **File / chunk:** `causal-models.qmd`, every `dagify()`/`ggdag()`/
+  `ggdag_collider()`/`ggdag_adjustment_set()`/`adjustmentSets()` call (first
+  visible occurrence: `## Building DAGs in R`, `### Basic DAG construction`,
+  `my_dag <- dagify(...)`)
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s "Causal DAGs" section.
+- **Issue:** `ggdag`/`dagitty` have no Stack coverage. Two Python
+  candidates were considered: `causalgraphicalmodels` (small,
+  dagitty-inspired, has a direct `get_all_backdoor_adjustment_sets()`
+  match for `ggdag_adjustment_set()`/`adjustmentSets()`) and `dowhy`
+  (actively maintained, but built around full effect
+  identification/estimation/refutation rather than plain DAG structural
+  analysis — a heavier tool than this chapter needs). Discussed with the
+  human maintainer (chat, 2026-08-26).
+- **Candidates:** `causalgraphicalmodels`, adopted. Rejected: `dowhy` (API
+  mismatch with the chapter's actual scope); a hand-written `networkx`-only
+  approach (correctness risk in reimplementing backdoor-criterion logic for
+  a teaching book).
+- **Provisional choice in the book:** `causalgraphicalmodels` added to the
+  Stack; glossary entries added to `TRANSLATION.md`'s "Causal DAGs"
+  section before translating the rest of the chapter. Marked
+  `# TRANSLATION-NOTE: OQ-051` at the first occurrence only.
+- **Recommendation:** as implemented. Worth noting: `causalgraphicalmodels`
+  is lightly maintained, the same trade-off already accepted for `pymer4`
+  under OQ-043.
+- **Resolution:** glossary entries added to `TRANSLATION.md` before
+  translating the rest of the chapter.
+
+---
+
+## OQ-052
+
+- **File / chunk:** `causal-models.qmd`, every `ggdag_paths()` call (first
+  occurrence: `#### Examine paths`, `ggdag_paths(my_dag)`)
+- **Status:** open
+- **R original:** `ggdag_paths(my_dag)`; `ggdag_paths(my_dag, adjust_for =
+  "confounder")`.
+- **Issue:** `ggdag_paths()` lists every path from exposure to outcome,
+  colour-coded open (biasing) vs closed (blocked). Neither
+  `causalgraphicalmodels` nor any other package in the Stack computes this
+  in one call — a faithful port would mean writing custom d-separation
+  logic per path, a materially bigger invention than the ambiguity
+  protocol is meant to cover. Human maintainer decided (chat, 2026-08-26)
+  to skip-and-log rather than approximate with a plain, unlabelled path
+  listing.
+- **Candidates:** none within the current Stack.
+- **Provisional choice in the book:** no Python tab added for any
+  `ggdag_paths()` chunk.
+- **Recommendation:** revisit only if a Stack package is found that
+  computes open/closed path status directly (e.g. a more complete DAG
+  library than `causalgraphicalmodels`).
+- **Resolution:**
+
+---
+
+## OQ-053
+
+- **File / chunk:** `causal-models.qmd`, two pre-existing R-only tabsets —
+  `#### Find adjustment sets` (`Visualised`/`Written`, `##` tabs) and
+  `### Building the DAG` (`Code`/`Visualisation`, `##` tabs); separately,
+  `### Fitting the models` (`Total effect (Recommended)`/`With precision
+  variable`/`Wrong model (for comparison)`, `##` tabs)
+- **Status:** open
+- **R original:** `Visualised` calls `ggdag_adjustment_set(my_dag)`,
+  `Written` calls `adjustmentSets(my_dag)` — the same computation, two
+  output formats. `Code` builds `fly_dag <- dagify(...)`, `Visualisation`
+  plots it — two sequential steps of one workflow, not alternatives.
+  `Total effect`/`With precision variable`/`Wrong model` each fit a
+  genuinely different model specification for the same research question.
+- **Issue:** three tabsets, three different reasons for having multiple R
+  tabs, but the same pre-existing-R-only-tabset rule applies to all: add
+  one Python tab per group rather than one per R tab. For the first two
+  groups, this is a natural fit (one operation to represent; a two-step
+  workflow that combines cleanly into one Python chunk). The third group
+  is a closer call, since the tabs aren't true alternatives — one
+  representative (`Total effect`, already marked "Recommended" in the R
+  prose) was chosen rather than three near-identical Python tabs.
+- **Candidates:** as implemented — `get_all_backdoor_adjustment_sets()`
+  for the first; `CausalGraphicalModel(...)` construction followed by
+  `.draw()` combined into one Python tab for the second; the `Total
+  effect` model's `lm()`/`broom::tidy()` pair (via the `tidy()` helper
+  from OQ-029) for the third.
+- **Provisional choice in the book:** as implemented, no
+  `TRANSLATION-NOTE` marker (a scope/structure decision, not an idiom
+  substitution).
+- **Recommendation:** as implemented.
+- **Resolution:**
+
+---
+
+## OQ-054
+
+- **File / chunk:** `causal-models.qmd`, `## What is a DAG?`, unlabelled
+  chunk (`{r, echo=F, fig.width=6, fig.height=3}`)
+- **Status:** open
+- **R original:**
+
+  ```r
+  dagify(
+    height ~ fertiliser + sunlight,
+    fertiliser ~ sunlight,
+    exposure = "fertiliser",
+    outcome = "height"
+  ) |>
+    ggdag(text = FALSE, use_labels = "name") +
+    theme_dag()
+  ```
+
+- **Issue:** `echo=F` hides this chunk's source in the rendered R book —
+  same shape as OQ-032/OQ-037/OQ-047. No Python tab added, since a
+  visibly-sourced Python tab would be the only asymmetric one of its kind.
+- **Candidates:** the content is fully portable via the
+  `causalgraphicalmodels` idiom settled under OQ-051, so this is a
+  presentation question, not a translation gap.
+- **Provisional choice in the book:** no Python tab added for this chunk.
+- **Recommendation:** same as OQ-032 — apply whichever general `echo=F`
+  policy a human settles on to this entry too.
+- **Resolution:**
+
+---

@@ -19,6 +19,7 @@ the wider Python ecosystem.
 | Plotting | ggplot2 | plotnine | Not matplotlib or seaborn. |
 | Models | stats / broom | statsmodels (formula API) | Preserves the `y ~ x` narrative. |
 | Mixed models | lme4 / lmerTest | pymer4 | Wraps R's lme4 via `rpy2` — needs a working R installation with lme4/lmerTest to actually run, the one Python idiom in this book with a non-Python runtime dependency. In exchange, formula strings (including nested and `cbind()` forms) pass through to lme4 essentially unchanged. |
+| Causal DAGs | ggdag / dagitty | causalgraphicalmodels | Small, dagitty-inspired package covering DAG construction and backdoor-adjustment-set identification. Lightly maintained — the same trade-off already accepted for pymer4, made deliberately rather than reaching for a heavier general-purpose causal-inference library the chapter doesn't otherwise need. |
 | Machine learning | tidymodels | scikit-learn | Not statsmodels. Pipeline mirrors recipe/workflow structure. |
 | Arrays and numerics | base R | numpy | |
 | Distributions and tests | stats | scipy.stats | |
@@ -72,6 +73,12 @@ decision-tree diagram (see "Diagrams" below):
 
 ```python
 import graphviz
+```
+
+Chapters building causal DAGs (`causal-models.qmd` and beyond) add:
+
+```python
+from causalgraphicalmodels import CausalGraphicalModel
 ```
 
 Machine-learning chapters (`ml-regression.qmd`, `ml-logistic-regression.qmd`,
@@ -453,6 +460,28 @@ OQ-048.
 | R | Python |
 |---|---|
 | `d \|> aggregate(y ~ a + b, data = _, mean)` | `d.groupby(["a", "b"], as_index=False)["y"].mean()` |
+
+### Causal DAGs (ggdag/dagitty to causalgraphicalmodels)
+
+`dagify()`'s `child ~ parent1 + parent2` formula convention becomes an
+explicit edge list: each parent becomes a `(parent, child)` tuple.
+`causalgraphicalmodels` methods take `exposure`/`outcome` as explicit
+arguments per call, rather than storing them on the object the way
+dagitty does — settled under OQ-051.
+
+| R (ggdag/dagitty) | Python (causalgraphicalmodels) |
+|---|---|
+| `dagify(y ~ x + z, x ~ z, exposure = "x", outcome = "y")` | `CausalGraphicalModel(nodes=["x", "y", "z"], edges=[("z", "x"), ("z", "y"), ("x", "y")])` |
+| `ggdag(dag, text = FALSE, use_labels = "name") + theme_dag()` | `dag.draw()` — returns a graphviz object; layout and styling differ from ggdag's ggplot2-based rendering, an extension of the plotnine/ggplot2 standing warning |
+| `ggdag_collider(dag)` | `[n for n, d in dag.dag.in_degree() if d >= 2]` — lists collider nodes (two or more parents in the whole graph); ggdag's highlighted diagram itself has no equivalent, only the underlying node list |
+| `ggdag_adjustment_set(dag)` / `adjustmentSets(dag)` | `dag.get_all_backdoor_adjustment_sets(exposure, outcome)` |
+| `ggdag_paths(dag)` / `ggdag_paths(dag, adjust_for = ...)` | no equivalent — skip-and-logged (OQ-052); would require custom d-separation logic per path, a larger invention than the ambiguity protocol is meant to cover |
+
+Custom node `labels =` (cosmetic display names distinct from the node's
+variable name) have no `causalgraphicalmodels` equivalent and are dropped
+from the Python translation rather than approximated — the node names
+themselves are used, consistent with dropping other untranslatable cosmetic
+arguments elsewhere (e.g. OQ-024's `colorspace` scale).
 
 ## Setup chunks
 

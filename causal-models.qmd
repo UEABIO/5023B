@@ -90,10 +90,31 @@ Treatment → Outcome
 
 **What to do**: **Adjust for confounders** in your model to block the backdoor path.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval=FALSE}
 # Correct model - adjusts for confounder
 lm(height ~ fertiliser + sunlight, data = plant_data)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+from causalgraphicalmodels import CausalGraphicalModel
+
+# Correct model - adjusts for confounder
+smf.ols("height ~ fertiliser + sunlight", data=plant_data).fit()
+```
+
+:::
 
 ::: {.callout-warning}
 ## Common mistake
@@ -123,6 +144,10 @@ Treatment → Collider ← Outcome
 
 **What to do**: **Do NOT adjust for colliders**. They naturally block paths - adjusting for them creates spurious associations.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval=FALSE}
 # WRONG - adjusts for collider, creates bias
 lm(fledglings ~ feeding + predator_visits, data = bird_data)
@@ -130,6 +155,19 @@ lm(fledglings ~ feeding + predator_visits, data = bird_data)
 # CORRECT - leaves collider alone
 lm(fledglings ~ feeding, data = bird_data)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# WRONG - adjusts for collider, creates bias
+smf.ols("fledglings ~ feeding + predator_visits", data=bird_data).fit()
+
+# CORRECT - leaves collider alone
+smf.ols("fledglings ~ feeding", data=bird_data).fit()
+```
+
+:::
 
 ::: {.callout-warning}
 ## Common mistake
@@ -157,6 +195,10 @@ Treatment → Mediator → Outcome
 * For **total effect** (all pathways): Don't adjust for mediator
 * For **direct effect** (excluding mediation): Do adjust for mediator
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval=FALSE}
 # Total effect - how does exercise affect heart disease?
 lm(heart_disease ~ exercise, data = exercise_data)
@@ -165,6 +207,20 @@ lm(heart_disease ~ exercise, data = exercise_data)
 # BESIDES through weight loss?
 lm(heart_disease ~ exercise + weight_loss, data = exercise_data)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Total effect - how does exercise affect heart disease?
+smf.ols("heart_disease ~ exercise", data=exercise_data).fit()
+
+# Direct effect - how does exercise affect heart disease
+# BESIDES through weight loss?
+smf.ols("heart_disease ~ exercise + weight_loss", data=exercise_data).fit()
+```
+
+:::
 
 ::: {.callout-note}
 ## Research question matters
@@ -187,6 +243,10 @@ We use the `ggdag` package to create and analyse DAGs in R.
 
 ### Basic DAG construction
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 library(ggdag)
 library(dagitty)
@@ -205,20 +265,56 @@ ggdag(my_dag, text = FALSE, use_labels = "name") +
   theme_dag()
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-051
+# Create a simple DAG
+my_dag = CausalGraphicalModel(
+    nodes=["treatment", "outcome", "confounder"],
+    edges=[
+        ("treatment", "outcome"),
+        ("confounder", "outcome"),
+        ("confounder", "treatment"),
+    ],
+)
+exposure, outcome = "treatment", "outcome"
+
+# Visualise it
+my_dag.draw()
+```
+
+:::
+
 ### Using ggdag tools
 
 #### Check for colliders
+
+:::{.panel-tabset group="language"}
+
+##### R
 
 ```{r}
 # Identify colliders in your DAG
 ggdag_collider(my_dag)
 ```
 
+##### Python
+
+```{python}
+#| eval: false
+# Identify colliders in your DAG
+[n for n, d in my_dag.dag.in_degree() if d >= 2]
+```
+
+:::
+
 #### Find adjustment sets
 
 The most important function: **What should I adjust for?**
 
-:::{.panel-tabset}
+:::{.panel-tabset group="language"}
 
 ## Visualised
 
@@ -233,6 +329,13 @@ ggdag_adjustment_set(my_dag)
 
 adjustmentSets(my_dag)
 
+```
+
+## Python
+
+```{python}
+#| eval: false
+my_dag.get_all_backdoor_adjustment_sets(exposure, outcome)
 ```
 
 :::
@@ -290,9 +393,22 @@ downloadthis::download_link(
 )
 ```
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 head(fly_data)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+fly_data.head(6)
+```
+
+:::
 
 The data columns are:
 
@@ -331,7 +447,7 @@ Let's think about the causal relationships:
    - Larger flies may be healthier (Arrow: `thorax → longevity`)
    - But thorax doesn't affect mating assignment (random)
 
-:::{.panel-tabset}
+:::{.panel-tabset group="language"}
 
 ## Code
 
@@ -360,15 +476,48 @@ ggdag(fly_dag, text = FALSE, use_labels = "label") +
   theme_dag()
 ```
 
+## Python
+
+```{python}
+#| eval: false
+fly_dag = CausalGraphicalModel(
+    nodes=["type", "longevity", "sleep", "thorax", "partners"],
+    edges=[
+        ("type", "longevity"),
+        ("sleep", "longevity"),
+        ("thorax", "longevity"),
+        ("partners", "longevity"),
+        ("type", "sleep"),
+        ("partners", "sleep"),
+    ],
+)
+exposure, outcome = "type", "longevity"
+
+fly_dag.draw()
+```
+
 :::
 
 ### Identifying key structures
 
 #### Is sleep a collider?
 
+:::{.panel-tabset group="language"}
+
+##### R
+
 ```{r}
 ggdag_collider(fly_dag)
 ```
+
+##### Python
+
+```{python}
+#| eval: false
+[n for n, d in fly_dag.dag.in_degree() if d >= 2]
+```
+
+:::
 
 **Yes!** Sleep has two arrows pointing into it:
 ```
@@ -393,15 +542,41 @@ First, as described above, conditioning on sleep induces collider bias between t
 
 ### What should we adjust for?
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 ggdag_adjustment_set(fly_dag)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+fly_dag.get_all_backdoor_adjustment_sets(exposure, outcome)
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 
 adjustmentSets(fly_dag)
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+fly_dag.get_all_backdoor_adjustment_sets(exposure, outcome)
+```
+
+:::
 
 
 The adjustment set is **empty** `{ }` or contains only `{ thorax }`.
@@ -416,7 +591,7 @@ The adjustment set is **empty** `{ }` or contains only `{ thorax }`.
 
 ### Fitting the models
 
-:::{.panel-tabset}
+:::{.panel-tabset group="language"}
 
 ## Total effect (Recommended)
 
@@ -453,6 +628,25 @@ This model has two problems:
 
 The effect estimate is biased.
 
+## Python
+
+```{python}
+#| eval: false
+def tidy(model):
+    return pd.DataFrame({
+        "term": model.params.index,
+        "estimate": model.params.values,
+        "std_error": model.bse.values,
+        "conf_low": model.conf_int()[0].values,
+        "conf_high": model.conf_int()[1].values,
+        "p_value": model.pvalues.values,
+    })
+
+model_total = smf.ols("longevity ~ type", data=fly_data).fit()
+
+tidy(model_total)
+```
+
 :::
 
 ### Comparing models
@@ -471,9 +665,23 @@ In this example *not by a lot* probably because sleep doesn't actually account f
 
 ### Model diagnostics
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 performance::check_model(model_total, detrend = FALSE)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+sm.qqplot(model_total.resid, line="45")
+plt.scatter(model_total.fittedvalues, model_total.resid)
+```
+
+:::
 
 The total effect model shows reasonable fit to assumptions.
 
@@ -484,10 +692,24 @@ The total effect model shows reasonable fit to assumptions.
 
 ::: {.callout-warning}
 **Don't do this:**
+::::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval=FALSE}
 # Kitchen sink model
 lm(outcome ~ treatment + var1 + var2 + var3 + var4 + var5, data = data)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Kitchen sink model
+smf.ols("outcome ~ treatment + var1 + var2 + var3 + var4 + var5", data=data).fit()
+```
+
+::::
 
 **Why it's wrong**: You'll almost certainly adjust for colliders, block mediators, or both.
 :::
@@ -518,10 +740,24 @@ Variables caused by treatment (mediators, colliders) should rarely be adjusted f
 
 When you have repeated measures, baseline values are special:
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval=FALSE}
 # Always include baseline when outcome is measured post-treatment
 lm(diversity_change ~ treatment + baseline_diversity, data = data)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Always include baseline when outcome is measured post-treatment
+smf.ols("diversity_change ~ treatment + baseline_diversity", data=data).fit()
+```
+
+:::
 
 These improve precision and may be confounders if they affected treatment allocation (even in randomised trials, they still improve precision).
 
@@ -540,6 +776,10 @@ Follow this process when planning your analysis:
    - Consider unmeasured variables
 
 3. **Build in R**
+   :::{.panel-tabset group="language"}
+
+   ### R
+
    ```{r, eval=FALSE}
    my_dag <- dagify(
      outcome ~ exposure + ...,
@@ -549,21 +789,74 @@ Follow this process when planning your analysis:
    )
    ```
 
+   ### Python
+
+   ```{python}
+   #| eval: false
+   my_dag = CausalGraphicalModel(
+       nodes=["exposure", "outcome", ...],
+       edges=[("exposure", "outcome"), ...],
+   )
+   ```
+
+   :::
+
 4. **Check structures**
+   :::{.panel-tabset group="language"}
+
+   ### R
+
    ```{r, eval=FALSE}
    ggdag_collider(my_dag)      # Find colliders
    ggdag_paths(my_dag)          # See all paths
    ```
 
+   ### Python
+
+   ```{python}
+   #| eval: false
+   [n for n, d in my_dag.dag.in_degree() if d >= 2]  # Find colliders
+
+   # TRANSLATION-NOTE: OQ-052 - ggdag_paths() has no Python equivalent, see OPEN-QUESTIONS.md
+   ```
+
+   :::
+
 5. **Find adjustment sets**
+   :::{.panel-tabset group="language"}
+
+   ### R
+
    ```{r, eval=FALSE}
    ggdag_adjustment_set(my_dag)
    ```
 
+   ### Python
+
+   ```{python}
+   #| eval: false
+   my_dag.get_all_backdoor_adjustment_sets(exposure, outcome)
+   ```
+
+   :::
+
 6. **Fit your model**
+   :::{.panel-tabset group="language"}
+
+   ### R
+
    ```{r, eval=FALSE}
    lm(outcome ~ exposure + adjustments, data = data)
    ```
+
+   ### Python
+
+   ```{python}
+   #| eval: false
+   smf.ols("outcome ~ exposure + adjustments", data=data).fit()
+   ```
+
+   :::
 
 7. **Sensitivity analysis**
    - What if a relationship goes the other way?
@@ -643,6 +936,10 @@ Think about the causal relationships and build a DAG. Consider:
 
 One reasonable DAG might be:
 
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 farm_dag <- dagify(
   biodiversity ~ farming_intensity + pesticide_use + soil_quality,
@@ -656,6 +953,29 @@ farm_dag <- dagify(
 ggdag(farm_dag) + theme_dag()
 ggdag_adjustment_set(farm_dag)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+farm_dag = CausalGraphicalModel(
+    nodes=["biodiversity", "farming_intensity", "pesticide_use", "soil_quality", "field_size"],
+    edges=[
+        ("farming_intensity", "biodiversity"),
+        ("pesticide_use", "biodiversity"),
+        ("soil_quality", "biodiversity"),
+        ("field_size", "farming_intensity"),
+        ("soil_quality", "farming_intensity"),
+        ("farming_intensity", "pesticide_use"),
+    ],
+)
+exposure, outcome = "farming_intensity", "biodiversity"
+
+farm_dag.draw()
+farm_dag.get_all_backdoor_adjustment_sets(exposure, outcome)
+```
+
+:::::
 
 Key insights:
 - Pesticide use is a **mediator** (on the causal pathway)
@@ -687,10 +1007,25 @@ A student wants to know if a new teaching method improves exam scores. They coll
 They reason: "Motivated students score better, so I should control for motivation. Students in the new method study more, so I should control for hours studied."
 
 They fit this model:
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval=FALSE}
 lm(exam_score ~ teaching_method + motivation + hours_studied + 
    prior_achievement, data = exam_data)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+smf.ols(
+    "exam_score ~ teaching_method + motivation + hours_studied + prior_achievement", data=exam_data
+).fit()
+```
+
+:::::
 
 **Questions:**
 
@@ -711,9 +1046,22 @@ lm(exam_score ~ teaching_method + motivation + hours_studied +
 **3. What to do instead:**
 
 For **total effect** (does the new method work?):
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval=FALSE}
 lm(exam_score ~ teaching_method + prior_achievement, data = exam_data)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+smf.ols("exam_score ~ teaching_method + prior_achievement", data=exam_data).fit()
+```
+
+:::::
 
 Note: Motivation might also be a mediator if the new method increases motivation. Only adjust for it if you want to exclude that pathway.
 
