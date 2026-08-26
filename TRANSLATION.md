@@ -112,6 +112,12 @@ not listed goes through the ambiguity protocol in `CLAUDE.md`.
 | `arrange(desc(x))` | `.sort_values("x", ascending=False)` |
 | `summarise(m = mean(x), .by = g)` | `.groupby("g", as_index=False).agg(m=("x", "mean"))` |
 | `count(g)` | `.groupby("g", as_index=False).size().rename(columns={"size": "n"})` |
+| `count()` (no group, after `filter()`) | `len(df)` - shape differs (bare count vs a one-row/one-column `n` tibble) but the value matches |
+| `sd(x)`, inside `summarise()` | `.std()` / `"std"` inside `.agg()` |
+| `median(x)`, inside `summarise()` | `.median()` / `"median"` inside `.agg()` |
+| `IQR(x)` | `x.quantile(0.75) - x.quantile(0.25)` |
+| `summarise_at(c(cols), fn, na.rm = T)` (superseded dplyr verb, still used in this book) | `.groupby(g)[cols].agg(fn_name)` |
+| `summarise_if(is.numeric, fn, na.rm = T)` (superseded dplyr verb, still used in this book) | `.groupby(g).agg(fn_name, numeric_only=True)` |
 | `left_join(y, by = join_by(id))` | `.merge(y, on="id", how="left")` |
 | `pivot_longer(cols, names_to, values_to)` | `.melt(id_vars=..., var_name=..., value_name=...)` |
 | `pivot_wider(names_from, values_from)` | `.pivot(index=..., columns=..., values=...)` |
