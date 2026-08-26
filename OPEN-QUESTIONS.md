@@ -1569,3 +1569,69 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-055
+
+- **File / chunk:** `power_analysis_chapter.qmd`, every `replicate()`/
+  `map_dfr()` call (first occurrence: `### Stage 2 — Repeating the
+  iteration`)
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s "Monte Carlo simulation" section.
+- **Issue:** R's random-number generators (`rnorm`/`rpois`/`rbinom`),
+  `qlogis`/`plogis`, `replicate()` and `map_dfr()` have no glossary
+  coverage. Unlike the mixed-models/DAGs chapters, nothing here needed a
+  new external package — numpy/scipy already cover distributions and the
+  logit/expit functions, and a helper function plus a list comprehension
+  covers `replicate()`/`map_dfr()` without inventing new machinery.
+- **Candidates:** as written into `TRANSLATION.md`. A `one_simulation()`
+  helper function stands in for `replicate()`'s inline expression block,
+  called inside a list comprehension; `map_dfr()` becomes
+  `pd.DataFrame([...])` over a list of per-iteration `dict`s.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-055` at the first occurrence only.
+- **Recommendation:** as implemented. Also settled here: `tidy(model) |>
+  filter(...) |> pull(p.value)` is translated as `model.pvalues["term"]`
+  directly, and the first occurrence per chapter carries a comment noting
+  patsy names a two-level factor's coefficient `group[T.treatment]`, not
+  R's `grouptreatment` — an easy `KeyError` otherwise.
+- **Resolution:** glossary entries added to `TRANSLATION.md` before
+  translating the rest of the chapter.
+
+---
+
+## OQ-056
+
+- **File / chunk:** `power_analysis_chapter.qmd`, `### Poisson simulation`
+  and `### Binomial simulation`, each a pre-existing `Single iteration`/
+  `Power curve` tabset
+- **Status:** open
+- **R original:** each tabset's two tabs are sequential teaching steps (a
+  single worked example, then the full power-curve loop built from it),
+  not alternative approaches to the same operation.
+- **Issue:** these are the same shape as the "pre-existing R-only tabset"
+  cases (`duplicates.qmd` etc.) and `causal-models.qmd`'s OQ-053, but
+  unlike those, both tabs here are substantial, independently useful
+  teaching units (30+ lines each) rather than compact alternatives or
+  sequential steps that read naturally combined. Collapsing them into one
+  Python tab per the established rule would force a reader wanting just
+  the single-iteration pattern to scroll through the whole power-curve
+  loop too, losing the pedagogical structure the R side deliberately
+  keeps.
+- **Candidates:** 1. Collapse to one representative Python tab per group,
+  per the established rule. 2. Nest an R/Python tabset inside *each*
+  existing tab, leaving the outer `Single iteration`/`Power curve` split
+  untouched. Chosen: 2, since it preserves the chapter's own pedagogical
+  structure rather than flattening it, at the cost of being a second,
+  different resolution for the same general "pre-existing multi-tab"
+  situation `causal-models.qmd` already resolved one way.
+- **Provisional choice in the book:** nested tabsets (4 colons, inside the
+  outer 3-colon tab) added to both `Single iteration` and `Power curve`
+  tabs in both the Poisson and Binomial sections; the outer tabset itself
+  is untouched (no `group="language"` added to it, since it isn't a
+  language tabset).
+- **Recommendation:** worth a human decision on whether "collapse" or
+  "nest" should be the standing rule for future substantial multi-tab
+  cases, rather than deciding per chapter as this and OQ-053 have done.
+- **Resolution:**
+
+---

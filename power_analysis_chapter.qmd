@@ -160,10 +160,29 @@ A power analysis is only as trustworthy as its inputs. If no prior quantitative 
 
 We use two packages throughout this chapter. `tidyverse` for data manipulation and plotting, and `broom` for tidy model output.
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval=FALSE}
 library(tidyverse)
 library(broom)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+from scipy.special import expit, logit
+from plotnine import *
+from causalgraphicalmodels import CausalGraphicalModel
+```
+
+:::
 
 The simulation is built in three stages. Each stage adds one layer of complexity. Work through them in sequence.
 
@@ -172,6 +191,10 @@ The simulation is built in three stages. Each stage adds one layer of complexity
 Before iterating, write one complete simulation explicitly. This makes the logic visible and ensures you understand each step before it is wrapped in a loop.
 
 The example below uses a Gaussian (OLS) model — a two-group comparison with a continuous outcome.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 set.seed(123)
@@ -195,12 +218,43 @@ sim_data <- tibble(group, response)
 sim_data
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+np.random.seed(123)
+
+# --- Define parameters ---
+n = 30           # sample size PER group
+effect = 0.5     # difference in means between groups (on response scale)
+sigma = 1.0      # residual standard deviation
+alpha = 0.05     # significance threshold
+
+# --- Step 1: Simulate data ---
+group = np.repeat(["control", "treatment"], n)
+
+response = np.concatenate([
+    np.random.normal(0, sigma, n),       # control group
+    np.random.normal(effect, sigma, n),  # treatment group: shifted by effect
+])
+
+sim_data = pd.DataFrame({"group": group, "response": response})
+
+sim_data
+```
+
+:::
+
 
 :::{.callout-note}
 Whenever we run a set of code that uses simulation, then numbers are generated (pseudo)randomly. When we use `set.seed()` it initializes a pseudorandom number generator (PRNG) with a specific integer value, ensuring that subsequent "random" functions (like `rnorm` or `sample`) produce the exact same, reproducible sequence. This is essential if we want our simulations to be reproducible.
 
 :::
 
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 
@@ -216,6 +270,23 @@ p_value <- tidy(model) |>
 p_value < alpha
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# --- Step 2: Fit the model ---
+model = smf.ols("response ~ group", data=sim_data).fit()
+
+# --- Step 3: Extract the p-value ---
+# patsy names the dummy-coded term "group[T.treatment]", not "grouptreatment"
+p_value = model.pvalues["group[T.treatment]"]
+
+# --- Step 4: Is this iteration significant? ---
+p_value < alpha
+```
+
+:::
+
 Run this code several times. Because the data are simulated randomly, the result will differ between runs. Sometimes the test is significant, sometimes not. This variability is precisely what the simulation quantifies.
 
 
@@ -223,6 +294,10 @@ Run this code several times. Because the data are simulated randomly, the result
 ### Stage 2 — Repeating the iteration
 
 `replicate()` repeats an expression a specified number of times and collects the results. We use it to run our single iteration 1000 times.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 set.seed(123)
@@ -257,6 +332,42 @@ power <- mean(p_values < alpha)
 power
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-055
+np.random.seed(123)
+# --- Define parameters ---
+n = 30
+effect = 0.5
+sigma = 1.0
+alpha = 0.05
+n_sims = 1000
+
+# --- Repeat 1000 times ---
+def one_simulation():
+    group = np.repeat(["control", "treatment"], n)
+
+    response = np.concatenate([
+        np.random.normal(0, sigma, n),
+        np.random.normal(effect, sigma, n),
+    ])
+
+    sim_data = pd.DataFrame({"group": group, "response": response})
+    model = smf.ols("response ~ group", data=sim_data).fit()
+
+    return model.pvalues["group[T.treatment]"]
+
+p_values = np.array([one_simulation() for _ in range(n_sims)])
+
+# --- Calculate power ---
+power = (p_values < alpha).mean()
+power
+```
+
+:::
+
 `mean(p_values < alpha)` works because `p_values < alpha` returns a logical vector of `TRUE` and `FALSE` values, and `mean()` treats `TRUE` as 1 and `FALSE` as 0. The result is the proportion of iterations where the test was significant — which is the estimated power.
 
 
@@ -269,6 +380,10 @@ Set `effect <- 0` and run the code. What proportion of runs return `TRUE`? This 
 ### Stage 3 — The power curve
 
 A power curve shows how power changes as a function of sample size. We generate it by repeating Stage 2 across a vector of sample sizes using `map_dfr()` from `purrr`.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, cache=TRUE}
 set.seed(123)
@@ -316,6 +431,55 @@ ggplot(power_curve, aes(x = n, y = power)) +
   ) +
   theme_minimal()
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+np.random.seed(123)
+# --- Define parameters ---
+effect = 0.5
+sigma = 1.0
+alpha = 0.05
+n_sims = 1000
+sample_sizes = np.arange(10, 101, 10)
+
+# --- Iterate over sample sizes ---
+def power_at_n(n):
+    def one_simulation():
+        group = np.repeat(["control", "treatment"], n)
+
+        response = np.concatenate([
+            np.random.normal(0, sigma, n),
+            np.random.normal(effect, sigma, n),
+        ])
+
+        sim_data = pd.DataFrame({"group": group, "response": response})
+        model = smf.ols("response ~ group", data=sim_data).fit()
+
+        return model.pvalues["group[T.treatment]"]
+
+    p_values = np.array([one_simulation() for _ in range(n_sims)])
+    return {"n": n, "power": (p_values < alpha).mean()}
+
+power_curve = pd.DataFrame([power_at_n(n) for n in sample_sizes])
+
+# --- Plot ---
+(
+    ggplot(power_curve, aes("n", "power"))
+    + geom_line()
+    + geom_point()
+    + geom_hline(yintercept=0.80, linetype="dashed", colour="red")
+    + labs(
+        x="Sample size per group",
+        y="Estimated power",
+        title="Power curve: two-group Gaussian comparison",
+    )
+    + theme_minimal()
+)
+```
+
+:::
 
 The dashed red line marks the 0.80 threshold. Read off the x-axis to identify the minimum sample size required to achieve adequate power under your assumed effect size and variance.
 
@@ -405,6 +569,10 @@ Never add an effect directly to a probability or a count inside the simulation. 
 
 ## Single iteration
 
+::::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 set.seed(123)
 # --- Define parameters ---
@@ -439,7 +607,48 @@ p_value <- tidy(model) |>
 p_value < alpha
 ```
 
+### Python
+
+```{python}
+#| eval: false
+np.random.seed(123)
+# --- Define parameters ---
+n = 30
+lambda_control = 5      # baseline count rate (response scale)
+effect = 0.69           # effect on LOG scale: log(2) ≈ 0.69 = doubling
+alpha = 0.05
+
+# --- Step 1: Simulate data ---
+group = np.repeat(["control", "treatment"], n)
+
+# Convert from log scale to response scale with exp()
+lambda_treatment = lambda_control * np.exp(effect)
+
+response = np.concatenate([
+    np.random.poisson(lambda_control, n),
+    np.random.poisson(lambda_treatment, n),
+])
+
+sim_data = pd.DataFrame({"group": group, "response": response})
+
+# --- Step 2: Fit the model ---
+# smf.glm() with family=sm.families.Poisson() uses log link by default
+# this matches the scale on which we specified the effect
+model = smf.glm("response ~ group", data=sim_data, family=sm.families.Poisson()).fit()
+
+# --- Step 3: Extract p-value ---
+p_value = model.pvalues["group[T.treatment]"]
+
+p_value < alpha
+```
+
+::::
+
 ## Power curve
+
+::::{.panel-tabset group="language"}
+
+### R
 
 ```{r, cache=TRUE}
 set.seed(123)
@@ -487,6 +696,54 @@ ggplot(power_curve_poisson, aes(x = n, y = power)) +
   theme_minimal()
 ```
 
+### Python
+
+```{python}
+#| eval: false
+np.random.seed(123)
+# --- Define parameters ---
+lambda_control = 5
+effect = 0.69
+alpha = 0.05
+n_sims = 1000
+sample_sizes = np.arange(10, 101, 10)
+
+def power_at_n(n):
+    def one_simulation():
+        group = np.repeat(["control", "treatment"], n)
+        lambda_treatment = lambda_control * np.exp(effect)
+
+        response = np.concatenate([
+            np.random.poisson(lambda_control, n),
+            np.random.poisson(lambda_treatment, n),
+        ])
+
+        sim_data = pd.DataFrame({"group": group, "response": response})
+        model = smf.glm("response ~ group", data=sim_data, family=sm.families.Poisson()).fit()
+
+        return model.pvalues["group[T.treatment]"]
+
+    p_values = np.array([one_simulation() for _ in range(n_sims)])
+    return {"n": n, "power": (p_values < alpha).mean()}
+
+power_curve_poisson = pd.DataFrame([power_at_n(n) for n in sample_sizes])
+
+(
+    ggplot(power_curve_poisson, aes("n", "power"))
+    + geom_line()
+    + geom_point()
+    + geom_hline(yintercept=0.80, linetype="dashed", colour="red")
+    + labs(
+        x="Sample size per group",
+        y="Estimated power",
+        title="Power curve: Poisson GLM",
+    )
+    + theme_minimal()
+)
+```
+
+::::
+
 :::
 
 ### Binomial simulation
@@ -494,6 +751,10 @@ ggplot(power_curve_poisson, aes(x = n, y = power)) +
 :::{.panel-tabset}
 
 ## Single iteration
+
+::::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 set.seed(123)
@@ -540,7 +801,59 @@ p_value <- tidy(model) |>
 p_value < alpha
 ```
 
+### Python
+
+```{python}
+#| eval: false
+np.random.seed(123)
+# --- Define parameters ---
+n = 30
+prob_control = 0.3   # baseline win probability (response scale)
+effect = 0.5         # effect on LOGIT scale
+                     # expit(logit(0.3) + 0.5) ≈ 0.42
+alpha = 0.05
+
+# --- Step 1: Simulate data ---
+group = np.repeat(["control", "treatment"], n)
+
+# logit() converts probability to log-odds scale
+# add effect on log-odds scale
+# expit() converts back to probability
+prob_treatment = expit(logit(prob_control) + effect)
+
+# Each subject has a fixed number of trials
+# We record wins and losses separately
+trials = 10   # number of trials per subject
+
+wins = np.concatenate([
+    np.random.binomial(trials, prob_control, n),    # control group wins
+    np.random.binomial(trials, prob_treatment, n),  # treatment group wins
+])
+
+losses = trials - wins   # losses are simply trials minus wins
+
+sim_data = pd.DataFrame({"group": group, "wins": wins, "losses": losses})
+
+# --- Step 2: Fit the model ---
+# "wins + losses" passes a two-column binomial response
+# smf.glm() with family=sm.families.Binomial() uses logit link by default
+model = smf.glm(
+    "wins + losses ~ group", data=sim_data, family=sm.families.Binomial()
+).fit()
+
+# --- Step 3: Extract p-value ---
+p_value = model.pvalues["group[T.treatment]"]
+
+p_value < alpha
+```
+
+::::
+
 ## Power curve
+
+::::{.panel-tabset group="language"}
+
+### R
 
 ```{r, cache=TRUE}
 set.seed(123)
@@ -592,6 +905,59 @@ ggplot(power_curve_binomial, aes(x = n, y = power)) +
   ) +
   theme_minimal()
 ```
+
+### Python
+
+```{python}
+#| eval: false
+np.random.seed(123)
+# --- Define parameters ---
+prob_control = 0.3
+effect = 0.5
+trials = 10      # number of trials per subject
+alpha = 0.05
+n_sims = 1000
+sample_sizes = np.arange(10, 151, 10)
+
+def power_at_n(n):
+    def one_simulation():
+        group = np.repeat(["control", "treatment"], n)
+        prob_treatment = expit(logit(prob_control) + effect)
+
+        wins = np.concatenate([
+            np.random.binomial(trials, prob_control, n),
+            np.random.binomial(trials, prob_treatment, n),
+        ])
+
+        losses = trials - wins
+        sim_data = pd.DataFrame({"group": group, "wins": wins, "losses": losses})
+
+        model = smf.glm(
+            "wins + losses ~ group", data=sim_data, family=sm.families.Binomial()
+        ).fit()
+
+        return model.pvalues["group[T.treatment]"]
+
+    p_values = np.array([one_simulation() for _ in range(n_sims)])
+    return {"n": n, "power": (p_values < alpha).mean()}
+
+power_curve_binomial = pd.DataFrame([power_at_n(n) for n in sample_sizes])
+
+(
+    ggplot(power_curve_binomial, aes("n", "power"))
+    + geom_line()
+    + geom_point()
+    + geom_hline(yintercept=0.80, linetype="dashed", colour="red")
+    + labs(
+        x="Sample size per group",
+        y="Estimated power",
+        title="Power curve: Binomial GLM (wins/losses)",
+    )
+    + theme_minimal()
+)
+```
+
+::::
 
 :::
 
@@ -721,6 +1087,10 @@ Exercise 4: Connecting DAGs to power analysis
 
 Return to the farming intensity DAG from @sec-dags:
 
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval=FALSE}
 farm_dag <- dagify(
   biodiversity ~ farming_intensity + pesticide_use + soil_quality,
@@ -730,6 +1100,26 @@ farm_dag <- dagify(
   outcome = "biodiversity"
 )
 ```
+
+### Python
+
+```{python}
+#| eval: false
+farm_dag = CausalGraphicalModel(
+    nodes=["biodiversity", "farming_intensity", "pesticide_use", "soil_quality", "field_size"],
+    edges=[
+        ("farming_intensity", "biodiversity"),
+        ("pesticide_use", "biodiversity"),
+        ("soil_quality", "biodiversity"),
+        ("field_size", "farming_intensity"),
+        ("soil_quality", "farming_intensity"),
+        ("farming_intensity", "pesticide_use"),
+    ],
+)
+exposure, outcome = "farming_intensity", "biodiversity"
+```
+
+:::::
 
 **a)** The adjustment set for the total effect of farming intensity on biodiversity is `{soil_quality}`. What model should you fit, and what effect are you estimating in your power analysis?
 
@@ -748,6 +1138,10 @@ farm_dag <- dagify(
 **c)** You should not use this effect size directly. The study had n = 22 and the effect just crossed p < 0.05 — this is a small, underpowered study. The winner's curse means the reported effect is likely inflated relative to the true effect. Using it will produce an optimistic power estimate and an underpowered study.
 
 **d)**
+:::::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval=FALSE}
 # A 40% reduction corresponds to a rate ratio of 0.6
 # On the log scale: log(0.6) ≈ -0.51
@@ -762,6 +1156,26 @@ response <- c(
   rpois(n, lambda = lambda_treatment)
 )
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# A 40% reduction corresponds to a rate ratio of 0.6
+# On the log scale: log(0.6) ≈ -0.51
+lambda_control = 12           # plausible baseline species count
+effect = np.log(0.6)          # 40% reduction on log scale
+
+group = np.repeat(["low_intensity", "high_intensity"], n)
+lambda_treatment = lambda_control * np.exp(effect)
+
+response = np.concatenate([
+    np.random.poisson(lambda_control, n),
+    np.random.poisson(lambda_treatment, n),
+])
+```
+
+:::::
 
 `r unhide()`
 

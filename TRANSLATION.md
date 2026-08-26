@@ -483,6 +483,30 @@ from the Python translation rather than approximated — the node names
 themselves are used, consistent with dropping other untranslatable cosmetic
 arguments elsewhere (e.g. OQ-024's `colorspace` scale).
 
+### Monte Carlo simulation (power analysis)
+
+R's random-number generators, `replicate()` and `map_dfr()` have no glossary
+entries. Settled under OQ-055.
+
+| R | Python |
+|---|---|
+| `set.seed(x)` | `np.random.seed(x)` |
+| `rnorm(n, mean, sd)` | `np.random.normal(mean, sd, n)` |
+| `rpois(n, lambda)` | `np.random.poisson(lambda, n)` |
+| `rbinom(n, size, prob)` | `np.random.binomial(size, prob, n)` |
+| `qlogis(p)` | `logit(p)` (`from scipy.special import expit, logit`) |
+| `plogis(x)` | `expit(x)` |
+| `replicate(n, { expr })` | a `one_simulation()` helper function containing `expr`, called inside `[one_simulation() for _ in range(n)]` |
+| `map_dfr(vector, function)` | `pd.DataFrame([function(x) for x in vector])`, where `function` returns a `dict` per row instead of a one-row tibble |
+
+`tidy(model) |> filter(term == "x") |> pull(p.value)` is translated as
+`model.pvalues["x"]` directly rather than building the full `tidy()` table
+just to extract one value — simpler and equally clear for a single lookup.
+Note that patsy's dummy-coding names a two-level factor's coefficient
+`group[T.treatment]`, not R's `grouptreatment`; the first occurrence in a
+chapter carries a comment flagging this, since it is easy to copy the R
+name by habit and get a `KeyError`.
+
 ## Setup chunks
 
 An R chunk marked `{r, echo = F, warning = F, message = F}` (or any subset of
