@@ -85,7 +85,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | A5 | data_reshaping.qmd | 9 | todo | | | | mostly covered by existing glossary |
 | A6 | quarto.qmd | ~5 | todo | | | | raw chunk count over-counts literal `` `r ''` `` fences, not real code |
 | A7 | ggplot.qmd | ~35 | todo | | | | extension packages appear late in file |
-| A8 | advanced_ggplot.qmd | 10 (exact) | translated | 2 | | 2026-08-27 | consolidated all 19 uncovered-extension-package sections (ggdist, ggridges, ggbump, ggalt, ggh4x, gghighlight, ggbeeswarm, plotly, ggforce, geomtextpath, ggtext, sf/rnaturalearth, ggpubr+patchwork layout, showtext) into one entry rather than one per package (OQ-067); translated the portable remainder (custom themes, viridis heatmap, native `geom_hex()`, `scales`' log-transform/mizani idioms) (OQ-068) |
+| A8 | advanced_ggplot.qmd | 10 (exact) | translated | 2 | ca3ec5f | 2026-08-27 | consolidated all 19 uncovered-extension-package sections (ggdist, ggridges, ggbump, ggalt, ggh4x, gghighlight, ggbeeswarm, plotly, ggforce, geomtextpath, ggtext, sf/rnaturalearth, ggpubr+patchwork layout, showtext) into one entry rather than one per package (OQ-067); translated the portable remainder (custom themes, viridis heatmap, native `geom_hex()`, `scales`' log-transform/mizani idioms) (OQ-068) |
 | A9 | summary-table.qmd | 0 | todo | | | | sjPlot/gtsummary, no equivalent |
 | A10 | references.qmd | 0 | todo | | | | no code |
 
