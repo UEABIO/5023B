@@ -56,6 +56,10 @@ Clone the GitHub Classroom repository for this workshop using the link on your c
 
 `r hide("Quick setup - run this if you did not complete Workshop 2")`
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 # ── Packages ──────────────────────────────────────────────────────────────────
 library(tidymodels)
@@ -109,7 +113,67 @@ message("Setup complete — dogs_model, dog_train, dog_test, and logistic_preds 
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Packages
+import pandas as pd
+import numpy as np
+from plotnine import *
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.inspection import permutation_importance
+from sklearn.metrics import (
+    accuracy_score, recall_score, confusion_matrix, roc_curve, roc_auc_score
+)
+
+# Data
+dogs = pd.read_csv("data/dogs_imputed_reduced.tsv", sep=r"\s+")
+dogs.columns = dogs.columns.str.lower()
+
+dogs_model = (
+    dogs
+    .drop(columns=["fid", "iid", "pat", "mat", "sex"])
+    .assign(phenotype=lambda d: np.where(d["phenotype"] == 2, "affected", "unaffected"))
+)
+
+# Split
+dog_train, dog_test = train_test_split(
+    dogs_model, train_size=0.8, stratify=dogs_model["phenotype"], random_state=42
+)
+
+# Logistic regression
+dog_train = dog_train.dropna()
+
+logistic_fit = Pipeline([
+    ("normalize", StandardScaler()),
+    ("model", LogisticRegression()),
+]).fit(dog_train.drop(columns="phenotype"), dog_train["phenotype"])
+
+# Logistic predictions
+# This object is needed for the model comparison section at the end
+X_test = dog_test.drop(columns="phenotype")
+pred_probs = logistic_fit.predict_proba(X_test)
+logistic_preds = dog_test[["phenotype"]].assign(
+    pred_affected=pred_probs[:, list(logistic_fit.classes_).index("affected")],
+    pred_unaffected=pred_probs[:, list(logistic_fit.classes_).index("unaffected")],
+    pred_class=logistic_fit.predict(X_test),
+)
+
+print("Setup complete — dogs_model, dog_train, dog_test, and logistic_preds are ready")
+```
+
+:::
+
 `r unhide()`
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 library(tidymodels)
@@ -119,6 +183,22 @@ library(vip)
 library(here)
 library(janitor)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.inspection import permutation_importance
+```
+
+:::
 
 ::: {.callout-note}
 ## New packages
@@ -323,6 +403,10 @@ tibble(
 
 Load the synthetic dataset and prepare it for modelling. The preparation steps are identical to Workshop 2 — the same dataset, the same recoding, the same split.
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 library(tidyverse)
 library(tidymodels)
@@ -336,6 +420,21 @@ dogs <- read_table(here("data", "dogs_imputed_reduced.tsv")) |>
   clean_names()
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Load the synthetic dataset
+dogs = pd.read_csv("data/dogs_imputed_reduced.tsv", sep=r"\s+")
+dogs.columns = dogs.columns.str.lower()
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 # Remove pedigree columns and recode phenotype
 dogs_model <- dogs |>
@@ -348,6 +447,26 @@ dogs_model <- dogs |>
 dogs_model |> count(phenotype)
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Remove pedigree columns and recode phenotype
+dogs_model = (
+    dogs
+    .drop(columns=["fid", "iid", "pat", "mat", "sex"])
+    .assign(phenotype=lambda d: np.where(d["phenotype"] == 2, "affected", "unaffected"))
+)
+
+dogs_model["phenotype"].value_counts()
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 dogs_model <- dogs |>
   select(-fid, -iid, -pat, -mat, -sex) |>
@@ -356,6 +475,19 @@ dogs_model <- dogs |>
     levels = c("affected", "unaffected")
   ))
 ```
+
+### Python
+
+```{python}
+#| eval: false
+dogs_model = (
+    dogs
+    .drop(columns=["fid", "iid", "pat", "mat", "sex"])
+    .assign(phenotype=lambda d: np.where(d["phenotype"] == 2, "affected", "unaffected"))
+)
+```
+
+:::
 
 
 ```{r, include = FALSE}
@@ -372,6 +504,10 @@ dog_test  |> count(phenotype)
 
 ```
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 # 80/20 stratified split — identical to Workshop 2
 set.seed(42)
@@ -385,6 +521,21 @@ dog_test  |> count(phenotype)
 
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# 80/20 stratified split — identical to Workshop 2
+dog_train, dog_test = train_test_split(
+    dogs_model, train_size=0.8, stratify=dogs_model["phenotype"], random_state=42
+)
+
+dog_train["phenotype"].value_counts()
+dog_test["phenotype"].value_counts()
+```
+
+:::
 
 ::: {.callout-note}
 ## Why the same split?
@@ -417,6 +568,10 @@ Random forests have three main hyperparameters:
 
 We tune `mtry` using cross-validation and fix the others at sensible defaults.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Recipe — random forests do not require normalisation
 # They are scale-invariant: only the rank order of values matters for splits
@@ -443,9 +598,31 @@ rf_workflow <- workflow() |>
   add_model(rf_spec)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# Random forests do not require normalisation — they are scale-invariant
+# We still dropna() as a precaution for any missing genotype values
+dog_train = dog_train.dropna()
+
+# TRANSLATION-NOTE: OQ-063
+# mtry = max_features; trees = n_estimators; min_n = min_samples_split
+# importance="permutation" is applied later via permutation_importance()
+rf_workflow = Pipeline([
+    ("model", RandomForestClassifier(n_estimators=500, min_samples_split=5, random_state=42)),
+])
+```
+
+:::
+
 
 
 ### Tuning mtry
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # 5-fold cross-validation for tuning
@@ -468,10 +645,50 @@ rf_tuned <- rf_workflow |>
   )
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# Search grid for mtry (max_features), scored by ROC-AUC across 5 folds
+rf_grid = {"model__max_features": np.linspace(2, 40, 15, dtype=int)}
+
+rf_tuned = GridSearchCV(
+    rf_workflow,
+    param_grid=rf_grid,
+    cv=5,
+    scoring="roc_auc",
+)
+rf_tuned.fit(dog_train.drop(columns="phenotype"), dog_train["phenotype"])
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Plot cross-validation AUC against mtry
 autoplot(rf_tuned)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+tuning_results = pd.DataFrame({
+    "mtry": rf_tuned.cv_results_["param_model__max_features"],
+    "roc_auc": rf_tuned.cv_results_["mean_test_score"],
+})
+
+(
+    ggplot(tuning_results, aes("mtry", "roc_auc"))
+    + geom_line()
+    + geom_point()
+)
+```
+
+:::
 
 `r hide("Hint: reading the mtry tuning curve")`
 
@@ -489,6 +706,10 @@ The optimal mtry balances these two effects. A clear peak in the curve indicates
 - At very low mtry values, each tree uses only a few predictors. What effect would this have on the predictions of individual trees, and why does averaging over many such trees still produce a reasonable result?
 :::
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Select the best mtry value
 best_mtry <- rf_tuned |>
@@ -497,9 +718,24 @@ best_mtry <- rf_tuned |>
 best_mtry
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+best_mtry = rf_tuned.best_params_
+
+best_mtry
+```
+
+:::
+
 ---
 
 ## Fitting the Final Model {.unnumbered}
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 # Finalise and fit on the full training set
@@ -507,6 +743,16 @@ rf_final <- rf_workflow |>
   finalize_workflow(best_mtry) |>
   fit(data = dog_train)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# GridSearchCV already refits the best combination on the full training set
+rf_final = rf_tuned.best_estimator_
+```
+
+:::
 
 
 ```{r, include = FALSE}
@@ -524,6 +770,10 @@ rf_preds <- rf_final |>
 
 
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 # Generate predictions on the held-out test set
 rf_preds <- rf_final |>
@@ -535,6 +785,24 @@ rf_preds <- rf_final |>
 
 rf_preds
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# Generate predictions on the held-out test set
+X_test = dog_test.drop(columns="phenotype")
+pred_probs = rf_final.predict_proba(X_test)
+rf_preds = dog_test[["phenotype"]].assign(
+    pred_affected=pred_probs[:, list(rf_final.classes_).index("affected")],
+    pred_unaffected=pred_probs[:, list(rf_final.classes_).index("unaffected")],
+    pred_class=rf_final.predict(X_test),
+)
+
+rf_preds
+```
+
+:::
 
 ```{r, echo = FALSE}
 opts_oob <- c(
@@ -555,10 +823,27 @@ The evaluation framework is identical to Workshop 2. This is deliberate — the 
 
 ### Confusion Matrix
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 # Confusion matrix
 conf_mat(rf_preds, truth = phenotype, estimate = .pred_class)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+confusion_matrix(rf_preds["phenotype"], rf_preds["pred_class"], labels=["affected", "unaffected"])
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # Heatmap
@@ -566,7 +851,33 @@ conf_mat(rf_preds, truth = phenotype, estimate = .pred_class) |>
   autoplot(type = "heatmap")
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+cm = confusion_matrix(rf_preds["phenotype"], rf_preds["pred_class"], labels=["affected", "unaffected"])
+cm_df = (
+    pd.DataFrame(cm, index=["affected", "unaffected"], columns=["affected", "unaffected"])
+    .rename_axis(index="truth", columns="prediction")
+    .reset_index()
+    .melt(id_vars="truth", var_name="prediction", value_name="n")
+)
+
+(
+    ggplot(cm_df, aes("prediction", "truth", fill="n"))
+    + geom_tile()
+    + geom_text(aes(label="n"), colour="white")
+    + theme_minimal()
+)
+```
+
+:::
+
 ### Sensitivity, Specificity, and Accuracy
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 classification_metrics <- metric_set(
@@ -580,12 +891,32 @@ classification_metrics(
 )
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+pd.DataFrame({
+    "metric": ["sensitivity", "specificity", "accuracy"],
+    "estimate": [
+        recall_score(rf_preds["phenotype"], rf_preds["pred_class"], pos_label="affected"),
+        recall_score(rf_preds["phenotype"], rf_preds["pred_class"], pos_label="unaffected"),
+        accuracy_score(rf_preds["phenotype"], rf_preds["pred_class"]),
+    ],
+})
+```
+
+:::
+
 ### ROC Curve and AUC
 
 A receiver operating characteristic (ROC) curve plots sensitivity (the proportion of truly affected dogs correctly identified) against 1 − specificity (the proportion of unaffected dogs incorrectly flagged as affected) across every possible classification threshold. Each point on the curve corresponds to one threshold value. A model that discriminates perfectly would pass through the top-left corner — sensitivity of 1 and specificity of 1 simultaneously. A model with no discriminative ability would follow the diagonal, performing no better than random assignment.
 
 The area under the ROC curve (AUC) summarises this into a single number. An AUC of 1.0 indicates perfect discrimination; an AUC of 0.5 indicates none. 
 :::
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # ROC curve
@@ -598,12 +929,38 @@ rf_preds |>
   )
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+fpr, tpr, _ = roc_curve(rf_preds["phenotype"] == "affected", rf_preds["pred_affected"])
+roc_df = pd.DataFrame({"fpr": fpr, "tpr": tpr})
+
+(
+    ggplot(roc_df, aes("fpr", "tpr"))
+    + geom_line()
+    + geom_abline(linetype="dashed", colour="grey60")
+    + labs(
+        x="1 - specificity",
+        y="sensitivity",
+        title="ROC curve — random forest",
+        subtitle="AUC closer to 1.0 indicates better discrimination",
+    )
+)
+```
+
+:::
+
 ::: {.callout-note}
 ## The Youden Index
 
 The Youden index (also called the J-index) is defined as sensitivity + specificity − 1. It ranges from 0 (no better than chance) to 1 (perfect discrimination). The threshold that maximises the J-index is the point on the ROC curve geometrically closest to the top-left corner — where sensitivity and specificity are jointly highest. It is a common, if not universal, method for selecting a decision threshold; in some applications you may deliberately weight sensitivity or specificity differently depending on the cost of false negatives versus false positives.
 
 :::
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 # Get all the threshold values
@@ -617,7 +974,28 @@ roc_points |>
   slice_max(j_index, n = 1)
 ```
 
+### Python
+
+```{python}
+#| eval: false
+fpr, tpr, thresholds = roc_curve(rf_preds["phenotype"] == "affected", rf_preds["pred_affected"])
+roc_points = pd.DataFrame({
+    "threshold": thresholds,
+    "sensitivity": tpr,
+    "specificity": 1 - fpr,
+})
+
+# Youden index — maximises sensitivity + specificity jointly
+roc_points.assign(j_index=lambda d: d["sensitivity"] + d["specificity"] - 1).nlargest(1, "j_index")
+```
+
+:::
+
 ### Tweaking Model sensitivity
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 
@@ -638,8 +1016,27 @@ conf_mat(rf_preds,
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+chosen_threshold = 0.33  # replace with your actual value
+
+rf_preds = rf_preds.assign(
+    pred_class_custom=lambda d: np.where(d["pred_affected"] > chosen_threshold, "affected", "unaffected")
+)
+
+confusion_matrix(rf_preds["phenotype"], rf_preds["pred_class_custom"], labels=["affected", "unaffected"])
+```
+
+:::
+
 
 ### Predicted Probability Distributions
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 # Predicted probability distributions by true class
@@ -660,6 +1057,29 @@ rf_preds |>
   theme_minimal()
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Predicted probability distributions by true class
+(
+    ggplot(rf_preds, aes("pred_affected", fill="phenotype"))
+    + geom_histogram(bins=20, alpha=0.7, position="identity")
+    + scale_fill_manual(values={"affected": "#E63946", "unaffected": "#457B9D"})
+    + geom_vline(xintercept=chosen_threshold, linetype="dashed", colour="grey30")
+    + labs(
+        x="Predicted probability of being affected",
+        y="Count",
+        fill="True outcome",
+        title="Random forest — predicted probability distributions",
+        subtitle="Dashed line = 0.5 classification threshold",
+    )
+    + theme_minimal()
+)
+```
+
+:::
+
 
 
 ::: {.callout-note}
@@ -679,6 +1099,10 @@ One of the most useful outputs of a random forest is feature importance — a me
 
 **Permutation importance** works by randomly shuffling the values of each predictor in turn and measuring how much prediction accuracy drops. A large drop means the predictor was important — the model was relying on it. A small drop means the predictor can be scrambled without much consequence.
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 # Extract and plot variable importance
 # vip() from the vip package works directly on tidymodels workflow fits
@@ -692,6 +1116,40 @@ rf_final |>
   ) +
   theme_minimal()
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-063
+importance = permutation_importance(
+    rf_final, dog_test.drop(columns="phenotype"), dog_test["phenotype"], n_repeats=10, random_state=42
+)
+
+importance_df = (
+    pd.DataFrame({
+        "term": dog_test.drop(columns="phenotype").columns,
+        "importance": importance.importances_mean,
+    })
+    .nlargest(20, "importance")
+    .sort_values("importance")
+    .pipe(lambda d: d.assign(term=pd.Categorical(d["term"], categories=d["term"], ordered=True)))
+)
+
+(
+    ggplot(importance_df, aes(x="importance", y="term"))
+    + geom_col(fill="steelblue")
+    + labs(
+        x="Permutation importance",
+        y="SNP",
+        title="Random forest — top 20 SNPs by permutation importance",
+        subtitle="Importance measures prediction accuracy drop when each SNP is permuted",
+    )
+    + theme_minimal()
+)
+```
+
+:::
 
 ```{r, echo = FALSE}
 opts_importance <- c(
@@ -732,6 +1190,10 @@ The code takes the predictions each model made on the test set and asks the same
 
 This is threshold-independent — you are evaluating the quality of the underlying probability estimates, not a particular classification decision - allowing a clean comparison of the models
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 
 # Check logistic_preds exists before comparing
@@ -754,6 +1216,31 @@ bind_rows(
 
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# Check logistic_preds exists before comparing
+# If it does not, run the quick setup code above
+if "logistic_preds" not in dir():
+    raise NameError("logistic_preds not found — run the quick setup code at the top of this script")
+
+# Numeric comparison of AUC
+pd.DataFrame({
+    "model": ["Random forest", "Logistic regression"],
+    "estimate": [
+        roc_auc_score(rf_preds["phenotype"] == "affected", rf_preds["pred_affected"]),
+        roc_auc_score(logistic_preds["phenotype"] == "affected", logistic_preds["pred_affected"]),
+    ],
+}).sort_values("estimate", ascending=False)
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 # ROC curves for both models on the same axes
@@ -784,6 +1271,38 @@ bind_rows(
   theme_minimal() +
   theme(legend.position = "bottom")
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# ROC curves for both models on the same axes
+rf_fpr, rf_tpr, _ = roc_curve(rf_preds["phenotype"] == "affected", rf_preds["pred_affected"])
+log_fpr, log_tpr, _ = roc_curve(logistic_preds["phenotype"] == "affected", logistic_preds["pred_affected"])
+
+roc_comparison = pd.concat([
+    pd.DataFrame({"fpr": rf_fpr, "tpr": rf_tpr, "model": "Random forest"}),
+    pd.DataFrame({"fpr": log_fpr, "tpr": log_tpr, "model": "Logistic regression"}),
+])
+
+(
+    ggplot(roc_comparison, aes("fpr", "tpr", colour="model"))
+    + geom_line(size=1)
+    + geom_abline(linetype="dashed", colour="grey50")
+    + scale_colour_manual(values={"Random forest": "#E63946", "Logistic regression": "#457B9D"})
+    + labs(
+        x="1 - Specificity",
+        y="Sensitivity",
+        colour=None,
+        title="ROC curves: random forest vs. logistic regression",
+        subtitle="Both evaluated on the same held-out test set",
+    )
+    + theme_minimal()
+    + theme(legend_position="bottom")
+)
+```
+
+:::
 
 ```{r, echo = FALSE}
 opts_complexity <- c(

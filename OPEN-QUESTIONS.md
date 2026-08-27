@@ -1792,3 +1792,57 @@ chapter.
   learning" section before translating the rest of the chapter.
 
 ---
+
+## OQ-063
+
+- **File / chunk:** `workshop_03_random_forests.qmd`, several — `mtry`
+  tuning via `grid_regular(mtry(range = ...))` (`### Tuning mtry`),
+  `roc_auc()` as a `metric_set()` member, and
+  `set_engine("ranger", importance = "permutation") |> ... |> vip()`
+  (`## Feature Importance`)
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s extended "Machine learning" table.
+- **Issue:** `rand_forest()`/`set_engine("ranger")` and `vip()` were
+  already settled at the inventory stage, but this chapter needed `roc_auc`
+  as a scoring metric for `GridSearchCV`, and a decision on which
+  scikit-learn importance measure matches R's explicitly-requested
+  `importance = "permutation"`.
+- **Candidates:** `roc_auc_score` for the metric; `mtry` maps to
+  `max_features` in `RandomForestClassifier`, tuned the same way as
+  `ridge`'s `alpha` in `ml-regression.qmd` (`GridSearchCV` with
+  `scoring="roc_auc"`). For importance, `RandomForestClassifier
+  .feature_importances_` alone is impurity-based, not permutation-based —
+  `sklearn.inspection.permutation_importance` is the faithful match to
+  R's explicit `importance = "permutation"` request.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-063` at each idiom's first occurrence.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entries added to `TRANSLATION.md` before
+  translating the rest of the chapter.
+
+---
+
+## OQ-064
+
+- **File / chunk:** `workshop_03_random_forests.qmd`, three `echo=F`
+  decorative diagrams: the schematic decision tree (`### A single decision
+  tree`), the bagging/bootstrapping diagram (`### From bagging to random
+  forests`), and the "more trees → more stable predictions" simulation
+  histogram (same section)
+- **Status:** open
+- **R original:** synthetic `tibble()`s plotted with `geom_label()`/
+  `geom_segment()`/`geom_histogram()` respectively, all `echo=F`.
+- **Issue:** same shape as OQ-032/037/047/054/060 — `echo=F` hides each
+  chunk's source in the rendered R book, so a visibly-sourced Python tab
+  would be the only asymmetric one of its kind. All three logged together
+  since they share the identical reasoning within this one chapter.
+- **Candidates:** all three are fully portable (plain `pd.DataFrame` +
+  plotnine, no new idiom needed), so this is a presentation question, not
+  a translation gap.
+- **Provisional choice in the book:** no Python tab added for any of the
+  three chunks.
+- **Recommendation:** same as OQ-032 — apply whichever general `echo=F`
+  policy a human settles on to this entry too.
+- **Resolution:**
+
+---

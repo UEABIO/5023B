@@ -252,6 +252,8 @@ still sees the whole modelling process in one place.
 | `specificity(...)` (= recall of the negative class) | `recall_score(y_true, y_pred, pos_label=<negative class>)` — scikit-learn has no dedicated `specificity_score`; recall computed against the negative label gives the same quantity |
 | `conf_mat(results, truth, estimate) \|> autoplot(type = "heatmap")` | reshape `confusion_matrix(y_true, y_pred)` into a long frame with the true/predicted labels and plot with `geom_tile()`, mirroring the corrplot heatmap idiom above |
 | `roc_curve(results, truth, .pred_class) \|> autoplot()` | `fpr, tpr, _ = roc_curve(y_true, y_score)`, then a plotnine `geom_line()` plot of `tpr` against `fpr` |
+| `roc_auc(results, truth, .pred_class)` | `roc_auc_score(y_true, y_score)` |
+| `set_engine("ranger", importance = "permutation")` \|> ... \|> `vip::vip(fit)` | `sklearn.inspection.permutation_importance(model, X, y)` — `RandomForestClassifier.feature_importances_` alone is impurity-based (mean decrease in Gini), not permutation-based; since the R chunk explicitly requests `importance = "permutation"`, the faithful port uses `permutation_importance`, not the plain `.feature_importances_` attribute |
 
 ### Dates and times (lubridate)
 
