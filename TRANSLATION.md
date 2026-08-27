@@ -236,6 +236,14 @@ still sees the whole modelling process in one place.
 | `vip::vip(fit)` | `pd.Series(model.feature_importances_, index=X.columns).sort_values().plot.barh()` |
 | `kmeans(data, centers = 3)` | `KMeans(n_clusters=3).fit(data)` |
 | `augment(fit, new_data = data)` | `model.predict(X)` assigned back onto a copy of the frame with `.assign()` |
+| `y ~ .` (formula: "all other columns as predictors") | build the formula string explicitly: `"y ~ " + " + ".join(c for c in df.columns if c != "y")` — patsy has no `.` shorthand |
+| `step_naomit(all_predictors(), all_outcomes())` | `.dropna()` applied to the training `DataFrame` before building `X_train`/`y_train` — `Pipeline` has no row-dropping step, so this happens outside the pipeline rather than inside it |
+| `metrics(truth = y, estimate = .pred)` (yardstick; rmse + rsq + mae together) | a small `DataFrame` built from `mean_squared_error(y_true, y_pred, squared=False)`, `r2_score(y_true, y_pred)` and `mean_absolute_error(y_true, y_pred)`, mirroring yardstick's `.metric`/`.estimate` shape |
+| `extract_fit_engine(workflow_fit)` | `pipeline.named_steps["model"]` — the fitted estimator inside a `Pipeline` |
+| `extract_fit_parsnip(workflow_fit) \|> tidy()` | a `DataFrame` built from `pipeline.named_steps["model"].coef_` and `.intercept_`; unlike `broom::tidy()`, scikit-learn regressors expose only point coefficients — no standard errors or p-values, consistent with this book's prediction-not-inference framing for the ML chapters |
+| `autoplot(tune_grid_result)` | build a `DataFrame` from `grid_search.cv_results_["param_<name>"]` and `-grid_search.cv_results_["mean_test_score"]` (use `scoring="neg_root_mean_squared_error"` in `GridSearchCV`, since scikit-learn scorers are "higher is better"), then a plotnine point/line plot |
+| `select_best()` / `finalize_workflow()` / `fit()` (three separate steps) | collapses into nothing extra — `GridSearchCV(...).fit(...)` already refits the best combination in one call; `.best_estimator_` is the finalised, fitted pipeline directly |
+| `corrplot::corrplot(cor_matrix)` | no equivalent package in the Stack; reshape to long form with `.reset_index().melt(...)` and plot with `geom_tile()`, staying within plotnine rather than reaching for matplotlib/seaborn for an otherwise-ordinary heatmap |
 
 ### Dates and times (lubridate)
 

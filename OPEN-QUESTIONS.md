@@ -1672,3 +1672,99 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-058
+
+- **File / chunk:** `ml-regression.qmd`, several — `age ~ .` formula
+  (`### A familiar starting point`), `step_naomit()` (`## Building the
+  Linear Regression Model`), `metrics()` (multiple), `extract_fit_engine()`/
+  `extract_fit_parsnip()` (multiple), `autoplot(ridge_tuned)` (`### Fitting
+  ridge regression`), `corrplot::corrplot()` (`### Returning to the
+  correlation structure`)
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s extended "Machine learning" table.
+- **Issue:** the tidymodels→scikit-learn Stack decision was already made
+  at the inventory stage, but this chapter is the first to exercise several
+  specific idioms it didn't need to spell out yet: R's `.` formula
+  shorthand (no patsy equivalent), a row-dropping recipe step (no
+  `Pipeline` equivalent), yardstick's combined rmse/rsq/mae output, pulling
+  the raw fitted estimator or its coefficients out of a `Pipeline`, and
+  plotting a `tune_grid()` result. Bundled as one entry since all extend
+  the same already-settled Stack decision rather than introducing a new
+  one.
+- **Candidates:** as written into `TRANSLATION.md`. Notably,
+  `select_best() |> finalize_workflow() |> fit()`'s three explicit steps
+  collapse to nothing extra in scikit-learn — `GridSearchCV(...).fit(...)`
+  already refits the best combination, so `.best_estimator_` is the
+  finalised, fitted pipeline directly.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-058` at each idiom's first occurrence in the
+  chapter.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entries added to `TRANSLATION.md`'s "Machine
+  learning" section before translating the rest of the chapter.
+
+---
+
+## OQ-059
+
+- **File / chunk:** `ml-regression.qmd`, `### Returning to the correlation
+  structure`, `corrplot::corrplot(bats_cor_matrix)`
+- **Status:** resolved
+- **R original:** `corrplot(bats_cor_matrix)`
+- **Issue:** `corrplot` has no Stack coverage. Its output is an ordinary
+  correlation-matrix heatmap, which plotnine can produce directly from a
+  long-format frame — no need to reach for matplotlib/seaborn the way the
+  model-diagnostics exception does, since this is a plain chart, not a
+  specialised statistical diagnostic.
+- **Candidates:** `bats_cor_matrix` reshaped via `.reset_index().melt(...)`
+  then plotted with `geom_tile(aes(fill="value"))`.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-059`.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entry added to `TRANSLATION.md` before
+  translating the rest of the chapter.
+
+---
+
+## OQ-060
+
+- **File / chunk:** `ml-regression.qmd`, `### Fitting ridge regression`,
+  unlabelled chunk (`{r, echo=FALSE, warning=FALSE, message=FALSE,
+  fig.height=4}`), the 5-fold cross-validation schematic diagram
+- **Status:** open
+- **R original:** a `tibble()` of synthetic fold/observation/role data
+  plotted with `geom_tile()`, illustrating which observations are
+  training vs validation in each of 5 folds.
+- **Issue:** `echo=FALSE` hides this chunk's source in the rendered R
+  book — same shape as OQ-032/037/047/054/OQ-047. No Python tab added,
+  consistent with that precedent.
+- **Candidates:** the content is fully portable (plain `pd.DataFrame` +
+  `geom_tile()`, no new idiom), so this is a presentation question, not a
+  translation gap.
+- **Provisional choice in the book:** no Python tab added for this chunk.
+- **Recommendation:** same as OQ-032 — apply whichever general `echo=F`
+  policy a human settles on to this entry too.
+- **Resolution:**
+
+---
+
+## OQ-061
+
+- **File / chunk:** `ml-regression.qmd`, `### Step 4 — Relationships
+  between variables` and its repeat inside `\`r hide("Show complete
+  solution")\``, `GGally::ggpairs()`
+- **Status:** open
+- **R original:** `bats_raw |> select(...) |> ggpairs()`
+- **Issue:** identical shape to OQ-026/OQ-042 — `GGally::ggpairs()` has no
+  accepted Python equivalent, seaborn explicitly ruled out by the Stack
+  table. Skip-and-logged rather than translated, both occurrences (the
+  standalone step and its repeat in the combined solution chunk).
+- **Candidates:** none within the current Stack.
+- **Provisional choice in the book:** no Python tab added for either
+  occurrence.
+- **Recommendation:** same as OQ-026 — revisit only if the Stack is
+  extended with a pairs-plot-capable package.
+- **Resolution:**
+
+---

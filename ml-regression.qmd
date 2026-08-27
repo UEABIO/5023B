@@ -65,6 +65,10 @@ bat_workshop/
 
 Raw data lives in `data/` and should never be modified. Scripts are numbered to indicate the order they should be run. All plots and saved outputs go to `outputs/`. Open `scripts/01_explore.R` and confirm the packages load without errors.
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 library(tidyverse)
 library(here)
@@ -73,6 +77,25 @@ library(skimr)
 library(GGally)
 library(corrplot)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression, Ridge
+from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
+```
+
+:::
 
 ::: {.callout-note}
 ## Troubleshooting
@@ -163,6 +186,10 @@ bats_raw <- clean_names(bats_raw)
 
 ```
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 library(tidyverse)
 library(here)
@@ -171,6 +198,16 @@ library(janitor)
 bats_raw <- read_csv(here("data", "bat_methylation.csv"))
 bats_raw <- clean_names(bats_raw)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+bats_raw = pd.read_csv("data/bat_methylation.csv")
+bats_raw.columns = bats_raw.columns.str.lower()
+```
+
+:::
 
 After running this, check that `glimpse(bats_raw)` shows column names in snake_case with no spaces or backtick escaping needed. For example, `CpG 1 TET2` should become `cpg_1_tet2`.
 
@@ -190,6 +227,10 @@ Before any analysis, confirm the data are complete. Check dimensions, missing va
 
 For duplicates, `duplicated()` returns a logical vector — `TRUE` for any row that is an exact copy of a previous row. Summing that vector gives the total count of duplicate rows. Reporting zero explicitly is better than producing no output, because silence is not confirmation.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 library(skimr)
 
@@ -199,6 +240,17 @@ bats_raw |>
   duplicated() |>
   sum()
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+bats_raw.info()
+
+bats_raw.duplicated().sum()
+```
+
+:::
 
 `r unhide()`
 
@@ -214,6 +266,10 @@ Produce a histogram of bat ages and faceted histograms of methylation values at 
 
 A histogram with 15 bins is appropriate for 62 observations. Fewer bins will obscure the shape; more will produce noise. Save directly to `outputs/` using `ggsave()` immediately after the plot call — if you wait until the end of the script you may save the wrong plot.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 bats_raw |>
   ggplot(aes(x = age)) +
@@ -228,6 +284,22 @@ bats_raw |>
 #ggsave(here("outputs", "age_distribution.png"), width = 7, height = 5)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+(
+    ggplot(bats_raw, aes("age"))
+    + geom_histogram(bins=15, fill="steelblue", colour="white")
+    + labs(title="Distribution of bat ages", x="Age (years)", y="Count")
+    + theme_minimal()
+)
+
+# ggsave("outputs/age_distribution.png", width=7, height=5)
+```
+
+:::
+
 `r unhide()`
 
 `r hide("Hint: faceted CpG histograms")`
@@ -235,6 +307,10 @@ bats_raw |>
 With multiple CpG sites measured on different scales, a faceted plot is more informative than overlaid histograms. `pivot_longer()` reshapes the data from wide format — one column per site — to long format — one row per measurement — which `facet_wrap()` can then use to split by site.
 
 Use `scales = "free_y"` to allow each panel its own y-axis scale, since sites with rare extreme values would compress the scale for all other panels if a shared axis were used.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 bats_raw |>
@@ -256,6 +332,28 @@ bats_raw |>
 
 #ggsave(here("outputs", "cpg_distributions.png"), width = 10, height = 6)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+(
+    bats_raw
+    .drop(columns=["sample", "age_category"])
+    .melt(id_vars="age", var_name="site", value_name="methylation")
+    .pipe(lambda d: (
+        ggplot(d, aes("methylation"))
+        + geom_histogram(bins=20, fill="steelblue", colour="white")
+        + facet_wrap("site", scales="free_y")
+        + labs(title="Methylation distributions by CpG site", x="Methylation value", y="Count")
+        + theme_minimal()
+    ))
+)
+
+# ggsave("outputs/cpg_distributions.png", width=10, height=6)
+```
+
+:::
 
 `r unhide()`
 
@@ -289,11 +387,26 @@ bats_raw |>
 
 At the end of the exploration script, save a cleaned version of the data that the modelling script can load directly. This avoids repeating cleaning steps and ensures both scripts work from identical data.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 # Save the cleaned dataset for use in scripts/02_model.R
 # This means 02_model.R does not need to repeat the cleaning steps
 write_csv(bats_raw, here("data", "bat_methylation_clean.csv"))
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Save the cleaned dataset for use in scripts/02_model.R
+# This means 02_model.R does not need to repeat the cleaning steps
+bats_raw.to_csv("data/bat_methylation_clean.csv", index=False)
+```
+
+:::
 
 ---
 
@@ -350,6 +463,10 @@ A cleaned dataset has been written to `data/bat_methylation_clean.csv`. `r torf(
 ---
 
 `r hide("Show complete solution")`
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 # Load required packages
@@ -424,6 +541,60 @@ bats_raw |>
 write_csv(bats_raw, here("data", "bat_methylation_clean.csv"))
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# Load the bat methylation dataset
+bats_raw = pd.read_csv("data/bat_methylation.csv")
+
+# Clean column names to snake_case
+bats_raw.columns = bats_raw.columns.str.lower()
+
+# Check dimensions and variable types
+bats_raw.info()
+
+# Summarise completeness and distributions at column level
+bats_raw.info()
+
+# Check for duplicate rows — report zero explicitly, not silence
+bats_raw.duplicated().sum()
+
+# Distribution of bat ages
+# Uneven coverage of age groups affects model reliability
+(
+    ggplot(bats_raw, aes("age"))
+    + geom_histogram(bins=15, fill="steelblue", colour="white")
+    + labs(title="Distribution of bat ages", x="Age (years)", y="Count")
+    + theme_minimal()
+)
+
+# ggsave("outputs/age_distribution.png", width=7, height=5)
+
+# Methylation distributions at each CpG site
+(
+    bats_raw
+    .drop(columns=["sample", "age_category"])
+    .melt(id_vars="age", var_name="site", value_name="methylation")
+    .pipe(lambda d: (
+        ggplot(d, aes("methylation"))
+        + geom_histogram(bins=20, fill="steelblue", colour="white")
+        + facet_wrap("site", scales="free_y")
+        + labs(title="Methylation distributions by CpG site", x="Methylation value", y="Count")
+        + theme_minimal()
+    ))
+)
+
+# ggsave("outputs/cpg_distributions.png", width=10, height=6)
+
+# TRANSLATION-NOTE: OQ-061 - GGally::ggpairs() has no Python equivalent, see OPEN-QUESTIONS.md
+
+# Save cleaned dataset for modelling script
+bats_raw.to_csv("data/bat_methylation_clean.csv", index=False)
+```
+
+:::
+
 `r unhide()`
 
 `r hide("What should I look for in the outputs?")`
@@ -448,6 +619,10 @@ From this point forward, you write all code yourself. The sections that follow c
 Open `scripts/02_model.R`. All remaining code in this workshop goes here.
 
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 # Load required packages
 library(tidyverse)
@@ -462,6 +637,17 @@ library(here)
 bats <- read_csv(here("data", "bat_methylation_clean.csv")) |>
   select(-sample, -age_category)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# Load the cleaned dataset produced by 01_explore.R
+# Run that script first if this file does not exist
+bats = pd.read_csv("data/bat_methylation_clean.csv").drop(columns=["sample", "age_category"])
+```
+
+:::
 
 ```{r, include = FALSE}
 # Internal version for rendering
@@ -480,12 +666,30 @@ The `select(-sample, -age_category)` step removes two columns that must not ente
 
 You have used linear regression before to ask whether methylation is associated with age. The code below fits the same model you would have written in your statistics course.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Fit a linear model the familiar way
 # This is the inferential framing you have used before in statistics
 lm_base <- lm(age ~ ., data = bats)
 summary(lm_base)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-058
+# Fit a linear model the familiar way
+# This is the inferential framing you have used before in statistics
+formula = "age ~ " + " + ".join(c for c in bats.columns if c != "age")
+lm_base = smf.ols(formula, data=bats).fit()
+lm_base.summary()
+```
+
+:::
 
 `summary()` gives you coefficients, standard errors, p-values, and R-squared. These answer the question: *is there a significant relationship between methylation and age, and how much variance does the model explain?*
 
@@ -513,6 +717,10 @@ opts_pval <- c(
 
 Now check whether the model meets the assumptions of linear regression before interpreting anything from it.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 library(performance)
 
@@ -522,6 +730,20 @@ library(performance)
 # not whether it will generalise to new bats
 check_model(lm_base)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Check model assumptions on the training data
+# check_model() evaluates the model on the data it was fitted on —
+# it tells us whether the model's assumptions are met,
+# not whether it will generalise to new bats
+sm.qqplot(lm_base.resid, line="45")
+plt.scatter(lm_base.fittedvalues, lm_base.resid)
+```
+
+:::
 
 `check_model()` produces six diagnostic panels. The most important for a linear regression are:
 
@@ -547,6 +769,10 @@ The model is identical. The question — and therefore the evaluation — change
 ## The Train/Test Split {.unnumbered}
 
 If we train a model on all available data and measure how well it fits, we are measuring memorisation rather than generalisation. A model that has seen every data point during training can fit them closely without learning anything that transfers to new observations.
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 tibble(
@@ -589,6 +815,45 @@ tibble(
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+split_diagram = pd.DataFrame({
+    "x": [0, 0.8],
+    "xend": [0.8, 1],
+    "label": ["Training set (80%)\nn ≈ 50 bats", "Test set (20%)\nn ≈ 12 bats"],
+    "fill": ["#457B9D", "#E63946"],
+})
+
+(
+    ggplot(split_diagram)
+    + geom_rect(
+        aes(xmin="x", xmax="xend", ymin=0, ymax=1, fill="fill"),
+        alpha=0.85, colour="white", size=1,
+    )
+    + geom_text(
+        aes(x="(x + xend) / 2", y=0.5, label="label"),
+        colour="white", fontweight="bold", size=4.5, lineheight=1.3,
+    )
+    + scale_fill_identity()
+    + annotate("text", x=0.4, y=-0.25, label="Model is fitted on this data only", colour="#457B9D", size=3.5)
+    + annotate("text", x=0.9, y=-0.25, label="Model is never seen this data until evaluation", colour="#E63946", size=3.5)
+    + annotate("segment", x=0.4, xend=0.4, y=-0.15, yend=0, colour="#457B9D", arrow=arrow(length=0.2))
+    + annotate("segment", x=0.9, xend=0.9, y=-0.15, yend=0, colour="#E63946", arrow=arrow(length=0.2))
+    + scale_x_continuous(limits=(0, 1))
+    + scale_y_continuous(limits=(-0.4, 1.2))
+    + labs(title="The train/test split", subtitle="Data is divided before any modelling begins")
+    + theme_void(base_size=13)
+    + theme(
+        plot_title=element_text(face="bold", ha="center"),
+        plot_subtitle=element_text(ha="center", colour="grey40"),
+    )
+)
+```
+
+:::
+
 By withholding some data before training, the **training set** is used to fit the model. The **test set** is then held out entirely and used only for final evaluation. The model never sees the test set during fitting, making the evaluation an honest estimate of performance on genuinely new data.
 
 We will run the same model three times, changing one thing at a time. This is the simplest way to understand what drives variability in RMSE — changing two things simultaneously would make it impossible to identify the cause of any difference.
@@ -604,6 +869,10 @@ Split 1 versus Split 2 tells you whether the proportion matters. Split 1 versus 
 
 `lm()` fits a model but has no built-in machinery for train/test splits, cross-validation, or consistent evaluation metrics across model types. `tidymodels` provides all of these in a consistent framework. The underlying fitting engine is still `lm()` — you can confirm this with `set_engine("lm")` in the code below. **RMSE** (root mean squared error) is the average prediction error in the same units as the outcome — here, years.
 :::
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 # Split 1: baseline — 80/20, seed 42
@@ -630,6 +899,29 @@ rmse_1 <- fit_1 |>
 rmse_1
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Split 1: baseline — 80/20, seed 42
+train_1, test_1 = train_test_split(bats, train_size=0.8, random_state=42)
+
+fit_1 = Pipeline([
+    ("normalize", StandardScaler()),
+    ("model", LinearRegression()),
+]).fit(train_1.drop(columns="age"), train_1["age"])
+
+rmse_1 = mean_squared_error(test_1["age"], fit_1.predict(test_1.drop(columns="age")), squared=False)
+
+rmse_1
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 # Split 2: 70/30, seed 42
 # Only the prop argument changes relative to Split 1
@@ -655,6 +947,30 @@ rmse_2 <- fit_2 |>
 
 rmse_2
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# Split 2: 70/30, seed 42
+# Only the train_size argument changes relative to Split 1
+train_2, test_2 = train_test_split(bats, train_size=0.7, random_state=42)
+
+fit_2 = Pipeline([
+    ("normalize", StandardScaler()),
+    ("model", LinearRegression()),
+]).fit(train_2.drop(columns="age"), train_2["age"])
+
+rmse_2 = mean_squared_error(test_2["age"], fit_2.predict(test_2.drop(columns="age")), squared=False)
+
+rmse_2
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 # Split 3: 80/20, seed 123
@@ -683,6 +999,31 @@ rmse_3 <- fit_3 |>
 rmse_3
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Split 3: 80/20, seed 123
+# Only the random_state changes relative to Split 1
+# The proportion is identical — only the random assignment differs
+train_3, test_3 = train_test_split(bats, train_size=0.8, random_state=123)
+
+fit_3 = Pipeline([
+    ("normalize", StandardScaler()),
+    ("model", LinearRegression()),
+]).fit(train_3.drop(columns="age"), train_3["age"])
+
+rmse_3 = mean_squared_error(test_3["age"], fit_3.predict(test_3.drop(columns="age")), squared=False)
+
+rmse_3
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 # Collect results in a readable table
 tibble(
@@ -690,6 +1031,18 @@ tibble(
   rmse  = c(rmse_1, rmse_2, rmse_3)
 )
 ```
+
+### Python
+
+```{python}
+#| eval: false
+pd.DataFrame({
+    "split": ["80/20, seed 42", "70/30, seed 42", "80/20, seed 123"],
+    "rmse": [rmse_1, rmse_2, rmse_3],
+})
+```
+
+:::
 
 Record your three RMSE values before answering the questions below.
 
@@ -750,6 +1103,10 @@ Normalisation is **not required** for ordinary linear regression, logistic regre
 A useful rule of thumb: if your model involves a penalty term or a distance calculation, normalise. If it does not, normalisation is a stylistic choice rather than an analytical requirement.
 :::
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Commit to the 80/20 split with seed 42 for the main model
 set.seed(42)
@@ -780,7 +1137,36 @@ lm_fit <- lm_workflow |>
   fit(data = bat_train)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# Commit to the 80/20 split with seed 42 for the main model
+bat_train, bat_test = train_test_split(bats, train_size=0.8, random_state=42)
+
+# TRANSLATION-NOTE: OQ-058
+# step_naomit() drops rows with missing values before fitting; Pipeline has
+# no row-dropping step, so this happens on the training frame directly
+bat_train = bat_train.dropna()
+
+# Model specification: ordinary linear regression, normalised predictors
+# StandardScaler rescales all predictors to mean 0, standard deviation 1
+lm_workflow = Pipeline([
+    ("normalize", StandardScaler()),
+    ("model", LinearRegression()),
+])
+
+# Fit on training data only — the test set is not touched here
+lm_fit = lm_workflow.fit(bat_train.drop(columns="age"), bat_train["age"])
+```
+
+:::
+
 Now run `check_model()` on the fitted workflow to examine assumptions on the training data.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # Extract the underlying lm object from the tidymodels workflow
@@ -790,6 +1176,23 @@ lm_fit |>
   extract_fit_engine() |>
   check_model()
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-058
+# Pull the fitted estimator out of the pipeline and compute residuals
+# manually — scikit-learn has no built-in diagnostic panel like check_model()
+# This runs on the training data only
+lm_train_fitted = lm_fit.predict(bat_train.drop(columns="age"))
+lm_train_resid = bat_train["age"] - lm_train_fitted
+
+sm.qqplot(lm_train_resid, line="45")
+plt.scatter(lm_train_fitted, lm_train_resid)
+```
+
+:::
 
 ::: {.callout-note}
 ## Two diagnostics, two questions
@@ -803,6 +1206,10 @@ The predicted versus actual plot in the next section asks a different question: 
 
 Now generate predictions on the held-out test set and calculate evaluation metrics.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Generate predictions on the held-out test set
 lm_preds <- lm_fit |>
@@ -815,6 +1222,29 @@ lm_metrics <- lm_preds |>
 
 lm_metrics
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Generate predictions on the held-out test set
+lm_preds = bat_test.assign(pred=lm_fit.predict(bat_test.drop(columns="age")))[["age", "pred"]]
+
+# TRANSLATION-NOTE: OQ-058
+# Calculate evaluation metrics
+lm_metrics = pd.DataFrame({
+    "metric": ["rmse", "rsq", "mae"],
+    "estimate": [
+        mean_squared_error(lm_preds["age"], lm_preds["pred"], squared=False),
+        r2_score(lm_preds["age"], lm_preds["pred"]),
+        mean_absolute_error(lm_preds["age"], lm_preds["pred"]),
+    ],
+})
+
+lm_metrics
+```
+
+:::
 
 ```{r, echo = FALSE}
 opts_rmse <- c(
@@ -860,6 +1290,10 @@ Two patterns are worth looking for specifically in this dataset. First, does the
 
 `r unhide()`
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 # Predicted versus actual age
 # The dashed red line is perfect prediction
@@ -877,6 +1311,26 @@ lm_preds |>
   theme_minimal()
 ```
 
+### Python
+
+```{python}
+#| eval: false
+(
+    ggplot(lm_preds, aes("age", "pred"))
+    + geom_point(alpha=0.5)
+    + geom_abline(linetype="dashed", colour="red")
+    + geom_smooth(method="loess", colour="blue", se=True)
+    + labs(x="Actual age (years)", y="Predicted age (years)", title="Linear regression — predicted vs. actual age")
+    + theme_minimal()
+)
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 # Residual plot: actual minus predicted age, against predicted age
 # A well-behaved model has residuals scattered randomly around zero
@@ -893,6 +1347,26 @@ lm_preds |>
   ) +
   theme_minimal()
 ```
+
+### Python
+
+```{python}
+#| eval: false
+(
+    lm_preds
+    .assign(residual=lambda d: d["age"] - d["pred"])
+    .pipe(lambda d: (
+        ggplot(d, aes("pred", "residual"))
+        + geom_point(alpha=0.5)
+        + geom_hline(yintercept=0, linetype="dashed", colour="red")
+        + geom_smooth(method="loess", colour="blue", se=True)
+        + labs(x="Predicted age (years)", y="Residual (actual minus predicted)", title="Residual plot — linear regression")
+        + theme_minimal()
+    ))
+)
+```
+
+:::
 
 ```{r, echo = FALSE}
 opts_diag <- c(
@@ -934,6 +1408,10 @@ Linear regression with many predictors faces a specific problem. When predictors
 
 Before introducing ridge regression, return to the correlation structure you observed in Part 1. We now examine it on the training data only — the test set must remain untouched, even for exploratory purposes.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Correlation structure in the training data only
 # We never use bat_test for exploratory purposes
@@ -948,6 +1426,30 @@ bats_cor_matrix <- bats |>
 
 corrplot(bats_cor_matrix)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Correlation structure in the training data only
+# We never use bat_test for exploratory purposes
+bats_cor_matrix = bats.dropna().drop(columns="age").corr()
+
+# TRANSLATION-NOTE: OQ-059
+(
+    bats_cor_matrix
+    .reset_index(names="var1")
+    .melt(id_vars="var1", var_name="var2", value_name="correlation")
+    .pipe(lambda d: (
+        ggplot(d, aes("var1", "var2", fill="correlation"))
+        + geom_tile()
+        + theme_minimal()
+        + theme(axis_text_x=element_text(rotation=90))
+    ))
+)
+```
+
+:::
 
 ::: {.callout-note}
 ## What the correlation structure tells us
@@ -1017,6 +1519,10 @@ If we used the test set to choose lambda, we would be making a modelling decisio
 
 `r unhide()`
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Ridge specification
 # mixture = 0 specifies ridge; mixture = 1 would give lasso
@@ -1046,6 +1552,35 @@ ridge_tuned <- ridge_workflow |>
   )
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# Ridge specification: Pipeline with the same normalisation as linear regression
+ridge_workflow = Pipeline([
+    ("normalize", StandardScaler()),
+    ("model", Ridge()),
+])
+
+# Define 50 candidate lambda (alpha) values and search across 5 folds,
+# scoring by RMSE (GridSearchCV maximises its score, so RMSE is negated)
+lambda_grid = {"model__alpha": np.logspace(-4, 4, 50)}
+
+ridge_tuned = GridSearchCV(
+    ridge_workflow,
+    param_grid=lambda_grid,
+    cv=5,
+    scoring="neg_root_mean_squared_error",
+)
+ridge_tuned.fit(bat_train.drop(columns="age"), bat_train["age"])
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Plot cross-validation RMSE against lambda
 # Each point is the average RMSE across all five folds at that lambda value
@@ -1053,6 +1588,26 @@ p <- autoplot(ridge_tuned)
   
 p + scale_x_log10(labels = scales::label_log()) # force better x axis labels
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-058
+tuning_results = pd.DataFrame({
+    "penalty": ridge_tuned.cv_results_["param_model__alpha"],
+    "rmse": -ridge_tuned.cv_results_["mean_test_score"],
+})
+
+(
+    ggplot(tuning_results, aes("penalty", "rmse"))
+    + geom_line()
+    + geom_point()
+    + scale_x_log10()
+)
+```
+
+:::
 
 `r hide("Hint: reading the tuning curve")`
 
@@ -1079,6 +1634,10 @@ Before running the selection code, interpret the plot.
 
 Now select the best lambda:
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Approach: the single lambda with the lowest cross-validation RMSE
 best_lambda <- ridge_tuned |>
@@ -1088,12 +1647,27 @@ best_lambda
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+best_lambda = ridge_tuned.best_params_
+
+best_lambda
+```
+
+:::
+
 
 
 
 ## Fitting Ridge and Examining Coefficients {.unnumbered}
 
 Finalise the ridge model using the best lambda and evaluate it on the test set.
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 # Finalise the workflow with the chosen lambda and fit on full training data
@@ -1113,6 +1687,35 @@ ridge_metrics <- ridge_preds |>
 ridge_metrics
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-058
+# GridSearchCV already refits the best combination — no separate
+# finalize/fit step needed, .best_estimator_ is the fitted pipeline
+ridge_final = ridge_tuned.best_estimator_
+
+ridge_preds = bat_test.assign(pred=ridge_final.predict(bat_test.drop(columns="age")))[["age", "pred"]]
+
+ridge_metrics = pd.DataFrame({
+    "metric": ["rmse", "rsq", "mae"],
+    "estimate": [
+        mean_squared_error(ridge_preds["age"], ridge_preds["pred"], squared=False),
+        r2_score(ridge_preds["age"], ridge_preds["pred"]),
+        mean_absolute_error(ridge_preds["age"], ridge_preds["pred"]),
+    ],
+})
+
+ridge_metrics
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 # Predicted versus actual age — ridge regression
 # Identical plot structure to the linear regression section for direct comparison
@@ -1128,6 +1731,26 @@ ridge_preds |>
   ) +
   theme_minimal()
 ```
+
+### Python
+
+```{python}
+#| eval: false
+(
+    ggplot(ridge_preds, aes("age", "pred"))
+    + geom_point(alpha=0.5)
+    + geom_abline(linetype="dashed", colour="red")
+    + geom_smooth(method="loess", colour="blue", se=True)
+    + labs(x="Actual age (years)", y="Predicted age (years)", title="Ridge regression — predicted vs. actual age")
+    + theme_minimal()
+)
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 # Residual plot — ridge regression
@@ -1145,9 +1768,33 @@ ridge_preds |>
   theme_minimal()
 ```
 
+### Python
+
+```{python}
+#| eval: false
+(
+    ridge_preds
+    .assign(residual=lambda d: d["age"] - d["pred"])
+    .pipe(lambda d: (
+        ggplot(d, aes("pred", "residual"))
+        + geom_point(alpha=0.5)
+        + geom_hline(yintercept=0, linetype="dashed", colour="red")
+        + geom_smooth(method="loess", colour="blue", se=True)
+        + labs(x="Predicted age (years)", y="Residual (actual minus predicted)", title="Residual plot — ridge regression")
+        + theme_minimal()
+    ))
+)
+```
+
+:::
+
 ### Which predictors were shrunk?
 
 One of the most instructive outputs of ridge regression is the coefficient plot. Because we know which predictors are genuine CpG sites and which are synthetic noise, we can check directly whether the penalty is doing what it should.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 df <- tibble(
@@ -1229,11 +1876,62 @@ ggplot(df) +
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+df = pd.DataFrame({
+    "predictor": pd.Categorical(
+        ["CpG site A\n(strong signal)", "CpG site B\n(weak signal)", "Hypothetical\nnon-predictor"],
+        categories=["CpG site A\n(strong signal)", "CpG site B\n(weak signal)", "Hypothetical\nnon-predictor"],
+    ),
+    "lm_est": [4.2, 1.8, 3.1],
+    "ridge_est": [3.8, 0.9, 0.4],
+    "type": ["CpG site", "CpG site", "Synthetic noise"],
+    "x_pos": [1, 2, 3],
+})
+
+(
+    ggplot(df)
+    + geom_col(aes(x="predictor", y="ridge_est", fill="type"), alpha=0.85, width=0.55)
+    + geom_rect(
+        aes(xmin="x_pos - 0.275", xmax="x_pos + 0.275", ymin="ridge_est", ymax="lm_est", colour="type"),
+        fill=None, linetype="dashed", size=0.7,
+    )
+    + annotate("text", x=0.72, y=1.9, label="Ridge\ncoefficient", colour="white", size=2.8, fontweight="bold", lineheight=1.1)
+    + annotate("segment", x=0.88, xend=0.88, y=3.82, yend=4.18, colour="#457B9D", arrow=arrow(ends="both", length=0.15))
+    + scale_fill_manual(values={"CpG site": "#457B9D", "Synthetic noise": "#E63946"})
+    + scale_colour_manual(values={"CpG site": "#457B9D", "Synthetic noise": "#E63946"}, guide=False)
+    + scale_y_continuous(limits=(0, 5), breaks=range(0, 6))
+    + labs(
+        x=None,
+        y="Coefficient magnitude",
+        fill=None,
+        title="Ridge shrinks all coefficients — hypothetical non-predictors most heavily",
+        subtitle="Solid bar = ridge coefficient retained   Dashed bar = amount shrunk by penalty\nSchematic illustration — not real data",
+    )
+    + theme_minimal(base_size=12)
+    + theme(
+        legend_position="bottom",
+        strip_text=element_text(face="bold"),
+        axis_text_x=element_text(size=10, lineheight=1.2),
+        plot_subtitle=element_text(colour="grey40", size=10),
+        plot_title=element_text(face="bold", size=12),
+    )
+)
+```
+
+:::
+
 `r hide("Hint: extracting and comparing coefficients")`
 
 `extract_fit_parsnip()` retrieves the model object from the workflow. `tidy()` converts it to a tibble with one row per coefficient. 
 
 `r unhide()`
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # Extract coefficients from the finalised ridge model
@@ -1246,6 +1944,29 @@ lm_coefficients <- lm_fit |>
   extract_fit_parsnip() |>
   tidy()
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-058
+def tidy_coefs(pipeline, feature_names):
+    model = pipeline.named_steps["model"]
+    return pd.DataFrame({
+        "term": ["Intercept"] + list(feature_names),
+        "estimate": [model.intercept_] + list(model.coef_),
+    })
+
+feature_names = bat_train.drop(columns="age").columns
+ridge_coefficients = tidy_coefs(ridge_final, feature_names)
+lm_coefficients = tidy_coefs(lm_fit, feature_names)
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # Visualise ridge coefficients
@@ -1264,6 +1985,27 @@ ridge_coefficients |>
   theme_minimal()
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+(
+    ridge_coefficients
+    .loc[lambda d: d["term"] != "Intercept"]
+    .sort_values("estimate")
+    .pipe(lambda d: d.assign(term=pd.Categorical(d["term"], categories=d["term"], ordered=True)))
+    .pipe(lambda d: (
+        ggplot(d, aes(x="estimate", y="term"))
+        + geom_col(fill="steelblue")
+        + geom_vline(xintercept=0, linetype="dashed", colour="red")
+        + labs(x="Coefficient estimate", y="Predictor", title="Ridge regression coefficients", subtitle="Sites close to zero have been shrunk by the penalty")
+        + theme_minimal()
+    ))
+)
+```
+
+:::
+
 
 
 ::: {.callout-note}
@@ -1277,6 +2019,10 @@ ridge_coefficients |>
 
 ## Comparing Models {.unnumbered}
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 # Numeric comparison of RMSE
 bind_rows(
@@ -1287,6 +2033,27 @@ bind_rows(
   select(model, .estimate) |>
   arrange(.estimate)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+(
+    pd.concat([
+        lm_metrics.assign(model="Linear regression"),
+        ridge_metrics.assign(model="Ridge regression"),
+    ])
+    .loc[lambda d: d["metric"] == "rmse"]
+    [["model", "estimate"]]
+    .sort_values("estimate")
+)
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 # Predicted versus actual for both models side by side
@@ -1305,6 +2072,33 @@ bind_rows(
   ) +
   theme_minimal()
 ```
+
+### Python
+
+```{python}
+#| eval: false
+(
+    pd.concat([
+        lm_preds.assign(model="Linear regression"),
+        ridge_preds.assign(model="Ridge regression"),
+    ])
+    .pipe(lambda d: (
+        ggplot(d, aes("age", "pred"))
+        + geom_point(alpha=0.5)
+        + geom_abline(linetype="dashed", colour="red")
+        + geom_smooth(method="loess", colour="blue", se=True)
+        + facet_wrap("model")
+        + labs(x="Actual age (years)", y="Predicted age (years)")
+        + theme_minimal()
+    ))
+)
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 # Residual plots for both models side by side
@@ -1325,6 +2119,29 @@ bind_rows(
   ) +
   theme_minimal()
 ```
+
+### Python
+
+```{python}
+#| eval: false
+(
+    pd.concat([
+        lm_preds.assign(model="Linear regression", residual=lambda d: d["age"] - d["pred"]),
+        ridge_preds.assign(model="Ridge regression", residual=lambda d: d["age"] - d["pred"]),
+    ])
+    .pipe(lambda d: (
+        ggplot(d, aes("pred", "residual"))
+        + geom_point(alpha=0.5)
+        + geom_hline(yintercept=0, linetype="dashed", colour="red")
+        + geom_smooth(method="loess", colour="blue", se=True)
+        + facet_wrap("model")
+        + labs(x="Predicted age (years)", y="Residual")
+        + theme_minimal()
+    ))
+)
+```
+
+:::
 
 ```{r, echo = FALSE}
 opts_worse <- c(
@@ -1384,6 +2201,10 @@ By the end of this workshop you should be able to:
 - [ ] Extract and compare coefficients between linear and ridge regression
 - [ ] Compare two models critically using both numerical metrics and visual diagnostics
 
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 library(ggplot2)
@@ -1458,6 +2279,70 @@ ggplot() +
   )
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+boxes = pd.DataFrame({
+    "x": [0.25, 0.25, 0.25, 0.25, 0.75, 0.75, 0.75, 0.75, 0.75],
+    "y": [0.90, 0.68, 0.46, 0.24, 0.90, 0.72, 0.54, 0.36, 0.18],
+    "label": [
+        "All data",
+        "Fit model\non all data",
+        "summary()",
+        "p-values, coefficients,\nR-squared on training data",
+        "All data",
+        "Split: training\nand test sets",
+        "Fit model on\ntraining set only",
+        "Predict on\nheld-out test set",
+        "RMSE on\nunseen data",
+    ],
+    "col": ["#457B9D"] * 4 + ["#E63946"] * 5,
+    "frame": ["Inference"] * 4 + ["Prediction"] * 5,
+})
+
+arrows_inf = pd.DataFrame({
+    "x": 0.25, "xend": 0.25,
+    "y": [0.86, 0.64, 0.42],
+    "yend": [0.72, 0.50, 0.30],
+})
+
+arrows_pred = pd.DataFrame({
+    "x": 0.75, "xend": 0.75,
+    "y": [0.86, 0.68, 0.50, 0.32],
+    "yend": [0.76, 0.58, 0.40, 0.22],
+})
+
+(
+    ggplot()
+    + annotate("text", x=0.25, y=1.0, label="INFERENCE", fontweight="bold", colour="#457B9D", size=4.5)
+    + annotate("text", x=0.75, y=1.0, label="PREDICTION", fontweight="bold", colour="#E63946", size=4.5)
+    + geom_label(
+        boxes, aes(x="x", y="y", label="label", fill="col"),
+        colour="white", fontweight="bold", size=3, lineheight=1.1, label_size=0,
+    )
+    + geom_segment(
+        arrows_inf, aes(x="x", xend="xend", y="y", yend="yend"),
+        arrow=arrow(length=0.2, type="closed"), colour="#457B9D", size=0.8,
+    )
+    + geom_segment(
+        arrows_pred, aes(x="x", xend="xend", y="y", yend="yend"),
+        arrow=arrow(length=0.2, type="closed"), colour="#E63946", size=0.8,
+    )
+    + scale_fill_identity()
+    + scale_x_continuous(limits=(0, 1))
+    + scale_y_continuous(limits=(0.1, 1.05))
+    + labs(title="Two frameworks, same model", subtitle="The mathematics does not change — the question and evaluation do")
+    + theme_void(base_size=13)
+    + theme(
+        plot_title=element_text(face="bold", ha="center", size=14),
+        plot_subtitle=element_text(ha="center", colour="grey40", size=11),
+    )
+)
+```
+
+:::
 
 ---
 
