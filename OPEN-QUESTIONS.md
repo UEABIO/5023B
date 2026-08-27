@@ -1960,3 +1960,29 @@ chapter.
   translating the rest of the chapter.
 
 ---
+
+## OQ-069
+
+- **File / chunk:** `summary-table.qmd`, the whole chapter (two `sjPlot::
+  tab_model()` calls, two `gtsummary::tbl_regression()` calls)
+- **Status:** open
+- **R original:** the chapter exists solely to demonstrate publication-
+  ready regression table formatting via `sjPlot` and `gtsummary`.
+- **Issue:** `sjPlot::tab_model()` was already settled as having no Python
+  equivalent under OQ-046 (`intro-mixed-model.qmd`) — the two occurrences
+  here reuse that decision silently, no new entry needed. `gtsummary` is a
+  new package but the same category: a publication-table formatter with no
+  Stack equivalent. Between the two packages, every chunk in this chapter
+  is skip-worthy, and there is no portable remainder — unlike
+  `advanced_ggplot.qmd`, there's no custom-theme or heatmap-style section
+  to translate around them. Logged as one whole-chapter entry rather than
+  four near-identical ones, same treatment as `AI-programming.qmd` (OQ-057).
+- **Candidates:** none within the current Stack for either package.
+- **Provisional choice in the book:** no Python tabs added anywhere in
+  this chapter; no `.qmd` edits made.
+- **Recommendation:** revisit only if the Stack is extended with a
+  regression-table package (e.g. `stargazer`-style output) — the same
+  recommendation already on record for OQ-046.
+- **Resolution:**
+
+---

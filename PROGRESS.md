@@ -86,7 +86,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | A6 | quarto.qmd | ~5 | todo | | | | raw chunk count over-counts literal `` `r ''` `` fences, not real code |
 | A7 | ggplot.qmd | ~35 | todo | | | | extension packages appear late in file |
 | A8 | advanced_ggplot.qmd | 10 (exact) | translated | 2 | ca3ec5f | 2026-08-27 | consolidated all 19 uncovered-extension-package sections (ggdist, ggridges, ggbump, ggalt, ggh4x, gghighlight, ggbeeswarm, plotly, ggforce, geomtextpath, ggtext, sf/rnaturalearth, ggpubr+patchwork layout, showtext) into one entry rather than one per package (OQ-067); translated the portable remainder (custom themes, viridis heatmap, native `geom_hex()`, `scales`' log-transform/mizani idioms) (OQ-068) |
-| A9 | summary-table.qmd | 0 | todo | | | | sjPlot/gtsummary, no equivalent |
+| A9 | summary-table.qmd | 4 | translated | 1 | | 2026-08-27 | whole chapter skip-logged (OQ-069): entirely `sjPlot::tab_model()` (reuses OQ-046) and `gtsummary::tbl_regression()` (new, same no-equivalent category), no portable remainder — no `.qmd` edits made |
 | A10 | references.qmd | 0 | todo | | | | no code |
 
 ### Needs a decision before bulk work
@@ -114,8 +114,9 @@ unilaterally.
   the ~19 uncovered-extension-package sections were consolidated into one
   `OPEN-QUESTIONS.md` entry (OQ-067) rather than resolved individually; the
   portable remainder was translated (see row above).
-- **`summary-table.qmd`** is still open: `sjPlot`/`gtsummary`, no accepted
-  Python equivalent named yet.
+- ~~`summary-table.qmd`~~ **Resolved 2026-08-27:** whole chapter
+  skip-logged (OQ-069) — `sjPlot`/`gtsummary` have no accepted Python
+  equivalent and there is no portable remainder.
 - ~~`echo = F, warning = F, message = F` setup chunks~~ **Resolved
   2026-08-25:** treated as equivalent to `#| include: false` and skipped
   silently, no Python tab and no `OPEN-QUESTIONS.md` entry. Documented in
