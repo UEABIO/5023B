@@ -35,6 +35,10 @@ showtext_auto()
 It is often the case that we start to default to a particular 'style' for our figures, or you may be making several similar figures within a research paper. Creating custom functions can extend to making our own custom ggplot themes. You have probably already used theme variants such as `theme_bw()`, `theme_void()`, `theme_minimal()` - these are incredibly useful, but you might find you still wish to make consistent changes. 
 
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 plot <- penguins |> 
   drop_na(sex) |> 
@@ -48,7 +52,35 @@ plot
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+
+plot = (
+    penguins
+    .dropna(subset=["sex"])
+    .pipe(lambda d: (
+        ggplot(d, aes("species", "culmen_length_mm", fill="species"))
+        + geom_violin(width=0.5, alpha=0.4)
+        + geom_boxplot(width=0.2)
+        + scale_fill_brewer(palette="Dark2")
+    ))
+)
+
+plot
+```
+
+:::
+
 With the addition of a title and `theme_classic()` we can improve the style quickly
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval=F}
 
@@ -59,6 +91,20 @@ plot+
   theme_classic()
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+(
+    plot
+    + ggtitle("Comparison of bill lengths by species in Palmer Penguins")
+    + labs(x="", y="Bill length (mm)")
+    + theme_classic()
+)
+```
+
+:::
 
 But I **still** want to make some more changes, rather than do this work for one figure, and potentially have to repeat this several times for subsequent figures, I can decide to make a new function instead. See [here](https://ggplot2.tidyverse.org/reference/theme.html) for a full breakdown of the arguments for the `theme()` function. 
 
@@ -71,6 +117,10 @@ theme_classic + theme() # is correct
 theme() + theme_classic() # will not work as intended
 
 :::
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval=T}
 
@@ -109,9 +159,41 @@ theme(
 
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# custom theme sets defaults for font and size, but these can be changed without changing the function
+def theme_custom(base_size=12, base_family="serif"):
+    return theme_classic(base_size=base_size, base_family=base_family) + theme(
+        # specify default settings for plot titles
+        plot_title=element_text(size=base_size * 1.5, face="bold", family=base_family),
+        # specify defaults for axis titles
+        axis_title=element_text(size=base_size, family=base_family),
+        # specify position for y axis title
+        axis_title_y=element_text(angle=90, margin={"r": 10, "l": 10}),
+        # specify position for x axis title
+        axis_title_x=element_text(margin={"t": 10, "b": 10}),
+        # set major y grid lines
+        panel_grid_major_y=element_line(colour="gray", size=0.5),
+        # add axis lines
+        axis_line=element_line(),
+        # adding a margin around the plot
+        plot_margin=0.02,
+        # setting the position for the legend
+        legend_position="none",
+    )
+```
+
+:::
+
 With this function set, I can now use it for as many figures as I wish. To use it in the future I should probably save it in a unique script, with a clear title and comments for future use. 
 
 I could then easily use `source("custom_theme_function.R")` to make this available to any scripts I was using. 
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, fig.width = 7}
 plot+
@@ -121,6 +203,20 @@ plot+
   theme_custom()
 
 ```
+
+### Python
+
+```{python}
+#| eval: false
+(
+    plot
+    + ggtitle("Comparison of bill lengths\n by species in Palmer Penguins")
+    + labs(x="", y="Bill length (mm)")
+    + theme_custom()
+)
+```
+
+:::
 
 
 
@@ -308,6 +404,10 @@ Here’s an example of simulated biological data for a heatmap in R. This datase
 A popular package for this sort of data is the `viridis` package. The `viridis` package is popular for creating color scales in data visualizations because it offers color palettes that are perceptually uniform, accessible, and still work when printed grayscale.
 
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 
 library(viridis)
@@ -335,9 +435,45 @@ ggplot(heat_data, aes(x = month, y = lake, fill = ph)) +
     theme_minimal()
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# Set seed for reproducibility
+np.random.seed(123)
+
+# Simulate data
+month_abb = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+heat_data = pd.DataFrame(
+    [(lake, month) for lake in [f"Lake {i}" for i in range(1, 6)] for month in month_abb],
+    columns=["lake", "month"],
+)
+
+# Add simulated measurements for water quality
+heat_data["ph"] = np.round(np.random.normal(7, 0.5, len(heat_data)), 2)
+heat_data["dissolved_oxygen"] = np.round(np.random.normal(8, 1, len(heat_data)), 1)
+heat_data["nutrients"] = np.round(np.random.uniform(0, 1, len(heat_data)), 2)
+
+# TRANSLATION-NOTE: OQ-068
+# Heatmap for pH levels by lake and month
+(
+    ggplot(heat_data, aes(x="month", y="lake", fill="ph"))
+    + geom_tile(colour="white", size=0.7)
+    + scale_fill_cmap(name="pH Level", cmap_name="viridis")
+    + labs(title="Monthly pH Levels by Lake", x="Month", y="Lake")
+    + theme_minimal()
+)
+```
+
+:::
+
 ### Hexbins
 
 Hexbin plots are excellent for visualizing dense data without overplotting, as they use color intensity to represent areas with many overlapping points, revealing patterns and clusters effectively.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # Load necessary packages
@@ -361,6 +497,34 @@ ggplot(hex_data, aes(x = body_size, y = metabolic_rate)) +
     y = "Metabolic Rate"
   ) 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Set seed for reproducibility
+np.random.seed(123)
+
+# Simulate data
+hex_data = pd.DataFrame({
+    "body_size": np.random.normal(50, 15, 1000),
+    "metabolic_rate": np.random.normal(200, 50, 1000),
+})
+
+# Create hexbin plot
+(
+    ggplot(hex_data, aes(x="body_size", y="metabolic_rate"))
+    + geom_hex()
+    + scale_fill_cmap(name="Density", cmap_name="viridis")
+    + labs(
+        title="Hexbin Plot of Body Size vs. Metabolic Rate",
+        x="Body Size (cm)",
+        y="Metabolic Rate",
+    )
+)
+```
+
+:::
 
 ### Facets
 
@@ -569,6 +733,10 @@ Here is a good example of the `scales` package in action.
 
 The distribution of GDP per capita in the `gapminder` dataset is heavily skewed, with most countries reporting less than $10,000. As a result, the scatterplot makes an upside-down L shape. Try sticking a regression line on that and you’ll get in trouble.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 library(gapminder)
 gapminder |> 
@@ -581,7 +749,31 @@ ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+from gapminder import gapminder
+
+(
+    gapminder
+    .loc[lambda d: d["year"] == 2007]
+    .pipe(lambda d: (
+        ggplot(d, aes(x="gdpPercap", y="lifeExp", colour="continent"))
+        + geom_point()
+        + guides(colour=False)
+        + labs(title="GDP per capita", subtitle="GDP per capita raw values")
+    ))
+)
+```
+
+:::
+
 Fit this onto a log scale (R's standard log function is the natural log). And we get a straighter line but some ugly axis labels.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 
@@ -596,7 +788,33 @@ ggplot(aes(x = log(gdpPercap), y = lifeExp, color = continent)) +
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+(
+    gapminder
+    .loc[lambda d: d["year"] == 2007]
+    .assign(log_gdpPercap=lambda d: np.log(d["gdpPercap"]))
+    .pipe(lambda d: (
+        ggplot(d, aes(x="log_gdpPercap", y="lifeExp", colour="continent"))
+        + geom_point()
+        + guides(colour=False)
+        + labs(
+            title="GDP per capita, natural log (base e)",
+            subtitle="GDP per capita logged manually",
+        )
+    ))
+)
+```
+
+:::
+
 GGplot has a `scale_x/y_log10` scale but this applues the wrong transformation to our data - in this particular example there is little difference in the range of values when using a `log10` vs `log` transformation (as we will see in a moment).
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 
@@ -611,8 +829,34 @@ ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+(
+    gapminder
+    .loc[lambda d: d["year"] == 2007]
+    .pipe(lambda d: (
+        ggplot(d, aes(x="gdpPercap", y="lifeExp", colour="continent"))
+        + geom_point()
+        + guides(colour=False)
+        + labs(
+            title="GDP per capita, log (base 10)",
+            subtitle="GDP per capita logged with scale",
+        )
+        + scale_x_log10()
+    ))
+)
+```
+
+:::
+
 But we can set whatever custom transformation we wish
 
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 
@@ -634,6 +878,41 @@ ggplot(aes(x = gdpPercap, y = lifeExp, color = continent)) +
                      labels = label_dollar(accuracy = 1))
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-068
+from mizani.transforms import trans
+from mizani.formatters import dollar_format
+
+class LogNaturalTrans(trans):
+    @staticmethod
+    def transform(x):
+        return np.log(x)
+
+    @staticmethod
+    def inverse(x):
+        return np.exp(x)
+
+(
+    gapminder
+    .loc[lambda d: d["year"] == 2007]
+    .pipe(lambda d: (
+        ggplot(d, aes(x="gdpPercap", y="lifeExp", colour="continent"))
+        + geom_point()
+        + guides(colour=False)
+        + labs(
+            title="GDP per capita, natural log (base e)",
+            subtitle="GDP per capita logged manually",
+        )
+        + scale_x_continuous(trans=LogNaturalTrans(), labels=dollar_format(accuracy=1))
+    ))
+)
+```
+
+:::
 
 
 

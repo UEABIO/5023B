@@ -532,6 +532,19 @@ Note that patsy's dummy-coding names a two-level factor's coefficient
 chapter carries a comment flagging this, since it is easy to copy the R
 name by habit and get a `KeyError`.
 
+### Viridis colour scales and custom transforms (scales package)
+
+`viridis`'s scales and base R's `scales` package (`trans_new()`, `label_dollar()`,
+`label_number()`) have Python analogues via plotnine's own scale/formatter
+machinery (`mizani`, which plotnine re-exports), settled under OQ-068.
+
+| R | Python |
+|---|---|
+| `scale_fill_viridis(name = "x")` | `scale_fill_cmap(name="x", cmap_name="viridis")` |
+| `scale_fill_viridis_c(name = "x")` | `scale_fill_cmap(name="x", cmap_name="viridis")` |
+| `trans_new(name, transform, inverse, breaks)` | a `mizani.transforms.trans` subclass, or a bespoke `scale_x_continuous(trans=...)` argument built the same way plotnine's own log/sqrt transforms are |
+| `label_dollar(accuracy = 1)` | `mizani.formatters.dollar_format()` |
+
 ## Setup chunks
 
 An R chunk marked `{r, echo = F, warning = F, message = F}` (or any subset of

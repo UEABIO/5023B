@@ -1893,3 +1893,70 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-067
+
+- **File / chunk:** `advanced_ggplot.qmd` — nineteen sections/chunks, each
+  built on one R-specific ggplot2 extension package (or a package
+  combination) with no Python/plotnine equivalent: `showtext`'s Google
+  Fonts loading (`## Fonts`); `ggdist` (`#### Rainclouds`, `### Interval
+  plots`); `ggdensity` (`### Density`); `ggridges` (`### ggridges`, and
+  reused inside `### scales`'s ridge example); `ggbump` (`### Bump
+  charts`); `ggalt` (`### Dumbell charts`); `ggh4x` (`### Facets`);
+  `gghighlight` (`### Highlighting`, twice, and again inside `#### ggforce`);
+  `ggbeeswarm` (`### Highlighting`); `plotly`/`ggplotly()` (`### Plotly`);
+  `ggforce` (`#### ggforce`); `geomtextpath` (`#### textpaths`); `ggtext`
+  (`#### ggtext`, and again in `### Layouts and compositions`);
+  `sf`/`rnaturalearth` (`### Maps`); `ggpubr::background_image()` +
+  `patchwork` custom `plot_layout(design = ...)` composition (`### Layouts
+  and compositions`)
+- **Status:** open
+- **R original:** see the chapter — each section is a short, self-contained
+  demonstration of one extension package's signature geom or feature.
+- **Issue:** this chapter is structured as a gallery of ggplot2 extension
+  packages, most with no plotnine equivalent and no plausible one within
+  the current Stack (interactive plotting, rich-markdown text rendering,
+  geographic data, nested faceting, and several specialised statistical
+  geoms all fall outside what plotnine/matplotlib/mizani provide). Logging
+  each package individually would produce roughly nineteen near-identical
+  entries for one appendix chapter, all sharing the same reasoning and none
+  warranting a dedicated Stack decision for a single illustrative example.
+  Consolidated into one entry per human decision (chat, 2026-08-27).
+- **Candidates:** none within the current Stack for any of the listed
+  sections.
+- **Provisional choice in the book:** no Python tab added for any of the
+  nineteen sections/chunks listed above. The chapter's remaining sections
+  (custom themes, the viridis heatmap, hexbins via plotnine's native
+  `geom_hex()`, and the `scales` package's log-transform examples) were
+  translated normally — see OQ-068 for the one new idiom that needed
+  settling among those.
+- **Recommendation:** revisit individual packages only if the Stack is
+  later extended to cover interactive plotting, geographic data, or rich
+  text rendering for other reasons — not worth adding solely for this
+  appendix.
+- **Resolution:**
+
+---
+
+## OQ-068
+
+- **File / chunk:** `advanced_ggplot.qmd`, `### Heat maps`
+  (`scale_fill_viridis()`) and `### scales` (`trans_new()`,
+  `label_dollar()`)
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s "Viridis colour scales and custom
+  transforms" section.
+- **Issue:** viridis colour scales and the base `scales` package's
+  transform/label-formatting tools had no glossary entries.
+- **Candidates:** `scale_fill_cmap(cmap_name="viridis")` for viridis
+  scales — plotnine has no `scale_fill_viridis()`-named function, but
+  exposes the same colormap via its general colormap scale. For custom
+  transforms and dollar labels, plotnine's own scale/label machinery is
+  built on `mizani`, which provides direct equivalents.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-068` at each occurrence.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entries added to `TRANSLATION.md` before
+  translating the rest of the chapter.
+
+---

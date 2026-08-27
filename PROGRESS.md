@@ -85,7 +85,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | A5 | data_reshaping.qmd | 9 | todo | | | | mostly covered by existing glossary |
 | A6 | quarto.qmd | ~5 | todo | | | | raw chunk count over-counts literal `` `r ''` `` fences, not real code |
 | A7 | ggplot.qmd | ~35 | todo | | | | extension packages appear late in file |
-| A8 | advanced_ggplot.qmd | ~3 | todo | | | | almost entirely undocumented geom-extension packages |
+| A8 | advanced_ggplot.qmd | 10 (exact) | translated | 2 | | 2026-08-27 | consolidated all 19 uncovered-extension-package sections (ggdist, ggridges, ggbump, ggalt, ggh4x, gghighlight, ggbeeswarm, plotly, ggforce, geomtextpath, ggtext, sf/rnaturalearth, ggpubr+patchwork layout, showtext) into one entry rather than one per package (OQ-067); translated the portable remainder (custom themes, viridis heatmap, native `geom_hex()`, `scales`' log-transform/mizani idioms) (OQ-068) |
 | A9 | summary-table.qmd | 0 | todo | | | | sjPlot/gtsummary, no equivalent |
 | A10 | references.qmd | 0 | todo | | | | no code |
 
@@ -106,13 +106,16 @@ unilaterally.
   2026-08-25:** add one extra `Python` tab per existing R-only tabset group,
   showing one representative approach rather than mirroring every R tab.
   Documented in `TRANSLATION.md` under "Pre-existing R-only tabsets".
-- **`intro-mixed-model.qmd`, `causal-models.qmd`, `advanced_ggplot.qmd`,
-  `summary-table.qmd`** are each built on one or more R packages with no
-  Python equivalent named in `TRANSLATION.md` (lme4/ggeffects/MuMIn/sjPlot;
-  ggdag/dagitty; a different extension package per section — ggdist,
-  ggridges, ggbump, patchwork, sf, etc.; sjPlot/gtsummary). Same shape as the
-  ML gap above, just smaller — worth deciding per-chapter whether to seed a
-  minimal glossary entry or defer.
+- ~~`intro-mixed-model.qmd`~~ **Resolved 2026-08-26:** `pymer4` adopted (see
+  row above).
+- ~~`causal-models.qmd`~~ **Resolved 2026-08-26:** `causalgraphicalmodels`
+  adopted (see row above).
+- ~~`advanced_ggplot.qmd`~~ **Resolved 2026-08-27:** no Stack addition —
+  the ~19 uncovered-extension-package sections were consolidated into one
+  `OPEN-QUESTIONS.md` entry (OQ-067) rather than resolved individually; the
+  portable remainder was translated (see row above).
+- **`summary-table.qmd`** is still open: `sjPlot`/`gtsummary`, no accepted
+  Python equivalent named yet.
 - ~~`echo = F, warning = F, message = F` setup chunks~~ **Resolved
   2026-08-25:** treated as equivalent to `#| include: false` and skipped
   silently, no Python tab and no `OPEN-QUESTIONS.md` entry. Documented in
