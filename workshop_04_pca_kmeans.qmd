@@ -144,6 +144,10 @@ Open `scripts/01_prepare.R`. All Part 1 code goes here.
 The count matrix file should be saved as `count_matrix.csv` and the metadata file as `ccap_metadata.csv`, both inside your `files/` directory. These correspond to the files distributed with the workshop: the Salmon-quantified, TPM-normalised gene-level count matrix for *Ceratitis capitata* and the accompanying sample metadata.
 :::
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 library(tidymodels)
 library(tidyverse)
@@ -159,7 +163,33 @@ rna_raw <- read_csv(here("files", "ccap_count_matrix.csv"))
 meta <- read_csv(here("files", "ccap_metadata.csv"))
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.decomposition import PCA
+from sklearn.cluster import KMeans
+
+# Count matrix: genes as rows, samples as columns
+# First column "Name" contains gene identifiers (e.g. CCAP1982_LOCUS00001)
+rna_raw = pd.read_csv("files/ccap_count_matrix.csv")
+
+# Sample metadata: one row per sample
+meta = pd.read_csv("files/ccap_metadata.csv")
+```
+
+:::
+
 Inspect both objects before proceeding.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 # How many genes and samples?
@@ -168,6 +198,19 @@ dim(rna_raw)
 # What experimental variables are recorded?
 glimpse(meta)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# How many genes and samples?
+rna_raw.shape
+
+# What experimental variables are recorded?
+meta.info()
+```
+
+:::
 
 The metadata contains the columns: `id` (sample name), `experiment` (1 or 2), `rep` (biological replicate), `tissue`, `sex`, `age`, and `mating_status`.
 
@@ -186,6 +229,10 @@ Tissue codes for experiment 1:
 
 This workshop focuses on the adult tissue samples (experiment 1). Filter the metadata to those samples, then use the resulting sample IDs to subset the count matrix.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 # Keep only experiment 1 rows
 meta1 <- meta |> filter(experiment == 1)
@@ -195,6 +242,19 @@ meta1 <- meta |> filter(experiment == 1)
 rna1 <- rna_raw |>
   select(Name, all_of(meta1$id))
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Keep only experiment 1 rows
+meta1 = meta.loc[lambda d: d["experiment"] == 1]
+
+# Subset count matrix to experiment 1 samples only
+rna1 = rna_raw[["Name"] + list(meta1["id"])]
+```
+
+:::
 
 ::: {.webex-check .webex-box}
 
@@ -212,10 +272,25 @@ TPM values are already normalised for sequencing depth and gene length, but the 
 
 Applying $\log(\text{TPM} + 1)$ compresses the upper tail, stabilises variance across the expression range, and makes the values more appropriate for a variance-based method.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 rna1_log <- rna1 |>
   mutate(across(where(is.numeric), log1p))
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+rna1_log = rna1.assign(**{
+    col: np.log1p(rna1[col]) for col in rna1.select_dtypes("number").columns
+})
+```
+
+:::
 
 `r hide("Why log1p() rather than log()?")`
 
@@ -237,12 +312,31 @@ With 23,268 genes, the majority contribute noise rather than biological signal t
 
 The pipeline below computes mean log-expression across all 33 samples for each gene, then retains the top 200.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 rna1_filtered <- rna1_log |>
   mutate(mean_expr = rowMeans(across(where(is.numeric)))) |>
   slice_max(order_by = mean_expr, n = 200) |>
   select(-mean_expr)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-065
+rna1_filtered = (
+    rna1_log
+    .assign(mean_expr=lambda d: d.select_dtypes("number").mean(axis=1))
+    .nlargest(200, "mean_expr")
+    .drop(columns="mean_expr")
+)
+```
+
+:::
 
 `r hide("Hint: what does rowMeans(across(where(is.numeric))) do?")`
 
@@ -264,19 +358,54 @@ The `Name` column is still present in `rna1_filtered`. `r torf(TRUE)`
 
 The count matrix has genes as rows and samples as columns. The tidymodels recipe requires samples as rows and genes as columns — the transpose orientation. A pivot-through-long-format achieves this cleanly without base R matrix operations.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 rna1_wide <- rna1_filtered |>
   pivot_longer(-Name, names_to = "id", values_to = "log_tpm") |>
   pivot_wider(names_from = Name, values_from = log_tpm)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+rna1_wide = (
+    rna1_filtered
+    .melt(id_vars="Name", var_name="id", value_name="log_tpm")
+    .pivot(index="id", columns="Name", values="log_tpm")
+    .reset_index()
+)
+```
+
+:::
+
 Check the result: `rna1_wide` should have 33 rows (one per sample) and 201 columns (200 gene columns plus `id`).
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 dim(rna1_wide)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+rna1_wide.shape
+```
+
+:::
+
 `r hide("Show complete solution")`
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 rna1_wide <- rna1_filtered |>
@@ -290,6 +419,20 @@ rna1_wide <- rna1_filtered |>
     values_from = log_tpm
   )
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+rna1_wide = (
+    rna1_filtered
+    .melt(id_vars="Name", var_name="id", value_name="log_tpm")
+    .pivot(index="id", columns="Name", values="log_tpm")
+    .reset_index()
+)
+```
+
+:::
 
 `r unhide()`
 
@@ -309,6 +452,10 @@ The number of gene columns in `rna1_wide` is 200. `r torf(TRUE)`
 
 Before reducing the dimensionality of the data it is worth examining whether the genes in our filtered set are correlated with one another. If many genes rise and fall together across samples, that shared variation is exactly the signal PCA is designed to extract. If genes were all independent, PCA would offer little compression.
 
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 library(corrplot)
@@ -336,6 +483,34 @@ corrplot(cor_mat,
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# Build the correlation matrix from the wide-format data
+cor_mat = rna1_wide.drop(columns="id").iloc[:, :40].corr()
+
+# Shorten gene names for legibility
+cor_mat.columns = cor_mat.columns.str.replace("CCAP1982_", "").str.replace("LOCUS", "L")
+cor_mat.index = cor_mat.columns
+
+# TRANSLATION-NOTE: OQ-059
+(
+    cor_mat
+    .reset_index(names="var1")
+    .melt(id_vars="var1", var_name="var2", value_name="correlation")
+    .pipe(lambda d: (
+        ggplot(d, aes("var1", "var2", fill="correlation"))
+        + geom_tile()
+        + scale_fill_gradient2(low="#457B9D", mid="white", high="#E63946")
+        + theme_minimal()
+        + theme(axis_text_x=element_text(rotation=90, size=6), axis_text_y=element_text(size=6))
+    ))
+)
+```
+
+:::
+
 `r hide("What should I look for?")`
 A narrow ellipse aligned along the diagonal indicates a strong correlation — positive if it leans to the upper right, negative if it leans to the upper left. A circle indicates no correlation. In a transcriptomics dataset, you would expect to see blocks of strongly correlated genes corresponding to co-expressed gene sets — genes involved in the same biological process tend to be switched on and off together. These blocks are exactly what PCA will summarise as a single axis of variation.
 
@@ -352,6 +527,10 @@ The recipe formula `~.` indicates there is no outcome variable — every column 
 
 `step_normalize()` standardises each gene to zero mean and unit variance across the 33 samples. This is necessary even after log transformation, because genes still differ in their variance across samples. `step_pca()` then performs the eigendecomposition. Setting `num_comp = 10` is sufficient to capture the interpretable structure; the maximum possible number of PCs is 32 (one fewer than the number of samples), but only the first few will be worth examining.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 pca_rec <- recipe(~., data = rna1_wide |> select(-id)) |>
   step_normalize(all_numeric_predictors()) |>
@@ -365,7 +544,34 @@ pca_scores <- juice(pca_prep) |>
   left_join(meta1, by = "id")
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-065
+pca_pipeline = Pipeline([
+    ("normalize", StandardScaler()),
+    ("pca", PCA(n_components=10)),
+])
+
+X = rna1_wide.drop(columns="id")
+pc_scores = pca_pipeline.fit_transform(X)
+
+# Extract PC scores and join metadata
+pca_scores = (
+    pd.DataFrame(pc_scores, columns=[f"PC{i+1:02d}" for i in range(10)])
+    .assign(id=rna1_wide["id"].values)
+    .merge(meta1, on="id", how="left")
+)
+```
+
+:::
+
 It is useful to create a readable tissue label column for plotting.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 pca_scores <- pca_scores |>
@@ -383,7 +589,33 @@ pca_scores <- pca_scores |>
   )
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+conditions = [
+    pca_scores["tissue"] == "YO",
+    pca_scores["tissue"] == "OO",
+    (pca_scores["tissue"] == "AB") & (pca_scores["sex"] == "F"),
+    (pca_scores["tissue"] == "AB") & (pca_scores["sex"] == "M"),
+    pca_scores["tissue"] == "TE",
+    pca_scores["tissue"] == "AG",
+    pca_scores["tissue"] == "EG",
+]
+choices = ["Young ovary", "Old ovary", "Abdomen (F)", "Abdomen (M)", "Testis", "Accessory gland", "Egg"]
+
+pca_scores = pca_scores.assign(
+    tissue_label=np.select(conditions, choices, default=pca_scores["tissue"])
+)
+```
+
+:::
+
 ### 2.2 Scree plot
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 pca_var <- tidy(pca_prep, 2, type = "variance") |>
@@ -404,6 +636,34 @@ pca_var |>
 
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+pca_model = pca_pipeline.named_steps["pca"]
+pca_var = pd.DataFrame({
+    "component": [f"PC{i+1}" for i in range(10)],
+    "value": pca_model.explained_variance_ratio_[:10] * 100,
+})
+
+pca_var = pca_var.assign(label=lambda d: d["value"].round(1).astype(str) + "%")
+
+(
+    ggplot(pca_var, aes(x="component", y="value"))
+    + geom_col(fill="#457B9D", alpha=0.85, width=0.65)
+    + geom_text(aes(label="label"), va="bottom", fontweight="bold", size=9)
+    + labs(
+        x="Principal component",
+        y="Variance explained (%)",
+        title="Scree plot: Ceratitis capitata RNAseq, experiment 1",
+    )
+    + theme_minimal(base_size=13)
+    + theme(panel_grid_major_x=element_blank())
+)
+```
+
+:::
 
 ::: {.webex-check .webex-box}
 
@@ -428,6 +688,10 @@ In transcriptomic data from samples with distinct tissue identities, PC1 typical
 ### 2.3 Gene loadings on PC1
 
 Loadings on PC1 identify the genes whose expression most strongly separates samples along the primary axis of variation. With 200 genes, showing all loadings produces an unreadable plot — filter to the top 20 by absolute loading value.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 tidy(pca_prep, 2) |>
@@ -454,6 +718,45 @@ tidy(pca_prep, 2) |>
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+loadings = pd.DataFrame(
+    pca_model.components_.T,
+    index=X.columns,
+    columns=[f"PC{i+1}" for i in range(10)],
+).rename_axis("terms").reset_index()
+
+(
+    loadings
+    .assign(abs_value=lambda d: d["PC1"].abs())
+    .nlargest(20, "abs_value")
+    .assign(
+        terms=lambda d: d["terms"].str.replace("CCAP1982_", ""),
+        direction=lambda d: np.where(d["PC1"] >= 0, "positive", "negative"),
+    )
+    .sort_values("PC1")
+    .pipe(lambda d: d.assign(terms=pd.Categorical(d["terms"], categories=d["terms"], ordered=True)))
+    .pipe(lambda d: (
+        ggplot(d, aes(x="PC1", y="terms", colour="direction"))
+        + geom_vline(xintercept=0, colour="grey60")
+        + geom_segment(aes(x=0, xend="PC1", y="terms", yend="terms"), size=1.2)
+        + geom_point(size=3.5)
+        + scale_colour_manual(values={"positive": "#457B9D", "negative": "#E63946"}, guide=False)
+        + labs(
+            x="Loading on PC1",
+            y=None,
+            title="Top 20 gene loadings on PC1",
+            subtitle="Gene names shortened — full IDs in the form CCAP1982_LOCUSxxxxx",
+        )
+        + theme_minimal(base_size=12)
+    ))
+)
+```
+
+:::
+
 ::: {.callout-note}
 ## Reflection 2
 
@@ -466,6 +769,10 @@ tidy(pca_prep, 2) |>
 ### 2.4 Scores biplot
 
 The scores are the coordinates of each sample in PC space. Colouring points by tissue type — a variable not used to compute the PCA — tests whether the analysis has recovered the biological structure of the experiment.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 pc1_pct <- round(pca_var$value[1], 1)
@@ -494,7 +801,45 @@ pca_scores |>
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+pc1_pct = round(pca_var["value"].iloc[0], 1)
+pc2_pct = round(pca_var["value"].iloc[1], 1)
+
+pal_tissue = {
+    "Young ovary": "#E63946",
+    "Old ovary": "#F4A261",
+    "Abdomen (F)": "#E9C46A",
+    "Abdomen (M)": "#2a9d8f",
+    "Testis": "#457B9D",
+    "Accessory gland": "#1D3557",
+    "Egg": "#8338EC",
+}
+
+(
+    ggplot(pca_scores, aes(x="PC01", y="PC02", colour="tissue_label"))
+    + geom_point(size=3, alpha=0.9)
+    + scale_colour_manual(values=pal_tissue, name="Tissue")
+    + labs(
+        x=f"PC1 ({pc1_pct}% variance)",
+        y=f"PC2 ({pc2_pct}% variance)",
+        title="PCA biplot — Ceratitis capitata experiment 1",
+        subtitle="Tissue labels were not used to compute the PCA",
+    )
+    + theme_minimal(base_size=13)
+    + theme(legend_position="right")
+)
+```
+
+:::
+
 Now produce a second version coloured by mating status to see whether that variable also structures the data.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 pca_scores |>
@@ -514,6 +859,34 @@ pca_scores |>
 
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+(
+    pca_scores
+    .loc[lambda d: d["mating_status"].notna()]
+    .pipe(lambda d: (
+        ggplot(d, aes(x="PC01", y="PC02", colour="tissue_label", shape="mating_status"))
+        + geom_point(size=3, alpha=0.9)
+        + scale_colour_manual(values=pal_tissue, name="Tissue")
+        + scale_shape_manual(
+            values={"M": "o", "V": "1"},
+            labels={"M": "Mated", "V": "Virgin"},
+            name="Mating status",
+        )
+        + labs(
+            x=f"PC1 ({pc1_pct}% variance)",
+            y=f"PC2 ({pc2_pct}% variance)",
+            title="PCA biplot — tissue type and mating status",
+        )
+        + theme_minimal(base_size=13)
+    ))
+)
+```
+
+:::
 
 ::: {.webex-check .webex-box}
 
@@ -551,6 +924,10 @@ K-means partitions the samples in PC space into $k$ discrete clusters by minimis
 
 #### 2.5.1 Choosing k: elbow plot
 
+:::{.panel-tabset group="language"}
+
+##### R
+
 ```{r, eval = FALSE}
 set.seed(99)
 elbow_df <- tibble(k = 1:8) |>
@@ -572,6 +949,33 @@ elbow_df |>
 
 ```
 
+##### Python
+
+```{python}
+#| eval: false
+pc_subset = pca_scores[["PC01", "PC02", "PC03"]]
+
+elbow_df = pd.DataFrame({
+    "k": range(1, 9),
+    "wss": [KMeans(n_clusters=k, n_init=25, random_state=99).fit(pc_subset).inertia_ for k in range(1, 9)],
+})
+
+(
+    ggplot(elbow_df, aes(x="k", y="wss"))
+    + geom_line(colour="#457B9D", size=1.2)
+    + geom_point(colour="#457B9D", size=3.5)
+    + scale_x_continuous(breaks=range(1, 9))
+    + labs(
+        x="Number of clusters (k)",
+        y="Total within-cluster sum of squares",
+        title="Elbow plot: k-means on experiment 1 PC scores (PC1–PC3)",
+    )
+    + theme_minimal(base_size=13)
+)
+```
+
+:::
+
 ::: {.webex-check .webex-box}
 
 #### Assessment 3
@@ -588,6 +992,10 @@ Based on the elbow plot, which value of k shows the most pronounced change in th
 
 #### 2.5.2 Fitting the final k-means model
 
+:::{.panel-tabset group="language"}
+
+##### R
+
 ```{r, eval = FALSE}
 set.seed(99)
 km_fit <- pca_scores |>
@@ -598,9 +1006,24 @@ pca_scores <- pca_scores |>
   mutate(cluster = factor(km_fit$cluster))
 ```
 
+##### Python
+
+```{python}
+#| eval: false
+km_fit = KMeans(n_clusters=5, n_init=25, random_state=99).fit(pca_scores[["PC01", "PC02", "PC03"]])
+
+pca_scores = pca_scores.assign(cluster=(km_fit.labels_ + 1).astype(str))
+```
+
+:::
+
 #### 2.5.3 Comparing clusters to tissue labels
 
 Produce two side-by-side plots: the first coloured by k-means cluster, the second by tissue type.
+
+:::{.panel-tabset group="language"}
+
+##### R
 
 ```{r, eval = FALSE}
 pal_cluster <- c("1" = "#457B9D", "2" = "#E63946", "3" = "#2a9d8f",
@@ -628,13 +1051,61 @@ p_cluster + p_tissue
 
 ```
 
+##### Python
+
+```{python}
+#| eval: false
+pal_cluster = {"1": "#457B9D", "2": "#E63946", "3": "#2a9d8f", "4": "#E9C46A", "5": "#8338EC"}
+
+p_cluster = (
+    ggplot(pca_scores, aes(x="PC01", y="PC02", colour="cluster"))
+    + geom_point(size=3, alpha=0.9)
+    + scale_colour_manual(values=pal_cluster, name="Cluster")
+    + labs(x=f"PC1 ({pc1_pct}% var)", y=f"PC2 ({pc2_pct}% var)", title="K-means (k = 5)")
+    + theme_minimal(base_size=12)
+)
+
+p_tissue = (
+    ggplot(pca_scores, aes(x="PC01", y="PC02", colour="tissue_label"))
+    + geom_point(size=3, alpha=0.9)
+    + scale_colour_manual(values=pal_tissue, name="Tissue")
+    + labs(x=f"PC1 ({pc1_pct}% var)", y=f"PC2 ({pc2_pct}% var)", title="Known tissue groups")
+    + theme_minimal(base_size=12)
+)
+
+# TRANSLATION-NOTE: OQ-066
+p_cluster
+p_tissue
+```
+
+:::
+
 Now cross-tabulate cluster assignments against tissue labels to see how well they correspond.
+
+:::{.panel-tabset group="language"}
+
+##### R
 
 ```{r, eval = FALSE}
 pca_scores |>
   count(cluster, tissue_label) |>
   pivot_wider(names_from = tissue_label, values_from = n, values_fill = 0)
 ```
+
+##### Python
+
+```{python}
+#| eval: false
+(
+    pca_scores
+    .groupby(["cluster", "tissue_label"], as_index=False)
+    .size()
+    .pivot(index="cluster", columns="tissue_label", values="size")
+    .fillna(0)
+)
+```
+
+:::
 
 ::: {.webex-check .webex-box}
 

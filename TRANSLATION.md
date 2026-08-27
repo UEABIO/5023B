@@ -253,6 +253,13 @@ still sees the whole modelling process in one place.
 | `conf_mat(results, truth, estimate) \|> autoplot(type = "heatmap")` | reshape `confusion_matrix(y_true, y_pred)` into a long frame with the true/predicted labels and plot with `geom_tile()`, mirroring the corrplot heatmap idiom above |
 | `roc_curve(results, truth, .pred_class) \|> autoplot()` | `fpr, tpr, _ = roc_curve(y_true, y_score)`, then a plotnine `geom_line()` plot of `tpr` against `fpr` |
 | `roc_auc(results, truth, .pred_class)` | `roc_auc_score(y_true, y_score)` |
+| `prep(recipe)` / `juice(prepped_recipe)` | `pipeline.fit_transform(X)` — a `Pipeline`'s `fit_transform` prepares and applies in one step, with no separate prep/juice distinction |
+| `tidy(pca_prep, 2, type = "variance")` (percent variance per PC) | `pca.explained_variance_ratio_ * 100`, where `pca` is the fitted `PCA` step pulled from the pipeline |
+| `tidy(pca_prep, 2)` (PCA loadings) | `pd.DataFrame(pca.components_.T, index=feature_names, columns=[f"PC{i+1}" for i in range(pca.n_components_)])` |
+| `kmeans(data, centers = k)$tot.withinss` | `KMeans(n_clusters=k).fit(data).inertia_` |
+| `rowMeans(across(where(is.numeric)))` | `df.select_dtypes("number").mean(axis=1)` |
+| `p1 + p2` (patchwork, side-by-side composition) | no plotnine equivalent — patchwork's `+` composes two separate plot objects into one figure; plotnine's `+` is layer-addition within a single plot. Settled under OQ-066: show the two plots as two separate Python statements rather than inventing a composition mechanism |
+
 | `set_engine("ranger", importance = "permutation")` \|> ... \|> `vip::vip(fit)` | `sklearn.inspection.permutation_importance(model, X, y)` — `RandomForestClassifier.feature_importances_` alone is impurity-based (mean decrease in Gini), not permutation-based; since the R chunk explicitly requests `importance = "permutation"`, the faithful port uses `permutation_importance`, not the plain `.feature_importances_` attribute |
 
 ### Dates and times (lubridate)

@@ -1846,3 +1846,50 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-065
+
+- **File / chunk:** `workshop_04_pca_kmeans.qmd`, several — `prep()`/
+  `juice()` (`### 2.1 Fitting the PCA`), `tidy(pca_prep, 2, type =
+  "variance")` and `tidy(pca_prep, 2)` (loadings) (`### 2.2 Scree plot`,
+  `### 2.3 Gene loadings on PC1`), `kmeans(...)$tot.withinss` (`#### 2.5.1
+  Choosing k`), `rowMeans(across(where(is.numeric)))` (`### 1.4 Filter to
+  highly expressed genes`)
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s extended "Machine learning" table.
+- **Issue:** `step_pca()` and `kmeans()` were already settled at the
+  inventory stage, but tidymodels' recipe-preparation step (`prep()`/
+  `juice()`) and extracting variance/loadings/inertia out of a fitted PCA
+  or k-means object had no glossary entries yet.
+- **Candidates:** as written into `TRANSLATION.md`. `Pipeline.fit_transform()`
+  collapses `prep()`+`juice()` into one call; `PCA.explained_variance_ratio_`
+  and `.components_` give variance and loadings directly;
+  `KMeans.inertia_` is `tot.withinss`.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-065` at each idiom's first occurrence.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entries added to `TRANSLATION.md` before
+  translating the rest of the chapter.
+
+---
+
+## OQ-066
+
+- **File / chunk:** `workshop_04_pca_kmeans.qmd`, `#### 2.5.3 Comparing
+  clusters to tissue labels`, `p_cluster + p_tissue`
+- **Status:** open
+- **R original:** `patchwork`'s `+` composes two separate ggplot objects
+  side by side into one figure.
+- **Issue:** plotnine has no composition mechanism equivalent to
+  patchwork — its own `+` is layer-addition within a single plot, not
+  figure composition. `patchwork` itself isn't in the Stack.
+- **Candidates:** show `p_cluster` and `p_tissue` as two separate Python
+  statements (two figures) rather than inventing a side-by-side
+  composition the Stack doesn't support.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-066`.
+- **Recommendation:** revisit if a plotnine-compatible composition
+  package is ever added to the Stack.
+- **Resolution:**
+
+---
