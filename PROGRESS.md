@@ -81,7 +81,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | A1 | r-basics.qmd | ~55 | todo | | | | results='asis' fake-output pairing, see below |
 | A2 | import.qmd | 2 | todo | | | | |
 | A3 | script.qmd | 2 | todo | | | | |
-| A4 | Naming conventions.qmd | 0 | todo | | | | all figures via include_graphics() |
+| A4 | Naming conventions.qmd | 0 | translated | 0 | | 2026-08-27 | confirmed on read: sole non-setup chunks are `echo=FALSE` `include_graphics()` calls, skip-silent — no `.qmd` edits made |
 | A5 | data_reshaping.qmd | 9 | todo | | | | mostly covered by existing glossary |
 | A6 | quarto.qmd | ~5 | todo | | | | raw chunk count over-counts literal `` `r ''` `` fences, not real code |
 | A7 | ggplot.qmd | ~35 | todo | | | | extension packages appear late in file |
