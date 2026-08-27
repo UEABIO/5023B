@@ -87,7 +87,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | A7 | ggplot.qmd | ~35 | todo | | | | extension packages appear late in file |
 | A8 | advanced_ggplot.qmd | 10 (exact) | translated | 2 | ca3ec5f | 2026-08-27 | consolidated all 19 uncovered-extension-package sections (ggdist, ggridges, ggbump, ggalt, ggh4x, gghighlight, ggbeeswarm, plotly, ggforce, geomtextpath, ggtext, sf/rnaturalearth, ggpubr+patchwork layout, showtext) into one entry rather than one per package (OQ-067); translated the portable remainder (custom themes, viridis heatmap, native `geom_hex()`, `scales`' log-transform/mizani idioms) (OQ-068) |
 | A9 | summary-table.qmd | 4 | translated | 1 | | 2026-08-27 | whole chapter skip-logged (OQ-069): entirely `sjPlot::tab_model()` (reuses OQ-046) and `gtsummary::tbl_regression()` (new, same no-equivalent category), no portable remainder — no `.qmd` edits made |
-| A10 | references.qmd | 0 | todo | | | | no code |
+| A10 | references.qmd | 0 | translated | 0 | | 2026-08-27 | confirmed on read: bibliography placeholder only, no content at all — no `.qmd` edits made |
 
 ### Needs a decision before bulk work
 
