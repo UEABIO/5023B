@@ -52,7 +52,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 |---|---|---|---|---|---|---|---|
 | 0 | index.qmd | 0 | todo | | | | preface: standing warnings, written last |
 | 1 | 03-github.qmd | 1 (exact) | translated | 1 | f72525c | 2026-08-27 | confirmed on read: eight `usethis`/`gitcreds`/`gert` chunks skip-logged as R-specific tooling, consolidated into one entry (OQ-070); the one genuinely portable chunk (`initial_exploration.R`, plain tidyverse data exploration) translated normally |
-| 2 | week-1.qmd | 0 | todo | | | | worksheet, no code |
+| 2 | week-1.qmd | 0 | translated | 0 | | 2026-08-27 | confirmed on read: zero `{r}` chunks — all fenced blocks are plain-text worksheet templates for students to copy into `.txt` files, no executable Quarto chunks — no `.qmd` edits made |
 | 3 | strings.qmd | 16 (exact) | reviewed | 2 | 2b1be5d | 2026-08-25 | **pilot chapter** — pilot gate passed, all 5 checks; OQ-002 resolved same pass |
 | 4 | duplicates.qmd | 6 (exact) | translated | 4 | 1cd238c | 2026-08-25 | R-only tabsets handled per TRANSLATION.md; RDS chunk skip-logged (OQ-003); dplyr tab's broken `sum()` flagged, left untouched (OQ-004) |
 | 5 | missing-values.qmd | 9 (exact) | translated | 4 | 7b7fb28 | 2026-08-25 | R-only tabset handled per TRANSLATION.md; RDS chunk skip-logged (OQ-010, also has a stray typo); stale "reorder columns" comment dropped, not carried (OQ-009) |
