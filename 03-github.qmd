@@ -643,6 +643,10 @@ Never commit large data files to Git unless they're small (< 10MB) and essential
 
 - Save it as `scripts/initial_exploration.R`
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 
 # Week 1: Initial Data Exploration ====
@@ -689,6 +693,50 @@ group_by(site, treatment) |>
 #
 
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Week 1: Initial Data Exploration
+# Author: [Your Name]
+# Date: [Today's Date]
+
+# Load packages
+import pandas as pd
+
+# Load data
+mosquito_egg_raw = pd.read_csv("data/mosquito_egg_data.csv")
+mosquito_egg_raw.columns = mosquito_egg_raw.columns.str.lower()
+
+# Basic overview
+mosquito_egg_raw.info()
+mosquito_egg_raw.describe(include="all")
+mosquito_egg_raw.info()
+
+# Interactive table
+# view() is an RStudio-specific spreadsheet viewer; in Jupyter/VS Code,
+# display the frame directly or use the editor's own variable viewer
+mosquito_egg_raw
+
+# Counts by site and treatment
+mosquito_egg_raw.groupby(["site", "treatment"], as_index=False).size()
+
+# Observations
+# Your observations (add as comments below):
+# - What biological system is this?
+#
+# - What's being measured?
+#
+# - How many observations?
+#
+# - Anything surprising?
+#
+# - Any obvious problems?
+#
+```
+
+:::
 
 :::{.callout-note}
 You'll need to install `tidyverse` and `here` first if you haven't already.

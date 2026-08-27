@@ -51,7 +51,7 @@ chapter is chosen yet — see "Needs a decision before bulk work" below.
 | # | File | Chunks eligible | Status | Open Qs | Commit | Date | Notes |
 |---|---|---|---|---|---|---|---|
 | 0 | index.qmd | 0 | todo | | | | preface: standing warnings, written last |
-| 1 | 03-github.qmd | 1 | todo | | | | mostly usethis/gitcreds auth tooling, skip-log |
+| 1 | 03-github.qmd | 1 (exact) | translated | 1 | | 2026-08-27 | confirmed on read: eight `usethis`/`gitcreds`/`gert` chunks skip-logged as R-specific tooling, consolidated into one entry (OQ-070); the one genuinely portable chunk (`initial_exploration.R`, plain tidyverse data exploration) translated normally |
 | 2 | week-1.qmd | 0 | todo | | | | worksheet, no code |
 | 3 | strings.qmd | 16 (exact) | reviewed | 2 | 2b1be5d | 2026-08-25 | **pilot chapter** — pilot gate passed, all 5 checks; OQ-002 resolved same pass |
 | 4 | duplicates.qmd | 6 (exact) | translated | 4 | 1cd238c | 2026-08-25 | R-only tabsets handled per TRANSLATION.md; RDS chunk skip-logged (OQ-003); dplyr tab's broken `sum()` flagged, left untouched (OQ-004) |

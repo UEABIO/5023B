@@ -1986,3 +1986,33 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-070
+
+- **File / chunk:** `03-github.qmd` — eight chunks covering
+  `usethis::use_git_config()`, `usethis::create_github_token()`,
+  `gitcreds::gitcreds_set()`, `usethis::gh_token_help()`,
+  `usethis::edit_r_environ()`, a literal `.Renviron` line, `gert::git_add()`/
+  `git_commit()`/`git_push()`, and the opening `install.packages(...)`
+  block
+- **Status:** open
+- **R original:** the whole chapter teaches Git/GitHub setup and workflow
+  from inside RStudio — creating a PAT, connecting `usethis`/`gitcreds` to
+  GitHub, using the RStudio Git pane, and (in the fallback path) driving
+  git via the `gert` package.
+- **Issue:** this matches CLAUDE.md's named skip category for "chunks
+  teaching something R-specific with no Python counterpart" (alongside
+  `renv`, RStudio projects, `sessionInfo()`) — `usethis`/`gitcreds`/`gert`
+  are R packages wrapping Git/GitHub setup specifically for an RStudio
+  workflow; the underlying Git concepts are language-agnostic but these
+  specific packages and the RStudio Git-pane instructions are not.
+  Consolidated into one entry rather than eight near-identical ones.
+- **Candidates:** none — not a translation gap, out-of-scope R tooling.
+- **Provisional choice in the book:** no Python tab added for any of the
+  eight chunks. The chapter's one genuinely portable chunk — the
+  `initial_exploration.R` data-analysis script — was translated normally.
+- **Recommendation:** none needed; matches an already-named CLAUDE.md skip
+  category rather than a new Stack question.
+- **Resolution:**
+
+---
