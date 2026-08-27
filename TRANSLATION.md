@@ -244,6 +244,14 @@ still sees the whole modelling process in one place.
 | `autoplot(tune_grid_result)` | build a `DataFrame` from `grid_search.cv_results_["param_<name>"]` and `-grid_search.cv_results_["mean_test_score"]` (use `scoring="neg_root_mean_squared_error"` in `GridSearchCV`, since scikit-learn scorers are "higher is better"), then a plotnine point/line plot |
 | `select_best()` / `finalize_workflow()` / `fit()` (three separate steps) | collapses into nothing extra — `GridSearchCV(...).fit(...)` already refits the best combination in one call; `.best_estimator_` is the finalised, fitted pipeline directly |
 | `corrplot::corrplot(cor_matrix)` | no equivalent package in the Stack; reshape to long form with `.reset_index().melt(...)` and plot with `geom_tile()`, staying within plotnine rather than reaching for matplotlib/seaborn for an otherwise-ordinary heatmap |
+| `read_table(path)` (whitespace-delimited, PLINK-style) | `pd.read_csv(path, sep=r"\s+")` |
+| `predict(fit, new_data, type = "prob")` | `pipeline.predict_proba(X)` |
+| `predict(fit, new_data, type = "class")` | `pipeline.predict(X)` |
+| `accuracy(truth = y, estimate = .pred_class)` | `accuracy_score(y_true, y_pred)` |
+| `sensitivity(...)` (= recall of the positive class) | `recall_score(y_true, y_pred, pos_label=...)` |
+| `specificity(...)` (= recall of the negative class) | `recall_score(y_true, y_pred, pos_label=<negative class>)` — scikit-learn has no dedicated `specificity_score`; recall computed against the negative label gives the same quantity |
+| `conf_mat(results, truth, estimate) \|> autoplot(type = "heatmap")` | reshape `confusion_matrix(y_true, y_pred)` into a long frame with the true/predicted labels and plot with `geom_tile()`, mirroring the corrplot heatmap idiom above |
+| `roc_curve(results, truth, .pred_class) \|> autoplot()` | `fpr, tpr, _ = roc_curve(y_true, y_score)`, then a plotnine `geom_line()` plot of `tpr` against `fpr` |
 
 ### Dates and times (lubridate)
 

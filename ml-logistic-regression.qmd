@@ -78,6 +78,10 @@ dog_snp_workshop/
 
 Open `scripts/01_explore.R` and confirm the packages load without errors.
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 library(tidymodels)
 library(tidyverse)
@@ -85,6 +89,25 @@ library(here)
 library(janitor)
 library(skimr)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+import pandas as pd
+import numpy as np
+from plotnine import *
+import statsmodels.formula.api as smf
+import statsmodels.api as sm
+import matplotlib.pyplot as plt
+from sklearn.model_selection import train_test_split
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import accuracy_score, recall_score, confusion_matrix, roc_curve
+```
+
+:::
 
 ::: {.callout-note}
 ## Troubleshooting
@@ -136,6 +159,10 @@ SNP columns are named by chromosome and position — for example `chr25.11293074
 
 `read_table()` from `readr` handles space-separated files with variable whitespace. `read_csv()` will not work here — it expects commas as delimiters and will collapse all columns into one.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 library(tidyverse)
 library(here)
@@ -148,6 +175,21 @@ glimpse(dogs_raw)
 
 head(dogs_raw)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-062
+dogs_raw = pd.read_csv("data/dogs_imputed_reduced.tsv", sep=r"\s+")
+dogs_raw.columns = dogs_raw.columns.str.lower()
+
+dogs_raw.info()
+
+dogs_raw.head(6)
+```
+
+:::
 
 After running this, confirm that the column names are in snake_case and that the number of columns matches the number of SNP loci plus six.
 
@@ -164,6 +206,10 @@ Check dimensions, missing values, and duplicate rows before doing anything else.
 `r hide("Hint: completeness checks")`
 
 `skim()` reports missing values and value ranges per column. For genotype columns specifically, check that all values fall within 0, 1, and 2. Any value outside this range warrants investigation before modelling.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 library(skimr)
@@ -184,6 +230,27 @@ dogs_raw |>
   count(genotype)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+dogs_raw.info()
+
+dogs_raw.duplicated().sum()
+
+# Check genotype value range across a sample of SNP columns
+(
+    dogs_raw
+    .filter(like="chr")
+    .iloc[:, :9]
+    .melt(var_name="snp", value_name="genotype")
+    .value_counts("genotype")
+    .reset_index(name="n")
+)
+```
+
+:::
+
 `r unhide()`
 
 ---
@@ -195,6 +262,10 @@ Produce a bar chart of phenotype counts. This is the most important single check
 `r hide("Hint: phenotype bar chart")`
 
 PLINK codes phenotype as 1 (unaffected) and 2 (affected). Recode to labels before plotting so the chart is self-explanatory.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 dogs_raw |>
@@ -214,6 +285,27 @@ dogs_raw |>
 # ggsave(here("outputs", "phenotype_distribution.png"), width = 5, height = 4)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+(
+    dogs_raw
+    .assign(phenotype_label=lambda d: np.where(d["phenotype"] == 2, "Affected", "Unaffected"))
+    .pipe(lambda d: (
+        ggplot(d, aes("phenotype_label", fill="phenotype_label"))
+        + geom_bar(alpha=0.85, show_legend=False)
+        + scale_fill_manual(values={"Affected": "#E63946", "Unaffected": "#457B9D"})
+        + labs(title="Phenotype distribution", x=None, y="Count")
+        + theme_minimal()
+    ))
+)
+
+# ggsave("outputs/phenotype_distribution.png", width=5, height=4)
+```
+
+:::
+
 `r unhide()`
 
 ---
@@ -225,6 +317,10 @@ Produce a bar chart showing the frequency of each genotype value (0, 1, 2) for a
 `r hide("Hint: genotype frequency plot")`
 
 With potentially hundreds of SNP columns, plot a representative sample of ten to fifteen sites. `pivot_longer()` reshapes multiple columns into a single faceted plot as in Workshop 1.
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 dogs_raw |>
@@ -252,17 +348,61 @@ dogs_raw |>
 # ggsave(here("outputs", "genotype_distributions.png"), width = 12, height = 8)
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+(
+    dogs_raw
+    .filter(like="chr")
+    .melt(var_name="snp", value_name="genotype")
+    .assign(genotype=lambda d: d["genotype"].astype(str))
+    .pipe(lambda d: (
+        ggplot(d, aes("genotype", fill="genotype"))
+        + geom_bar(show_legend=False)
+        + facet_wrap("snp", scales="free_y")
+        + scale_fill_manual(values={"0": "#457B9D", "1": "#2a9d8f", "2": "#E63946"})
+        + labs(
+            title="Genotype frequency distributions across a sample of SNP sites",
+            x="Genotype (0, 1, or 2 copies of reference allele)",
+            y="Count",
+        )
+        + theme_minimal()
+        + theme(axis_text_x=element_text(size=8))
+    ))
+)
+
+# ggsave("outputs/genotype_distributions.png", width=12, height=8)
+```
+
+:::
+
 `r unhide()`
 
 ---
 
 ### Step 5 — Save the cleaned dataset
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 # Save for use in 02_model.R
 # We save the raw cleaned version — recoding happens in the modelling script
 write_csv(dogs_raw, here("data", "cleft_lip_clean.csv"))
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Save for use in 02_model.R
+# We save the raw cleaned version — recoding happens in the modelling script
+dogs_raw.to_csv("data/cleft_lip_clean.csv", index=False)
+```
+
+:::
 
 ---
 
@@ -317,6 +457,10 @@ A cleaned dataset has been written to `data/cleft_lip_clean.csv`. `r torf(TRUE)`
 ---
 
 `r hide("Show complete solution")`
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r, eval = FALSE}
 library(tidyverse)
@@ -388,6 +532,73 @@ dogs_raw |>
 write_csv(dogs_raw, here("data", "cleft_lip_clean.csv"))
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# Load the dataset — space-separated, not comma-separated
+dogs_raw = pd.read_csv("data/dogs_imputed_reduced.tsv", sep=r"\s+")
+dogs_raw.columns = dogs_raw.columns.str.lower()
+
+# Check dimensions and variable types
+dogs_raw.info()
+
+# Completeness summary at column level
+dogs_raw.info()
+
+# Check for duplicate rows
+dogs_raw.duplicated().sum()
+
+# Confirm genotype values are 0, 1, and 2 only
+(
+    dogs_raw
+    .filter(like="chr")
+    .iloc[:, :10]
+    .melt(var_name="snp", value_name="genotype")
+    .value_counts("genotype")
+    .reset_index(name="n")
+)
+
+# Phenotype distribution
+(
+    dogs_raw
+    .assign(phenotype_label=lambda d: np.where(d["phenotype"] == 2, "Affected", "Unaffected"))
+    .pipe(lambda d: (
+        ggplot(d, aes("phenotype_label", fill="phenotype_label"))
+        + geom_bar(alpha=0.85, show_legend=False)
+        + scale_fill_manual(values={"Affected": "#E63946", "Unaffected": "#457B9D"})
+        + labs(title="Phenotype distribution", x=None, y="Count")
+        + theme_minimal()
+    ))
+)
+
+# ggsave("outputs/phenotype_distribution.png", width=5, height=4)
+
+# Genotype frequency distributions
+(
+    dogs_raw
+    .filter(like="chr")
+    .iloc[:, :12]
+    .melt(var_name="snp", value_name="genotype")
+    .assign(genotype=lambda d: d["genotype"].astype(str))
+    .pipe(lambda d: (
+        ggplot(d, aes("genotype", fill="genotype"))
+        + geom_bar(show_legend=False)
+        + facet_wrap("snp", scales="free_y")
+        + scale_fill_manual(values={"0": "#457B9D", "1": "#2a9d8f", "2": "#E63946"})
+        + labs(title="Genotype frequency distributions", x="Genotype", y="Count")
+        + theme_minimal()
+    ))
+)
+
+# ggsave("outputs/genotype_distributions.png", width=12, height=8)
+
+# Save cleaned dataset for modelling script
+dogs_raw.to_csv("data/cleft_lip_clean.csv", index=False)
+```
+
+:::
+
 `r unhide()`
 
 `r hide("What should I look for in the outputs?")`
@@ -411,6 +622,10 @@ From this point forward, you write all code yourself. Open `scripts/02_model.R`.
 
 
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 library(tidymodels)
 library(tidyverse)
@@ -420,6 +635,16 @@ library(here)
 # Load the cleaned dataset produced by 01_explore.R
 dogs <- read_csv(here("data", "cleft_lip_clean.csv"))
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# Load the cleaned dataset produced by 01_explore.R
+dogs = pd.read_csv("data/cleft_lip_clean.csv")
+```
+
+:::
 
 :::{.callout-note}
 ## Rlang
@@ -433,6 +658,10 @@ If you get an error about rlang, try loading tidymodels before tidyverse (try re
 ## A Familiar Starting Point {.unnumbered}
 
 You have used logistic regression before to ask whether a predictor is associated with a binary outcome. The code below fits the same model you would have written in your statistics course.
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 # Recode phenotype from PLINK coding (1/2) to a binary factor
@@ -456,9 +685,36 @@ glm_base <- glm(
 summary(glm_base)
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Recode phenotype from PLINK coding (1/2) to a binary factor
+# In PLINK: 1 = unaffected, 2 = affected
+dogs_glm = (
+    dogs
+    .drop(columns=["fid", "iid", "pat", "mat", "sex"])
+    .assign(phenotype=lambda d: np.where(d["phenotype"] == 2, "affected", "unaffected"))
+)
+
+# TRANSLATION-NOTE: OQ-058
+# Fit a logistic regression the familiar way using one SNP predictor
+# This is the inferential framing you have used before
+formula = "phenotype ~ " + " + ".join(c for c in dogs_glm.columns if c != "phenotype")
+glm_base = smf.glm(formula, data=dogs_glm, family=sm.families.Binomial()).fit()
+
+glm_base.summary()
+```
+
+:::
+
 `summary()` gives coefficients on the log-odds scale, standard errors, and p-values. These answer the question: *is this SNP significantly associated with cleft lip in this sample?*
 
 Now check model assumptions before interpreting anything.
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 library(performance)
@@ -468,6 +724,19 @@ library(performance)
 # binned residuals and influential observations
 check_model(glm_base)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# check_model() evaluates the model on the data it was fitted on
+# For a logistic regression the most relevant panels are
+# binned residuals and influential observations
+sm.qqplot(glm_base.resid_deviance, line="45")
+plt.scatter(glm_base.fittedvalues, glm_base.resid_deviance)
+```
+
+:::
 
 ```{r, echo = FALSE}
 opts_logodds <- c(
@@ -508,6 +777,10 @@ Before splitting, remove the non-predictor columns and recode phenotype. Two col
 - `sex` is a genuine biological variable but is excluded here without analysis — see Reflection 1 
 - `phenotype` must be a named factor, not a numeric 1/2 variable — leaving it numeric would cause tidymodels to fit a regression rather than a classification model
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r}
 # Remove pedigree columns and recode phenotype
 # age_category-equivalent problem: phenotype encodes the outcome,
@@ -523,6 +796,23 @@ dogs_model <- dogs |>
 dogs_model |>
   count(phenotype)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# Remove pedigree columns and recode phenotype
+dogs_model = (
+    dogs
+    .drop(columns=["fid", "iid", "pat", "mat", "sex"])
+    .assign(phenotype=lambda d: np.where(d["phenotype"] == 2, "affected", "unaffected"))
+)
+
+# Confirm the recoding and class balance
+dogs_model["phenotype"].value_counts()
+```
+
+:::
 
 ::: {.callout-note}
 ## Reflection 1
@@ -545,6 +835,10 @@ dog_test  <- testing(dog_split)
 
 ```
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 # Stratified split: maintains class proportions in both sets
 set.seed(42)
@@ -558,6 +852,22 @@ dog_train |> count(phenotype)
 dog_test  |> count(phenotype)
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Stratified split: maintains class proportions in both sets
+dog_train, dog_test = train_test_split(
+    dogs_model, train_size=0.8, stratify=dogs_model["phenotype"], random_state=42
+)
+
+# Confirm class balance is maintained
+dog_train["phenotype"].value_counts()
+dog_test["phenotype"].value_counts()
+```
+
+:::
+
 Now examine sensitivity to split choices, as in Workshop 1. Here we use **accuracy** — the proportion of dogs correctly classified — rather than RMSE, because the outcome is categorical not continuous.
 
 We change one thing at a time:
@@ -565,6 +875,10 @@ We change one thing at a time:
 - **Split 1** — baseline: 80/20, seed 42
 - **Split 2** — proportion only changes: 70/30, seed 42
 - **Split 3** — seed only changes: 80/20, seed 123
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 # Split 1: baseline — 80/20, seed 42
@@ -622,6 +936,44 @@ acc_1 <- fit_1 |>
 acc_1
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Split 1: baseline — 80/20, seed 42
+# random_state ensures the same dogs land in training and test
+# every time this script is run — without it results change each run
+
+# train_test_split() divides the data into training and test sets
+# train_size = 0.8 means 80% goes to training, 20% to the test set
+# stratify = dogs_model["phenotype"] ensures affected and unaffected dogs
+# appear in similar proportions in both sets — essential when imbalanced
+train_1, test_1 = train_test_split(
+    dogs_model, train_size=0.8, stratify=dogs_model["phenotype"], random_state=42
+)
+
+# Pipeline: normalise predictors, then fit logistic regression
+# StandardScaler rescales SNP predictors to mean 0, standard deviation 1
+fit_1 = Pipeline([
+    ("normalize", StandardScaler()),
+    ("model", LogisticRegression()),
+]).fit(train_1.drop(columns="phenotype"), train_1["phenotype"])
+
+# Evaluate on the held-out test set
+# predict() generates class labels using the default 0.5 threshold
+# accuracy_score() calculates the proportion of dogs correctly classified
+acc_1 = accuracy_score(test_1["phenotype"], fit_1.predict(test_1.drop(columns="phenotype")))
+
+# Print the accuracy for Split 1
+acc_1
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 # Split 2: 70/30, seed 42 — proportion changes only
 set.seed(42)
@@ -645,6 +997,31 @@ acc_2 <- fit_2 |>
 
 acc_2
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# Split 2: 70/30, seed 42 — proportion changes only
+train_2, test_2 = train_test_split(
+    dogs_model, train_size=0.7, stratify=dogs_model["phenotype"], random_state=42
+)
+
+fit_2 = Pipeline([
+    ("normalize", StandardScaler()),
+    ("model", LogisticRegression()),
+]).fit(train_2.drop(columns="phenotype"), train_2["phenotype"])
+
+acc_2 = accuracy_score(test_2["phenotype"], fit_2.predict(test_2.drop(columns="phenotype")))
+
+acc_2
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 # Split 3: 80/20, seed 123 — seed changes only
@@ -670,6 +1047,31 @@ acc_3 <- fit_3 |>
 acc_3
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Split 3: 80/20, seed 123 — seed changes only
+train_3, test_3 = train_test_split(
+    dogs_model, train_size=0.8, stratify=dogs_model["phenotype"], random_state=123
+)
+
+fit_3 = Pipeline([
+    ("normalize", StandardScaler()),
+    ("model", LogisticRegression()),
+]).fit(train_3.drop(columns="phenotype"), train_3["phenotype"])
+
+acc_3 = accuracy_score(test_3["phenotype"], fit_3.predict(test_3.drop(columns="phenotype")))
+
+acc_3
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 # Collect results
 tibble(
@@ -677,6 +1079,18 @@ tibble(
   accuracy = c(acc_1, acc_2, acc_3)
 )
 ```
+
+### Python
+
+```{python}
+#| eval: false
+pd.DataFrame({
+    "split": ["80/20, seed 42", "70/30, seed 42", "80/20, seed 123"],
+    "accuracy": [acc_1, acc_2, acc_3],
+})
+```
+
+:::
 
 ```{r, echo = FALSE}
 opts_acc_imbalance <- c(
@@ -708,12 +1122,27 @@ opts_strata <- c(
 
 The sensitivity analysis shows how accuracy varies with split choices. For the main model we commit to the 80/20 stratified split with seed 42.
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 set.seed(42)
 dog_split <- initial_split(dogs_model, prop = 0.8, strata = phenotype)
 dog_train <- training(dog_split)
 dog_test  <- testing(dog_split)
 ```
+
+### Python
+
+```{python}
+#| eval: false
+dog_train, dog_test = train_test_split(
+    dogs_model, train_size=0.8, stratify=dogs_model["phenotype"], random_state=42
+)
+```
+
+:::
 
 ---
 
@@ -724,6 +1153,10 @@ A `tidymodels` workflow for classification follows exactly the same structure as
 **Why normalise SNP predictors?**
 
 SNP genotypes are already on a 0/1/2 scale, so normalisation has a modest effect here. As in Workshop 1, we normalise because it is required for any regularised extension of logistic regression — ridge logistic regression, for example — and normalising now keeps the two models directly comparable if you choose to add regularisation.
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 # Recipe: normalise all numeric SNP predictors
@@ -750,7 +1183,31 @@ logistic_fit <- logistic_workflow |>
   fit(data = dog_train)
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# step_naomit() drops missing genotype values before fitting; done here on
+# the training frame directly since Pipeline has no row-dropping step
+dog_train = dog_train.dropna()
+
+# Pipeline: normalise predictors, then fit logistic regression
+logistic_workflow = Pipeline([
+    ("normalize", StandardScaler()),
+    ("model", LogisticRegression()),
+])
+
+# Fit on training data only
+logistic_fit = logistic_workflow.fit(dog_train.drop(columns="phenotype"), dog_train["phenotype"])
+```
+
+:::
+
 Check model assumptions on the training data before evaluating on the test set.
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 # Extract the underlying glm object and check assumptions
@@ -759,6 +1216,21 @@ logistic_fit |>
   extract_fit_engine() |>
   check_model()
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# Pull the fitted estimator out of the pipeline and compute residuals
+# manually — scikit-learn has no check_model()-style diagnostic panel
+# This runs on training data — it checks model fit, not generalisation
+train_probs = logistic_fit.predict_proba(dog_train.drop(columns="phenotype"))[:, 1]
+train_resid = (dog_train["phenotype"] == "affected").astype(int) - train_probs
+
+plt.scatter(train_probs, train_resid)
+```
+
+:::
 
 ::: {.callout-note}
 ## What check_model() shows for logistic regression
@@ -777,6 +1249,10 @@ logistic_preds <- logistic_fit |>
   bind_cols(dog_test |> select(phenotype))
 ```
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 # Generate both class probabilities and predicted class labels
 # type = "prob" returns the predicted probability for each class
@@ -790,6 +1266,25 @@ logistic_preds <- logistic_fit |>
 
 logistic_preds
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-062
+# Generate both class probabilities and predicted class labels
+X_test = dog_test.drop(columns="phenotype")
+pred_probs = logistic_fit.predict_proba(X_test)
+logistic_preds = dog_test[["phenotype"]].assign(
+    pred_affected=pred_probs[:, list(logistic_fit.classes_).index("affected")],
+    pred_unaffected=pred_probs[:, list(logistic_fit.classes_).index("unaffected")],
+    pred_class=logistic_fit.predict(X_test),
+)
+
+logistic_preds
+```
+
+:::
 
 ```{r, echo = FALSE}
 opts_prob_sum <- c(
@@ -810,16 +1305,56 @@ opts_prob_sum <- c(
 
 The confusion matrix summarises prediction outcomes across all four possible combinations of true class and predicted class. Reading it correctly requires knowing which class is the positive class — here, "affected".
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r, eval = FALSE}
 # Confusion matrix
 conf_mat(logistic_preds, truth = phenotype, estimate = .pred_class)
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+confusion_matrix(logistic_preds["phenotype"], logistic_preds["pred_class"], labels=["affected", "unaffected"])
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # Visualise as a heatmap
 conf_mat(logistic_preds, truth = phenotype, estimate = .pred_class) |>
   autoplot(type = "heatmap")
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-062
+cm = confusion_matrix(logistic_preds["phenotype"], logistic_preds["pred_class"], labels=["affected", "unaffected"])
+cm_df = (
+    pd.DataFrame(cm, index=["affected", "unaffected"], columns=["affected", "unaffected"])
+    .rename_axis(index="truth", columns="prediction")
+    .reset_index()
+    .melt(id_vars="truth", var_name="prediction", value_name="n")
+)
+
+(
+    ggplot(cm_df, aes("prediction", "truth", fill="n"))
+    + geom_tile()
+    + geom_text(aes(label="n"), colour="white")
+    + theme_minimal()
+)
+```
+
+:::
 
 The four cells are:
 
@@ -848,6 +1383,10 @@ opts_fn <- c(
 
 ### Sensitivity, Specificity, and Accuracy
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # Calculate sensitivity, specificity, and accuracy
 classification_metrics <- metric_set(
@@ -862,6 +1401,23 @@ classification_metrics(
   estimate = .pred_class
 )
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# Calculate sensitivity, specificity, and accuracy
+pd.DataFrame({
+    "metric": ["sensitivity", "specificity", "accuracy"],
+    "estimate": [
+        recall_score(logistic_preds["phenotype"], logistic_preds["pred_class"], pos_label="affected"),
+        recall_score(logistic_preds["phenotype"], logistic_preds["pred_class"], pos_label="unaffected"),
+        accuracy_score(logistic_preds["phenotype"], logistic_preds["pred_class"]),
+    ],
+})
+```
+
+:::
 
 **Sensitivity** is the proportion of truly affected dogs correctly identified — the true positive rate. High sensitivity means few false negatives.
 
@@ -892,6 +1448,10 @@ opts_sensitivity <- c(
 
 The ROC curve plots sensitivity against 1 minus specificity across all possible classification thresholds. A model with no predictive value produces a diagonal line. A perfect model reaches the top-left corner. The area under the ROC curve — **AUC** — summarises discrimination performance across all thresholds in a single number between 0.5 and 1.
 
+:::{.panel-tabset group="language"}
+
+#### R
+
 ```{r}
 # ROC curve
 logistic_preds |>
@@ -902,6 +1462,29 @@ logistic_preds |>
     subtitle = "AUC closer to 1.0 indicates better discrimination"
   )
 ```
+
+#### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-062
+fpr, tpr, _ = roc_curve(logistic_preds["phenotype"] == "affected", logistic_preds["pred_affected"])
+roc_df = pd.DataFrame({"fpr": fpr, "tpr": tpr})
+
+(
+    ggplot(roc_df, aes("fpr", "tpr"))
+    + geom_line()
+    + geom_abline(linetype="dashed", colour="grey60")
+    + labs(
+        x="1 - specificity",
+        y="sensitivity",
+        title="ROC curve — logistic regression",
+        subtitle="AUC closer to 1.0 indicates better discrimination",
+    )
+)
+```
+
+:::
 
 ### Choosing a threshold
 The ROC curve you produced in the previous section is not just a summary of model performance — it is a decision tool. Every point on the curve corresponds to a specific classification threshold. Moving along the curve from bottom-left to top-right means lowering the threshold, which increases sensitivity and reduces specificity simultaneously.
@@ -925,6 +1508,10 @@ This means you want a point on the ROC curve that is high on the y-axis, even if
 - The ROC curve does not depend on a specific threshold. Why is this more informative than reporting accuracy at the 0.5 threshold alone?
 :::
 
+
+:::{.panel-tabset group="language"}
+
+#### R
 
 ```{r}
 # After examining the ROC curve, choose a threshold
@@ -960,11 +1547,50 @@ classification_metrics(
 
 ```
 
+#### Python
+
+```{python}
+#| eval: false
+# After examining the ROC curve, choose a threshold
+# Replace 0.5 with the value you identified from the curve
+# that gives your preferred balance of sensitivity and specificity
+chosen_threshold = 0.5
+
+# Apply the chosen threshold to the probability predictions
+X_test = dog_test.drop(columns="phenotype")
+pred_probs = logistic_fit.predict_proba(X_test)
+logistic_preds = dog_test[["phenotype"]].assign(
+    pred_affected=pred_probs[:, list(logistic_fit.classes_).index("affected")],
+)
+logistic_preds = logistic_preds.assign(
+    pred_class=lambda d: np.where(d["pred_affected"] > chosen_threshold, "affected", "unaffected")
+)
+
+# Confusion matrix at the chosen threshold
+confusion_matrix(logistic_preds["phenotype"], logistic_preds["pred_class"], labels=["affected", "unaffected"])
+
+# Sensitivity, specificity, and accuracy at the chosen threshold
+pd.DataFrame({
+    "metric": ["sensitivity", "specificity", "accuracy"],
+    "estimate": [
+        recall_score(logistic_preds["phenotype"], logistic_preds["pred_class"], pos_label="affected"),
+        recall_score(logistic_preds["phenotype"], logistic_preds["pred_class"], pos_label="unaffected"),
+        accuracy_score(logistic_preds["phenotype"], logistic_preds["pred_class"]),
+    ],
+})
+```
+
+:::
+
 ---
 
 ## Visualising Predicted Probabilities {.unnumbered}
 
 A single AUC value summarises discrimination but conceals how the model distributes predicted probabilities. A well-discriminating model produces high predicted probabilities for affected dogs and low probabilities for unaffected dogs — the two distributions should be well separated.
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 # Distribution of predicted probabilities by true outcome class
@@ -984,6 +1610,28 @@ logistic_preds |>
   theme_minimal()
 ```
 
+### Python
+
+```{python}
+#| eval: false
+(
+    ggplot(logistic_preds, aes("pred_affected", fill="phenotype"))
+    + geom_histogram(bins=20, alpha=0.7, position="identity")
+    + scale_fill_manual(values={"affected": "#E63946", "unaffected": "#457B9D"})
+    + geom_vline(xintercept=chosen_threshold, linetype="dashed", colour="grey30")
+    + labs(
+        x="Predicted probability of being affected",
+        y="Count",
+        fill="True outcome",
+        title="Predicted probability distributions by true outcome",
+        subtitle="Dashed line = 0.5 classification threshold",
+    )
+    + theme_minimal()
+)
+```
+
+:::
+
 
 ::: {.callout-note}
 ## Reflection 6
@@ -999,6 +1647,10 @@ logistic_preds |>
 
 One of the key advantages of logistic regression over more complex models is that its coefficients are directly interpretable. Each coefficient represents the change in log-odds of being affected for a one-unit increase in the corresponding SNP predictor.
 
+:::{.panel-tabset group="language"}
+
+### R
+
 ```{r, eval = FALSE}
 # Extract logistic regression coefficients
 # Coefficients are on the log-odds scale
@@ -1008,6 +1660,30 @@ logistic_coefficients <- logistic_fit |>
 
 logistic_coefficients
 ```
+
+### Python
+
+```{python}
+#| eval: false
+# TRANSLATION-NOTE: OQ-058
+def tidy_coefs(pipeline, feature_names):
+    model = pipeline.named_steps["model"]
+    return pd.DataFrame({
+        "term": ["Intercept"] + list(feature_names),
+        "estimate": [model.intercept_[0]] + list(model.coef_[0]),
+    })
+
+feature_names = dog_train.drop(columns="phenotype").columns
+logistic_coefficients = tidy_coefs(logistic_fit, feature_names)
+
+logistic_coefficients
+```
+
+:::
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r, eval = FALSE}
 # Convert to odds ratios by exponentiating
@@ -1020,12 +1696,33 @@ logistic_fit |>
   arrange(desc(abs(estimate)))
 ```
 
+### Python
+
+```{python}
+#| eval: false
+# Convert to odds ratios by exponentiating
+# An odds ratio > 1 means the SNP INCREASES odds of being affected
+# An odds ratio < 1 means it DECREASES odds
+(
+    logistic_coefficients
+    .loc[lambda d: d["term"] != "Intercept"]
+    .assign(estimate=lambda d: np.exp(d["estimate"]))
+    .sort_values("estimate", ascending=False)
+)
+```
+
+:::
+
 ```{r, include = FALSE}
 logistic_coefficients <- logistic_fit |>
   extract_fit_parsnip() |>
   tidy()
 
 ```
+
+:::{.panel-tabset group="language"}
+
+### R
 
 ```{r}
 # Visualise top SNPs by absolute coefficient magnitude
@@ -1043,6 +1740,34 @@ logistic_coefficients |>
   ) +
   theme_minimal()
 ```
+
+### Python
+
+```{python}
+#| eval: false
+(
+    logistic_coefficients
+    .loc[lambda d: d["term"] != "Intercept"]
+    .assign(abs_estimate=lambda d: d["estimate"].abs())
+    .nlargest(20, "abs_estimate")
+    .sort_values("estimate")
+    .pipe(lambda d: d.assign(term=pd.Categorical(d["term"], categories=d["term"], ordered=True)))
+    .pipe(lambda d: (
+        ggplot(d, aes(x="estimate", y="term"))
+        + geom_col(fill="steelblue")
+        + geom_vline(xintercept=0, linetype="dashed", colour="red")
+        + labs(
+            x="Log-odds coefficient",
+            y="SNP",
+            title="Top 20 SNPs by logistic regression coefficient magnitude",
+            subtitle="Positive coefficients increase predicted odds of being affected",
+        )
+        + theme_minimal()
+    ))
+)
+```
+
+:::
 
 ```{r, echo = FALSE}
 opts_logor <- c(

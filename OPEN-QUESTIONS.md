@@ -1768,3 +1768,27 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-062
+
+- **File / chunk:** `ml-logistic-regression.qmd`, several — `read_table()`
+  (`### Step 1`), `predict(type = "prob"/"class")`, `accuracy()`/
+  `sensitivity()`/`specificity()` (`### Sensitivity, Specificity, and
+  Accuracy`), `conf_mat() |> autoplot(type = "heatmap")`, `roc_curve() |>
+  autoplot()`
+- **Status:** resolved
+- **R original:** see `TRANSLATION.md`'s extended "Machine learning" table.
+- **Issue:** classification-specific yardstick metrics and PLINK's
+  whitespace-delimited file format have no glossary entries yet. All
+  extend the already-settled tidymodels→scikit-learn Stack decision
+  rather than introducing a new one.
+- **Candidates:** as written into `TRANSLATION.md`. Notably, scikit-learn
+  has no dedicated `specificity_score` — it's computed as `recall_score`
+  against the negative label, the same quantity by definition.
+- **Provisional choice in the book:** as implemented, marked
+  `# TRANSLATION-NOTE: OQ-062` at each idiom's first occurrence.
+- **Recommendation:** as implemented.
+- **Resolution:** glossary entries added to `TRANSLATION.md`'s "Machine
+  learning" section before translating the rest of the chapter.
+
+---
