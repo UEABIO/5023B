@@ -1635,3 +1635,40 @@ chapter.
 - **Resolution:**
 
 ---
+
+## OQ-057
+
+- **File / chunk:** `AI-programming.qmd`, the whole chapter (~24 `{r,
+  eval=FALSE}` chunks)
+- **Status:** open
+- **R original:** n/a — chapter-level scope decision, not a single chunk.
+- **Issue:** this chapter teaches GitHub Copilot workflows inside RStudio
+  (menu paths, keyboard shortcuts, `copilot-instructions.md`, pasting
+  errors into comments for Copilot/Chat to read), not R data-analysis
+  technique. The embedded code snippets (dplyr/ggplot2, some deliberately
+  broken for the debugging exercises) are fully covered by the existing
+  glossary and would translate mechanically, but the surrounding prose is
+  RStudio-UI-specific throughout ("grey ghost text", "Tools > Global
+  Options > Copilot", "Ctrl+Shift+P"). A Python tab next to prose that only
+  makes sense for RStudio would be a half-updated chapter, not a coherent
+  second path through the material. Discussed with the human maintainer
+  (chat, 2026-08-26/27), who chose to skip the whole chapter rather than
+  cherry-pick the standalone code snippets.
+- **Candidates:** 1. Skip the whole chapter, treated as R-specific tooling
+  with no Python counterpart — same category as `renv`/RStudio-projects
+  content named in CLAUDE.md's skip list, extended to RStudio-specific AI
+  tooling. 2. Translate only the standalone code chunks, leaving
+  RStudio-narrated chunks untouched — rejected for producing a
+  partly-bilingual, partly-not chapter.
+- **Provisional choice in the book:** 1 — no Python tabs added anywhere in
+  this chapter, no `.qmd` edits made. One chapter-level entry logged here
+  rather than ~24 near-identical per-chunk entries.
+- **Recommendation:** if a Python-tooling equivalent chapter is ever
+  written (e.g. GitHub Copilot in VS Code for a Python workflow), it
+  belongs as new content in its own right, not a translation of this
+  chapter — out of scope for the translation workflow per CLAUDE.md's
+  "Python setup chapter is out of scope" rule, extended to AI-tooling
+  setup.
+- **Resolution:**
+
+---
